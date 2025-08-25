@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import toast from 'react-hot-toast';
 
 // API base URL - adjust this to match your osu! API server
@@ -60,9 +60,10 @@ export const authAPI = {
         },
       });
       return response.data;
-    } catch (error: any) {
-      console.error('Login error:', error.response?.data || error.message);
-      throw error;
+    } catch (error) {
+      const err = error as { response?: { data?: unknown }; message?: string };
+      console.error('Login error:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -83,9 +84,10 @@ export const authAPI = {
         },
       });
       return response.data;
-    } catch (error: any) {
-      console.error('Register error:', error.response?.data || error.message);
-      throw error;
+    } catch (error) {
+      const err = error as { response?: { data?: unknown }; message?: string };
+      console.error('Register error:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -113,9 +115,15 @@ export const userAPI = {
     return response.data;
   },
 
-  getUser: async (userIdOrName: string | number, ruleset?: string) => {
-    const url = ruleset ? `/api/v2/users/${userIdOrName}/${ruleset}` : `/api/v2/users/${userIdOrName}`;
-    const response = await api.get(url);
+  getUser: async (
+    userIdOrName: string | number,
+    ruleset?: string,
+    config?: AxiosRequestConfig,
+  ) => {
+    const url = ruleset
+      ? `/api/v2/users/${userIdOrName}/${ruleset}`
+      : `/api/v2/users/${userIdOrName}`;
+    const response = await api.get(url, config);
     return response.data;
   },
 
@@ -140,10 +148,10 @@ export const userAPI = {
     
     // 验证FormData内容
     console.log('FormData内容:');
-    for (let [key, value] of formData.entries()) {
+    for (const [key, value] of formData.entries()) {
       console.log(key, value);
-      if (value && typeof value === 'object' && ('size' in value) && ('type' in value)) {
-        console.log(`  类型: ${(value as any).type}, 大小: ${(value as any).size}`);
+      if (value instanceof Blob) {
+        console.log(`  类型: ${value.type}, 大小: ${value.size}`);
       }
     }
 
@@ -200,7 +208,7 @@ export const userAPI = {
       let errorData;
       try {
         errorData = await response.json();
-      } catch (e) {
+      } catch {
         errorData = await response.text();
       }
       console.error('重命名失败响应:', errorData);
@@ -224,10 +232,10 @@ export const userAPI = {
     
     // 验证FormData内容
     console.log('FormData内容:');
-    for (let [key, value] of formData.entries()) {
+    for (const [key, value] of formData.entries()) {
       console.log(key, value);
-      if (value && typeof value === 'object' && ('size' in value) && ('type' in value)) {
-        console.log(`  类型: ${(value as any).type}, 大小: ${(value as any).size}`);
+      if (value instanceof Blob) {
+        console.log(`  类型: ${value.type}, 大小: ${value.size}`);
       }
     }
 
@@ -255,7 +263,7 @@ export const userAPI = {
       let errorData;
       try {
         errorData = await response.json();
-      } catch (e) {
+      } catch {
         errorData = await response.text();
       }
       console.error('上传失败响应:', errorData);
@@ -320,10 +328,10 @@ export const friendsAPI = {
           friendsAPI.getFriends(),
           friendsAPI.getBlocks()
         ]);
-        
-        const isFriend = friends.some((friend: any) => friend.target_id === targetUserId);
-        const isBlocked = blocks.some((block: any) => block.target_id === targetUserId);
-        const isMutual = friends.some((friend: any) => friend.target_id === targetUserId && friend.mutual === true);
+
+        const isFriend = friends.some((friend: { target_id: number; mutual?: boolean }) => friend.target_id === targetUserId);
+        const isBlocked = blocks.some((block: { target_id: number }) => block.target_id === targetUserId);
+        const isMutual = friends.some((friend: { target_id: number; mutual?: boolean }) => friend.target_id === targetUserId && friend.mutual === true);
         
         // 在 osu! 的好友系统中：
         // 1. isFriend = true 且 mutual = true: 双向关注，对方关注了我
@@ -366,13 +374,17 @@ export const friendsAPI = {
 };
 
 // Error handler utility
-export const handleApiError = (error: any) => {
-  if (error.response?.data?.error_description) {
-    toast.error(error.response.data.error_description);
-  } else if (error.response?.data?.message) {
-    toast.error(error.response.data.message);
-  } else if (error.message) {
-    toast.error(error.message);
+export const handleApiError = (error: unknown) => {
+  const err = error as {
+    response?: { data?: { error_description?: string; message?: string } };
+    message?: string;
+  };
+  if (err.response?.data?.error_description) {
+    toast.error(err.response.data.error_description);
+  } else if (err.response?.data?.message) {
+    toast.error(err.response.data.message);
+  } else if (err.message) {
+    toast.error(err.message);
   } else {
     toast.error('发生意外错误');
   }

@@ -35,13 +35,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const userData = await userAPI.getMe();
           setUser(userData);
           setIsAuthenticated(true);
-        } catch (error) {
+        } catch {
           // Token might be expired, try to refresh
           const refreshToken = localStorage.getItem('refresh_token');
           if (refreshToken) {
             try {
               await refreshAccessToken();
-            } catch (refreshError) {
+            } catch {
               logout();
             }
           } else {
@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       toast.success(`欢迎回来，${userData.username}！`);
       return true;
-    } catch (error: any) {
+    } catch (error) {
       handleApiError(error);
       return false;
     } finally {
@@ -95,17 +95,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         toast.success('账户创建成功！');
       }
       return loginSuccess;
-    } catch (error: any) {
-      if (error.response?.status === 422 && error.response?.data?.form_error) {
-        const formError = error.response.data.form_error;
+    } catch (error) {
+      const err = error as {
+        response?: { status?: number; data?: { form_error?: { user?: { username?: string[]; user_email?: string[]; password?: string[] }; message?: string } } };
+      };
+      if (err.response?.status === 422 && err.response?.data?.form_error) {
+        const formError = err.response.data.form_error;
         if (formError.user) {
-          const { username: usernameErrors, user_email: emailErrors, password: passwordErrors } = formError.user;
-          
-          if (usernameErrors?.length > 0) {
+          const {
+            username: usernameErrors = [],
+            user_email: emailErrors = [],
+            password: passwordErrors = [],
+          } = formError.user;
+
+          if (usernameErrors.length > 0) {
             toast.error(`用户名：${usernameErrors[0]}`);
-          } else if (emailErrors?.length > 0) {
+          } else if (emailErrors.length > 0) {
             toast.error(`邮箱：${emailErrors[0]}`);
-          } else if (passwordErrors?.length > 0) {
+          } else if (passwordErrors.length > 0) {
             toast.error(`密码：${passwordErrors[0]}`);
           }
         } else if (formError.message) {
@@ -187,6 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { FiAward, FiGlobe, FiLoader, FiTrendingUp, FiUsers, FiStar, FiMapPin } from 'react-icons/fi';
+import { FiLoader } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { rankingsAPI, handleApiError } from '../utils/api';
 import CountrySelect from '../components/UI/CountrySelect';
-import RankBadge from '../components/UI/RankBadge';
-import { 
+import UserRankingsList from '../components/Rankings/UserRankingsList';
+import CountryRankingsList from '../components/Rankings/CountryRankingsList';
+import PaginationControls from '../components/Rankings/PaginationControls';
+import {
   GAME_MODE_NAMES,
   GAME_MODE_COLORS,
   GAME_MODE_GROUPS,
   MAIN_MODE_ICONS
 } from '../types';
-import type { 
+import type {
   GameMode,
   MainGameMode,
-  TopUsersResponse, 
-  CountryResponse, 
-  UserRanking, 
-  CountryRanking,
+  TopUsersResponse,
+  CountryResponse,
   TabType,
   RankingType
 } from '../types';
@@ -79,7 +78,7 @@ const RankingsPage: React.FC = () => {
         currentPage
       );
       setUserRankings(response);
-    } catch (error: any) {
+    } catch (error) {
       handleApiError(error);
       console.error('加载用户排行榜失败:', error);
     } finally {
@@ -93,7 +92,7 @@ const RankingsPage: React.FC = () => {
     try {
       const response = await rankingsAPI.getCountryRankings(selectedMode, currentPage);
       setCountryRankings(response);
-    } catch (error: any) {
+    } catch (error) {
       handleApiError(error);
       console.error('加载国家排行榜失败:', error);
     } finally {
@@ -127,250 +126,6 @@ const RankingsPage: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const renderUserRankings = () => {
-    if (!userRankings || !userRankings.ranking.length) {
-      return (
-        <div className="text-center py-20">
-          <div className="bg-gray-100 dark:bg-gray-700 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-            <FiAward className="text-4xl text-gray-400 dark:text-gray-500" />
-          </div>
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            暂无排行榜数据
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            当前筛选条件下没有找到数据
-          </p>
-        </div>
-      );
-    }
-
-    const startRank = (currentPage - 1) * 50 + 1;
-
-    return (
-      <div className="space-y-3">
-        {userRankings.ranking.map((ranking: UserRanking, index: number) => {
-          const rank = startRank + index;
-          const isTopThree = rank <= 3;
-          
-          return (
-            <div
-              key={ranking.user.id}
-              className={`group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 
-                         border border-gray-100 dark:border-gray-700 
-                         hover:border-gray-200 dark:hover:border-gray-600
-                         hover:shadow-lg transition-all duration-200
-                         ${isTopThree ? 'ring-2 ring-yellow-400/20 bg-gradient-to-r from-yellow-50 to-transparent dark:from-yellow-900/10' : ''}`}
-            >
-              <div className="flex items-center gap-4 p-5">
-                {/* 排名徽章 */}
-                <div className="flex-shrink-0">
-                  <RankBadge rank={rank} size="md" />
-                </div>
-
-                {/* 用户头像 */}
-                <Link to={`/users/${ranking.user.id}`} className="flex-shrink-0">
-                  <img
-                    src={ranking.user.avatar_url || '/default.jpg'}
-                    alt={ranking.user.username}
-                    className="w-12 h-12 rounded-xl border-2 border-gray-200 dark:border-gray-600 
-                             hover:border-blue-400 dark:hover:border-blue-500
-                             transition-colors duration-200"
-                  />
-                </Link>
-
-                {/* 用户信息 */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Link 
-                      to={`/users/${ranking.user.id}`}
-                      className="font-semibold text-lg text-gray-900 dark:text-white 
-                               hover:text-blue-600 dark:hover:text-blue-400 
-                               transition-colors truncate"
-                    >
-                      {ranking.user.username}
-                    </Link>
-                    {ranking.user.country_code && (
-                      <img
-                        src={`https://flagcdn.com/20x15/${ranking.user.country_code.toLowerCase()}.png`}
-                        alt={ranking.user.country_code}
-                        className="w-5 h-4 rounded-sm"
-                        title={ranking.user.country?.name || ranking.user.country_code}
-                      />
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {ranking.user.country?.name || ranking.user.country_code}
-                  </div>
-                </div>
-
-                {/* 分数显示 */}
-                <div className="text-right">
-                  <div 
-                    className="text-xl font-bold"
-                    style={{ color: GAME_MODE_COLORS[selectedMode] }}
-                  >
-                    {rankingType === 'performance' 
-                      ? `${Math.round(ranking.pp || 0).toLocaleString()}pp`
-                      : `${(ranking.ranked_score || 0).toLocaleString()}`
-                    }
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {rankingType === 'performance' ? '表现分数' : '总分'}
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const renderCountryRankings = () => {
-    if (!countryRankings || !countryRankings.ranking.length) {
-      return (
-        <div className="text-center py-20">
-          <div className="bg-gray-100 dark:bg-gray-700 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-            <FiGlobe className="text-4xl text-gray-400 dark:text-gray-500" />
-          </div>
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            暂无国家排行榜数据
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            当前模式下没有找到国家数据
-          </p>
-        </div>
-      );
-    }
-
-    const startRank = (currentPage - 1) * 50 + 1;
-
-    return (
-      <div className="space-y-3">
-        {countryRankings.ranking.map((ranking: CountryRanking, index: number) => {
-          const rank = startRank + index;
-          const isTopThree = rank <= 3;
-          
-          return (
-            <div
-              key={ranking.code}
-              className={`group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 
-                         border border-gray-100 dark:border-gray-700 
-                         hover:border-gray-200 dark:hover:border-gray-600
-                         hover:shadow-lg transition-all duration-200
-                         ${isTopThree ? 'ring-2 ring-yellow-400/20 bg-gradient-to-r from-yellow-50 to-transparent dark:from-yellow-900/10' : ''}`}
-            >
-              <div className="flex items-center gap-4 p-5">
-                {/* 排名徽章 */}
-                <div className="flex-shrink-0">
-                  <RankBadge rank={rank} size="md" />
-                </div>
-
-                {/* 国旗 */}
-                <div className="flex-shrink-0">
-                  <img
-                    src={`https://flagcdn.com/48x36/${ranking.code.toLowerCase()}.png`}
-                    alt={ranking.code}
-                    className="w-12 h-9 rounded border border-gray-200 dark:border-gray-600"
-                  />
-                </div>
-
-                {/* 国家信息 */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white truncate mb-1">
-                    {ranking.name}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {ranking.active_users.toLocaleString()} 活跃用户 • {ranking.play_count.toLocaleString()} 游戏次数
-                  </div>
-                </div>
-
-                {/* 统计数据 */}
-                <div className="text-right">
-                  <div 
-                    className="text-xl font-bold"
-                    style={{ color: GAME_MODE_COLORS[selectedMode] }}
-                  >
-                    {Math.round(ranking.performance).toLocaleString()}pp
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    总体表现
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const renderPagination = () => {
-    const totalPages = selectedTab === 'users' 
-      ? Math.ceil((userRankings?.total || 0) / 50)
-      : Math.ceil((countryRankings?.total || 0) / 50);
-    
-    if (totalPages <= 1) return null;
-
-    const pages = [];
-    const maxVisiblePages = 5;
-    const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    // 上一页
-    if (currentPage > 1) {
-      pages.push(
-        <button
-          key="prev"
-          onClick={() => handlePageChange(currentPage - 1)}
-          className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
-                   text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700
-                   hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
-        >
-          ←
-        </button>
-      );
-    }
-
-    // 页码
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            i === currentPage
-              ? 'bg-blue-600 text-white border border-blue-600'
-              : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // 下一页
-    if (currentPage < totalPages) {
-      pages.push(
-        <button
-          key="next"
-          onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
-                   text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700
-                   hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
-        >
-          →
-        </button>
-      );
-    }
-
-    return (
-      <div className="flex items-center justify-center gap-2 mt-8">
-        {pages}
-      </div>
-    );
   };
 
   return (
@@ -523,13 +278,28 @@ const RankingsPage: React.FC = () => {
               </div>
             </div>
           ) : selectedTab === 'users' ? (
-            renderUserRankings()
+            <UserRankingsList
+              rankings={userRankings}
+              currentPage={currentPage}
+              selectedMode={selectedMode}
+              rankingType={rankingType}
+            />
           ) : (
-            renderCountryRankings()
+            <CountryRankingsList
+              rankings={countryRankings}
+              currentPage={currentPage}
+              selectedMode={selectedMode}
+            />
           )}
 
           {/* 分页 */}
-          {!isLoading && renderPagination()}
+          {!isLoading && (
+            <PaginationControls
+              total={selectedTab === 'users' ? userRankings?.total || 0 : countryRankings?.total || 0}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
     </div>

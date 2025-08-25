@@ -72,11 +72,12 @@ const SettingsPage: React.FC = () => {
       setTimeout(async () => {
         await refreshUser();
       }, 1000);
-    } catch (error: any) {
+    } catch (error) {
       console.error('修改用户名失败:', error);
-      if (error.response?.status === 409) {
+      const err = error as { response?: { status?: number } };
+      if (err.response?.status === 409) {
         toast.error('用户名已被占用，请选择其他用户名');
-      } else if (error.response?.status === 404) {
+      } else if (err.response?.status === 404) {
         toast.error('找不到指定用户');
       } else {
         toast.error('修改用户名失败，请稍后重试');

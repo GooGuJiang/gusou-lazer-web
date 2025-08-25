@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { userAPI } from '../../utils/api';
 
 // 开发环境调试工具
-const debugLog = (message: string, data?: any) => {
+const debugLog = (message: string, data?: unknown) => {
   if (import.meta.env.DEV) {
     console.log(message, data);
   }

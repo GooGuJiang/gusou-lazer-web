@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { userAPI } from '../../utils/api';
 
 // 开发环境调试工具
-const debugLog = (message: string, data?: any) => {
+const debugLog = (message: string, data?: unknown) => {
   if (import.meta.env.DEV) {
     console.log(message, data);
   }
@@ -222,26 +222,33 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       onUploadSuccess(avatarUrl);
       onClose();
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       debugLog('上传错误:', error);
-      debugLog('错误详情:', error.response?.data);
+      const err = error as {
+        response?: {
+          status?: number;
+          data?: { detail?: { msg?: string; loc?: string[] }[]; message?: string };
+        };
+        message?: string;
+      };
+      debugLog('错误详情:', err.response?.data);
       
       // 处理422验证错误
-      if (error.response?.status === 422) {
-        const details = error.response.data?.detail;
+      if (err.response?.status === 422) {
+        const details = err.response.data?.detail;
         debugLog('422错误详情:', details);
-        
+
         if (details && Array.isArray(details) && details.length > 0) {
           const errorMsg = details[0].msg || '验证失败';
           const field = details[0].loc ? details[0].loc.join('.') : '';
           toast.error(`上传失败: ${field ? `${field}: ` : ''}${errorMsg}`);
-        } else if (error.response.data?.message) {
-          toast.error(`上传失败: ${error.response.data.message}`);
+        } else if (err.response.data?.message) {
+          toast.error(`上传失败: ${err.response.data.message}`);
         } else {
           toast.error('图片格式或大小不符合要求，请检查图片是否为PNG、JPEG或GIF格式，且小于5MB');
         }
       } else {
-        toast.error(error.message || '上传失败，请重试');
+        toast.error(err.message || '上传失败，请重试');
       }
     } finally {
       setIsUploading(false);

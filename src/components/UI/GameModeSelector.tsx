@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCircle, FiMusic, FiTarget, FiGrid } from 'react-icons/fi';
+import type { IconType } from 'react-icons';
 import type { GameMode, MainGameMode } from '../../types';
 import { 
   GAME_MODE_NAMES, 
@@ -16,7 +17,7 @@ interface GameModeSelectorProps {
 }
 
 // 主模式图标映射
-const MAIN_MODE_ICON_COMPONENTS: Record<MainGameMode, React.ComponentType<any>> = {
+const MAIN_MODE_ICON_COMPONENTS: Record<MainGameMode, IconType> = {
   osu: FiCircle,
   taiko: FiMusic,
   fruits: FiTarget,

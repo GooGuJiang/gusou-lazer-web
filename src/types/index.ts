@@ -60,7 +60,7 @@ export interface User {
     raw: string;
   };
   previous_usernames: string[];
-  badges: any[];
+  badges: unknown[];
   is_restricted: boolean;
   beatmap_playcounts_count: number;
   playmode: string;
@@ -85,7 +85,7 @@ export interface User {
   is_qat: boolean;
   is_bng: boolean;
   is_online: number;
-  groups: any[];
+  groups: unknown[];
   country: {
     code: string;
     name: string;
@@ -98,15 +98,15 @@ export interface User {
   nominated_beatmapset_count: number;
   pending_beatmapset_count: number;
   ranked_beatmapset_count: number;
-  follow_user_mapping: any[];
+  follow_user_mapping: unknown[];
   follower_count: number;
-  friends?: any;
+  friends?: unknown;
   scores_best_count: number;
   scores_first_count: number;
   scores_recent_count: number;
   scores_pinned_count: number;
-  account_history: any[];
-  active_tournament_banners: any[];
+  account_history: unknown[];
+  active_tournament_banners: unknown[];
   kudosu: {
     available: number;
     total: number;
@@ -115,7 +115,7 @@ export interface User {
     start_date: string;
     count: number;
   }[];
-  replay_watched_counts: any[];
+  replay_watched_counts: unknown[];
   unread_pm_count: number;
   rank_history?: {
     mode: string;
@@ -129,14 +129,14 @@ export interface User {
   statistics_rulesets?: {
     [key: string]: UserStatistics;
   };
-  user_achievements: any[];
-  team?: any;
+  user_achievements: unknown[];
+  team?: unknown;
   session_verified: boolean;
   daily_challenge_user_stats?: {
     daily_streak_best: number;
     daily_streak_current: number;
     last_update?: string | null;
-    last_weekly_streak?: any;
+    last_weekly_streak?: unknown;
     playcount: number;
     top_10p_placements: number;
     top_50p_placements: number;

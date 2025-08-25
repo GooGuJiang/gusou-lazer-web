@@ -11,14 +11,8 @@ import { GAME_MODE_COLORS, GAME_MODE_GROUPS, GAME_MODE_NAMES, MAIN_MODE_ICONS } 
 import Avatar from '../components/UI/Avatar';
 import ProfileCover from '../components/UI/ProfileCover';
 import toast from 'react-hot-toast';
-
-// 文本骨架屏 - 精确匹配文本尺寸
-const TextSkeleton: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`relative ${className}`}>
-    <div className="invisible">{children}</div>
-    <div className="absolute inset-0 animate-pulse bg-gray-300/70 dark:bg-gray-600/70 rounded"></div>
-  </div>
-);
+import TextSkeleton from '../components/UI/TextSkeleton';
+import UserStatsSection from '../components/User/UserStatsSection';
 
 const UserPage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -84,10 +78,11 @@ const UserPage: React.FC = () => {
       await friendsAPI.addFriend(user.id);
       await fetchFriendshipStatus(user.id);
       toast.success('已添加好友');
-    } catch (err: any) {
-      console.error('添加好友失败:', err);
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      console.error('添加好友失败:', error);
       setFriendshipStatus((prev) => ({ ...prev, loading: false }));
-      toast.error(err?.response?.data?.detail || '添加好友失败');
+      toast.error(error.response?.data?.detail || '添加好友失败');
     }
   };
   const handleRemoveFriend = async () => {
@@ -97,10 +92,11 @@ const UserPage: React.FC = () => {
       await friendsAPI.removeFriend(user.id);
       await fetchFriendshipStatus(user.id);
       toast.success('已删除好友');
-    } catch (err: any) {
-      console.error('删除好友失败:', err);
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      console.error('删除好友失败:', error);
       setFriendshipStatus((prev) => ({ ...prev, loading: false }));
-      toast.error(err?.response?.data?.detail || '删除好友失败');
+      toast.error(error.response?.data?.detail || '删除好友失败');
     }
   };
   const handleBlockUser = async () => {
@@ -110,10 +106,11 @@ const UserPage: React.FC = () => {
       await friendsAPI.blockUser(user.id);
       await fetchFriendshipStatus(user.id);
       toast.success('已屏蔽用户');
-    } catch (err: any) {
-      console.error('屏蔽用户失败:', err);
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      console.error('屏蔽用户失败:', error);
       setFriendshipStatus((prev) => ({ ...prev, loading: false }));
-      toast.error(err?.response?.data?.detail || '屏蔽用户失败');
+      toast.error(error.response?.data?.detail || '屏蔽用户失败');
     }
   };
   const handleUnblockUser = async () => {
@@ -123,10 +120,11 @@ const UserPage: React.FC = () => {
       await friendsAPI.unblockUser(user.id);
       await fetchFriendshipStatus(user.id);
       toast.success('已取消屏蔽');
-    } catch (err: any) {
-      console.error('取消屏蔽失败:', err);
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      console.error('取消屏蔽失败:', error);
       setFriendshipStatus((prev) => ({ ...prev, loading: false }));
-      toast.error(err?.response?.data?.detail || '取消屏蔽失败');
+      toast.error(error.response?.data?.detail || '取消屏蔽失败');
     }
   };
 
@@ -148,10 +146,11 @@ const UserPage: React.FC = () => {
     try {
       const userData = await userAPI.getUser(userIdOrName, mode, { signal });
       setUser(userData);
-    } catch (err: any) {
-      if (err?.name === 'AbortError') return; // 被取消的请求
-      console.error('获取用户数据失败:', err);
-      setError(err?.response?.data?.detail || '用户不存在或服务器错误');
+    } catch (err) {
+      const error = err as { name?: string; response?: { data?: { detail?: string } } };
+      if (error?.name === 'AbortError') return; // 被取消的请求
+      console.error('获取用户数据失败:', error);
+      setError(error.response?.data?.detail || '用户不存在或服务器错误');
       setUser(null);
       toast.error('获取用户信息失败');
     } finally {
@@ -377,7 +376,7 @@ const UserPage: React.FC = () => {
                   </div>
 
                   {/* 游戏统计 */}
-                  <div className="bg-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20">
+                  <div className="hidden">
                     <div className="flex items-center gap-6 text-xs">
                       <div className="text-left">
                         <p className="text-sm font-bold text-white">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.play_count?.toLocaleString() || '999,999'}</TextSkeleton> : user.statistics.play_count?.toLocaleString() || '0'}</p>
@@ -399,7 +398,7 @@ const UserPage: React.FC = () => {
                   </div>
 
                   {/* 核心统计 */}
-                  <div className="bg-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20">
+                  <div className="hidden">
                     <div className="flex items-center gap-6 text-xs">
                       <div className="text-left">
                         <div className="text-white font-bold text-sm sm:text-lg">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.global_rank ? `#${user.statistics.global_rank.toLocaleString()}` : '#999,999'}</TextSkeleton> : user.statistics.global_rank ? `#${user.statistics.global_rank.toLocaleString()}` : 'N/A'}</div>
@@ -491,73 +490,12 @@ const UserPage: React.FC = () => {
       </motion.div>
 
       {/* 手机端用户详细信息卡片 */}
-      <div className="lg:hidden space-y-4">
-        {/* 用户基本信息 */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4">
-          <div className="space-y-1.5">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">用户 ID</span>
-              <span className="text-gray-900 dark:text-white font-bold text-lg">{user.id}</span>
-            </div>
-            {user.join_date && (
-              <div className="flex justify之间 items-center">
-                <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">加入时间</span>
-                <span className="text-gray-900 dark:text白 font-medium text-base">{new Date(user.join_date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-              </div>
-            )}
-            {user.last_visit && (
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">最后访问</span>
-                <span className="text-gray-900 dark:text白 font-medium text-base">{new Date(user.last_visit).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* 游戏统计 */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.play_count?.toLocaleString() || '999,999'}</TextSkeleton> : user.statistics.play_count?.toLocaleString() || '0'}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">游戏次数</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.total_score?.toLocaleString() || '99,999,999'}</TextSkeleton> : user.statistics.total_score?.toLocaleString() || '0'}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">总分</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.ranked_score?.toLocaleString() || '99,999,999'}</TextSkeleton> : user.statistics.ranked_score?.toLocaleString() || '0'}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">排名分数</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.play_time ? `${Math.round(user.statistics.play_time / 3600).toLocaleString()}h` : '999h'}</TextSkeleton> : `${Math.round((user.statistics.play_time || 0) / 3600).toLocaleString()}h`}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">游戏时间</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 核心统计 */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <div className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.global_rank ? `#${user.statistics.global_rank.toLocaleString()}` : '#999,999'}</TextSkeleton> : user.statistics.global_rank ? `#${user.statistics.global_rank.toLocaleString()}` : 'N/A'}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">全球排名</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.country_rank ? `#${user.statistics.country_rank.toLocaleString()}` : '#999,999'}</TextSkeleton> : user.statistics.country_rank ? `#${user.statistics.country_rank.toLocaleString()}` : 'N/A'}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">国家排名</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.pp ? `${Math.round(user.statistics.pp).toLocaleString()}pp` : '9,999pp'}</TextSkeleton> : `${Math.round(user.statistics.pp || 0).toLocaleString()}pp`}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">表现分数</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-gray-900 dark:text白">{isUpdatingMode || !user.statistics ? <TextSkeleton>{user.statistics?.hit_accuracy ? `${user.statistics.hit_accuracy.toFixed(1)}%` : '99.9%'}</TextSkeleton> : `${(user.statistics.hit_accuracy || 0).toFixed(1)}%`}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">准确率</div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      <UserStatsSection
+        user={user}
+        statistics={user.statistics}
+        isUpdatingMode={isUpdatingMode}
+        selectedMode={selectedMode}
+      />
 
       {/* 排名历史图表 */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
