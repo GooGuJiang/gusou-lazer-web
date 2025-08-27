@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "ahooks": "^3.8.0",
     "axios": "^1.7.2",
+    "browser-image-compression": "^2.0.2",
     "framer-motion": "^11.3.6",
     "html2canvas": "^1.4.1",
     "jotai": "^2.9.0",
@@ -24,7 +26,8 @@
     "react-native-web": "^0.21.1",
     "react-router-dom": "^6.25.0",
     "react-tooltip": "^5.29.1",
-    "recharts": "^3.1.2"
+    "recharts": "^3.1.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

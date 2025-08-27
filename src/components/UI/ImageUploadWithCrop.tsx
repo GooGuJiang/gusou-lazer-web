@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FiUpload } from 'react-icons/fi';
+import imageCompression from 'browser-image-compression';
 import ImageCropper from './ImageCropper';
 import toast from 'react-hot-toast';
 
@@ -40,7 +41,7 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 处理文件选择
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -56,14 +57,40 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
       return;
     }
 
+    let processedFile = file;
+
+    // 如果文件过大，先进行预压缩
+    if (file.size > 2 * 1024 * 1024) { // 大于2MB时进行预压缩
+      try {
+        toast.loading('正在优化图片...', { id: 'compress' });
+        
+        const options = {
+          maxWidthOrHeight: 2048, // 预压缩到最大2048px
+          useWebWorker: true,
+          quality: 0.9,
+          initialQuality: 0.9,
+          alwaysKeepResolution: false,
+          preserveExif: false,
+        };
+
+        processedFile = await imageCompression(file, options);
+        toast.success('图片优化完成', { id: 'compress' });
+      } catch (error) {
+        console.error('预压缩失败:', error);
+        toast.dismiss('compress');
+        // 如果预压缩失败，使用原文件
+        processedFile = file;
+      }
+    }
+
     // 读取文件并显示裁剪器
     const reader = new FileReader();
     reader.onload = (e) => {
       setOriginalImageSrc(e.target?.result as string);
-      setOriginalFileName(file.name);
+      setOriginalFileName(processedFile.name);
       setShowCropper(true);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(processedFile);
   };
 
   // 处理裁剪完成

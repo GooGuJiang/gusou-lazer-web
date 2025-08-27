@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
 import type { Crop, PixelCrop } from 'react-image-crop';
 import { FiX, FiCheck, FiRotateCw } from 'react-icons/fi';
+import imageCompression from 'browser-image-compression';
 import 'react-image-crop/dist/ReactCrop.css';
 
 interface ImageCropperProps {
@@ -17,44 +18,38 @@ interface ImageCropperProps {
   uploadingText?: string;
 }
 
-// 压缩图片并调整大小
-const compressImage = (
+// 使用 browser-image-compression 压缩图片
+const compressImageAdvanced = async (
   canvas: HTMLCanvasElement,
   maxWidth: number,
   maxHeight: number,
   quality: number = 0.8
 ): Promise<Blob> => {
-  return new Promise((resolve) => {
-    const { width, height } = canvas;
-    let newWidth = width;
-    let newHeight = height;
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        reject(new Error('Canvas to blob conversion failed'));
+        return;
+      }
 
-    // 计算新的尺寸，保持宽高比
-    if (width > maxWidth || height > maxHeight) {
-      const ratio = Math.min(maxWidth / width, maxHeight / height);
-      newWidth = width * ratio;
-      newHeight = height * ratio;
-    }
+      try {
+        const options = {
+          maxWidthOrHeight: Math.max(maxWidth, maxHeight),
+          useWebWorker: true,
+          quality: quality,
+          initialQuality: quality,
+          alwaysKeepResolution: false,
+          preserveExif: false,
+        };
 
-    // 创建新的canvas进行压缩
-    const compressCanvas = document.createElement('canvas');
-    const compressCtx = compressCanvas.getContext('2d')!;
-    compressCanvas.width = newWidth;
-    compressCanvas.height = newHeight;
-
-    // 使用高质量的插值算法
-    compressCtx.imageSmoothingEnabled = true;
-    compressCtx.imageSmoothingQuality = 'high';
-
-    // 绘制压缩后的图片
-    compressCtx.drawImage(canvas, 0, 0, newWidth, newHeight);
-
-    // 输出为blob
-    compressCanvas.toBlob(
-      (blob) => resolve(blob!),
-      'image/jpeg',
-      quality
-    );
+        const compressedFile = await imageCompression(blob as File, options);
+        resolve(compressedFile);
+      } catch (error) {
+        console.error('图片压缩失败:', error);
+        // 如果压缩失败，返回原始 blob
+        resolve(blob);
+      }
+    }, 'image/jpeg', quality);
   });
 };
 
@@ -115,8 +110,8 @@ const getCroppedImg = async (
   // 恢复状态
   ctx.restore();
 
-  // 压缩图片
-  return compressImage(canvas, maxWidth, maxHeight, quality);
+  // 使用高级压缩
+  return compressImageAdvanced(canvas, maxWidth, maxHeight, quality);
 };
 
 const ImageCropper: React.FC<ImageCropperProps> = ({

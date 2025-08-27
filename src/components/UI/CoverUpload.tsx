@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { FiUpload, FiX } from 'react-icons/fi';
+import imageCompression from 'browser-image-compression';
 import toast from 'react-hot-toast';
 import { userAPI } from '../../utils/api';
 import ImageCropper from './ImageCropper';
@@ -34,7 +35,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
   }, []);
 
   // 处理文件选择
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -50,14 +51,39 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
       return;
     }
 
+    let processedFile = file;
+
+    // 如果文件过大，先进行预压缩
+    if (file.size > 3 * 1024 * 1024) { // 头图大于3MB时进行预压缩
+      try {
+        toast.loading('正在优化头图...', { id: 'compress-cover' });
+        
+        const options = {
+          maxWidthOrHeight: 2048, // 头图预压缩到最大2048px
+          useWebWorker: true,
+          quality: 0.9,
+          initialQuality: 0.9,
+          alwaysKeepResolution: false,
+          preserveExif: false,
+        };
+
+        processedFile = await imageCompression(file, options);
+        toast.success('头图优化完成', { id: 'compress-cover' });
+      } catch (error) {
+        console.error('头图预压缩失败:', error);
+        toast.dismiss('compress-cover');
+        processedFile = file;
+      }
+    }
+
     // 读取文件
     const reader = new FileReader();
     reader.onload = (e) => {
       setImgSrc(e.target?.result as string);
-      setOriginalFileName(file.name);
+      setOriginalFileName(processedFile.name);
       setStep('crop');
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(processedFile);
   };
 
   // 处理裁剪完成
@@ -92,16 +118,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
     setOriginalFileName('');
   };
 
-  // 重置上传
-  const resetUpload = () => {
-    setStep('select');
-    setImgSrc('');
-    setOriginalFileName('');
-    setIsUploading(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
+
 
   return createPortal(
     <div
