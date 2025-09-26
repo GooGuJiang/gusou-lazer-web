@@ -10,3 +10,5 @@ export { statsAPI } from './stats';
 export { chatAPI } from './chat';
 export { notificationsAPI } from './notifications';
 export { beatmapAPI } from './beatmap';
+export { deviceAPI } from './device';
+export { preferencesAPI } from './preferences';

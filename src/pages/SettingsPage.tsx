@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield } from 'react-icons/fi';
+import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiSettings } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -11,6 +11,8 @@ import Avatar from '../components/UI/Avatar';
 import AvatarUpload from '../components/UI/AvatarUpload';
 import TotpSetupModal from '../components/TOTP/TotpSetupModal';
 import TotpDisableModal from '../components/TOTP/TotpDisableModal';
+import DeviceManagement from '../components/Device/DeviceManagement';
+import DefaultModeSelector from '../components/Preferences/DefaultModeSelector';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -396,11 +398,63 @@ const SettingsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 用户信息 */}
+      {/* 用户偏好设置 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+      >
+        <div className="flex items-center gap-3 mb-6">
+          <FiSettings className="w-6 h-6 text-osu-pink" />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {t('settings.preferences.title')}
+          </h2>
+        </div>
+        
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {t('settings.preferences.description')}
+          </p>
+        </div>
+
+        {/* 默认游戏模式选择器 */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            {t('settings.preferences.defaultMode.title')}
+          </h3>
+          <DefaultModeSelector />
+        </div>
+      </motion.div>
+
+      {/* 设备管理 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+      >
+        <div className="flex items-center gap-3 mb-6">
+          <FiMonitor className="w-6 h-6 text-osu-pink" />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {t('settings.device.title')}
+          </h2>
+        </div>
+        
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {t('settings.device.description')}
+          </p>
+        </div>
+        
+        <DeviceManagement />
+      </motion.div>
+
+      {/* 用户信息 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
         className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
       >
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">

@@ -96,6 +96,74 @@ export const settingsPage = {
         verificationFailed: '验证失败，请重试',
         disableFailed: '禁用TOTP失败，请重试'
       }
+    },
+    device: {
+      title: '设备管理',
+      description: '管理您的活跃登录会话',
+      sessions: {
+        title: '活跃会话',
+        noSessions: '没有找到活跃会话',
+        loading: '加载会话中...',
+        current: '当前设备',
+        lastUsed: '最后使用：{{date}}',
+        created: '创建时间：{{date}}',
+        expires: '过期时间：{{date}}',
+        location: '位置：{{location}}',
+        deviceType: '设备类型：{{type}}',
+        revoke: '撤销会话',
+        revokeTitle: '撤销会话',
+        revokeConfirm: '确定要撤销这个会话吗？',
+        revokeWarning: '撤销此会话后，该设备将需要重新登录。',
+        revokeSuccess: '会话已成功撤销',
+        revokeError: '撤销会话失败，请重试',
+        revoking: '撤销中...',
+        localhost: '本地连接'
+      },
+      summary: {
+        title: '设备统计',
+        loading: '加载统计中...',
+        loadError: '加载统计失败'
+      },
+      deviceTypes: {
+        desktop: '桌面设备',
+        mobile: '移动设备',
+        tablet: '平板设备',
+        unknown: '未知设备',
+        app: '桌面应用'
+      },
+      browsers: {
+        chrome: 'Chrome',
+        firefox: 'Firefox',
+        safari: 'Safari',
+        edge: 'Edge',
+        opera: 'Opera',
+        unknown: '未知浏览器'
+      }
+    },
+    preferences: {
+      title: '用户偏好',
+      description: '自定义您的游戏体验',
+      defaultMode: {
+        title: '默认游戏模式',
+        description: '选择您偏好的默认游戏模式',
+        current: '当前默认模式',
+        change: '更改模式',
+        save: '保存',
+        saving: '保存中...',
+        success: '默认游戏模式已更新！',
+        error: '更新默认游戏模式失败，请重试',
+        availableModes: '可用模式: {{count}} 个',
+        modes: {
+          osu: 'osu!',
+          osurx: 'osu! (Relax)',
+          osuap: 'osu! (Auto Pilot)', 
+          taiko: 'osu!taiko',
+          taikorx: 'osu!taiko (Relax)',
+          fruits: 'osu!catch',
+          fruitsrx: 'osu!catch (Relax)',
+          mania: 'osu!mania'
+        }
+      }
     }
   },
 } as const;
