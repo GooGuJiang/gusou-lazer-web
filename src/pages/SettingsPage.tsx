@@ -11,8 +11,8 @@ import Avatar from '../components/UI/Avatar';
 import AvatarUpload from '../components/UI/AvatarUpload';
 import TotpSetupModal from '../components/TOTP/TotpSetupModal';
 import TotpDisableModal from '../components/TOTP/TotpDisableModal';
-import DeviceManagement from '../components/Device/DeviceManagement';
-import DefaultModeSelector from '../components/Preferences/DefaultModeSelector';
+// import DeviceManagement from '../components/Device/DeviceManagement';
+// import DefaultModeSelector from '../components/Preferences/DefaultModeSelector';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -398,8 +398,8 @@ const SettingsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 用户偏好设置 */}
-      <motion.div
+      {/* 用户偏好设置 - 暂时注释 */}
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
@@ -419,16 +419,16 @@ const SettingsPage: React.FC = () => {
         </div>
 
         {/* 默认游戏模式选择器 */}
-        <div>
+        {/* <div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             {t('settings.preferences.defaultMode.title')}
           </h3>
           <DefaultModeSelector />
         </div>
-      </motion.div>
+      </motion.div> */}
 
-      {/* 设备管理 */}
-      <motion.div
+      {/* 设备管理 - 暂时注释 */}
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
@@ -448,7 +448,7 @@ const SettingsPage: React.FC = () => {
         </div>
         
         <DeviceManagement />
-      </motion.div>
+      </motion.div> */}
 
       {/* 用户信息 */}
       <motion.div
