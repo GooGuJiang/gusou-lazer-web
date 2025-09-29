@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { DeviceSession, RevokeSessionRequest, RevokeSessionResponse, DeviceSummary } from '../../types/device';
+import type { DeviceSession, RevokeSessionResponse, DeviceSummary } from '../../types/device';
 
 export const deviceAPI = {
   // 获取活跃会话

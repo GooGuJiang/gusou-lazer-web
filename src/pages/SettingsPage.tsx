@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiSettings } from 'react-icons/fi';
+import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';

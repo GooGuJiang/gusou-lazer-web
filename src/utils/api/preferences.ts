@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { GameMode, SetDefaultModeRequest, SetDefaultModeResponse, GetUserPreferencesResponse } from '../../types';
+import type { GameMode, SetDefaultModeResponse, GetUserPreferencesResponse } from '../../types';
 
 export const preferencesAPI = {
   // 设置默认游戏模式
