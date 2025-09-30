@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//export const API_BASE_URL = 'https://lazer-api.g0v0.top';
-export const API_BASE_URL = 'http://127.0.0.1:8000';
+export const API_BASE_URL = 'https://lazer-api.g0v0.top';
+//export const API_BASE_URL = 'http://127.0.0.1:8000';
 
 // 全局验证处理器，由 VerificationProvider 设置
 let globalVerificationHandler: ((error: any) => boolean) | null = null;
