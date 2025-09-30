@@ -246,9 +246,9 @@ const HowToJoinPage: React.FC = () => {
                     <div className="flex items-center">
                       <span className="font-semibold text-gray-800 dark:text-gray-200">{t('howToJoin.method2.steps.step3.websiteUrl')}</span>
                       <code className="bg-osu-blue/10 dark:bg-osu-blue/20 text-osu-blue dark:text-blue-300 px-2 py-1 rounded ml-2 flex-1">
-                        https://lazer.g0g0.top
+                        https://lazer.g0v0.top
                       </code>
-                      <CopyButton text="https://lazer.g0g0.top" label="Website URL" />
+                      <CopyButton text="https://lazer.g0v0.top" label="Website URL" />
                     </div>
                   </div>
                 </div>
