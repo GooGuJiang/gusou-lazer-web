@@ -96,6 +96,74 @@ export const settingsPage = {
         verificationFailed: 'Verification failed, please try again',
         disableFailed: 'Failed to disable TOTP, please try again'
       }
+    },
+    device: {
+      title: 'Device Management',
+      description: 'Manage your active login sessions',
+      sessions: {
+        title: 'Active Sessions',
+        noSessions: 'No active sessions found',
+        loading: 'Loading sessions...',
+        current: 'Current Device',
+        lastUsed: 'Last used: {{date}}',
+        created: 'Created: {{date}}',
+        expires: 'Expires: {{date}}',
+        location: 'Location: {{location}}',
+        deviceType: 'Device type: {{type}}',
+        revoke: 'Revoke Session',
+        revokeTitle: 'Revoke Session',
+        revokeConfirm: 'Are you sure you want to revoke this session?',
+        revokeWarning: 'After revoking this session, the device will need to log in again.',
+        revokeSuccess: 'Session revoked successfully',
+        revokeError: 'Failed to revoke session, please try again',
+        revoking: 'Revoking...',
+        localhost: 'Local Connection'
+      },
+      summary: {
+        title: 'Device Statistics',
+        loading: 'Loading statistics...',
+        loadError: 'Failed to load statistics'
+      },
+      deviceTypes: {
+        desktop: 'Desktop',
+        mobile: 'Mobile',
+        tablet: 'Tablet',
+        unknown: 'Unknown Device',
+        app: 'Desktop App'
+      },
+      browsers: {
+        chrome: 'Chrome',
+        firefox: 'Firefox',
+        safari: 'Safari',
+        edge: 'Edge',
+        opera: 'Opera',
+        unknown: 'Unknown Browser'
+      }
+    },
+    preferences: {
+      title: 'User Preferences',
+      description: 'Customize your gaming experience',
+      defaultMode: {
+        title: 'Default Game Mode',
+        description: 'Choose your preferred default game mode',
+        current: 'Current default mode',
+        change: 'Change Mode',
+        save: 'Save',
+        saving: 'Saving...',
+        success: 'Default game mode updated!',
+        error: 'Failed to update default game mode, please try again',
+        availableModes: 'Available modes: {{count}}',
+        modes: {
+          osu: 'osu!',
+          osurx: 'osu! (Relax)',
+          osuap: 'osu! (Auto Pilot)',
+          taiko: 'osu!taiko',
+          taikorx: 'osu!taiko (Relax)',
+          fruits: 'osu!catch',
+          fruitsrx: 'osu!catch (Relax)',
+          mania: 'osu!mania'
+        }
+      }
     }
   },
 } as const;

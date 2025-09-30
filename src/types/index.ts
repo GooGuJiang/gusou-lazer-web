@@ -9,3 +9,5 @@ export * from './notifications';
 export * from './activity';
 export * from './scores';
 export * from './beatmap';
+export * from './device';
+export * from './preferences';
