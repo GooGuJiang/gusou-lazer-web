@@ -115,7 +115,7 @@ const TeamRankingCard: React.FC<Props> = ({
           {/* 战队信息 */}
           <div className="flex-1 min-w-0">
             <Link
-              to={`/teams/${team.id}`}
+              to={`/teams/${team.id}?mode=${selectedMode}`}
               className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
             >
               {team.name}
@@ -189,7 +189,7 @@ const TeamRankingCard: React.FC<Props> = ({
         {/* 战队信息 */}
         <div className="flex-1 min-w-0">
           <Link
-            to={`/teams/${team.id}`}
+            to={`/teams/${team.id}?mode=${selectedMode}`}
             className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
           >
             {team.name}
@@ -226,7 +226,7 @@ const TeamRankingCard: React.FC<Props> = ({
   );
 
   return (
-    <Link to={`/teams/${team.id}`}>
+    <Link to={`/teams/${team.id}?mode=${selectedMode}`}>
       {teamContent}
     </Link>
   );

@@ -183,13 +183,13 @@ export const userAPI = {
 
   getUserPage: async (userId: number) => {
     console.log('获取用户页面内容（编辑用）:', { userId });
-    const response = await api.get(`/api/v2/users/${userId}/page`);
+    const response = await api.get(`/api/private/user/page`);
     return response.data;
   },
 
   updateUserPage: async (userId: number, content: string) => {
     console.log('更新用户页面内容:', { userId, contentLength: content.length });
-    const response = await api.put(`/api/v2/users/${userId}/page`, {
+    const response = await api.put(`/api/private/user/page`, {
       body: content,
     });
     return response.data;
@@ -197,7 +197,7 @@ export const userAPI = {
 
   validateBBCode: async (content: string) => {
     console.log('验证BBCode内容:', { contentLength: content.length });
-    const response = await api.post('/api/v2/me/validate-bbcode', {
+    const response = await api.post('/api/private/user/validate-bbcode', {
       content: content,
     });
     return response.data;

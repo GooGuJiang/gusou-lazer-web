@@ -58,15 +58,17 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg p-6 ${className}`}>
-      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
-        <ExternalLink size={20} />
-        {t('beatmap.loadFromUrl')}
-      </h3>
+    <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden ${className}`}>
+      <div className="px-6 py-4 bg-gradient-to-r from-osu-pink/10 to-transparent border-b border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+          <ExternalLink size={20} className="text-osu-pink" />
+          {t('beatmap.loadFromUrl')}
+        </h3>
+      </div>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div>
-          <label htmlFor="beatmap-url" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="beatmap-url" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             {t('beatmap.urlPlaceholder')}
           </label>
           <div className="relative">
@@ -76,16 +78,17 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://osu.ppy.sh/beatmapsets/123456#osu/789012"
-              className="w-full px-4 py-2 pl-10 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg 
-                        bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-                        focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                        placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-4 py-3 pl-10 pr-12 border-2 border-slate-200 dark:border-slate-700 rounded-lg 
+                        bg-white dark:bg-slate-900 text-slate-900 dark:text-white
+                        focus:ring-2 focus:ring-osu-pink focus:border-osu-pink
+                        placeholder-slate-400 dark:placeholder-slate-500
+                        transition-all"
               disabled={loading}
             />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
             {isValidOsuUrl(url) && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
               </div>
             )}
           </div>
@@ -94,9 +97,9 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
         <button
           type="submit"
           disabled={!url.trim() || loading}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 
-                    text-white font-medium rounded-lg transition-colors
-                    flex items-center justify-center gap-2"
+          className="w-full px-4 py-3 bg-osu-pink hover:bg-osu-pink/90 disabled:bg-slate-400 disabled:cursor-not-allowed
+                    text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg
+                    flex items-center justify-center gap-2 transform hover:scale-[1.02] active:scale-[0.98]"
         >
           {loading ? (
             <>
@@ -112,12 +115,21 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
         </button>
       </form>
       
-      <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-        <p className="mb-2">{t('beatmap.supportedUrls')}:</p>
-        <ul className="list-disc list-inside space-y-1 text-xs">
-          <li>https://osu.ppy.sh/beatmapsets/123456</li>
-          <li>https://osu.ppy.sh/beatmapsets/123456#osu/789012</li>
-          <li>https://osu.ppy.sh/beatmaps/789012</li>
+      <div className="px-6 pb-6 text-sm text-slate-600 dark:text-slate-400">
+        <p className="mb-2 font-medium">{t('beatmap.supportedUrls')}:</p>
+        <ul className="space-y-1.5 text-xs">
+          <li className="flex items-start gap-2">
+            <span className="text-osu-pink mt-0.5">●</span>
+            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">https://osu.ppy.sh/beatmapsets/123456</code>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-osu-pink mt-0.5">●</span>
+            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">https://osu.ppy.sh/beatmapsets/123456#osu/789012</code>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-osu-pink mt-0.5">●</span>
+            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">https://osu.ppy.sh/beatmaps/789012</code>
+          </li>
         </ul>
       </div>
     </div>

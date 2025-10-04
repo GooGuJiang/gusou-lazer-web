@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { FiArrowLeft, FiLoader, FiUsers, FiCalendar, FiAward } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { teamsAPI, handleApiError } from '../utils/api';
 import TeamDetailUserCard from '../components/Rankings/TeamDetailUserCard';
 import TeamActions from '../components/Teams/TeamActions';
 import MemberActions from '../components/Teams/MemberActions';
-import type { TeamDetailResponse, User } from '../types';
+import type { TeamDetailResponse, User, GameMode } from '../types';
 
 const TeamDetailPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { teamId } = useParams<{ teamId: string }>();
+  const [searchParams] = useSearchParams();
   const [teamDetail, setTeamDetail] = useState<TeamDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 从 URL 参数获取模式,如果没有则默认为 'osu'
+  const modeFromUrl = searchParams.get('mode') as GameMode | null;
+  const selectedMode: GameMode = modeFromUrl || 'osu';
 
   useEffect(() => {
     if (!teamId) return;
@@ -205,7 +210,7 @@ const TeamDetailPage: React.FC = () => {
                   ranked_score: leader.statistics?.ranked_score,
                   pp: leader.statistics?.pp
                 }}
-                selectedMode="osu"
+                selectedMode={selectedMode}
                 rankingType="performance"
               />
             </div>
@@ -232,7 +237,7 @@ const TeamDetailPage: React.FC = () => {
                       ranked_score: member.statistics?.ranked_score,
                       pp: member.statistics?.pp
                     }}
-                    selectedMode="osu"
+                    selectedMode={selectedMode}
                     rankingType="performance"
                   />
                   

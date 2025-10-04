@@ -213,5 +213,10 @@ export const profilePage = {
         syntaxErrors: 'BBCode syntax errors',
       },
     },
+    restrictedBanner: {
+      title: 'Notice - Account is in restricted mode!',
+      message: 'While in restricted mode, you will not be able to interact with other players, and all scores will only be visible to yourself.',
+      learnMore: 'Learn More',
+    },
   },
 } as const;

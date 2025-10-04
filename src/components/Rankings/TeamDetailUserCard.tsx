@@ -29,7 +29,7 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
       <div className="relative overflow-hidden transition-colors duration-200 sm:bg-white sm:dark:bg-gray-800 sm:hover:bg-gray-50 sm:dark:hover:bg-gray-800/50">
         <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
           {/* 用户头像 */}
-          <Link to={`/users/${ranking.user.id}`} className="flex-shrink-0">
+          <Link to={`/users/${ranking.user.id}?mode=${selectedMode}`} className="flex-shrink-0">
             <LazyAvatar
               src={ranking.user.avatar_url}
               alt={ranking.user.username}
@@ -41,7 +41,7 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
           {/* 用户信息 */}
           <div className="flex-1 min-w-0">
             <Link
-              to={`/users/${ranking.user.id}`}
+              to={`/users/${ranking.user.id}?mode=${selectedMode}`}
               className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
             >
               {ranking.user.username}
@@ -85,7 +85,7 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
       
       <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
         {/* 用户头像 */}
-        <Link to={`/users/${ranking.user.id}`} className="flex-shrink-0">
+        <Link to={`/users/${ranking.user.id}?mode=${selectedMode}`} className="flex-shrink-0">
           <LazyAvatar
             src={ranking.user.avatar_url}
             alt={ranking.user.username}
@@ -97,7 +97,7 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
         {/* 用户信息 */}
         <div className="flex-1 min-w-0">
           <Link
-            to={`/users/${ranking.user.id}`}
+            to={`/users/${ranking.user.id}?mode=${selectedMode}`}
             className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
           >
             {ranking.user.username}

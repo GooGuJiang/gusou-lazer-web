@@ -45,7 +45,7 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
           </div>
 
                   {/* User avatar */}
-        <Link to={`/users/${ranking.user.id}`} className="flex-shrink-0">
+        <Link to={`/users/${ranking.user.id}?mode=${selectedMode}`} className="flex-shrink-0">
           <LazyAvatar
             src={ranking.user.avatar_url}
             alt={ranking.user.username}
@@ -57,7 +57,7 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
           {/* User info */}
           <div className="flex-1 min-w-0">
             <Link
-              to={`/users/${ranking.user.id}`}
+              to={`/users/${ranking.user.id}?mode=${selectedMode}`}
               className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
             >
               {ranking.user.username}
@@ -136,7 +136,7 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
         </div>
 
         {/* User avatar */}
-        <Link to={`/users/${ranking.user.id}`} className="flex-shrink-0">
+        <Link to={`/users/${ranking.user.id}?mode=${selectedMode}`} className="flex-shrink-0">
           <LazyAvatar
             src={ranking.user.avatar_url}
             alt={ranking.user.username}
@@ -148,7 +148,7 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
         {/* User info */}
         <div className="flex-1 min-w-0">
           <Link
-            to={`/users/${ranking.user.id}`}
+            to={`/users/${ranking.user.id}?mode=${selectedMode}`}
             className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
           >
             {ranking.user.username}

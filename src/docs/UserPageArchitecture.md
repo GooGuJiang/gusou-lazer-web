@@ -4,7 +4,7 @@
 
 ### 1. **用户页面数据获取**
 - **显示用户页面**: 直接从 `/api/v2/me/` 响应中的 `page` 字段获取
-- **编辑用户页面**: 使用 `/api/v2/users/{id}/page` 接口进行更新
+- **编辑用户页面**: 使用 `/api/private/user/page` 接口进行更新
 
 ### 2. **API 接口说明**
 
@@ -68,9 +68,9 @@ user.page 字段                  BBCodeEditor.tsx
 
 根据提供的API文档：
 
-- ✅ `GET /api/v2/users/{user_id}/page` - 仅用于编辑时获取最新内容
-- ✅ `PUT /api/v2/users/{user_id}/page` - 更新用户页面内容
-- ✅ `POST /api/v2/me/validate-bbcode` - BBCode语法验证
+- ✅ `GET /api/private/user/page` - 仅用于编辑时获取最新内容
+- ✅ `PUT /api/private/user/page` - 更新用户页面内容
+- ✅ `POST /api/private/user/validate-bbcode` - BBCode语法验证
 
 用户页面内容的主要来源是 `/api/v2/me/` 响应中的 `page` 字段：
 

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthProvider } from './contexts/AuthContext';
 import { AudioProvider } from './components/UI/AudioPlayer';
 import { VerificationProvider } from './contexts/VerificationContext';
+import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -29,6 +30,7 @@ function App() {
       <VerificationProvider>
         <AudioProvider>
           <Router>
+          <ScrollToTop />
           <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />

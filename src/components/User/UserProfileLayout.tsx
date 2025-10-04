@@ -12,6 +12,7 @@ import FriendStats from './FriendStats';
 import UserRecentActivity from './UserRecentActivity';
 import UserBestScores from './UserBestScores';
 import UserPageDisplay from './UserPageDisplay';
+import RestrictedBanner from './RestrictedBanner';
 import { BiSolidPencil } from 'react-icons/bi';
 import { FaTools } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip';
@@ -139,6 +140,14 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
     <main className="max-w-6xl mx-auto px-0 md:px-4 lg:px-8 py-4 md:py-6">
       {/* 主卡片 */}
       <div className="bg-transparent md:bg-white/95 md:dark:bg-gray-900/85 md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-gray-100/70 md:dark:border-white/10">
+        
+        {/* 受限用户提示 - 仅管理员可见 */}
+        {user.is_restricted && currentUser?.is_admin && (
+          <div className="px-3 md:px-6 pt-4">
+            <RestrictedBanner />
+          </div>
+        )}
+
         {/* 头部栏 + 模式选择（与头图同容器） */}
         <div className="relative overflow-hidden">
           <div className="bg-white/95 dark:bg-gray-900/85 text-gray-900 dark:text-gray-100 px-3 md:px-4 py-2 flex items-center justify-between md:rounded-t-2xl border-b border-gray-100/70 dark:border-white/10">

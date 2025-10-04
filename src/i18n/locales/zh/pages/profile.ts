@@ -213,5 +213,10 @@ export const profilePage = {
         syntaxErrors: 'BBCode语法错误',
       },
     },
+    restrictedBanner: {
+      title: '注意 - 账户进入限制模式！',
+      message: '处于受限模式时，您将不能与其他玩家互动，所有成绩仅自己可见。',
+      learnMore: '了解详情',
+    },
   },
 } as const;
