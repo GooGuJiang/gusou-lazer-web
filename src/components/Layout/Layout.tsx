@@ -10,9 +10,9 @@ const Layout: React.FC = () => {
 
   return (
     <NotificationProvider isAuthenticated={isAuthenticated} user={user}>
-      <div className="min-h-screen bg-bg-primary">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Navbar />
-        <main className="pt-[56px] md:pt-16">
+        <main className="pt-[56px] md:pt-20 bg-gray-50 dark:bg-gray-900">
           <Outlet />
         </main>
         <Toaster

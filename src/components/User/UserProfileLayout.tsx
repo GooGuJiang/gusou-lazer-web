@@ -137,7 +137,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   };
 
   return (
-    <main className="max-w-6xl mx-auto px-0 md:px-4 lg:px-8 py-4 md:py-6">
+    <main className="max-w-7xl mx-auto px-4 lg:px-6 py-4 md:py-6">
       {/* 主卡片 */}
       <div className="bg-transparent md:bg-white/95 md:dark:bg-gray-900/85 md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-gray-100/70 md:dark:border-white/10">
         
@@ -150,8 +150,11 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 头部栏 + 模式选择（与头图同容器） */}
         <div className="relative overflow-hidden">
-          <div className="bg-white/95 dark:bg-gray-900/85 text-gray-900 dark:text-gray-100 px-3 md:px-4 py-2 flex items-center justify-between md:rounded-t-2xl border-b border-gray-100/70 dark:border-white/10">
-            <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
+          <div className="bg-white/95 dark:bg-gray-900/85 text-gray-900 dark:text-gray-100 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-gray-100/70 dark:border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+              <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
+            </div>
             <div className="flex items-center gap-2 md:gap-3">
               {/* 右侧模式按钮们（来自你的 GameModeSelector） */}
               <GameModeSelector

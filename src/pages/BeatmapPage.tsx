@@ -180,66 +180,70 @@ const BeatmapPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Hero Section */}
-      <div 
-        className="relative h-72 overflow-hidden"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url(${beatmapset.covers.cover})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/60" />
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-end pb-6">
-          <div className="text-white">
-            {/* Badges */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-osu-pink/90 text-white">
-                {beatmapset.status}
-              </span>
-              {beatmapset.video && (
-                <span className="px-3 py-1 bg-red-500/90 text-white rounded-full text-xs font-bold uppercase tracking-wider">
-                  VIDEO
-                </span>
-              )}
-              {beatmapset.storyboard && (
-                <span className="px-3 py-1 bg-purple-500/90 text-white rounded-full text-xs font-bold uppercase tracking-wider">
-                  STORYBOARD
-                </span>
-              )}
-            </div>
-            
-            {/* Title and Artist */}
-            <div className="flex items-end justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 truncate">
-                  {beatmapset.title_unicode || beatmapset.title}
-                </h1>
-                <p className="text-lg sm:text-xl opacity-95 mb-1">
-                  by <span className="font-semibold">{beatmapset.artist_unicode || beatmapset.artist}</span>
-                </p>
-                <p className="text-base opacity-80">
-                  mapped by <span className="font-medium hover:text-osu-pink transition-colors cursor-pointer">{beatmapset.creator}</span>
-                </p>
-              </div>
-              
-              {/* Audio Preview Button */}
-              {beatmapset.preview_url && (
-                <div className="flex-shrink-0">
-                  <AudioPlayButton
-                    audioUrl={beatmapset.preview_url}
-                    size="lg"
-                    showProgress={true}
-                    className="shadow-2xl hover:scale-105 transition-transform"
-                  />
+      {/* Hero Section Container */}
+      <div className="px-4 lg:px-6 pt-0 pb-6">
+        <div className="max-w-7xl mx-auto">
+          <div 
+            className="relative h-72 overflow-hidden rounded-2xl shadow-lg"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url(${beatmapset.covers.cover})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/60" />
+            <div className="relative px-6 lg:px-8 h-full flex flex-col justify-end pb-6">
+              <div className="text-white">
+                {/* Badges */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-osu-pink/90 text-white">
+                    {beatmapset.status}
+                  </span>
+                  {beatmapset.video && (
+                    <span className="px-3 py-1 bg-red-500/90 text-white rounded-full text-xs font-bold uppercase tracking-wider">
+                      VIDEO
+                    </span>
+                  )}
+                  {beatmapset.storyboard && (
+                    <span className="px-3 py-1 bg-purple-500/90 text-white rounded-full text-xs font-bold uppercase tracking-wider">
+                      STORYBOARD
+                    </span>
+                  )}
                 </div>
-              )}
+                
+                {/* Title and Artist */}
+                <div className="flex items-end justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 truncate">
+                      {beatmapset.title_unicode || beatmapset.title}
+                    </h1>
+                    <p className="text-lg sm:text-xl opacity-95 mb-1">
+                      by <span className="font-semibold">{beatmapset.artist_unicode || beatmapset.artist}</span>
+                    </p>
+                    <p className="text-base opacity-80">
+                      mapped by <span className="font-medium hover:text-osu-pink transition-colors cursor-pointer">{beatmapset.creator}</span>
+                    </p>
+                  </div>
+                  
+                  {/* Audio Preview Button */}
+                  {beatmapset.preview_url && (
+                    <div className="flex-shrink-0">
+                      <AudioPlayButton
+                        audioUrl={beatmapset.preview_url}
+                        size="lg"
+                        showProgress={true}
+                        className="shadow-2xl hover:scale-105 transition-transform"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">

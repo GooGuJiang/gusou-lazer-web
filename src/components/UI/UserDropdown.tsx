@@ -131,7 +131,7 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
         {/* Dropdown Icon */}
         <motion.div
           animate={{ 
-            rotate: isOpen ? 180 : 0
+            rotate: isOpen ? 0 : -180
           }}
           transition={{ duration: 0.2 }}
           className="hidden sm:block"

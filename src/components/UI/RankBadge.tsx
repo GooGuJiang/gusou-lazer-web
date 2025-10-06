@@ -10,6 +10,7 @@ interface RankStyle {
   bg: string;
   text: string;
   border?: string;
+  shadow?: string;
 }
 
 const RankBadge: React.FC<RankBadgeProps> = ({ 
@@ -18,9 +19,9 @@ const RankBadge: React.FC<RankBadgeProps> = ({
   className = '' 
 }) => {
   const sizeClasses = {
-    sm: 'min-w-[24px] h-6 text-xs px-2',
-    md: 'min-w-[28px] h-7 text-sm px-2',
-    lg: 'min-w-[32px] h-8 text-base px-2',
+    sm: 'w-12 h-6 text-xs',
+    md: 'w-14 h-7 text-sm',
+    lg: 'w-16 h-8 text-base',
   } as const;
 
   const getRankStyle = (): RankStyle => {
@@ -28,28 +29,29 @@ const RankBadge: React.FC<RankBadgeProps> = ({
       switch (rank) {
         case 1:
           return {
-            bg: 'bg-gradient-to-r from-yellow-400 to-yellow-500',
+            bg: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-500',
             text: 'text-white',
-            border: 'shadow-md',
+            shadow: 'shadow-lg shadow-yellow-500/30',
           };
         case 2:
           return {
-            bg: 'bg-gradient-to-r from-gray-300 to-gray-400',
+            bg: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500',
             text: 'text-white',
-            border: 'shadow-md',
+            shadow: 'shadow-lg shadow-gray-400/30',
           };
         case 3:
           return {
-            bg: 'bg-gradient-to-r from-amber-500 to-orange-500',
+            bg: 'bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600',
             text: 'text-white',
-            border: 'shadow-md',
+            shadow: 'shadow-lg shadow-orange-500/30',
           };
       }
     }
     
     return {
-      bg: 'bg-gray-100 dark:bg-gray-700',
-      text: 'text-gray-600 dark:text-gray-300',
+      bg: 'bg-gray-100 dark:bg-gray-700/80',
+      text: 'text-gray-700 dark:text-gray-300',
+      shadow: 'shadow-sm',
     };
   };
 
@@ -58,12 +60,12 @@ const RankBadge: React.FC<RankBadgeProps> = ({
   return (
     <div
       className={`
-        inline-flex items-center justify-center rounded-full font-bold
+        inline-flex items-center justify-center rounded-lg font-bold
         ${sizeClasses[size]} 
         ${style.bg} 
         ${style.text}
-        ${style.border || ''}
-        transition-all duration-200
+        ${style.shadow || ''}
+        transition-all duration-200 hover:scale-105
         ${className}
       `.replace(/\s+/g, ' ').trim()}
     >

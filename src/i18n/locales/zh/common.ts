@@ -13,6 +13,10 @@ export const common = {
     de: 'Deutsch',
     ru: 'Русский',
   },
+  theme: {
+    light: '浅色模式',
+    dark: '深色模式',
+  },
   authAgreement: '登录即表示你同意我们的服务条款和隐私政策',
   registerAgreement: '注册即表示你同意我们的服务条款和隐私政策',
   privacyDisclosure: '我们使用 Microsoft Clarity 来了解您如何使用我们的网站，以改进我们的产品和广告。使用我们的网站即表示您同意我们和 Microsoft 可以收集和使用这些数据。我们的隐私声明中有更多详细信息。',

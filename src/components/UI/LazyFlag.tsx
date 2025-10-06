@@ -71,9 +71,7 @@ const LazyFlag: React.FC<LazyFlagProps> = ({
     >
       {/* 占位符背景 - 只在未加载且没有错误时显示 */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center border border-gray-200 dark:border-gray-600 rounded">
-          <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
-        </div>
+        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded animate-pulse" />
       )}
       
       {/* 国旗图片 */}

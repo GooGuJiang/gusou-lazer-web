@@ -81,9 +81,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
     >
       {/* 占位符背景 - 只在图片未加载时显示 */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-          <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse" />
-        </div>
+        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse" />
       )}
       
       {/* 实际图片 */}
