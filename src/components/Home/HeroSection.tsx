@@ -17,6 +17,7 @@ import {
   FaQq,
   FaDiscord,
   FaGithub,
+  FaChevronDown,
 } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -191,9 +192,13 @@ const HeroSection: React.FC = () => {
                 </span>
               ))}
             </p>
-
-           
           </div>
+        </div>
+
+        {/* 向下滚动提示箭头 */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+          <FaChevronDown className="w-6 h-6 text-gray-400 dark:text-gray-500 opacity-70" />
+          <FaChevronDown className="w-6 h-6 text-gray-400 dark:text-gray-500 opacity-50 -mt-4" />
         </div>
       </section>
 

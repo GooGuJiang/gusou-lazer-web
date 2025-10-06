@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
@@ -7,12 +7,16 @@ import { NotificationProvider } from '../../contexts/NotificationContext';
 
 const Layout: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
+  
+  // 检查是否在主页
+  const isHomePage = location.pathname === '/';
 
   return (
     <NotificationProvider isAuthenticated={isAuthenticated} user={user}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Navbar />
-        <main className="pt-[56px] md:pt-20 bg-gray-50 dark:bg-gray-900">
+        <main className={isHomePage ? '' : 'pt-[56px] md:pt-20 bg-gray-50 dark:bg-gray-900'}>
           <Outlet />
         </main>
         <Toaster
