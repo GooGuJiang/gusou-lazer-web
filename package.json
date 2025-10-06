@@ -16,6 +16,7 @@
     "ahooks": "^3.8.0",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.6",
+    "gsap": "^3.13.0",
     "html2canvas": "^1.4.1",
     "i18next": "^25.5.2",
     "jotai": "^2.9.0",

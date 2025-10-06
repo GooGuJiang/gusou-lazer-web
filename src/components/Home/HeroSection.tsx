@@ -1,272 +1,253 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 
 import InfoCard from '../InfoCard';
 import { features } from '../../data/features';
-import { 
+import {
   FaDesktop,
-  FaRocket, 
-  FaHeart, 
-  FaCog, 
-  FaBug, 
-  FaCodeBranch, 
-  FaPaperPlane, 
+  FaRocket,
+  FaHeart,
+  FaCog,
+  FaBug,
+  FaCodeBranch,
+  FaPaperPlane,
   FaChartBar,
-  FaQq, 
-  FaDiscord, 
-  FaGithub
+  FaQq,
+  FaDiscord,
+  FaGithub,
 } from 'react-icons/fa';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const HeroSection: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const logoRef = useRef<HTMLDivElement | null>(null);
+  const subtitleRef = useRef<HTMLHeadingElement | null>(null);
+  const descRef = useRef<HTMLParagraphElement | null>(null);
+  const badgesRef = useRef<HTMLDivElement | null>(null);
+  const ctasRef = useRef<HTMLDivElement | null>(null);
+  // 将 logo 与 标题 作为一个整体分组，保证移动/缩放始终保持一致
+  const brandRef = useRef<HTMLDivElement | null>(null);
+
+  // 英文副标题的排版优化（更合理的字间距/行高/行宽/断行）
+  const isEN = i18n?.language?.toLowerCase().startsWith('en') ?? false;
+  const subtitleClasses = isEN
+    ? 'text-left md:text-right text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 leading-snug md:leading-snug tracking-tight max-w-4xl md:max-w-[42ch] xl:max-w-[56ch] break-words mt-3 md:mt-0'
+    : 'text-left md:text-right text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 leading-tight max-w-4xl md:max-w-[40ch] mt-3 md:mt-0';
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!sectionRef.current) return;
+
+    // 保存原始描述 HTML，用于清理时还原，防止重复包裹
+    let originalDescHTML: string | null = null;
+
+    const ctx = gsap.context(() => {
+      // 将元素内所有文本节点拆分为按“字形簇(grapheme)”的 span.char，保持标签与空白顺序不变
+      const wrapChars = (el: HTMLElement) => {
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const textNodes: Text[] = [];
+        let node: Node | null;
+        while ((node = walker.nextNode())) {
+          if (node.nodeType === Node.TEXT_NODE && (node as Text).data.length) {
+            textNodes.push(node as Text);
+          }
+        }
+
+        const hasSeg = typeof (Intl as any)?.Segmenter === 'function';
+        const seg = hasSeg ? new (Intl as any).Segmenter(undefined, { granularity: 'grapheme' }) : null;
+
+        textNodes.forEach((textNode) => {
+          const parent = textNode.parentNode as Node | null;
+          if (!parent) return;
+          const text = textNode.data;
+          const frag = document.createDocumentFragment();
+
+          if (seg) {
+            for (const s of (seg as any).segment(text)) {
+              const unit: string = s.segment as string;
+              if (/^\s+$/.test(unit)) {
+                frag.appendChild(document.createTextNode(unit));
+              } else {
+                const span = document.createElement('span');
+                span.className = 'char inline-block';
+                span.textContent = unit;
+                frag.appendChild(span);
+              }
+            }
+          } else {
+            for (const ch of Array.from(text)) {
+              if (/^\s+$/.test(ch)) {
+                frag.appendChild(document.createTextNode(ch));
+              } else {
+                const span = document.createElement('span');
+                span.className = 'char inline-block';
+                span.textContent = ch;
+                frag.appendChild(span);
+              }
+            }
+          }
+
+          parent.replaceChild(frag, textNode);
+        });
+      };
+      // 动态计算需要移动到屏幕（section）中心的水平距离
+      const computeCenterX = () => {
+        const container = sectionRef.current!; // 以 pinned section 的中心为基准，更符合“屏幕中间”
+        const group = brandRef.current!; // logo + 标题 分组容器
+        if (!container || !group) return 0;
+        const containerRect = container.getBoundingClientRect();
+        const groupRect = group.getBoundingClientRect();
+        const containerCenter = containerRect.left + containerRect.width / 2;
+        const groupCenter = groupRect.left + groupRect.width / 2;
+        return containerCenter - groupCenter;
+      };
+
+      // 以左侧为缩放锚点，避免放大时位置偏移
+      if (brandRef.current) gsap.set(brandRef.current, { transformOrigin: 'left center' });
+      // 初始隐藏描述段落，并进行逐字符包裹，准备动画
+      if (descRef.current) {
+        originalDescHTML = descRef.current.innerHTML;
+        wrapChars(descRef.current);
+        gsap.set(descRef.current, { autoAlpha: 0, display: 'none', y: 0 });
+        gsap.set(descRef.current.querySelectorAll('.char'), { autoAlpha: 0, y: 6 });
+      }
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        scrollTrigger: {
+          trigger: sectionRef.current!,
+          start: 'top top',
+          end: '+=1400',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          markers: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl
+        // 中段：将左侧的 logo+标题 平滑移动到屏幕正中，并轻微放大（以分组为单位）
+        .to(brandRef.current, { x: computeCenterX, y: -20, scale: 1.08 }, 0)
+        // 副标题先淡出（同时微微上移），随后描述淡入显示
+        .to(subtitleRef.current, { autoAlpha: 0, y: -10, duration: 0.35 }, '<+0.05')
+        .set(descRef.current, { display: 'block' })
+        .to(descRef.current, { autoAlpha: 1, y: -10, duration: 0.2 }, '<')
+        // 逐字符显现（保持顺序，避免重排）
+        .to(
+          descRef.current ? descRef.current.querySelectorAll('.char') : [],
+          { autoAlpha: 1, y: 0, ease: 'power1.out', stagger: { each: 0.025 } },
+          '<'
+        )
+        // 描述出现的同时，让品牌组进一步上移一点，突出层次
+        .to(brandRef.current, { y: -160, duration: 0.45 }, '<')
+        // 收场：逐步淡出，为下一屏让位
+        // .to([badgesRef.current, ctasRef.current], { opacity: 0, y: -30 }, '+=0.2')
+        // .to([subtitleRef.current, descRef.current], { opacity: 0, y: -40 }, '-=0.1')
+        // .to(brandRef.current, { opacity: 0, y: -50, scale: 0.96 }, '-=0.1');
+    }, sectionRef);
+
+    return () => {
+      ctx.revert();
+      if (descRef.current && originalDescHTML !== null) {
+        descRef.current.innerHTML = originalDescHTML;
+      }
+    };
+  }, []);
 
   return (
     <div className="relative">
-      {/* Fixed background with parallax effect */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-3 z-0"></div>
-      <div className="fixed top-1/4 left-1/4 w-32 h-32 bg-pink-200/20 dark:bg-pink-800/20 rounded-full blur-2xl z-0"></div>
-      <div className="fixed bottom-1/3 right-1/3 w-40 h-40 bg-teal-200/20 dark:bg-teal-800/20 rounded-full blur-2xl z-0"></div>
-      <div className="fixed top-1/2 right-1/4 w-24 h-24 bg-blue-200/15 dark:bg-blue-800/15 rounded-full blur-xl z-0"></div>
-      <div className="fixed bottom-1/4 left-1/3 w-36 h-36 bg-purple-200/15 dark:bg-purple-800/15 rounded-full blur-xl z-0"></div>
-      <div className="hidden lg:block fixed top-10 right-10 w-2 h-2 bg-pink-400/30 rounded-full z-0"></div>
-      <div className="hidden lg:block fixed bottom-20 left-20 w-1 h-1 bg-teal-400/40 rounded-full z-0"></div>
-      <div className="hidden lg:block fixed top-1/3 left-10 w-1.5 h-1.5 bg-blue-400/35 rounded-full z-0"></div>
+      {/* 背景装饰（全局固定，仅作轻装点缀） */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-pink-200/20 dark:bg-pink-800/20 rounded-full blur-2xl" />
+        <div className="absolute bottom-1/3 right-1/3 w-40 h-40 bg-teal-200/20 dark:bg-teal-800/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-blue-200/15 dark:bg-blue-800/15 rounded-full blur-xl" />
+        <div className="absolute bottom-1/4 left-1/3 w-36 h-36 bg-purple-200/15 dark:bg-purple-800/15 rounded-full blur-xl" />
+      </div>
 
-      {/* 第一页：主要内容占满整个屏幕 */}
-      <section className="relative overflow-hidden h-screen flex items-center z-10">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
-          {/* Main Content */}
-          <div className="w-full text-center space-y-4 mt-[-100px] sm:space-y-6 md:space-y-8 lg:space-y-12 lg:mt-[-100px]">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="px-2 sm:px-4">
-            {/* Logo and brand */}
-            <div className="flex items-center justify-center mb-6 sm:mb-8 md:mb-10">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center mr-3 sm:mr-4 md:mr-5 p-1 sm:p-2">
-                <img src="/image/logos/logo.svg" alt={t('common.brandAlt')} className="w-full h-full object-contain drop-shadow-lg" />
+      {/* 第一屏：使用 ScrollTrigger pin 固定在视窗中间 */}
+      <section ref={sectionRef} className="relative h-screen flex items-center justify-center z-10">
+  <div ref={scrollerRef} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="w-full space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-10">
+            {/* 顶部行：品牌组（logo+标题） 与 副标题 并排 */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-6">
+              <div className="flex items-center justify-start" ref={brandRef}>
+                <div ref={logoRef} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 flex items-center justify-center mr-4 sm:mr-5 md:mr-6 lg:mr-8 p-1 sm:p-2">
+                  <img src="/image/logos/logo.svg" alt={t('common.brandAlt')} className="w-full h-full object-contain drop-shadow-lg" />
+                </div>
+                <h1 ref={titleRef} className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tight">
+                  <span className="gradient-text">{t('common.brandName')}</span>
+                </h1>
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight">
-                <span className="gradient-text">{t('common.brandName')}</span>
-              </h1>
+
+              <h2 ref={subtitleRef} lang={isEN ? 'en' : undefined} className={subtitleClasses}>
+                {t('hero.tagline')}
+              </h2>
             </div>
 
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 mb-4 sm:mb-5 md:mb-6 leading-tight max-w-4xl mx-auto">
-              {t('hero.tagline')}
-            </h2>
-
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-2">
+            <p ref={descRef} className="text-center mx-auto text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl md:max-w-4xl leading-relaxed">
               <Trans
                 i18nKey="hero.description"
-                components={{
-                  bold: <span className="font-bold text-pink-600 dark:text-pink-400" />,
-                }}
+                components={{ bold: <span className="font-bold text-pink-600 dark:text-pink-400" /> }}
               />
             </p>
 
-            {/* Server Status */}
-            <div className="mt-4 sm:mt-6 md:mt-8">
-              <div className="text-pink-700 dark:text-pink-300 text-sm sm:text-base md:text-lg font-bold">
-                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4">
-                  <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                    <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
-                    {t('hero.statusOperational')}
-                  </span>
-
-                  {/* 可选分隔线：不要就删掉这一行 */}
-                  <span className="hidden sm:block h-4 w-px bg-pink-300/60 dark:bg-pink-200/40" />
-
-                  <span className="text-sm sm:text-base whitespace-nowrap">
-                    {t('hero.statusCommunity')}
-                  </span>
-                </div>
-              </div>
-
-
-              
-             {/* Community Badges */}
-              <div className="w-full">
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:gap-3 w-full max-w-sm sm:max-w-2xl mx-auto">
-                  <a
-                    href="https://qm.qq.com/q/Uw8tOkgJSS"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                      <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
-                    </div>
-                    <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm">1059561526</span>
-                    </div>
-                  </a>
-
-                  <a
-                    href="https://discord.gg/AhzJXXWYfF"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                      <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
-                    </div>
-                    <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm">{t('hero.community.discordTag')}</span>
-                    </div>
-                  </a>
-
-                  <a
-                    href="https://github.com/GooGuTeam"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                      <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
-                    </div>
-                    <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm">GooGuTeam</span>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              </div>
-
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-3 sm:space-y-4 px-2 sm:px-4 max-w-md sm:max-w-lg md:max-w-2xl mx-auto"
-          >
-            {/* 如何加入按钮 - 始终显示 */}
-            <div className="w-full">
-              <Link
-                to="/how-to-join"
-                className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium shadow-lg flex items-center justify-center gap-2"
-              >
-                <FaRocket className="w-4 h-4 sm:w-5 sm:h-5" />
-                {t('hero.joinCta')}
-              </Link>
-            </div>
-            
-            {/* 登录状态相关按钮 */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/profile"
-                    className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl shadow-lg text-center font-medium"
-                  >
-                    {t('hero.viewProfile')}
-                  </Link>
-                  <Link
-                    to="/rankings"
-                    className="btn-secondary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium"
-                  >
-                    {t('hero.viewRankings')}
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/register"
-                    className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl shadow-lg text-center font-medium"
-                  >
-                    {t('hero.register')}
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="btn-secondary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium"
-                  >
-                    {t('hero.login')}
-                  </Link>
-                </>
-              )}
-            </div>
-          </motion.div>
+           
           </div>
         </div>
       </section>
 
-      {/* 第二页：Swiper轮播图 */}
-      <section className="relative min-h-screen flex items-center py-8 sm:py-12 md:py-20 lg:py-32 z-10">
-        {/* 不透明背景遮挡第一页的固定背景 */}
-        <div className="absolute inset-0 bg-white dark:bg-gray-900 z-0"></div>
-        {/* 渐变装饰层 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-50/30 to-gray-100/30 dark:from-gray-800/30 dark:to-gray-700/30 z-0"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
-          {/* Feature Cards Grid Container */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-8 sm:mt-12 md:mt-16 relative w-full"
-          >
-            <div className="text-center mb-8 sm:mb-12 md:mb-16">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-                <span className="gradient-text">{t('hero.featuresTitle')}</span>
-              </h3>
-              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                {t('hero.featuresSubtitle')}
-              </p>
-            </div>
+      {/* 第二屏：正常文档流（用于解除 pin 后的内容展示） */}
+      <section className="relative min-h-screen flex items-center py-12 md:py-20 lg:py-28 z-0">
+        <div className="absolute inset-0 bg-white dark:bg-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50/30 to-gray-100/30 dark:from-gray-800/30 dark:to-gray-700/30" />
 
-            {/* Features Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
-              {features.map((feature, index) => {
-                const icons = [
-                  <FaDesktop key="desktop" className="h-6 w-6" />,
-                  <FaRocket key="rocket" className="h-6 w-6" />,
-                  <FaHeart key="heart" className="h-6 w-6" />,
-                  <FaCog key="cog" className="h-6 w-6" />,
-                  <FaBug key="bug" className="h-6 w-6" />,
-                  <FaCodeBranch key="code" className="h-6 w-6" />,
-                  <FaPaperPlane key="plane" className="h-6 w-6" />,
-                  <FaChartBar key="chart" className="h-6 w-6" />
-                ];
-                
-                return (
-                  <motion.div
-                    key={feature.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 * index }}
-                    className="w-full"
-                  >
-                    <InfoCard
-                      image={feature.image}
-                      imageAlt={t(feature.imageAltKey)}
-                      title={t(feature.titleKey)}
-                      content={t(feature.contentKey)}
-                      icon={icons[index]}
-                    />
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="text-center mb-10 md:mb-14">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+              <span className="gradient-text">{t('hero.featuresTitle')}</span>
+            </h3>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              {t('hero.featuresSubtitle')}
+            </p>
+          </div>
 
-          {/* {isAuthenticated && user && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="px-4 max-w-lg mx-auto"
-            >
-              <div className="p-3 sm:p-4 lg:p-6 bg-white/70 dark:bg-gray-800/70 border border-pink-200/50 dark:border-pink-700/50 rounded-2xl inline-block backdrop-blur-sm shadow-lg">
-                <p className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 flex flex-col sm:flex-row items-center justify-center">
-                  欢迎回来，<span className="font-semibold text-pink-600 dark:text-pink-400 sm:ml-1">{user.username}</span>！
-                </p>
-              </div>
-            </motion.div>
-          )} */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
+            {features.map((feature, index) => {
+              const icons = [
+                <FaDesktop key="desktop" className="h-6 w-6" />, 
+                <FaRocket key="rocket" className="h-6 w-6" />, 
+                <FaHeart key="heart" className="h-6 w-6" />, 
+                <FaCog key="cog" className="h-6 w-6" />, 
+                <FaBug key="bug" className="h-6 w-6" />, 
+                <FaCodeBranch key="code" className="h-6 w-6" />, 
+                <FaPaperPlane key="plane" className="h-6 w-6" />, 
+                <FaChartBar key="chart" className="h-6 w-6" />
+              ];
+
+              return (
+                <div key={feature.id} className="w-full">
+                  <InfoCard
+                    image={feature.image}
+                    imageAlt={t(feature.imageAltKey)}
+                    title={t(feature.titleKey)}
+                    content={t(feature.contentKey)}
+                    icon={icons[index]}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
     </div>
