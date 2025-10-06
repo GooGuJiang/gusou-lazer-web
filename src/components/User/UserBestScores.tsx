@@ -157,7 +157,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
             <div className="flex-shrink-0 flex items-center gap-2 mr-6">
               {/* MOD图标 + 准确率 */}
               <ModsDisplay mods={mods} />
-              <div className="text-sm font-bold text-osu-blue dark:text-blue-400 ml-2">
+              <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 {accuracy}%
               </div>
             </div>
@@ -166,7 +166,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
           {/* 右侧性能区域 */}
           <div className="absolute right-0 top-0 h-full w-20 flex items-center justify-center">
             {/* PP 值 */}
-            <div className="text-sm font-bold text-osu-pink dark:text-pink-400">
+            <div className="text-sm font-bold text-pink-600 dark:text-pink-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               {originalPp} PP
             </div>
           </div>
@@ -180,7 +180,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-10 h-5 object-contain"
+                className="w-16 h-10 object-contain"
               />
             </div>
 
@@ -217,11 +217,11 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ModsDisplay mods={mods} />
-                  <div className="text-sm font-bold text-osu-blue dark:text-blue-400">
+                  <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                     {accuracy}%
                   </div>
                 </div>
-                <div className="text-sm font-bold text-osu-pink dark:text-pink-400">
+                <div className="text-sm font-bold text-pink-600 dark:text-pink-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                   {originalPp} PP
                 </div>
               </div>
