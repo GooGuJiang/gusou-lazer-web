@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 
 import InfoCard from '../InfoCard';
@@ -36,6 +36,47 @@ const HeroSection: React.FC = () => {
   // 将 logo 与 标题 作为一个整体分组，保证移动/缩放始终保持一致
   const brandRef = useRef<HTMLDivElement | null>(null);
 
+  // 用于存储分割后的文本字符
+  const [descriptionChars, setDescriptionChars] = useState<Array<{ char: string; isBold: boolean }>>([]);
+
+  // 分割文本为字符的函数
+  const splitTextIntoChars = (text: string) => {
+    const chars: Array<{ char: string; isBold: boolean }> = [];
+    let i = 0;
+    let isBold = false;
+    
+    while (i < text.length) {
+      // 检查是否是粗体开始标记
+      if (text.substring(i, i + 6) === '<bold>') {
+        isBold = true;
+        i += 6; // 跳过 <bold> 标记
+        continue;
+      }
+      
+      // 检查是否是粗体结束标记
+      if (text.substring(i, i + 7) === '</bold>') {
+        isBold = false;
+        i += 7; // 跳过 </bold> 标记
+        continue;
+      }
+      
+      // 添加当前字符
+      chars.push({ char: text[i], isBold });
+      i++;
+    }
+    
+    return chars;
+  };
+
+  // 获取翻译文本并分割
+  useEffect(() => {
+    const description = t('hero.description');
+    const chars = splitTextIntoChars(description);
+    console.log('Description:', description);
+    console.log('Split chars:', chars.slice(0, 50)); // 显示前50个字符用于调试
+    setDescriptionChars(chars);
+  }, [t, i18n.language]);
+
   // 英文副标题的排版优化（更合理的字间距/行高/行宽/断行）
   const isEN = i18n?.language?.toLowerCase().startsWith('en') ?? false;
   const subtitleClasses = isEN
@@ -45,63 +86,12 @@ const HeroSection: React.FC = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    if (!sectionRef.current) return;
-
-    // 保存原始描述 HTML，用于清理时还原，防止重复包裹
-    let originalDescHTML: string | null = null;
+    if (!sectionRef.current || descriptionChars.length === 0) return;
 
     const ctx = gsap.context(() => {
-      // 将元素内所有文本节点拆分为按“字形簇(grapheme)”的 span.char，保持标签与空白顺序不变
-      const wrapChars = (el: HTMLElement) => {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        const textNodes: Text[] = [];
-        let node: Node | null;
-        while ((node = walker.nextNode())) {
-          if (node.nodeType === Node.TEXT_NODE && (node as Text).data.length) {
-            textNodes.push(node as Text);
-          }
-        }
-
-        const hasSeg = typeof (Intl as any)?.Segmenter === 'function';
-        const seg = hasSeg ? new (Intl as any).Segmenter(undefined, { granularity: 'grapheme' }) : null;
-
-        textNodes.forEach((textNode) => {
-          const parent = textNode.parentNode as Node | null;
-          if (!parent) return;
-          const text = textNode.data;
-          const frag = document.createDocumentFragment();
-
-          if (seg) {
-            for (const s of (seg as any).segment(text)) {
-              const unit: string = s.segment as string;
-              if (/^\s+$/.test(unit)) {
-                frag.appendChild(document.createTextNode(unit));
-              } else {
-                const span = document.createElement('span');
-                span.className = 'char inline-block';
-                span.textContent = unit;
-                frag.appendChild(span);
-              }
-            }
-          } else {
-            for (const ch of Array.from(text)) {
-              if (/^\s+$/.test(ch)) {
-                frag.appendChild(document.createTextNode(ch));
-              } else {
-                const span = document.createElement('span');
-                span.className = 'char inline-block';
-                span.textContent = ch;
-                frag.appendChild(span);
-              }
-            }
-          }
-
-          parent.replaceChild(frag, textNode);
-        });
-      };
       // 动态计算需要移动到屏幕（section）中心的水平距离
       const computeCenterX = () => {
-        const container = sectionRef.current!; // 以 pinned section 的中心为基准，更符合“屏幕中间”
+        const container = sectionRef.current!; // 以 pinned section 的中心为基准，更符合"屏幕中间"
         const group = brandRef.current!; // logo + 标题 分组容器
         if (!container || !group) return 0;
         const containerRect = container.getBoundingClientRect();
@@ -113,13 +103,15 @@ const HeroSection: React.FC = () => {
 
       // 以左侧为缩放锚点，避免放大时位置偏移
       if (brandRef.current) gsap.set(brandRef.current, { transformOrigin: 'left center' });
-      // 初始隐藏描述段落，并进行逐字符包裹，准备动画
+      // 初始隐藏描述段落，等待副标题淡出后整体出现
       if (descRef.current) {
-        originalDescHTML = descRef.current.innerHTML;
-        wrapChars(descRef.current);
         gsap.set(descRef.current, { autoAlpha: 0, display: 'none', y: 0 });
-        gsap.set(descRef.current.querySelectorAll('.char'), { autoAlpha: 0, y: 6 });
       }
+
+      // 初始化所有字符为不可见
+      descriptionChars.forEach((_, index) => {
+        gsap.set(`.char-${index}`, { opacity: 0, y: 20 });
+      });
 
       const tl = gsap.timeline({
         defaults: { ease: 'power2.out' },
@@ -142,27 +134,20 @@ const HeroSection: React.FC = () => {
         .to(subtitleRef.current, { autoAlpha: 0, y: -10, duration: 0.35 }, '<+0.05')
         .set(descRef.current, { display: 'block' })
         .to(descRef.current, { autoAlpha: 1, y: -10, duration: 0.2 }, '<')
-        // 逐字符显现（保持顺序，避免重排）
-        .to(
-          descRef.current ? descRef.current.querySelectorAll('.char') : [],
-          { autoAlpha: 1, y: 0, ease: 'power1.out', stagger: { each: 0.025 } },
-          '<'
-        )
-        // 描述出现的同时，让品牌组进一步上移一点，突出层次
+        // 品牌组进一步上移
         .to(brandRef.current, { y: -160, duration: 0.45 }, '<')
-        // 收场：逐步淡出，为下一屏让位
-        // .to([badgesRef.current, ctasRef.current], { opacity: 0, y: -30 }, '+=0.2')
-        // .to([subtitleRef.current, descRef.current], { opacity: 0, y: -40 }, '-=0.1')
-        // .to(brandRef.current, { opacity: 0, y: -50, scale: 0.96 }, '-=0.1');
+        // 字符逐个出现动画
+        .to(descriptionChars.map((_, index) => `.char-${index}`), {
+          opacity: 1,
+          y: 0,
+          duration: 0.03,
+          stagger: 0.02, // 每个字符间隔 0.02 秒出现
+          ease: 'power1.out'
+        }, '<+0.3'); // 在描述容器显示后延迟 0.3 秒开始字符动画
     }, sectionRef);
 
-    return () => {
-      ctx.revert();
-      if (descRef.current && originalDescHTML !== null) {
-        descRef.current.innerHTML = originalDescHTML;
-      }
-    };
-  }, []);
+    return () => ctx.revert();
+  }, [descriptionChars]);
 
   return (
     <div className="relative">
@@ -196,10 +181,15 @@ const HeroSection: React.FC = () => {
             </div>
 
             <p ref={descRef} className="text-center mx-auto text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl md:max-w-4xl leading-relaxed">
-              <Trans
-                i18nKey="hero.description"
-                components={{ bold: <span className="font-bold text-pink-600 dark:text-pink-400" /> }}
-              />
+              {descriptionChars.map((charObj, index) => (
+                <span 
+                  key={index} 
+                  className={`char-${index} inline-block ${charObj.isBold ? 'font-bold text-pink-600 dark:text-pink-400' : ''}`}
+                  style={{ opacity: 0 }}
+                >
+                  {charObj.char === ' ' ? '\u00A0' : charObj.char}
+                </span>
+              ))}
             </p>
 
            
