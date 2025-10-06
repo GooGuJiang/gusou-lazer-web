@@ -48,23 +48,23 @@ const PlayerRankCard: React.FC<Props> = ({ stats, playTime, user_achievements, g
       {/* 右侧：评级徽章 */}
       <div className="flex gap-1 md:gap-2 items-center mr-0 md:mr-[-15px] justify-center md:justify-end">
         <div className="flex flex-col items-center text-xs font-bold text-gray-700 dark:text-gray-200">
-          <img src="/image/grades/GradeSmall-SS-Silver.svg" alt="SSH" className="w-8 h-8 md:w-10 md:h-10" />
+          <img src="/image/grades/SS-Silver.svg" alt="SSH" className="w-8 h-8 md:w-10 md:h-10" />
           <span className="mt-1">{gradeCounts.ssh}</span>
         </div>
         <div className="flex flex-col items-center text-xs font-bold text-gray-700 dark:text-gray-200">
-          <img src="/image/grades/GradeSmall-SS.svg" alt="SS" className="w-8 h-8 md:w-10 md:h-10" />
+          <img src="/image/grades/SS.svg" alt="SS" className="w-8 h-8 md:w-10 md:h-10" />
           <span className="mt-1">{gradeCounts.ss}</span>
         </div>
         <div className="flex flex-col items-center text-xs font-bold text-gray-700 dark:text-gray-200">
-          <img src="/image/grades/GradeSmall-S-Silver.svg" alt="SH" className="w-8 h-8 md:w-10 md:h-10" />
+          <img src="/image/grades/S-Silver.svg" alt="SH" className="w-8 h-8 md:w-10 md:h-10" />
           <span className="mt-1">{gradeCounts.sh}</span>
         </div>
         <div className="flex flex-col items-center text-xs font-bold text-gray-700 dark:text-gray-200">
-          <img src="/image/grades/GradeSmall-S.svg" alt="S" className="w-8 h-8 md:w-10 md:h-10" />
+          <img src="/image/grades/S.svg" alt="S" className="w-8 h-8 md:w-10 md:h-10" />
           <span className="mt-1">{gradeCounts.s}</span>
         </div>
         <div className="flex flex-col items-center text-xs font-bold text-gray-700 dark:text-gray-200">
-          <img src="/image/grades/GradeSmall-A.svg" alt="A" className="w-8 h-8 md:w-10 md:h-10" />
+          <img src="/image/grades/A.svg" alt="A" className="w-8 h-8 md:w-10 md:h-10" />
           <span className="mt-1">{gradeCounts.a}</span>
         </div>
       </div>

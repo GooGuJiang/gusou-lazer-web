@@ -43,19 +43,19 @@ const formatTimeAgo = (dateString: string, t: any): string => {
 const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
     // SS 系列
-    XH: '/image/grades/GradeSmall-SS-Silver.svg', // 银 SS（SSH）
-    X:  '/image/grades/GradeSmall-SS.svg',        // 金 SS（SS）
+    XH: '/image/grades/SS-Silver.svg', // 银 SS（SSH）
+    X:  '/image/grades/SS.svg',        // 金 SS（SS）
 
     // S 系列
-    SH: '/image/grades/GradeSmall-S-Silver.svg',  // 银 S
-    S:  '/image/grades/GradeSmall-S.svg',         // 金 S
+    SH: '/image/grades/S-Silver.svg',  // 银 S
+    S:  '/image/grades/S.svg',         // 金 S
 
     // 其他等级
-    A:  '/image/grades/GradeSmall-A.svg',
-    B:  '/image/grades/GradeSmall-B.svg',
-    C:  '/image/grades/GradeSmall-C.svg',
-    D:  '/image/grades/GradeSmall-D.svg',
-    F:  '/image/grades/GradeSmall-F.svg', 
+    A:  '/image/grades/A.svg',
+    B:  '/image/grades/B.svg',
+    C:  '/image/grades/C.svg',
+    D:  '/image/grades/D.svg',
+    F:  '/image/grades/F.svg', 
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
@@ -117,7 +117,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-12 h-6 object-contain"
+                className="w-18 h-12 object-contain"
               />
             </div>
 
