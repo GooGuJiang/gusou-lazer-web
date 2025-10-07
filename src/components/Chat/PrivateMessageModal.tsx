@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiSend, FiSearch } from 'react-icons/fi';
 import { chatAPI } from '../../utils/api';
@@ -27,8 +27,24 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
+  // 防止背景滚动
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    };
+  }, [isOpen]);
+
   // 检查是否有预选用户
-  React.useEffect(() => {
+  useEffect(() => {
     const selectedUser = (window as any).selectedUserForPM as User;
     if (selectedUser) {
       setTargetUserId(selectedUser.id);

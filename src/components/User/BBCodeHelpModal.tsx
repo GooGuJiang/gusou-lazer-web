@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
 
@@ -9,6 +9,22 @@ interface BBCodeHelpModalProps {
 
 const BBCodeHelpModal: React.FC<BBCodeHelpModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  
+  // 防止背景滚动
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    };
+  }, [isOpen]);
   
   if (!isOpen) return null;
 

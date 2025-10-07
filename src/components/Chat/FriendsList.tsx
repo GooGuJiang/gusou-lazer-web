@@ -22,6 +22,17 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser: _currentUser, on
     loadFriends();
   }, []);
 
+  // 防止背景滚动
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = '0px';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    };
+  }, []);
+
   // 添加键盘快捷键支持
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

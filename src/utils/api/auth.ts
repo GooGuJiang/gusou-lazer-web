@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { API_BASE_URL } from './client';
+import { getDeviceUUID } from '../deviceUUID';
 
 export const authAPI = {
   login: async (username: string, password: string, clientId: number, clientSecret: string) => {
@@ -14,11 +15,15 @@ export const authAPI = {
     formData.append('password', password);
     formData.append('scope', '*');
 
+    // 获取设备UUID
+    const deviceUUID = getDeviceUUID();
+
     try {
       const response = await axios.post(`${API_BASE_URL}/oauth/token`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'x-api-version': '20250913',
+          'x-uuid': deviceUUID,
         },
       });
       return response.data;
@@ -59,12 +64,62 @@ export const authAPI = {
     formData.append('client_secret', clientSecret);
     formData.append('refresh_token', refreshToken);
 
+    // 获取设备UUID
+    const deviceUUID = getDeviceUUID();
+
     const response = await axios.post(`${API_BASE_URL}/oauth/token`, formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'x-api-version': '20250913',
+        'x-uuid': deviceUUID,
       },
     });
     return response.data;
+  },
+
+  // Password reset - Request reset code
+  requestPasswordReset: async (email: string) => {
+    console.log('Password reset request for:', email);
+
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/password-reset/request`, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-version': '20250913',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const err = error as { response?: { data?: unknown }; message?: string };
+      console.error('Password reset request error:', err.response?.data || err.message);
+      throw err;
+    }
+  },
+
+  // Password reset - Reset password with code
+  resetPassword: async (email: string, resetCode: string, newPassword: string) => {
+    console.log('Password reset with code for:', email);
+
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    formData.append('reset_code', resetCode);
+    formData.append('new_password', newPassword);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/password-reset/reset`, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-version': '20250913',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const err = error as { response?: { data?: unknown }; message?: string };
+      console.error('Password reset error:', err.response?.data || err.message);
+      throw err;
+    }
   },
 };

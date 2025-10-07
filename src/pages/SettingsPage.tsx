@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield } from 'react-icons/fi';
+import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -11,7 +11,9 @@ import Avatar from '../components/UI/Avatar';
 import AvatarUpload from '../components/UI/AvatarUpload';
 import TotpSetupModal from '../components/TOTP/TotpSetupModal';
 import TotpDisableModal from '../components/TOTP/TotpDisableModal';
-// import DeviceManagement from '../components/Device/DeviceManagement';
+import SessionManagement from '../components/Device/SessionManagement';
+import TrustedDeviceManagement from '../components/Device/TrustedDeviceManagement';
+import PasswordResetSection from '../components/Settings/PasswordResetSection';
 // import DefaultModeSelector from '../components/Preferences/DefaultModeSelector';
 
 const SettingsPage: React.FC = () => {
@@ -318,6 +320,23 @@ const SettingsPage: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* 密码设置 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.225 }}
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+      >
+        <div className="flex items-center gap-3 mb-6">
+          <FiLock className="w-6 h-6 text-osu-pink" />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {t('settings.password.title')}
+          </h2>
+        </div>
+
+        <PasswordResetSection />
+      </motion.div>
+
       {/* TOTP双因素验证设置 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -427,11 +446,11 @@ const SettingsPage: React.FC = () => {
         </div>
       </motion.div> */}
 
-      {/* 设备管理 - 暂时注释 */}
-      {/* <motion.div
+      {/* 设备管理 */}
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
+        transition={{ delay: 0.3 }}
         className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
@@ -441,14 +460,25 @@ const SettingsPage: React.FC = () => {
           </h2>
         </div>
         
-        <div className="mb-4">
+        <div className="mb-6">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {t('settings.device.description')}
           </p>
         </div>
-        
-        <DeviceManagement />
-      </motion.div> */}
+
+        {/* 登录会话管理 */}
+        <div className="mb-8">
+          <SessionManagement />
+        </div>
+
+        {/* 分割线 */}
+        <div className="border-t border-gray-200 dark:border-gray-700 my-8"></div>
+
+        {/* 受信任设备管理 */}
+        <div>
+          <TrustedDeviceManagement />
+        </div>
+      </motion.div>
 
       {/* 用户信息 */}
       <motion.div

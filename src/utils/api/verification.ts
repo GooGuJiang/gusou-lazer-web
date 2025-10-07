@@ -1,4 +1,5 @@
 import { api } from './client';
+import { getDeviceUUID } from '../deviceUUID';
 
 export interface VerificationError {
   error: {
@@ -22,9 +23,13 @@ export const verificationAPI = {
     const formData = new URLSearchParams();
     formData.append('verification_key', verificationKey);
 
+    // 获取设备UUID
+    const deviceUUID = getDeviceUUID();
+
     const response = await api.post('/api/v2/session/verify', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'x-uuid': deviceUUID,
       },
     });
     

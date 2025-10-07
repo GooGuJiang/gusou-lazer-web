@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getDeviceUUID } from '../deviceUUID';
 
 export const API_BASE_URL = 'https://lazer-api.g0v0.top';
 //export const API_BASE_URL = 'http://127.0.0.1:8000';
@@ -25,6 +26,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // 添加设备UUID到所有请求
+    const deviceUUID = getDeviceUUID();
+    config.headers['x-uuid'] = deviceUUID;
+    
     return config;
   },
   (error) => {

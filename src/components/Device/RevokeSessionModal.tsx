@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiTrash2, FiAlertTriangle } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,22 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
   onConfirm,
 }) => {
   const { t } = useTranslation();
+
+  // 防止背景滚动
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    };
+  }, [isOpen]);
 
   if (!session) return null;
 

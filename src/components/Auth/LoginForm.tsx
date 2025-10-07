@@ -105,6 +105,15 @@ const LoginForm: React.FC = () => {
             </button>
           </div>
 
+          <div className="flex items-center justify-between text-sm">
+            <Link
+              to="/password-reset"
+              className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
+            >
+              {t('auth.login.forgotPassword')}
+            </Link>
+          </div>
+
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('auth.login.noAccount')}{' '}

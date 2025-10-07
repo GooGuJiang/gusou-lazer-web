@@ -225,6 +225,44 @@ export const userAPI = {
     return response.data;
   },
 
+  // Change password with current password
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    console.log('修改密码');
+
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      throw new Error('未找到访问令牌');
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('current_password', currentPassword);
+    formData.append('new_password', newPassword);
+
+    const response = await fetch(`${API_BASE_URL}/api/private/password/change`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = await response.text();
+      }
+      console.error('修改密码失败响应:', errorData);
+      throw new Error(errorData?.detail || errorData?.message || `HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('修改密码响应:', result);
+    return result;
+  },
+
   // TOTP 相关接口
   totp: {
     // 检查 TOTP 状态

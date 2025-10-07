@@ -137,6 +137,17 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   const imgRef = useRef<HTMLImageElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // 防止背景滚动
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = '0px';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = 'unset';
+    };
+  }, []);
+
   // 图片加载完成后设置初始crop
   const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     const { width, height } = e.currentTarget;
