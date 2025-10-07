@@ -86,7 +86,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
+const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string }> = ({ score, t, profileColor }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -100,13 +100,30 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
   const beatmapUrl = score.beatmap?.url || '#';
   const coverImage = score.beatmapset?.covers?.['cover@2x'] || score.beatmapset?.covers?.cover;
 
+  // 将主题颜色转换为 RGB 以便使用透明度
+  const hexToRgb = (hex: string): string => {
+    const cleanHex = hex.replace('#', '');
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    return `${r}, ${g}, ${b}`;
+  };
+
+  const themeRgb = hexToRgb(profileColor);
+
   return (
     <LazyBackgroundImage 
       src={coverImage}
       className="relative overflow-hidden border-b border-gray-100 dark:border-gray-700/50 last:border-b-0"
     >
-      {/* 渐变遮罩层确保文字可读性 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-white/70 dark:from-gray-800/95 dark:via-gray-800/90 dark:to-gray-800/70" />
+      {/* 渐变遮罩层确保文字可读性 - 使用主题颜色 */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-r" 
+        style={{
+          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
       
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
         {/* 桌面端布局 */}
@@ -372,7 +389,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           {/* 主要内容区域 - 无圆角 */}
           <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
             {scores.map((score) => (
-              <ScoreCard key={score.id} score={score} t={t} />
+              <ScoreCard key={score.id} score={score} t={t} profileColor={profileColor} />
             ))}
 
             {hasMore && (

@@ -200,9 +200,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
           </div>
         )}
 
-        {/* 头部栏 + 模式选择（与头图同容器） */}
-        <div className="relative overflow-hidden">
-          <div className="bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
+        {/* 头部栏 + 模式选择 */}
+        <div className="relative">
+          <div className="relative z-10 bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
               <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
@@ -219,7 +219,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
           </div>
 
           {/* 头图懒加载 */}
-          <CoverImage src={coverUrl} alt={`${user.username} cover`} isExpanded={isCoverExpanded} />
+          <div className="overflow-hidden">
+            <CoverImage src={coverUrl} alt={`${user.username} cover`} isExpanded={isCoverExpanded} />
+          </div>
         </div>
 
         {/* 头像与基本信息条 */}
