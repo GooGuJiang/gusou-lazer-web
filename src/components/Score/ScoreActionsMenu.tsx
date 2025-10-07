@@ -22,6 +22,7 @@ interface ScoreActionsMenuProps {
   isPinned?: boolean;
   hasReplay?: boolean;
   onPinChange?: () => void;
+  onPinnedListChange?: () => void; // 置顶列表刷新回调
   className?: string;
 }
 
@@ -30,6 +31,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
   isPinned = false,
   hasReplay = false,
   onPinChange,
+  onPinnedListChange,
   className = '',
 }) => {
   const { t } = useTranslation();
@@ -69,6 +71,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
         toast.success(t('profile.bestScores.actions.pinSuccess'));
       }
       onPinChange?.();
+      onPinnedListChange?.(); // 同时刷新置顶列表
     } catch (error) {
       handleApiError(error);
     } finally {

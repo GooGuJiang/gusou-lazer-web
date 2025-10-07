@@ -104,6 +104,10 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const { preferences, updatePreference } = useUserPreferences();
   const { profileColor, setProfileColorLocal, resetProfileColor } = useProfileColor();
   
+  // 用于跨组件刷新的 ref
+  const pinnedScoresRefreshRef = useRef<(() => void) | null>(null);
+  const bestScoresRefreshRef = useRef<(() => void) | null>(null);
+  
   const stats = user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
   const levelProgress = stats?.level?.progress ?? 0;
@@ -387,12 +391,23 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 用户置顶成绩 */}
         <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserPinnedScores userId={user.id} selectedMode={selectedMode} user={user} />
+          <UserPinnedScores 
+            userId={user.id} 
+            selectedMode={selectedMode} 
+            user={user}
+            refreshRef={pinnedScoresRefreshRef}
+          />
         </div>
 
         {/* 用户最佳成绩 */}
         <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserBestScores userId={user.id} selectedMode={selectedMode} user={user} />
+          <UserBestScores 
+            userId={user.id} 
+            selectedMode={selectedMode} 
+            user={user}
+            refreshRef={bestScoresRefreshRef}
+            onPinnedListRefresh={() => pinnedScoresRefreshRef.current?.()}
+          />
         </div>
 
         {/* 用户最近成绩 */}

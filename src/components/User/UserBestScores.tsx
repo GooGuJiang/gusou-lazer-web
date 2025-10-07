@@ -14,6 +14,8 @@ interface UserBestScoresProps {
   selectedMode: GameMode;
   user?: User;
   className?: string;
+  refreshRef?: React.MutableRefObject<(() => void) | null>;
+  onPinnedListRefresh?: () => void;
 }
 
 // 时间格式化函数
@@ -94,7 +96,8 @@ const ScoreCard: React.FC<{
   profileColor: string;
   canEdit?: boolean;
   onRefresh?: () => void;
-}> = ({ score, t, profileColor, canEdit = false, onRefresh }) => {
+  onPinnedListChange?: () => void;
+}> = ({ score, t, profileColor, canEdit = false, onRefresh, onPinnedListChange }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -204,6 +207,7 @@ const ScoreCard: React.FC<{
                 isPinned={isPinned}
                 hasReplay={hasReplay}
                 onPinChange={onRefresh}
+                onPinnedListChange={onPinnedListChange}
               />
             )}
           </div>
@@ -269,6 +273,7 @@ const ScoreCard: React.FC<{
                       isPinned={isPinned}
                       hasReplay={hasReplay}
                       onPinChange={onRefresh}
+                      onPinnedListChange={onPinnedListChange}
                     />
                   )}
                 </div>
@@ -281,7 +286,7 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '' }) => {
+const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '', refreshRef, onPinnedListRefresh }) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
@@ -364,6 +369,13 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
     loadScores(true);
   };
 
+  // 将刷新函数暴露给父组件
+  useEffect(() => {
+    if (refreshRef) {
+      refreshRef.current = handleRefresh;
+    }
+  }, [refreshRef]);
+
   if (loading) {
     return (
       <div className={`${className}`}>
@@ -435,6 +447,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
                 profileColor={profileColor}
                 canEdit={canEdit}
                 onRefresh={handleRefresh}
+                onPinnedListChange={onPinnedListRefresh}
               />
             ))}
 

@@ -67,6 +67,7 @@ export const profilePage = {
     pinnedScores: {
       title: '置顶成绩',
       loadFailed: '加载置顶成绩失败',
+      reorderSuccess: '排序更新成功',
     },
     bestScores: {
       title: '最佳成绩',
