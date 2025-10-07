@@ -77,7 +77,12 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
       try {
         // 后台从服务器获取用户设置的颜色
         const preferences = await preferencesAPI.getPreferences();
-        const serverColor = preferences.profile_colour || DEFAULT_PROFILE_COLOR;
+        let serverColor = preferences.profile_colour || DEFAULT_PROFILE_COLOR;
+        
+        // 确保颜色值以 # 开头
+        if (serverColor && !serverColor.startsWith('#')) {
+          serverColor = `#${serverColor}`;
+        }
         
         // 只有当服务端颜色和本地存储不一样时才更新
         if (serverColor !== storedColor) {
@@ -147,19 +152,25 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
   // 设置个人颜色并保存到服务器和本地存储
   const setProfileColor = async (color: string) => {
     try {
-      setProfileColorState(color);
-      applyColorToDOM(color);
+      // 确保颜色值以 # 开头
+      let normalizedColor = color;
+      if (normalizedColor && !normalizedColor.startsWith('#')) {
+        normalizedColor = `#${normalizedColor}`;
+      }
+      
+      setProfileColorState(normalizedColor);
+      applyColorToDOM(normalizedColor);
       
       // 如果已登录，保存到服务器
       if (isAuthenticated) {
-        await preferencesAPI.updatePreferences({ profile_colour: color });
+        await preferencesAPI.updatePreferences({ profile_colour: normalizedColor });
       }
       
       // 保存到本地存储
-      localStorage.setItem(LOCAL_STORAGE_KEY, color);
+      localStorage.setItem(LOCAL_STORAGE_KEY, normalizedColor);
       
       // 成功后更新已保存颜色
-      setSavedProfileColor(color);
+      setSavedProfileColor(normalizedColor);
     } catch (error) {
       console.error('Failed to save profile color:', error);
       throw error;
@@ -168,8 +179,13 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
 
 	// 设置临时颜色（不持久化）
 	const setProfileColorLocal = (color: string) => {
-		setProfileColorState(color);
-		applyColorToDOM(color);
+		// 确保颜色值以 # 开头
+		let normalizedColor = color;
+		if (normalizedColor && !normalizedColor.startsWith('#')) {
+			normalizedColor = `#${normalizedColor}`;
+		}
+		setProfileColorState(normalizedColor);
+		applyColorToDOM(normalizedColor);
 	};
 
 	// 重置为已保存的颜色

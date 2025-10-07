@@ -124,16 +124,13 @@ const TeamRankingCard: React.FC<Props> = ({
               <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
                 <FiUsers className="w-3 h-3" />
                 <span className="text-xs">
-                  {ranking.play_count || 0} {t('common.playCount')}
+                  {ranking.member_count || 0} {t('common.members')}
                 </span>
               </div>
               <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
                 <FiTrendingUp className="w-3 h-3" />
                 <span className="text-xs">
-                  {rankingType === 'performance' 
-                    ? `${formatNumber(ranking.performance || 0)}pp`
-                    : `${formatNumber(ranking.ranked_score || 0)} ${t('common.score')}`
-                  }
+                  {ranking.play_count || 0} {t('common.playCount')}
                 </span>
               </div>
             </div>
@@ -198,16 +195,13 @@ const TeamRankingCard: React.FC<Props> = ({
             <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
               <FiUsers className="w-3 h-3" />
               <span className="text-xs">
-                {ranking.play_count || 0} {t('common.playCount')}
+                {ranking.member_count || 0} {t('common.members')}
               </span>
             </div>
             <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
               <FiTrendingUp className="w-3 h-3" />
               <span className="text-xs">
-                {rankingType === 'performance' 
-                  ? `${formatNumber(ranking.performance || 0)}pp`
-                  : `${formatNumber(ranking.ranked_score || 0)} ${t('common.score')}`
-                }
+                {ranking.play_count || 0} {t('common.playCount')}
               </span>
             </div>
           </div>

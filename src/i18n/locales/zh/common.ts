@@ -67,4 +67,5 @@ export const common = {
   playCount: '次游戏',
   score: '分数',
   noDataFound: '暂无数据',
+  members: '名成员',
 } as const;

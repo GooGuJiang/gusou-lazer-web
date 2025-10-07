@@ -141,7 +141,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         }
       }
       // 查看他人页面或本地无存储时，使用用户的 profile_colour
-      return user.profile_colour || '#ED8EA6';
+      // 确保颜色值以 # 开头
+      const rawColor = user.profile_colour || 'ED8EA6';
+      return rawColor.startsWith('#') ? rawColor : `#${rawColor}`;
     };
 
     const viewedColor = getViewedUserColor();

@@ -48,6 +48,8 @@ export interface TeamRanking {
   play_count: number;
   ranked_score: number;
   performance: number;
+  team: Team;
+  member_count: number;
 }
 
 export interface TeamDetailResponse {
