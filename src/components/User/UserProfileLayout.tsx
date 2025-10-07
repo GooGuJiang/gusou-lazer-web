@@ -195,9 +195,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   };
 
   return (
-    <main className="max-w-7xl mx-auto px-4 lg:px-6 py-4 md:py-6">
+    <main className="max-w-7xl mx-auto px-0 md:px-4 lg:px-6 py-4 md:py-6">
       {/* 主卡片 */}
-      <div className="bg-transparent md:bg-card md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-card">
+      <div className="bg-card md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-card">
         
         {/* 受限用户提示 - 仅管理员可见 */}
         {user.is_restricted && currentUser?.is_admin && (
@@ -208,7 +208,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 头部栏 + 模式选择 */}
         <div className="relative">
-          <div className="relative z-10 bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
+          <div className="relative z-10 bg-transparent md:bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
               <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
@@ -231,7 +231,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 头像与基本信息条 */}
-        <div className="bg-card px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-card relative">
+        <div className="bg-transparent md:bg-card px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-card relative">
           {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时有负边距下沉效果，收起时无负边距 */}
           <div className={isCoverExpanded ? "-mt-12" : "mt-0"}>
             <Avatar
@@ -313,7 +313,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
 
         {/* 中部：左 3/4（排名+折线+信息），右 1/4（统计） */}
-        <div className="bg-card px-3 md:px-6 py-4 border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 py-4 border-b border-card">
           <div className="flex flex-col md:flex-row gap-4">
             {/* 左侧 3/4 */}
             <div className="flex-[3] flex flex-col gap-3">
@@ -361,7 +361,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 好友/消息 + 等级进度 */}
-        <div className="bg-card px-3 md:px-6 lg:px-8 py-4 md:py-6 relative border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-4 md:py-6 relative border-b border-card">
           <div className="flex items-center justify-between relative">
               <FriendStats user={user} />
             <div className="flex items-center gap-4">
@@ -377,7 +377,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 个人页面 */}
-        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserPageDisplay
             user={user}
             onUserUpdate={onUserUpdate}
@@ -385,12 +385,12 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 用户最近活动 */}
-        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserRecentActivity userId={user.id} />
         </div>
 
         {/* 用户置顶成绩 */}
-        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserPinnedScores 
             userId={user.id} 
             selectedMode={selectedMode} 
@@ -400,7 +400,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 用户最佳成绩 */}
-        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+        <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserBestScores 
             userId={user.id} 
             selectedMode={selectedMode} 
