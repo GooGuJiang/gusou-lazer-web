@@ -217,7 +217,115 @@ export const settingsPage = {
     },
     preferences: {
       title: 'User Preferences',
-      description: 'Customize your gaming experience',
+      description: 'Customize your gaming experience and profile settings',
+      loading: 'Loading preferences...',
+      loadError: 'Failed to load preferences',
+      saving: 'Saving...',
+      saveSuccess: 'Preferences saved successfully',
+      saveError: 'Failed to save preferences',
+      
+      // Theme and language
+      theme: {
+        title: 'Theme',
+        description: 'Choose interface theme',
+        light: 'Light',
+        dark: 'Dark',
+        auto: 'Auto (System)'
+      },
+      language: {
+        title: 'Language',
+        description: 'Choose interface language',
+        zh: '中文',
+        en: 'English',
+        ja: '日本語'
+      },
+      
+      // Audio settings
+      audio: {
+        title: 'Audio Settings',
+        autoplay: 'Autoplay',
+        autoplayDescription: 'Automatically play audio content',
+        muted: 'Muted',
+        mutedDescription: 'Mute audio by default',
+        volume: 'Volume',
+        volumeDescription: 'Default volume level'
+      },
+      
+      // Beatmapset settings
+      beatmapset: {
+        title: 'Beatmap Settings',
+        cardSize: 'Card Size',
+        cardSizeDescription: 'Beatmap card display size',
+        normal: 'Normal',
+        large: 'Large',
+        download: 'Download Option',
+        downloadDescription: 'Beatmap download preference',
+        downloadAll: 'All',
+        downloadNoVideo: 'No Video',
+        downloadDirect: 'Direct',
+        showNsfw: 'Show NSFW Content',
+        showNsfwDescription: 'Display beatmaps with sensitive content'
+      },
+      
+      // Profile settings
+      profile: {
+        title: 'Profile Settings',
+        order: 'Display Order',
+        orderDescription: 'Profile section display order',
+        legacyScoreOnly: 'Legacy Scores Only',
+        legacyScoreOnlyDescription: 'Only display legacy scoring system scores',
+        coverExpanded: 'Cover Expanded',
+        coverExpandedDescription: 'Expand profile cover by default',
+        colour: 'Profile Color',
+        colourDescription: 'Customize profile theme color'
+      },
+      
+      // Scoring and sorting
+      scoring: {
+        title: 'Scoring and Display',
+        mode: 'Scoring Mode',
+        modeDescription: 'Score calculation mode',
+        standardised: 'Standardised',
+        classic: 'Classic',
+        userListFilter: 'User List Filter',
+        userListFilterDescription: 'Default user list filter',
+        filterAll: 'All',
+        filterOnline: 'Online',
+        filterOffline: 'Offline',
+        userListSort: 'User List Sort',
+        userListSortDescription: 'Default user list sort method',
+        sortLastVisit: 'Last Visit',
+        sortUsername: 'Username',
+        sortRank: 'Rank',
+        userListView: 'User List View',
+        userListViewDescription: 'Default user list view mode',
+        viewCard: 'Card',
+        viewList: 'List',
+        viewBrick: 'Brick'
+      },
+      
+      // Game mode and personal info
+      gameMode: {
+        title: 'Game Mode',
+        playmode: 'Default Game Mode',
+        playmodeDescription: 'Choose your preferred default game mode'
+      },
+      personalInfo: {
+        title: 'Personal Information',
+        interests: 'Interests',
+        interestsPlaceholder: 'Enter your interests',
+        location: 'Location',
+        locationPlaceholder: 'Enter your location',
+        occupation: 'Occupation',
+        occupationPlaceholder: 'Enter your occupation',
+        twitter: 'Twitter',
+        twitterPlaceholder: 'Enter your Twitter username',
+        website: 'Website',
+        websitePlaceholder: 'Enter your website URL',
+        discord: 'Discord',
+        discordPlaceholder: 'Enter your Discord username'
+      },
+      
       defaultMode: {
         title: 'Default Game Mode',
         description: 'Choose your preferred default game mode',

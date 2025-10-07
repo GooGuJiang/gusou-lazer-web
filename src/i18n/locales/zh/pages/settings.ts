@@ -217,7 +217,115 @@ export const settingsPage = {
     },
     preferences: {
       title: '用户偏好',
-      description: '自定义您的游戏体验',
+      description: '自定义您的游戏体验和个人资料设置',
+      loading: '加载偏好设置中...',
+      loadError: '加载偏好设置失败',
+      saving: '保存中...',
+      saveSuccess: '偏好设置已保存',
+      saveError: '保存偏好设置失败',
+      
+      // 主题和语言
+      theme: {
+        title: '主题',
+        description: '选择界面主题',
+        light: '浅色',
+        dark: '深色',
+        auto: '跟随系统'
+      },
+      language: {
+        title: '语言',
+        description: '选择界面语言',
+        zh: '中文',
+        en: 'English',
+        ja: '日本語'
+      },
+      
+      // 音频设置
+      audio: {
+        title: '音频设置',
+        autoplay: '自动播放',
+        autoplayDescription: '自动播放音频内容',
+        muted: '静音',
+        mutedDescription: '默认静音音频',
+        volume: '音量',
+        volumeDescription: '默认音量大小'
+      },
+      
+      // 谱面设置
+      beatmapset: {
+        title: '谱面设置',
+        cardSize: '卡片大小',
+        cardSizeDescription: '谱面卡片显示大小',
+        normal: '正常',
+        large: '大',
+        download: '下载选项',
+        downloadDescription: '谱面下载偏好',
+        downloadAll: '完整',
+        downloadNoVideo: '无视频',
+        downloadDirect: '直接下载',
+        showNsfw: '显示NSFW内容',
+        showNsfwDescription: '显示包含敏感内容的谱面'
+      },
+      
+      // 个人资料设置
+      profile: {
+        title: '个人资料设置',
+        order: '显示顺序',
+        orderDescription: '个人资料模块显示顺序',
+        legacyScoreOnly: '仅显示旧版分数',
+        legacyScoreOnlyDescription: '仅显示旧版计分系统的分数',
+        coverExpanded: '展开头图',
+        coverExpandedDescription: '默认展开个人资料头图',
+        colour: '个人资料颜色',
+        colourDescription: '自定义个人资料主题色'
+      },
+      
+      // 计分和排序
+      scoring: {
+        title: '计分和显示',
+        mode: '计分模式',
+        modeDescription: '成绩计分模式',
+        standardised: '标准化',
+        classic: '经典',
+        userListFilter: '用户列表筛选',
+        userListFilterDescription: '默认用户列表筛选器',
+        filterAll: '全部',
+        filterOnline: '在线',
+        filterOffline: '离线',
+        userListSort: '用户列表排序',
+        userListSortDescription: '默认用户列表排序方式',
+        sortLastVisit: '最后访问',
+        sortUsername: '用户名',
+        sortRank: '排名',
+        userListView: '用户列表视图',
+        userListViewDescription: '默认用户列表视图模式',
+        viewCard: '卡片',
+        viewList: '列表',
+        viewBrick: '砖块'
+      },
+      
+      // 游戏模式和个人信息
+      gameMode: {
+        title: '游戏模式',
+        playmode: '默认游戏模式',
+        playmodeDescription: '选择您偏好的默认游戏模式'
+      },
+      personalInfo: {
+        title: '个人信息',
+        interests: '兴趣爱好',
+        interestsPlaceholder: '输入您的兴趣爱好',
+        location: '所在地',
+        locationPlaceholder: '输入您的所在地',
+        occupation: '职业',
+        occupationPlaceholder: '输入您的职业',
+        twitter: 'Twitter',
+        twitterPlaceholder: '输入您的 Twitter 用户名',
+        website: '个人网站',
+        websitePlaceholder: '输入您的个人网站链接',
+        discord: 'Discord',
+        discordPlaceholder: '输入您的 Discord 用户名'
+      },
+      
       defaultMode: {
         title: '默认游戏模式',
         description: '选择您偏好的默认游戏模式',

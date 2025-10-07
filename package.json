@@ -13,6 +13,7 @@
     "@floating-ui/react": "^0.27.16",
     "@headlessui/react": "^2.2.7",
     "@react-spring/web": "^10.0.1",
+    "@uiw/react-color": "^2.9.0",
     "ahooks": "^3.8.0",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.6",

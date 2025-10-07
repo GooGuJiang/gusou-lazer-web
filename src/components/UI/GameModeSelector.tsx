@@ -14,13 +14,15 @@ interface GameModeSelectorProps {
   onModeChange: (mode: GameMode) => void;
   className?: string;
   variant?: 'compact' | 'full';
+  mainModesOnly?: boolean; // 新增：只显示主模式
 }
 
 const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   selectedMode = 'osu',
   onModeChange,
   className = '',
-  variant = 'full'
+  variant = 'full',
+  mainModesOnly = false
 }) => {
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
   const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
@@ -40,6 +42,12 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   }, []);
 
   const handleMainModeClick = (mainMode: MainGameMode) => {
+    // 如果只显示主模式，直接选择第一个（主模式）
+    if (mainModesOnly) {
+      onModeChange(GAME_MODE_GROUPS[mainMode][0]);
+      return;
+    }
+    
     const hasSubModes = GAME_MODE_GROUPS[mainMode].length > 1;
     if (!hasSubModes) {
       onModeChange(GAME_MODE_GROUPS[mainMode][0]);
@@ -61,7 +69,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
           {(Object.keys(GAME_MODE_GROUPS) as MainGameMode[]).map((mainMode) => {
             const isActive = selectedMainMode === mainMode;
             const isHovered = hoveredMode === mainMode;
-            const hasSubModes = GAME_MODE_GROUPS[mainMode].length > 1;
+            const hasSubModes = !mainModesOnly && GAME_MODE_GROUPS[mainMode].length > 1;
             const isExpanded = showSubModes === mainMode;
             const shouldExpand = isExpanded || (isHovered && hasSubModes && !showSubModes);
 
@@ -174,10 +182,12 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   }
 
   // 完整版本
-  const allModes: GameMode[] = ['osu', 'taiko', 'fruits', 'mania', 'osurx', 'osuap', 'taikorx', 'fruitsrx'];
+  const allModes: GameMode[] = mainModesOnly 
+    ? ['osu', 'taiko', 'fruits', 'mania']
+    : ['osu', 'taiko', 'fruits', 'mania', 'osurx', 'osuap', 'taikorx', 'fruitsrx'];
 
   return (
-    <div className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 ${className}`}>
+    <div className={`grid grid-cols-2 md:grid-cols-4 ${mainModesOnly ? 'lg:grid-cols-4' : 'lg:grid-cols-8'} gap-3 ${className}`}>
       {allModes.map((mode) => {
         const mainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
           .find(m => GAME_MODE_GROUPS[m].includes(mode));

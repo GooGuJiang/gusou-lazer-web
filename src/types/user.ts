@@ -71,6 +71,7 @@ export interface User {
   is_restricted: boolean;
   beatmap_playcounts_count: number;
   playmode: string;
+  g0v0_playmode?: GameMode;
   discord?: string | null;
   has_supported: boolean;
   interests?: string | null;

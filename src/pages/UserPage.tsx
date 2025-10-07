@@ -13,16 +13,18 @@ const UserPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // 从 URL 参数获取模式,如果没有则默认为 'osu'
+  // 从 URL 参数获取模式
   const modeFromUrl = searchParams.get('mode') as GameMode | null;
   const [selectedMode, setSelectedMode] = useState<GameMode>(modeFromUrl || 'osu');
 
-  // 当 URL 参数中的模式变化时,更新选中的模式
+  // 当用户数据加载后，如果 URL 没有指定模式，使用用户的 g0v0_playmode
   useEffect(() => {
     if (modeFromUrl) {
       setSelectedMode(modeFromUrl);
+    } else if (user?.g0v0_playmode && selectedMode !== user.g0v0_playmode) {
+      setSelectedMode(user.g0v0_playmode);
     }
-  }, [modeFromUrl]);
+  }, [modeFromUrl, user?.g0v0_playmode]);
 
   useEffect(() => {
     if (!userId) return;

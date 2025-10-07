@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock } from 'react-icons/fi';
+import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock, FiSettings } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ import TotpDisableModal from '../components/TOTP/TotpDisableModal';
 import SessionManagement from '../components/Device/SessionManagement';
 import TrustedDeviceManagement from '../components/Device/TrustedDeviceManagement';
 import PasswordResetSection from '../components/Settings/PasswordResetSection';
-// import DefaultModeSelector from '../components/Preferences/DefaultModeSelector';
+import UserPreferencesSection from '../components/Settings/UserPreferencesSection';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -417,11 +417,11 @@ const SettingsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 用户偏好设置 - 暂时注释 */}
-      {/* <motion.div
+      {/* 用户偏好设置 */}
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.275 }}
         className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
@@ -437,14 +437,8 @@ const SettingsPage: React.FC = () => {
           </p>
         </div>
 
-        {/* 默认游戏模式选择器 */}
-        {/* <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-            {t('settings.preferences.defaultMode.title')}
-          </h3>
-          <DefaultModeSelector />
-        </div>
-      </motion.div> */}
+        <UserPreferencesSection />
+      </motion.div>
 
       {/* 设备管理 */}
       <motion.div
