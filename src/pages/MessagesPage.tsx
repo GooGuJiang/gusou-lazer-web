@@ -1745,12 +1745,12 @@ const MessagesPage: React.FC = () => {
             transition={{ duration: 0.3 }}
             className={`
               ${isMobile ? 'fixed inset-y-0 left-0 z-50' : 'relative'}
-              w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
+              w-80 bg-card border-r border-card
               flex flex-col ${isMobile ? 'h-screen max-h-screen' : 'h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)]'}
             `}
           >
             {/* 侧边栏头部 */}
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-4 border-b border-card">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <h1 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -1815,7 +1815,7 @@ const MessagesPage: React.FC = () => {
               {activeTab === 'channels' ? (
                 <div className="h-full flex flex-col">
                   {/* 频道过滤器和新建按钮 */}
-                  <div className="p-4 border-b border-gray-200 dark:border-gray-700 space-y-3">
+                  <div className="p-4 border-b border-card space-y-3">
                     <div className="grid grid-cols-2 gap-1 text-xs">
                       {filterOptions.map(filter => (
                         <button
@@ -1932,7 +1932,7 @@ const MessagesPage: React.FC = () => {
                 /* 通知列表 */
                 <div className="flex flex-col h-full">
                   {/* 通知操作按钮 */}
-                  <div className="p-2 border-b border-gray-200 dark:border-gray-700 space-y-2">
+                  <div className="p-2 border-b border-card space-y-2">
                     <button
                       onClick={() => {
                         console.log('手动刷新通知列表');
@@ -1968,7 +1968,7 @@ const MessagesPage: React.FC = () => {
                         {notifications.map((notification, index) => (
                           <div
                             key={`notification-${notification.object_type}-${notification.object_id}-${notification.source_user_id || 'no-user'}-${index}`}
-                            className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                            className="p-3 rounded-lg border border-card bg-card"
                           >
                             <div className="flex items-start space-x-3">
                               <div className="flex-shrink-0">
@@ -2082,7 +2082,7 @@ const MessagesPage: React.FC = () => {
         {selectedChannel ? (
           <>
             {/* 聊天头部 */}
-            <div className="mt-[2px] h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center px-4 flex-shrink-0">
+            <div className="mt-[2px] h-16 bg-card border-b border-card flex items-center px-4 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 {isMobile && (
                   <button

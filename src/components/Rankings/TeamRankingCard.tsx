@@ -41,7 +41,7 @@ const TeamRankingCard: React.FC<Props> = ({
       <div className={`relative overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 animate-pulse ${
         isTopThree 
           ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10' 
-          : 'bg-white dark:bg-gray-800'
+          : 'bg-card'
       }`}>
         <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
           {/* 排名徽章 */}
@@ -89,7 +89,7 @@ const TeamRankingCard: React.FC<Props> = ({
         className={`relative overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 ${
           isTopThree 
             ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10' 
-            : 'bg-white dark:bg-gray-800'
+            : 'bg-card'
         }`}
       >
         <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">

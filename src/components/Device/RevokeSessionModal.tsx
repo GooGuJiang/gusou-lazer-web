@@ -77,7 +77,7 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4"
+            className="relative bg-card rounded-xl shadow-2xl w-full max-w-md mx-4"
           >
             {/* 头部 */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">

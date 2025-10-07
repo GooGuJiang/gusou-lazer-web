@@ -68,7 +68,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         }`}>
           <button
             onClick={toggleExpanded}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-osu-pink hover:text-pink-700 dark:text-osu-pink dark:hover:text-pink-300 transition-colors duration-200"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-osu-pink hover:brightness-90 dark:text-osu-pink dark:hover:brightness-110 transition-all duration-200"
           >
             {isExpanded ? (
               <>

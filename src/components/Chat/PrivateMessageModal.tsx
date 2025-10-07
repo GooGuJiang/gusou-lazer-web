@@ -125,7 +125,7 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md mx-4"
+          className="relative bg-card rounded-xl shadow-xl w-full max-w-md mx-4"
         >
           {/* 头部 */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">

@@ -123,7 +123,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
 
               {/* 下拉菜单 */}
               {showActions && (
-                <div className="absolute left-auto right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-[9999]">
+                <div className="absolute left-auto right-0 top-full mt-2 w-48 bg-card border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-[9999]">
                   <div className="py-1">
                     <button
                       onClick={() => {

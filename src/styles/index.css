@@ -2,6 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fuwari-inspired card components */
+@layer components {
+  /* 基础卡片样式 */
+  .card-base {
+    @apply rounded-2xl overflow-hidden transition-all duration-300;
+    background: var(--card-bg);
+  }
+  
+  .card-shadow {
+    @apply shadow-lg;
+  }
+  
+  .card-bordered {
+    border: 1px solid var(--border-color);
+  }
+  
+  .card-hover {
+    @apply hover:shadow-xl;
+  }
+  
+  .card-hover:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--border-hover);
+  }
+  
+  /* 浮动面板 */
+  .float-panel {
+    @apply rounded-2xl overflow-hidden transition-shadow shadow-xl;
+    background: var(--float-panel-bg);
+  }
+  
+  /* 常用卡片组合 */
+  .card-standard {
+    @apply rounded-2xl shadow-lg transition-all duration-300;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  .card-standard:hover {
+    @apply shadow-xl;
+    background: var(--card-bg-hover);
+    border-color: var(--border-hover);
+  }
+  
+  /* Modal 样式 */
+  .modal-card {
+    @apply rounded-2xl shadow-2xl;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  /* 紧凑卡片 */
+  .card-compact {
+    @apply rounded-xl shadow transition-all duration-300;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  /* 背景样式 - 用于替换 bg-white dark:bg-gray-xxx */
+  .bg-card {
+    background: var(--card-bg);
+  }
+  
+  .bg-card-hover {
+    background: var(--card-bg-hover);
+  }
+  
+  .bg-panel {
+    background: var(--float-panel-bg);
+  }
+  
+  .bg-page {
+    background: var(--page-bg);
+  }
+  
+  /* 边框样式 */
+  .border-card {
+    border-color: var(--border-color);
+  }
+  
+  .border-card-hover {
+    border-color: var(--border-hover);
+  }
+}
+
 /* 导入 Extra 字体 */
 @font-face {
   font-family: 'Extra';
@@ -57,22 +142,85 @@
 }
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
+  --hue: 340; /* 默认色相值，对应 osu-pink */
+  --profile-color: #ED8EA6;
+  --osu-pink: var(--profile-color, #ED8EA6);
+  
+  /* 使用 OKLCH 颜色空间，参考 fuwari 实现 */
+  /* 页面背景 */
+  --page-bg: oklch(0.97 0.01 var(--hue));
+  --bg-primary: var(--page-bg);
+  --bg-secondary: oklch(0.95 0.02 var(--hue));
+  
+  /* 卡片背景 - 亮色模式用白色 */
+  --card-bg: white;
+  --card-bg-hover: oklch(0.98 0.005 var(--hue));
+  
+  /* 文本颜色 */
   --text-primary: #1a202c;
   --text-secondary: #718096;
+  --text-muted: #a0aec0;
+  
+  /* 边框颜色 */
   --border-color: #e2e8f0;
-  --osu-pink: #ED8EA6;
-  --profile-color: #ED8EA6;
+  --border-hover: rgba(237, 142, 166, 0.2);
+  
+  /* 按钮背景 */
+  --btn-bg: oklch(0.95 0.025 var(--hue));
+  --btn-bg-hover: oklch(0.9 0.05 var(--hue));
+  --btn-bg-active: oklch(0.85 0.08 var(--hue));
+  
+  /* 重点色 */
+  --bg-accent-light: rgba(237, 142, 166, 0.05);
+  --bg-accent-medium: rgba(237, 142, 166, 0.1);
+  
+  /* 浮动面板 */
+  --float-panel-bg: rgba(255, 255, 255, 0.9);
+  
+  /* 导航栏 */
+  --navbar-bg: rgba(255, 255, 255, 0.9);
 }
 
 .dark {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --text-primary: #ffffff;
-  --text-secondary: #a0aec0;
-  --border-color: #4a5568;
-  --osu-pink: #ED8EA6;
+  /* 深色模式 - 参考 Fuwari 实现 */
+  --page-bg: oklch(0.16 0.014 var(--hue));
+  --bg-primary: var(--page-bg);
+  --bg-secondary: oklch(0.20 0.015 var(--hue));
+  
+  /* 卡片背景 - 与 Fuwari 一致 */
+  --card-bg: oklch(0.23 0.015 var(--hue));
+  --card-bg-hover: oklch(0.30 0.03 var(--hue));
+  
+  /* 文本颜色 */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* 边框颜色 - 更柔和 */
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(237, 142, 166, 0.3);
+  
+  /* 按钮背景 - 与 Fuwari 一致 */
+  --btn-bg: oklch(0.33 0.035 var(--hue));
+  --btn-bg-hover: oklch(0.38 0.04 var(--hue));
+  --btn-bg-active: oklch(0.43 0.045 var(--hue));
+  
+  /* Hover 状态背景 */
+  --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
+  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
+  
+  /* 重点色 */
+  --bg-accent-light: rgba(237, 142, 166, 0.08);
+  --bg-accent-medium: rgba(237, 142, 166, 0.15);
+  
+  /* 浮动面板 - 与 Fuwari 一致，使用 oklch */
+  --float-panel-bg: oklch(0.19 0.015 var(--hue) / 0.95);
+  
+  /* 导航栏 - 使用 oklch 带透明度 */
+  --navbar-bg: oklch(0.19 0.015 var(--hue) / 0.9);
+  
+  /* 深色模式专用颜色 */
+  --osu-pink: var(--profile-color, #ED8EA6);
   --profile-color: #ED8EA6;
 }
 
@@ -127,14 +275,14 @@ html, body {
 
 /* Gradient utilities */
 .gradient-text {
-  background: linear-gradient(135deg, #ED8EA6, #7DD5D4);
+  background: linear-gradient(135deg, var(--profile-color, #ED8EA6), #7DD5D4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .osu-gradient {
-  background: linear-gradient(135deg, #ED8EA6 0%, #7DD5D4 50%, #7DD5D4 100%);
+  background: linear-gradient(135deg, var(--profile-color, #ED8EA6) 0%, #7DD5D4 50%, #7DD5D4 100%);
 }
 
 .glass-morphism {
@@ -262,7 +410,7 @@ html, body {
 /* Loading spinner */
 .spinner {
   border: 2px solid var(--border-color);
-  border-top: 2px solid #ED8EA6;
+  border-top: 2px solid var(--osu-pink, #ED8EA6);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -293,7 +441,7 @@ html, body {
 
 /* Button styles */
 .btn-primary {
-  background: #ED8EA6;
+  background: var(--osu-pink, #ED8EA6);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
@@ -309,7 +457,7 @@ html, body {
 }
 
 .btn-primary:hover {
-  background: #e07396;
+  filter: brightness(0.95);
   box-shadow: 0 6px 20px rgba(237, 142, 166, 0.4);
   transform: translateY(-2px);
 }
@@ -321,8 +469,8 @@ html, body {
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid #ED8EA6;
-  color: #ED8EA6;
+  border: 2px solid var(--osu-pink, #ED8EA6);
+  color: var(--osu-pink, #ED8EA6);
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -343,14 +491,14 @@ html, body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: #ED8EA6;
+  background: var(--osu-pink, #ED8EA6);
   transition: left 0.3s ease;
   z-index: -1;
 }
 
 .btn-secondary:hover {
   color: white;
-  border-color: #ED8EA6;
+  border-color: var(--osu-pink, #ED8EA6);
   box-shadow: 0 4px 14px rgba(237, 142, 166, 0.3);
   transform: translateY(-1px);
 }
@@ -444,54 +592,37 @@ html, body {
   color: #d1d5db;
 }
 
-/* Card styles */
+/* Card styles - 使用 CSS 变量 */
 .card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 1rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   padding: 1.5rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
 }
 
-.dark .card {
-  background: #1f2937;
-  border-color: #374151;
-}
-
 .card:hover {
+  background: var(--card-bg-hover);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   transform: translateY(-4px);
-  border-color: rgba(237, 142, 166, 0.2);
-}
-
-.dark .card:hover {
-  border-color: rgba(237, 142, 166, 0.3);
+  border-color: var(--border-hover);
 }
 
 .card-compact {
-  background: white;
+  background: var(--card-bg);
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   padding: 1rem;
   transition: all 0.3s ease;
-}
-
-.dark .card-compact {
-  background: #1f2937;
-  border-color: #374151;
 }
 
 .card-header {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.dark .card-header {
-  border-bottom-color: #374151;
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Navigation styles */
@@ -508,12 +639,12 @@ html, body {
 }
 
 .nav-link:hover {
-  color: #ED8EA6;
+  color: var(--osu-pink, #ED8EA6);
   background: rgba(237, 142, 166, 0.1);
 }
 
 .nav-link.active {
-  color: #ED8EA6;
+  color: var(--osu-pink, #ED8EA6);
   background: rgba(237, 142, 166, 0.1);
 }
 
@@ -580,18 +711,13 @@ html, body {
   text-align: center;
   padding: 1rem;
   border-radius: 0.75rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   transition: all 0.2s ease;
 }
 
-.dark .stat-item {
-  background: rgba(55, 65, 81, 0.5);
-  border-color: #4b5563;
-}
-
 .stat-item:hover {
-  border-color: rgba(237, 142, 166, 0.3);
+  border-color: var(--border-hover);
 }
 
 .stat-value {
@@ -632,18 +758,15 @@ html, body {
 
 .modal-content {
   position: relative;
-  background: white;
+  background: var(--card-bg);
   border-radius: 0.75rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-color);
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   transform: translateZ(0);
-}
-
-.dark .modal-content {
-  background: #1f2937;
 }
 
 .chart-line {
@@ -795,4 +918,107 @@ span.imagemap__link:hover {
   background: rgba(237, 110, 160, 0.1);
   padding: 8px 12px;
   border-radius: 4px;
+}
+
+/* Hue 滑块样式 - 参照 fuwari 实现 */
+.hue-slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  padding: 0 0.25rem;
+}
+
+.hue-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1.5rem;
+  background: linear-gradient(to right,
+    oklch(0.70 0.14 0),
+    oklch(0.70 0.14 30),
+    oklch(0.70 0.14 60),
+    oklch(0.70 0.14 90),
+    oklch(0.70 0.14 120),
+    oklch(0.70 0.14 150),
+    oklch(0.70 0.14 180),
+    oklch(0.70 0.14 210),
+    oklch(0.70 0.14 240),
+    oklch(0.70 0.14 270),
+    oklch(0.70 0.14 300),
+    oklch(0.70 0.14 330),
+    oklch(0.70 0.14 360)
+  );
+  border-radius: 0.375rem;
+  outline: none;
+  cursor: pointer;
+  transition: background-image 0.15s ease-in-out;
+}
+
+/* WebKit (Chrome, Safari) */
+.hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1rem;
+  width: 0.5rem;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hue-slider::-webkit-slider-thumb:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: scaleY(1.1);
+}
+
+.hue-slider::-webkit-slider-thumb:active {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox */
+.hue-slider::-moz-range-thumb {
+  height: 1rem;
+  width: 0.5rem;
+  border: none;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hue-slider::-moz-range-thumb:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: scaleY(1.1);
+}
+
+.hue-slider::-moz-range-thumb:active {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox - 移除默认轨道样式 */
+.hue-slider::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+/* IE/Edge */
+.hue-slider::-ms-thumb {
+  height: 1rem;
+  width: 0.5rem;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.hue-slider::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
 }

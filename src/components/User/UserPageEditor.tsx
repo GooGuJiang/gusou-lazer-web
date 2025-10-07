@@ -135,7 +135,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 ${className}`}>
+      <div className={`bg-card rounded-lg shadow-lg p-6 ${className}`}>
         <div className="flex items-center justify-center py-12">
           <LoadingSpinner size="lg" />
           <span className="ml-3 text-gray-600 dark:text-gray-400">{t('profile.userPage.loadingEditor')}</span>
@@ -146,7 +146,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
 
   if (error && !canEdit) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 ${className}`}>
+      <div className={`bg-card rounded-lg shadow-lg p-6 ${className}`}>
         <div className="text-center py-12">
           <FaEdit className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
@@ -169,11 +169,11 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
   }
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden ${className}`}>
+    <div className={`bg-card rounded-lg shadow-lg overflow-hidden ${className}`}>
       {/* 头部 */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
         <div className="flex items-center gap-3">
-          <FaEdit className="w-5 h-5 text-pink-500" />
+          <FaEdit className="w-5 h-5 text-profile-color" />
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {t('profile.userPage.editPageTitle')}
@@ -252,7 +252,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving || content.length > 60000}
-            className="flex items-center gap-2 px-4 py-2 bg-pink-500 hover:bg-pink-600 disabled:bg-gray-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-osu-pink hover:opacity-90 disabled:bg-gray-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed"
           >
             {saving ? (
               <>

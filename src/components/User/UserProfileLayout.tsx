@@ -77,7 +77,7 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
     <div ref={ref} className={`relative w-full overflow-hidden transition-all duration-300 ${heightClass}`}>
       {/* 骨架 or 渐变背景兜底 */}
       <div className="absolute inset-0 cover-bg">
-        <div className="h-full w-full bg-white/0 dark:bg-black/10" />
+        <div className="h-full w-full" style={{ background: 'transparent' }} />
       </div>
 
       {inView && src && !error && (
@@ -176,7 +176,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   return (
     <main className="max-w-7xl mx-auto px-4 lg:px-6 py-4 md:py-6">
       {/* 主卡片 */}
-      <div className="bg-transparent md:bg-white/95 md:dark:bg-gray-900/85 md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-gray-100/70 md:dark:border-white/10">
+      <div className="bg-transparent md:bg-card md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-card">
         
         {/* 受限用户提示 - 仅管理员可见 */}
         {user.is_restricted && currentUser?.is_admin && (
@@ -187,7 +187,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 头部栏 + 模式选择（与头图同容器） */}
         <div className="relative overflow-hidden">
-          <div className="bg-white/95 dark:bg-gray-900/85 text-gray-900 dark:text-gray-100 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-gray-100/70 dark:border-white/10">
+          <div className="bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
               <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
@@ -233,7 +233,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 头像与基本信息条 */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-gray-200/60 dark:border-white/10 relative">
+        <div className="bg-card px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-card relative">
           {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时缩小 */}
           <div className={isCoverExpanded ? "-mt-12" : "-mt-16"}>
             <Avatar
@@ -304,7 +304,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
 
         {/* 中部：左 3/4（排名+折线+信息），右 1/4（统计） */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-6 py-4 border-b border-gray-200/60 dark:border-white/10">
+        <div className="bg-card px-3 md:px-6 py-4 border-b border-card">
           <div className="flex flex-col md:flex-row gap-4">
             {/* 左侧 3/4 */}
             <div className="flex-[3] flex flex-col gap-3">
@@ -344,7 +344,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
             {/* 右侧 1/4：统计信息 */}
             <div className="flex-1">
-              <div className="bg-gray-50 dark:bg-gray-800/60 p-3 md:rounded-lg h-full flex flex-col justify-center md:stats-card-shadow">
+              <div className="p-3 md:rounded-lg h-full flex flex-col justify-center md:stats-card-shadow" style={{ background: 'var(--bg-secondary)' }}>
                 <StatsCard stats={stats} />
               </div>
             </div>
@@ -352,7 +352,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 好友/消息 + 等级进度 */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-6 lg:px-8 py-4 md:py-6 relative border-b border-gray-200/60 dark:border-white/10">
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-4 md:py-6 relative border-b border-card">
           <div className="flex items-center justify-between relative">
               <FriendStats user={user} />
             <div className="flex items-center gap-4">
@@ -368,7 +368,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 个人页面 */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-gray-200/60 dark:border-white/10">
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserPageDisplay
             user={user}
             onUserUpdate={onUserUpdate}
@@ -376,17 +376,17 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 用户最近活动 */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-gray-200/60 dark:border-white/10">
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserRecentActivity userId={user.id} />
         </div>
 
         {/* 用户最佳成绩 */}
-        <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-gray-200/60 dark:border-white/10">
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserBestScores userId={user.id} selectedMode={selectedMode} user={user} />
         </div>
 
         {/* 施工中 */}
-        <div className="bg-gray-50 dark:bg-gray-800/60 p-3 md:rounded-lg h-[500px] flex flex-col justify-center">
+        <div className="p-3 md:rounded-lg h-[500px] flex flex-col justify-center" style={{ background: 'var(--bg-secondary)' }}>
           <div className="flex justify-center items-center h-full">
             <p className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
               <FaTools className="text-lg" />

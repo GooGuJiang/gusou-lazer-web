@@ -182,7 +182,7 @@ const ServerStatsCard: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        className="bg-card rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
       >
         {/* 标题占位符 */}
         <div className="flex items-center justify-between mb-4">
@@ -249,7 +249,7 @@ const ServerStatsCard: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        className="bg-card rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
       >
         <div className="text-center text-gray-500 dark:text-gray-400">
           <FiBarChart className="w-8 h-8 mx-auto mb-2" />
@@ -286,8 +286,8 @@ const ServerStatsCard: React.FC = () => {
     >
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-3">
-          <div className="w-8 h-8 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center">
-            <FiBarChart className="w-4 h-4 text-pink-600 dark:text-pink-400" />
+          <div className="w-8 h-8 bg-profile-color/10 dark:bg-profile-color/20 rounded-xl flex items-center justify-center">
+            <FiBarChart className="w-4 h-4 text-profile-color" />
           </div>
           {t('common.serverStats')}
         </h3>
@@ -297,7 +297,7 @@ const ServerStatsCard: React.FC = () => {
             <button
               onClick={fetchStats}
               disabled={loading}
-              className="text-pink-500 hover:text-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="text-profile-color hover:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               title={t('common.manualRefresh')}
             >
               <FiRefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />

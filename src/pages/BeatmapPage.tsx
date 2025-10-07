@@ -293,8 +293,8 @@ const BeatmapPage: React.FC = () => {
                           
                           {/* 选中指示器 */}
                           {isSelected && (
-                            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 rotate-45"
-                                 style={{ backgroundColor: bgColor, borderRight: `2px solid #ED8EA6`, borderBottom: `2px solid #ED8EA6` }}
+                            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 rotate-45 border-r-2 border-b-2 border-osu-pink"
+                                 style={{ backgroundColor: bgColor }}
                             />
                           )}
                         </button>

@@ -75,7 +75,7 @@ const TeamDetailPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center">
           <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
           <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.detail.loading')}</p>
@@ -86,7 +86,7 @@ const TeamDetailPage: React.FC = () => {
 
   if (!teamDetail) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center">
           <FiUsers className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -112,7 +112,7 @@ const TeamDetailPage: React.FC = () => {
   const nonLeaderMembers = getNonLeaderMembers();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 sm:py-8">
         {/* 返回按钮 */}
         <div className="mb-6">
@@ -126,7 +126,7 @@ const TeamDetailPage: React.FC = () => {
         </div>
 
         {/* 战队头部信息 */}
-        <div className="-mx-4 sm:mx-0 sm:bg-white sm:dark:bg-gray-800 sm:rounded-xl sm:shadow-sm sm:border sm:border-gray-200 sm:dark:border-gray-700 mb-8">
+        <div className="-mx-4 sm:mx-0 sm:bg-card sm:rounded-xl sm:shadow-sm sm:border sm:border-card mb-8">
           {/* 封面图片 */}
           <div className="relative h-32 sm:h-48 bg-gradient-to-r from-blue-500 to-purple-600 sm:rounded-t-xl overflow-hidden">
             <img
@@ -141,7 +141,7 @@ const TeamDetailPage: React.FC = () => {
           </div>
 
           {/* 战队信息 */}
-          <div className="relative px-4 sm:px-6 py-6 sm:bg-white sm:dark:bg-gray-800 sm:rounded-b-xl">
+          <div className="relative px-4 sm:px-6 py-6 sm:bg-card sm:rounded-b-xl">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               {/* 战队旗帜 - 2:1 比例 (240:120) */}
               <div className="w-32 h-16 sm:w-40 sm:h-20 rounded-xl overflow-hidden border-4 border-white dark:border-gray-800 bg-gray-100 dark:bg-gray-700 flex-shrink-0 -mt-12 sm:-mt-16">
@@ -198,12 +198,12 @@ const TeamDetailPage: React.FC = () => {
 
         {/* 队长信息 */}
         {leader && (
-          <div className="sm:bg-white sm:dark:bg-gray-800 sm:rounded-xl sm:shadow-sm sm:border sm:border-gray-200 sm:dark:border-gray-700 sm:p-6 mb-8">
+          <div className="sm:bg-card sm:rounded-xl sm:shadow-sm sm:border sm:border-card sm:p-6 mb-8">
             <div className="flex items-center gap-3 mb-4 px-4 sm:px-0">
               <FiAward className="w-5 h-5 text-yellow-500" />
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('teams.detail.captain')}</h2>
             </div>
-            <div className="-mx-4 sm:-mx-6 sm:border sm:border-gray-200 sm:dark:border-gray-700 overflow-hidden">
+            <div className="-mx-4 sm:-mx-6 sm:border sm:border-card overflow-hidden">
               <TeamDetailUserCard
                 ranking={{
                   user: leader,
@@ -219,7 +219,7 @@ const TeamDetailPage: React.FC = () => {
 
         {/* 团队成员 */}
         {nonLeaderMembers.length > 0 && (
-          <div className="sm:bg-white sm:dark:bg-gray-800 sm:rounded-xl sm:shadow-sm sm:border sm:border-gray-200 sm:dark:border-gray-700 sm:p-6">
+          <div className="sm:bg-card sm:rounded-xl sm:shadow-sm sm:border sm:border-card sm:p-6">
             <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
               <FiUsers className="w-5 h-5 text-blue-500" />
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('teams.detail.teamMembers')}</h2>
@@ -228,7 +228,7 @@ const TeamDetailPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="-mx-4 sm:-mx-6 sm:divide-y divide-gray-200 dark:divide-gray-700 sm:border sm:border-gray-200 sm:dark:border-gray-700 overflow-hidden">
+            <div className="-mx-4 sm:-mx-6 sm:divide-y divide-gray-200 dark:divide-gray-700 sm:border sm:border-card overflow-hidden">
               {nonLeaderMembers.map((member: User) => (
                 <div key={member.id} className="relative">
                   <TeamDetailUserCard

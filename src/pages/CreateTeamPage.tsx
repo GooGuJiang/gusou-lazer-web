@@ -156,7 +156,7 @@ const CreateTeamPage: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center">
           <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {t('teams.create.loginRequired')}
@@ -171,7 +171,7 @@ const CreateTeamPage: React.FC = () => {
 
   if (isEditing && isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center">
           <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
           <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.create.loading')}</p>
@@ -181,7 +181,7 @@ const CreateTeamPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 sm:py-8">
         {/* 返回按钮 */}
         <div className="mb-6">
@@ -208,7 +208,7 @@ const CreateTeamPage: React.FC = () => {
         <div className="max-w-2xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 基本信息 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-card rounded-xl shadow-sm border border-card p-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.basicInfo')}</h2>
               
               <div className="space-y-6">
@@ -222,8 +222,8 @@ const CreateTeamPage: React.FC = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg
-                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                    className="w-full px-4 py-3 border border-card rounded-lg
+                             bg-card text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-osu-pink focus:border-transparent"
                     placeholder={t('teams.create.teamNamePlaceholder')}
                     maxLength={50}
@@ -240,8 +240,8 @@ const CreateTeamPage: React.FC = () => {
                     name="short_name"
                     value={formData.short_name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg
-                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                    className="w-full px-4 py-3 border border-card rounded-lg
+                             bg-card text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-osu-pink focus:border-transparent"
                     placeholder={t('teams.create.teamShortNamePlaceholder')}
                     maxLength={10}
@@ -254,7 +254,7 @@ const CreateTeamPage: React.FC = () => {
             </div>
 
             {/* 旗帜上传 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-card rounded-xl shadow-sm border border-card p-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.teamFlag')}</h2>
               
               <ImageUploadWithCrop
@@ -274,7 +274,7 @@ const CreateTeamPage: React.FC = () => {
             </div>
 
             {/* 封面上传 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-card rounded-xl shadow-sm border border-card p-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.teamCover')}</h2>
               
               <ImageUploadWithCrop
@@ -295,7 +295,7 @@ const CreateTeamPage: React.FC = () => {
 
             {/* 队员管理 - 仅在编辑模式下显示 */}
             {isEditing && members.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="bg-card rounded-xl shadow-sm border border-card p-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                   <FiUsers className="mr-3" />
                   {t('teams.create.memberManagement')}
@@ -375,7 +375,7 @@ const CreateTeamPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="px-6 py-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="px-6 py-3 border border-card text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 {t('teams.create.cancel')}
               </button>

@@ -66,7 +66,7 @@ const RemoveDeviceModal: React.FC<RemoveDeviceModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.3 }}
-            className="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-md bg-card rounded-2xl shadow-2xl overflow-hidden"
           >
             {/* 关闭按钮 */}
             <button

@@ -54,7 +54,7 @@ const HowToJoinPage: React.FC = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               {t('howToJoin.method1.title')}
-              <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-osu-pink/10 text-osu-pink dark:bg-osu-pink/20 dark:text-pink-300">
+              <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-osu-pink/10 text-osu-pink dark:bg-osu-pink/20 dark:text-profile-color">
                 {t('howToJoin.method1.recommended')}
               </span>
             </h2>
@@ -73,7 +73,7 @@ const HowToJoinPage: React.FC = () => {
             </h3>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-pink-300 rounded-full flex items-center justify-center text-sm font-bold mt-1">
+                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-profile-color rounded-full flex items-center justify-center text-sm font-bold mt-1">
                   1
                 </div>
                 <div>
@@ -124,7 +124,7 @@ const HowToJoinPage: React.FC = () => {
               </div>
               
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-pink-300 rounded-full flex items-center justify-center text-sm font-bold mt-1">
+                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-profile-color rounded-full flex items-center justify-center text-sm font-bold mt-1">
                   2
                 </div>
                 <div>
@@ -132,7 +132,7 @@ const HowToJoinPage: React.FC = () => {
                     {t('howToJoin.method1.steps.step2.description')}
                   </p>
                   <div className="bg-gray-100/70 dark:bg-gray-700/70 backdrop-blur-sm p-4 rounded-lg flex items-center mb-4">
-                    <code className="bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-pink-300 px-2 py-1 rounded flex-1">
+                    <code className="bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-profile-color px-2 py-1 rounded flex-1">
                       lazer-api.g0v0.top
                     </code>
                     <CopyButton text="lazer-api.g0v0.top" label="API URL" />
@@ -154,7 +154,7 @@ const HowToJoinPage: React.FC = () => {
               </div>
               
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-pink-300 rounded-full flex items-center justify-center text-sm font-bold mt-1">
+                <div className="w-6 h-6 bg-osu-pink/10 dark:bg-osu-pink/20 text-osu-pink dark:text-profile-color rounded-full flex items-center justify-center text-sm font-bold mt-1">
                   3
                 </div>
                 <div>

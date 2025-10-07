@@ -70,7 +70,7 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
         type="button"
         onClick={handleToggle}
         className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg
-                   bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                   bg-card text-gray-900 dark:text-white
                    focus:ring-2 focus:ring-osu-pink focus:border-transparent
                    flex items-center justify-between transition-colors
                    hover:border-gray-300 dark:hover:border-gray-600"
@@ -124,7 +124,7 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
 
       {/* 下拉选项 */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute z-50 w-full mt-1 bg-card border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
           <div className="max-h-60 overflow-y-auto">
             {/* 保持当前队长选项 */}
             <button

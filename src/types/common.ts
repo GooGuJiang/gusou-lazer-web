@@ -20,15 +20,24 @@ export const GAME_MODE_NAMES: Record<GameMode, string> = {
   mania: 'Mania',
 };
 
+// 获取主题色的函数 - 直接从 CSS 变量读取
+export const getProfileColor = () => {
+  if (typeof window !== 'undefined') {
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--profile-color').trim();
+    return color || '#ED8EA6';
+  }
+  return '#ED8EA6';
+};
+
 export const GAME_MODE_COLORS: Record<GameMode, string> = {
-  osu: '#ED8EA6',
-  osurx: '#ED8EA6',
-  osuap: '#ED8EA6',
-  taiko: '#7DD5D4',
-  taikorx: '#7DD5D4',
-  fruits: '#7DD5D4',
-  fruitsrx: '#7DD5D4',
-  mania: '#ED8EA6',
+  osu: 'var(--profile-color, #ED8EA6)',
+  osurx: 'var(--profile-color, #ED8EA6)',
+  osuap: 'var(--profile-color, #ED8EA6)',
+  taiko: 'var(--profile-color, #ED8EA6)',
+  taikorx: 'var(--profile-color, #ED8EA6)',
+  fruits: 'var(--profile-color, #ED8EA6)',
+  fruitsrx: 'var(--profile-color, #ED8EA6)',
+  mania: 'var(--profile-color, #ED8EA6)',
 };
 
 export type Theme = 'light' | 'dark';

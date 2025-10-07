@@ -21,7 +21,7 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user, delay = 0 }) => {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay }}
-    className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4"
+    className="bg-card rounded-2xl shadow-lg p-4"
   >
     <div className="space-y-1.5">
       <div className="flex justify-between items-center">

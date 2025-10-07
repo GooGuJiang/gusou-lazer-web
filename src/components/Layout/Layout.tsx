@@ -14,9 +14,13 @@ const Layout: React.FC = () => {
 
   return (
     <NotificationProvider isAuthenticated={isAuthenticated} user={user}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900" style={{ 
+        background: 'var(--bg-primary)'
+      }}>
         <Navbar />
-        <main className={isHomePage ? '' : 'pt-[56px] md:pt-20 bg-gray-50 dark:bg-gray-900'}>
+        <main className={isHomePage ? '' : 'pt-[56px] md:pt-20'} style={{
+          background: isHomePage ? 'transparent' : 'var(--bg-primary)'
+        }}>
           <Outlet />
         </main>
         <Toaster
@@ -36,7 +40,7 @@ const Layout: React.FC = () => {
           },
           success: {
             iconTheme: {
-              primary: '#ED8EA6',
+              primary: 'var(--osu-pink, #ED8EA6)',
               secondary: 'white',
             },
           },

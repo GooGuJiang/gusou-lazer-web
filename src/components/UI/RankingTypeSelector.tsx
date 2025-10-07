@@ -75,12 +75,12 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
         className={`
           flex items-center justify-between w-full px-3 sm:px-4 py-2 sm:py-2.5 
           border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl
-          bg-white dark:bg-gray-800 text-gray-900 dark:text-white 
+          bg-card text-gray-900 dark:text-white 
           shadow-sm min-h-[44px] sm:min-h-[48px] font-medium text-sm sm:text-base
           transition-all duration-200 group
           ${isOpen
-            ? 'ring-2 ring-osu-pink border-transparent'
-            : 'hover:border-osu-pink hover:ring-1 hover:ring-osu-pink/50'
+            ? 'ring-2 ring-profile-color border-transparent'
+            : 'hover:border-profile-color hover:ring-1 hover:ring-profile-color/50'
           }
         `}
         aria-label="Ranking Type Selector"
@@ -90,7 +90,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
         <div className="flex items-center space-x-2">
           {currentType && (
             <>
-              <currentType.icon size={16} className="text-osu-pink" />
+              <currentType.icon size={16} className="text-profile-color" />
               <span>{currentType.label}</span>
             </>
           )}
@@ -111,7 +111,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
         <div
           className={`
             absolute top-full left-0 right-0 mt-1 z-50
-            bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+            bg-card border border-gray-200 dark:border-gray-700
             rounded-lg sm:rounded-xl shadow-lg min-w-full
             py-1 origin-top animate-in fade-in-0 zoom-in-95 duration-100
           `}
@@ -129,7 +129,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
                   transition-colors duration-150
                   flex items-center justify-between
                   ${isSelected
-                    ? 'bg-osu-pink/10 text-osu-pink'
+                    ? 'bg-profile-color/10 text-profile-color'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }
                 `}
@@ -137,7 +137,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
                 aria-selected={isSelected}
               >
                 <div className="flex items-center space-x-2">
-                  <IconComponent size={16} className={isSelected ? 'text-osu-pink' : 'text-gray-500'} />
+                  <IconComponent size={16} className={isSelected ? 'text-profile-color' : 'text-gray-500'} />
                   <div className="flex flex-col">
                     <span className="font-medium text-sm sm:text-base">
                       {type.label}
@@ -150,7 +150,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
                 
                 {/* 选中指示器 */}
                 {isSelected && (
-                  <div className="text-osu-pink">
+                  <div className="text-profile-color">
                     <div className="w-2 h-2 bg-current rounded-full"></div>
                   </div>
                 )}

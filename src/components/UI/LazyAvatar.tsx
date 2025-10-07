@@ -77,11 +77,14 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
   return (
     <div 
       ref={containerRef}
-      className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors duration-200`}
+      className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-lg border-2 transition-colors duration-200`}
+      style={{
+        borderColor: 'var(--border-color)',
+      }}
     >
       {/* 占位符背景 - 只在图片未加载时显示 */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse" />
+        <div className="absolute inset-0 animate-pulse" style={{ background: 'var(--card-bg)' }} />
       )}
       
       {/* 实际图片 */}

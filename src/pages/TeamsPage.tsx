@@ -105,7 +105,7 @@ const TeamsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 sm:py-8">
         {/* 页面标题 */}
         <div className="mb-6 sm:mb-8">
@@ -157,7 +157,7 @@ const TeamsPage: React.FC = () => {
           
           {/* 游戏模式选择 */}
           <div className="flex justify-start" ref={modeSelectRef}>
-            <div className="inline-flex gap-1 sm:gap-2 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border border-gray-200 dark:border-gray-700 min-h-[44px] sm:min-h-[48px] items-center">
+            <div className="inline-flex gap-1 sm:gap-2 bg-card rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border-card min-h-[44px] sm:min-h-[48px] items-center">
               {(Object.keys(GAME_MODE_GROUPS) as MainGameMode[]).map((mainMode) => (
                 <div key={mainMode} className="relative">
                   <button
@@ -178,31 +178,32 @@ const TeamsPage: React.FC = () => {
                       style={{
                         background: selectedMainMode === mainMode
                           ? `linear-gradient(135deg, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]} 0%, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]}CC 100%)`
-                          : 'transparent'
+                          : 'var(--card-bg)'
                       }}
                     />
                     <i
                       className={`${MAIN_MODE_ICONS[mainMode]} relative z-10 text-xl sm:text-2xl transition-colors duration-200`}
                       style={{
-                        color: selectedMainMode === mainMode ? '#fff' : 'var(--text-primary)'
+                        color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)'
                       }}
                     />
                   </button>
 
                   {/* 子模式弹出选项 */}
                   {showSubModes === mainMode && (
-                    <div className="absolute top-full mt-1 sm:mt-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl p-1.5 sm:p-2 min-w-28 sm:min-w-32 shadow-lg sm:shadow-xl z-30">
+                    <div className="absolute top-full mt-1 sm:mt-2 left-1/2 transform -translate-x-1/2 bg-card border-card rounded-lg sm:rounded-xl p-1.5 sm:p-2 min-w-28 sm:min-w-32 shadow-lg sm:shadow-xl z-30">
                       {GAME_MODE_GROUPS[mainMode].map((mode) => (
                         <button
                           key={mode}
                           onClick={() => handleSubModeSelect(mode)}
                           className={`w-full text-left px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm block ${
                             selectedMode === mode
-                              ? 'text-white shadow-sm'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                              ? 'shadow-sm'
+                              : 'hover:bg-card-hover'
                           }`}
                           style={{
                             backgroundColor: selectedMode === mode ? GAME_MODE_COLORS[mode] : 'transparent',
+                            color: selectedMode === mode ? 'white' : 'var(--text-primary)',
                           }}
                         >
                           {GAME_MODE_NAMES[mode]}
@@ -239,7 +240,7 @@ const TeamsPage: React.FC = () => {
         </div>
 
         {/* 排行榜内容 */}
-        <div className="-mx-4 sm:mx-0 sm:bg-white sm:dark:bg-gray-800 sm:rounded-xl sm:shadow-sm sm:border sm:border-gray-200 sm:dark:border-gray-700 sm:p-6">
+        <div className="-mx-4 sm:mx-0 sm:bg-card sm:rounded-xl sm:shadow-sm sm:border-card sm:p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-16 px-4 sm:px-0">
               <div className="text-center">

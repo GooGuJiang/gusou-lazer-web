@@ -31,9 +31,10 @@ const DefaultModeSelector: React.FC = () => {
   const fetchUserPreferences = async () => {
     try {
       setIsLoading(true);
-      const response = await preferencesAPI.getUserPreferences();
-      const defaultMode = response.default_mode || 'osu';
-      const availableModesFromAPI = response.available_modes || ['osu'];
+      const response = await preferencesAPI.getPreferences();
+      const defaultMode = (response.playmode as GameMode) || 'osu';
+      // 假设所有模式都可用，或者可以从其他 API 获取
+      const availableModesFromAPI: GameMode[] = ['osu', 'osurx', 'osuap', 'taiko', 'taikorx', 'fruits', 'fruitsrx', 'mania'];
       
       setCurrentMode(defaultMode);
       setSelectedMode(defaultMode);
@@ -58,7 +59,7 @@ const DefaultModeSelector: React.FC = () => {
 
     try {
       setIsSaving(true);
-      await preferencesAPI.setDefaultMode(selectedMode);
+      await preferencesAPI.updatePreferences({ playmode: selectedMode });
       setCurrentMode(selectedMode);
       setIsEditing(false);
       toast.success(t('settings.preferences.defaultMode.success'));
@@ -96,7 +97,7 @@ const DefaultModeSelector: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-osu-pink"></div>
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-profile-color"></div>
         <span className="ml-3 text-gray-500 dark:text-gray-400">
           {t('common.loading', '加载中...')}
         </span>
@@ -114,7 +115,7 @@ const DefaultModeSelector: React.FC = () => {
         {!isEditing ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-osu-pink/10 text-osu-pink rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-profile-color/10 text-profile-color rounded-lg flex items-center justify-center">
                 <i className={`${GAME_MODES.find(m => m.value === currentMode)?.iconClass || 'fa-extra-mode-osu'} text-lg`}></i>
               </div>
               <span className="text-lg font-medium text-gray-900 dark:text-white">
@@ -144,14 +145,14 @@ const DefaultModeSelector: React.FC = () => {
                   onClick={() => setSelectedMode(mode.value)}
                   className={`relative p-4 rounded-lg border-2 transition-all ${
                     selectedMode === mode.value
-                      ? 'border-osu-pink bg-osu-pink/10 text-osu-pink'
-                      : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-osu-pink/50'
+                      ? 'border-profile-color bg-profile-color/10 text-profile-color'
+                      : 'border-gray-200 dark:border-gray-700 bg-card text-gray-700 dark:text-gray-300 hover:border-profile-color/50'
                   }`}
                 >
                   <div className="flex flex-col items-center gap-2">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                       selectedMode === mode.value
-                        ? 'bg-osu-pink text-white'
+                        ? 'bg-profile-color text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                     }`}>
                       <i className={`${mode.iconClass} text-base`}></i>
@@ -162,7 +163,7 @@ const DefaultModeSelector: React.FC = () => {
                   </div>
                   {selectedMode === mode.value && (
                     <div className="absolute top-2 right-2">
-                      <FiCheck className="w-4 h-4 text-osu-pink" />
+                      <FiCheck className="w-4 h-4 text-profile-color" />
                     </div>
                   )}
                 </motion.button>

@@ -21,7 +21,7 @@ export default function PaginationControls({ total, currentPage, onPageChange }:
       <button
         key="prev"
         onClick={() => onPageChange(currentPage - 1)}
-        className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+        className="px-4 py-2 rounded-lg bg-card border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
       >
         <FiChevronLeft size={18} />
       </button>
@@ -36,7 +36,7 @@ export default function PaginationControls({ total, currentPage, onPageChange }:
         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
           i === currentPage
             ? 'bg-osu-pink text-white border border-osu-pink'
-            : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+            : 'bg-card border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
         }`}
       >
         {i}
@@ -49,7 +49,7 @@ export default function PaginationControls({ total, currentPage, onPageChange }:
       <button
         key="next"
         onClick={() => onPageChange(currentPage + 1)}
-        className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+        className="px-4 py-2 rounded-lg bg-card border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
       >
         <FiChevronRight size={18} />
       </button>

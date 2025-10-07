@@ -143,7 +143,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       }}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden"
+        className="bg-card rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden"
         style={{ minHeight: '400px' }}
       >
         {/* 头部 */}

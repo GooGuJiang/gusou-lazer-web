@@ -147,7 +147,7 @@ const HeroSection: React.FC = () => {
       {/* 背景装饰（全局固定，仅作轻装点缀） */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-pink-200/20 dark:bg-pink-800/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-profile-color/10 rounded-full blur-2xl" />
         <div className="absolute bottom-1/3 right-1/3 w-40 h-40 bg-teal-200/20 dark:bg-teal-800/20 rounded-full blur-2xl" />
         <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-blue-200/15 dark:bg-blue-800/15 rounded-full blur-xl" />
         <div className="absolute bottom-1/4 left-1/3 w-36 h-36 bg-purple-200/15 dark:bg-purple-800/15 rounded-full blur-xl" />
@@ -177,7 +177,7 @@ const HeroSection: React.FC = () => {
               {descriptionChars.map((charObj, index) => (
                 <span 
                   key={index} 
-                  className={`char-${index} inline-block ${charObj.isBold ? 'font-bold text-pink-600 dark:text-pink-400' : ''}`}
+                  className={`char-${index} inline-block ${charObj.isBold ? 'font-bold text-profile-color' : ''}`}
                   style={{ opacity: 0 }}
                 >
                   {charObj.char === ' ' ? '\u00A0' : charObj.char}

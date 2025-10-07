@@ -8,6 +8,7 @@ import {
   GAME_MODE_GROUPS,
   MAIN_MODE_ICONS
 } from '../../types';
+import { useProfileColor } from '../../contexts/ProfileColorContext';
 
 interface GameModeSelectorProps {
   selectedMode?: GameMode;
@@ -27,9 +28,20 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
   const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
   const modeSelectRef = useRef<HTMLDivElement>(null);
+  const { profileColor } = useProfileColor();
 
   const selectedMainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
     .find(mainMode => GAME_MODE_GROUPS[mainMode].includes(selectedMode)) || 'osu';
+  
+  // 获取实际的颜色值 - 如果是主题色模式，使用 profileColor
+  const getBrandColor = (mode: GameMode): string => {
+    const colorValue = GAME_MODE_COLORS[mode];
+    // 如果颜色值包含 CSS 变量，则使用当前的 profileColor
+    if (colorValue.includes('var(--profile-color')) {
+      return profileColor;
+    }
+    return colorValue;
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,7 +85,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             const isExpanded = showSubModes === mainMode;
             const shouldExpand = isExpanded || (isHovered && hasSubModes && !showSubModes);
 
-            const brand = GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]];
+            const brand = getBrandColor(GAME_MODE_GROUPS[mainMode][0]);
 
             return (
               <div 
@@ -88,14 +100,15 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                   whileTap={{ scale: 0.98 }}
                   className={`relative flex items-center justify-center rounded-xl font-medium text-sm transition-colors duration-200 overflow-hidden border ${
                     isActive
-                      ? 'text-white shadow-lg'
-                      : 'text-gray-700 dark:text-gray-300 bg-white/95 dark:bg-gray-900/85 border-black/10 dark:border-white/15 shadow-sm'
+                      ? 'shadow-lg'
+                      : 'shadow-sm'
                   }`}
                   style={{
                     height: '36px',
-                    backgroundColor: isActive ? brand : undefined,
-                    borderColor: isActive ? `${brand}66` : undefined,
+                    backgroundColor: isActive ? brand : 'var(--card-bg)',
+                    borderColor: isActive ? `${brand}66` : 'var(--border-color)',
                     boxShadow: isActive ? `0 4px 14px ${brand}30` : undefined,
+                    color: isActive ? 'white' : 'var(--text-primary)',
                   }}
                   animate={{ width: shouldExpand ? '56px' : '44px' }}
                   transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -108,7 +121,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                   >
                     <i 
                       className={`${MAIN_MODE_ICONS[mainMode]} text-lg transition-colors duration-200`}
-                      style={{ color: isActive ? '#fff' : undefined }}
+                      style={{ color: isActive ? 'white' : 'currentColor' }}
                     />
                   </motion.div>
 
@@ -125,8 +138,8 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
                         <FiChevronDown 
-                          size={12} 
-                          className={isActive ? 'text-white/80' : 'text-gray-700/60 dark:text-gray-200/60'}
+                          size={12}
+                          style={isActive ? { color: 'white', opacity: 0.8 } : { color: 'var(--text-secondary)', opacity: 0.6 }}
                         />
                       </motion.div>
                     </motion.div>
@@ -151,8 +164,11 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className="absolute top-full mt-2 right-0 z-30 min-w-36 rounded-xl p-1 backdrop-blur-xl
-                                 bg-white/95 dark:bg-gray-900/90 border border-gray-200/60 dark:border-white/15 shadow-2xl"
+                      className="absolute top-full mt-2 right-0 z-30 min-w-36 rounded-xl p-1 backdrop-blur-xl shadow-2xl"
+                      style={{
+                        background: 'var(--float-panel-bg)',
+                        border: '1px solid var(--border-color)',
+                      }}
                     >
                       {GAME_MODE_GROUPS[mainMode].map((mode, index) => (
                         <motion.button
@@ -163,9 +179,11 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                           transition={{ delay: index * 0.05, duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`w-full text-left px-3 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm
-                                      ${selectedMode === mode ? 'text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70'}`}
-                          style={{ backgroundColor: selectedMode === mode ? GAME_MODE_COLORS[mode] : undefined }}
+                          className={`w-full text-left px-3 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
+                          style={{ 
+                            backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
+                            color: selectedMode === mode ? 'white' : 'var(--text-primary)',
+                          }}
                         >
                           {GAME_MODE_NAMES[mode]}
                         </motion.button>
@@ -191,7 +209,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
       {allModes.map((mode) => {
         const mainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
           .find(m => GAME_MODE_GROUPS[m].includes(mode));
-        const brand = GAME_MODE_COLORS[mode];
+        const brand = getBrandColor(mode);
 
         return (
           <motion.button
@@ -199,17 +217,14 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             onClick={() => onModeChange(mode)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className={`relative rounded-xl font-medium transition-all duration-200 flex flex-col items-center justify-center gap-2 overflow-hidden group border ${
-              selectedMode === mode
-                ? 'text-white shadow-lg'
-                : 'text-gray-700 dark:text-gray-300 bg-white/95 dark:bg-gray-900/85 border-black/10 dark:border-white/15 shadow-sm hover:text-white'
-            }`}
+            className={`relative rounded-xl font-medium transition-all duration-200 flex flex-col items-center justify-center gap-2 overflow-hidden group border shadow-sm`}
             style={{
               width: '80px',
               height: '64px',
-              backgroundColor: selectedMode === mode ? brand : undefined,
-              borderColor: selectedMode === mode ? `${brand}66` : undefined,
+              backgroundColor: selectedMode === mode ? brand : 'var(--card-bg)',
+              borderColor: selectedMode === mode ? `${brand}66` : 'var(--border-color)',
               boxShadow: selectedMode === mode ? `0 4px 16px ${brand}25` : undefined,
+              color: selectedMode === mode ? 'white' : 'var(--text-primary)',
             }}
           >
             {/* 图标 */}
@@ -223,7 +238,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             >
               <i 
                 className={`${mainMode ? MAIN_MODE_ICONS[mainMode] : 'icon-osu'} text-xl transition-colors duration-200`}
-                style={{ color: selectedMode === mode ? '#fff' : undefined }}
+                style={{ color: selectedMode === mode ? 'white' : 'currentColor' }}
               />
             </motion.div>
             

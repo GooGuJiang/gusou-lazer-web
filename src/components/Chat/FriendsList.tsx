@@ -106,7 +106,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser: _currentUser, on
         initial={{ y: 50 }}
         animate={{ y: 0 }}
         exit={{ y: 50 }}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-hidden"
+        className="bg-card rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 头部 */}

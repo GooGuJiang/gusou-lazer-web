@@ -83,7 +83,7 @@ export const CustomToast: React.FC<CustomToastProps> = ({
   const displayUsername = getDisplayUsername();
 
   return (
-    <div className="flex items-start space-x-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-w-sm min-w-[300px] relative">
+    <div className="flex items-start space-x-3 p-4 bg-card rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-w-sm min-w-[300px] relative">
       {/* 关闭按钮 */}
       {onDismiss && (
         <button

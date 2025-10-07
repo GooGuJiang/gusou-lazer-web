@@ -10,7 +10,7 @@ interface TextSkeletonProps {
 const TextSkeleton: React.FC<TextSkeletonProps> = ({ children, className = '' }) => (
   <div className={`relative ${className}`}>
     <div className="invisible">{children}</div>
-    <div className="absolute inset-0 animate-pulse bg-gray-300/70 dark:bg-gray-600/70 rounded"></div>
+    <div className="absolute inset-0 animate-pulse rounded" style={{ background: 'var(--card-bg-hover)', opacity: 0.7 }}></div>
   </div>
 );
 

@@ -167,7 +167,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
           {/* 右侧性能区域 */}
           <div className="absolute right-0 top-0 h-full w-20 flex items-center justify-center">
             {/* PP 值 */}
-            <div className="text-sm font-bold text-pink-600 dark:text-pink-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            <div className="text-sm font-bold text-profile-color drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               {originalPp} PP
             </div>
           </div>
@@ -222,7 +222,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
                     {accuracy}%
                   </div>
                 </div>
-                <div className="text-sm font-bold text-pink-600 dark:text-pink-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                <div className="text-sm font-bold text-profile-color drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                   {originalPp} PP
                 </div>
               </div>
@@ -365,12 +365,12 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
       ) : (
         <div className="shadow-sm overflow-hidden rounded-lg">
           {/* 头部圆角div */}
-          <div className="bg-white dark:bg-gray-800 h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
+          <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
             <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
           </div>
           
           {/* 主要内容区域 - 无圆角 */}
-          <div className="bg-white dark:bg-gray-800 border-x border-gray-200/50 dark:border-gray-600/30">
+          <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
             {scores.map((score) => (
               <ScoreCard key={score.id} score={score} t={t} />
             ))}
@@ -399,7 +399,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           </div>
           
           {/* 尾部圆角div */}
-          <div className="bg-white dark:bg-gray-800 h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
+          <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
           </div>
         </div>
       )}

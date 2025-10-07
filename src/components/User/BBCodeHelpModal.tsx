@@ -107,7 +107,7 @@ const BBCodeHelpModal: React.FC<BBCodeHelpModalProps> = ({ isOpen, onClose }) =>
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-card rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* 头部 */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -173,7 +173,7 @@ const BBCodeHelpModal: React.FC<BBCodeHelpModalProps> = ({ isOpen, onClose }) =>
         <div className="flex justify-end p-6 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-osu-pink hover:bg-pink-600 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-osu-pink hover:opacity-90 text-white rounded-lg transition-colors"
           >
             关闭
           </button>

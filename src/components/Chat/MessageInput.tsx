@@ -69,7 +69,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className=" px-3 pt-3 pb-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+    <div className=" px-3 pt-3 pb-2 bg-card border-t border-gray-200 dark:border-gray-700">
       <div className="mb-3 flex items-end space-x-3">
         {/* 消息输入区域 */}
         <div className="flex-1 relative">

@@ -55,7 +55,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                    focus:ring-2 focus:ring-osu-pink focus:border-transparent transition-all duration-200
                    flex items-center justify-between
                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-osu-pink/50'}
-                   ${isOpen ? 'border-osu-pink ring-2 ring-osu-pink/20' : 'border-gray-300 dark:border-gray-600'}`}
+                   ${isOpen ? 'border-osu-pink ring-2 ring-osu-pink/20' : 'border-card'}`}
       >
         <span className={selectedOption ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
           {selectedOption ? selectedOption.label : placeholder}
@@ -75,7 +75,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 
+            className="absolute z-50 w-full mt-2 bg-card border border-gray-200 dark:border-gray-600 
                        rounded-lg shadow-xl overflow-hidden"
           >
             <div className="py-1 max-h-60 overflow-y-auto">

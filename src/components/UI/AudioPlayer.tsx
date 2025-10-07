@@ -424,7 +424,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
       fixed bottom-4 right-4 z-50
       w-1/3 min-w-[280px] max-w-[400px]
       sm:min-w-[320px] md:w-1/3 lg:w-1/4
-      bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+      bg-card border border-gray-200 dark:border-gray-700
       rounded-xl shadow-lg backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95
       px-3 py-2 flex items-center gap-2 sm:gap-3
       max-sm:bottom-2 max-sm:right-2 max-sm:left-2 max-sm:w-auto

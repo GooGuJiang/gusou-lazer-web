@@ -22,9 +22,11 @@ import type {
   TabType,
   RankingType
 } from '../types';
+import { useProfileColor } from '../contexts/ProfileColorContext';
 
 const RankingsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { profileColor } = useProfileColor();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   const [selectedMainMode, setSelectedMainMode] = useState<MainGameMode>('osu');
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
@@ -37,6 +39,16 @@ const RankingsPage: React.FC = () => {
   const [userRankings, setUserRankings] = useState<TopUsersResponse | null>(null);
   const [countryRankings, setCountryRankings] = useState<CountryResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 获取实际的颜色值 - 如果是主题色模式，使用 profileColor
+  const getBrandColor = (mode: GameMode): string => {
+    const colorValue = GAME_MODE_COLORS[mode];
+    // 如果颜色值包含 CSS 变量，则使用当前的 profileColor
+    if (colorValue.includes('var(--profile-color')) {
+      return profileColor;
+    }
+    return colorValue;
+  };
 
   // Click outside to close sub-mode menu
   useEffect(() => {
@@ -132,7 +144,7 @@ const RankingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 sm:py-8">
         {/* Page title */}
         <div className="mb-6 sm:mb-8">
@@ -149,7 +161,7 @@ const RankingsPage: React.FC = () => {
           
           {/* Game mode selection */}
           <div className="flex justify-start relative" ref={modeSelectRef}>
-            <div className="inline-flex gap-1 sm:gap-2 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border border-gray-200 dark:border-gray-700 min-h-[44px] sm:min-h-[48px] items-center">
+            <div className="inline-flex gap-1 sm:gap-2 bg-card rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border-card min-h-[44px] sm:min-h-[48px] items-center">
               {(Object.keys(GAME_MODE_GROUPS) as MainGameMode[]).map((mainMode) => (
                 <div key={mainMode} className="relative">
                   <button
@@ -166,21 +178,21 @@ const RankingsPage: React.FC = () => {
                       className="absolute inset-0 rounded-md sm:rounded-lg transition-all duration-200"
                       style={{
                         background: selectedMainMode === mainMode
-                          ? `linear-gradient(135deg, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]} 0%, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]}CC 100%)`
-                          : 'transparent'
+                          ? `linear-gradient(135deg, ${getBrandColor(GAME_MODE_GROUPS[mainMode][0])} 0%, ${getBrandColor(GAME_MODE_GROUPS[mainMode][0])}CC 100%)`
+                          : 'var(--card-bg)'
                       }}
                     />
                     <div className="flex items-center justify-center gap-1">
                       <i
                         className={`${MAIN_MODE_ICONS[mainMode]} relative z-10 text-xl sm:text-2xl transition-colors duration-200`}
                         style={{
-                          color: selectedMainMode === mainMode ? '#fff' : 'var(--text-primary)'
+                          color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)'
                         }}
                       />
                       <i
                         className="fas fa-chevron-down relative z-10 text-[8px] sm:text-[10px] transition-all duration-200 opacity-60"
                         style={{
-                          color: selectedMainMode === mainMode ? '#fff' : 'var(--text-primary)',
+                          color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)',
                           transform: showSubModes === mainMode ? 'rotate(180deg)' : 'rotate(0deg)'
                         }}
                       />
@@ -189,18 +201,19 @@ const RankingsPage: React.FC = () => {
 
                   {/* Sub-mode popup options */}
                   {showSubModes === mainMode && (
-                    <div className="absolute top-full mt-1 sm:mt-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl p-1.5 sm:p-2 min-w-28 sm:min-w-32 shadow-lg sm:shadow-xl z-30">
+                    <div className="absolute top-full mt-1 sm:mt-2 left-1/2 transform -translate-x-1/2 bg-card border-card rounded-lg sm:rounded-xl p-1.5 sm:p-2 min-w-28 sm:min-w-32 shadow-lg sm:shadow-xl z-30">
                       {GAME_MODE_GROUPS[mainMode].map((mode) => (
                         <button
                           key={mode}
                           onClick={() => handleSubModeSelect(mode)}
                           className={`w-full text-left px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm block ${
                             selectedMode === mode
-                              ? 'text-white shadow-sm'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                              ? 'shadow-sm'
+                              : 'hover:bg-card-hover'
                           }`}
                           style={{
-                            backgroundColor: selectedMode === mode ? GAME_MODE_COLORS[mode] : 'transparent',
+                            backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
+                            color: selectedMode === mode ? 'white' : 'var(--text-primary)',
                           }}
                 >
                   {GAME_MODE_NAMES[mode]}
@@ -229,7 +242,7 @@ const RankingsPage: React.FC = () => {
           <div className="flex flex-col lg:flex-row lg:items-center gap-3 sm:gap-4 xl:flex-1">
           {/* Tab switching */}
           <div className="flex-1">
-            <div className="inline-flex bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border border-gray-200 dark:border-gray-700 min-h-[44px] sm:min-h-[48px] items-center">
+            <div className="inline-flex bg-card rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-sm border-card min-h-[44px] sm:min-h-[48px] items-center">
               <button
                 onClick={() => setSelectedTab('users')}
                 className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-md sm:rounded-lg font-medium transition-colors text-sm sm:text-base ${
@@ -276,7 +289,7 @@ const RankingsPage: React.FC = () => {
         </div>
 
         {/* Rankings content */}
-        <div className="-mx-4 sm:mx-0 sm:bg-white sm:dark:bg-gray-800 sm:rounded-xl sm:shadow-sm sm:border sm:border-gray-200 sm:dark:border-gray-700 sm:p-6">
+        <div className="-mx-4 sm:mx-0 sm:bg-card sm:rounded-xl sm:shadow-sm sm:border-card sm:p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-16 px-4 sm:px-0">
               <div className="text-center">

@@ -43,7 +43,7 @@ export type LevelProgressProps = {
 export default function LevelProgress({
   levelCurrent,
   levelProgress,
-  tint = "#ED8EA6", // osu-pink as default color
+  tint = "var(--profile-color, #ED8EA6)", // default to dynamic profile color
   className = "",
   barHeight,
   barWidth,

@@ -62,13 +62,13 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-white/95 dark:bg-gray-900/85 rounded-2xl p-6 outline-none focus:outline-none ring-0 focus:ring-0"
+      className="bg-card rounded-2xl p-6 outline-none focus:outline-none ring-0 focus:ring-0"
       style={{ outline: 'none' }}
     >
       <div className={fullBleed ? '-mx-6' : ''} style={{ height }}>
         {isUpdatingMode ? (
           <div className="h-full flex items-center justify-center">
-            <div className="animate-pulse text-gray-400 dark:text-gray-500 text-center">
+            <div className="animate-pulse text-center" style={{ color: 'var(--text-muted)' }}>
               <FiBarChart2 className="mx-auto text-4xl mb-2" />
               <p>数据加载中...</p>
             </div>
@@ -122,8 +122,8 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
         ) : (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <FiBarChart2 className="mx-auto text-4xl mb-2 text-gray-400 dark:text-gray-500" />
-              <p className="text-gray-500 dark:text-gray-400">暂无排名历史数据</p>
+              <FiBarChart2 className="mx-auto text-4xl mb-2" style={{ color: 'var(--text-muted)' }} />
+              <p style={{ color: 'var(--text-secondary)' }}>暂无排名历史数据</p>
             </div>
           </div>
         )}

@@ -57,7 +57,7 @@ function hello() {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none"
+            className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm bg-card text-gray-900 dark:text-gray-100 resize-none"
             placeholder="在这里输入BBCode..."
           />
           
@@ -88,7 +88,7 @@ function hello() {
         {/* 预览区域 */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">HTML预览</h2>
-          <div className="border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 p-4 h-96 overflow-auto">
+          <div className="border border-gray-300 dark:border-gray-600 rounded-lg bg-card p-4 h-96 overflow-auto">
             <BBCodeRenderer html={parseResult.html} />
           </div>
           

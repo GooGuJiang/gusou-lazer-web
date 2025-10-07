@@ -71,7 +71,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
       
       {/* Loading skeleton */}
       {!blurDataURL && !isLoaded && !isError && (
-        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        <div className="absolute inset-0 animate-pulse" style={{ background: 'var(--card-bg)' }} />
       )}
 
       {/* Main image */}
@@ -89,8 +89,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
 
       {/* Error state */}
       {isError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-          <div className="text-center text-gray-500 dark:text-gray-400 p-4">
+        <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--card-bg)' }}>
+          <div className="text-center p-4" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-8 h-8 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
             </svg>

@@ -163,7 +163,7 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
       onMouseUp={handleBackdropMouseUp}
     >
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl h-[95vh] overflow-hidden flex flex-col"
+        className="bg-card rounded-lg shadow-xl w-full max-w-7xl h-[95vh] overflow-hidden flex flex-col"
         onClick={handleModalContentClick}
         onMouseDown={handleModalContentMouseDown}
         onMouseUp={handleModalContentMouseUp}
@@ -204,7 +204,7 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-2 px-6 py-2 bg-osu-pink hover:bg-pink-600 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2 bg-osu-pink hover:opacity-90 text-white rounded-lg transition-colors disabled:opacity-50"
           >
             {isSaving ? (
               <>

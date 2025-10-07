@@ -55,11 +55,11 @@ const EditableCover: React.FC<EditableCoverProps> = ({
   return (
     <>
       <div className={`relative group ${className}`}>
-        <div className="w-full bg-gradient-to-r from-pink-400 to-teal-400 rounded-lg overflow-hidden" style={{ aspectRatio: '4/1' }}>
+        <div className="w-full osu-gradient rounded-lg overflow-hidden" style={{ aspectRatio: '4/1' }}>
           {currentCoverUrl && !imageError ? (
             <div className="relative w-full h-full">
               {isLoading && (
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-teal-400 animate-pulse" />
+                <div className="absolute inset-0 osu-gradient animate-pulse" />
               )}
               <img
                 src={currentCoverUrl}
@@ -72,7 +72,7 @@ const EditableCover: React.FC<EditableCoverProps> = ({
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-white bg-gradient-to-r from-pink-400 to-teal-400">
+            <div className="w-full h-full flex items-center justify-center text-white osu-gradient">
               <div className="text-center">
                 <div className="text-6xl mb-2">🎨</div>
                 <p className="text-lg font-medium">暂无头图</p>

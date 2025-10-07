@@ -323,8 +323,10 @@ const MobileMenuDropdown = memo<{
               duration: 0.15,
               ease: [0.16, 1, 0.3, 1]
             }}
-            className="absolute right-0 mt-6 w-48 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 py-2 z-50 overflow-hidden"
+            className="absolute right-0 mt-6 w-48 backdrop-blur-xl rounded-2xl shadow-xl py-2 z-50 overflow-hidden"
             style={{
+              background: 'var(--float-panel-bg)',
+              border: '1px solid var(--border-color)',
               boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)'
             }}
           >
@@ -487,7 +489,10 @@ const Navbar: React.FC = () => {
     <>
       {/* Desktop Navigation - Top */}
       <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 pt-0">
-        <div className="max-w-7xl mx-auto bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg rounded-b-2xl">
+        <div className="max-w-7xl mx-auto backdrop-blur-xl shadow-lg rounded-b-2xl" style={{
+          background: 'var(--navbar-bg)',
+          border: '1px solid var(--border-color)',
+        }}>
           <div className="px-4 md:px-6 lg:px-8">
             {/* 使用 grid 布局来确保导航项真正居中 */}
             <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 gap-2 md:gap-3 lg:gap-4">
@@ -621,7 +626,10 @@ const Navbar: React.FC = () => {
       </nav>
 
       {/* Mobile Header - Top */}
-      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-sm" style={{
+        background: 'var(--navbar-bg)',
+        borderColor: 'var(--border-color)',
+      }}>
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
           <motion.div

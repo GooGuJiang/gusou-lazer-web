@@ -169,7 +169,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiUser className="w-6 h-6 text-osu-pink" />
@@ -240,7 +240,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiCamera className="w-6 h-6 text-osu-pink" />
@@ -286,7 +286,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiImage className="w-6 h-6 text-osu-pink" />
@@ -325,7 +325,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.225 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiLock className="w-6 h-6 text-osu-pink" />
@@ -342,7 +342,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiShield className="w-6 h-6 text-osu-pink" />
@@ -422,7 +422,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.275 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiSettings className="w-6 h-6 text-osu-pink" />
@@ -445,7 +445,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <div className="flex items-center gap-3 mb-6">
           <FiMonitor className="w-6 h-6 text-osu-pink" />
@@ -466,7 +466,7 @@ const SettingsPage: React.FC = () => {
         </div>
 
         {/* 分割线 */}
-        <div className="border-t border-gray-200 dark:border-gray-700 my-8"></div>
+        <div className="border-t border-card my-8"></div>
 
         {/* 受信任设备管理 */}
         <div>
@@ -479,7 +479,7 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
+        className="bg-card rounded-xl shadow-lg p-6"
       >
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
           {t('settings.account.title')}

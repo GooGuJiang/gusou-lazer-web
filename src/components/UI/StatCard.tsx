@@ -25,7 +25,7 @@ const StatCard: React.FC<StatCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 ${className}`}
+      className={`bg-card rounded-xl shadow-lg p-6 ${className}`}
     >
       <div className="flex items-center justify-between">
         <div className="flex-1">

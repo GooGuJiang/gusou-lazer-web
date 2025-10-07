@@ -138,8 +138,8 @@ const FriendActions: React.FC<FriendActionsProps> = ({
               {isMutual ? (
                 // 互相关注 - 双人图标 + 心形
                 <>
-                  <FiUsers className="w-4 h-4 text-pink-500" />
-                  <FiHeart className="absolute -top-0.5 -right-0.5 w-2 h-2 text-pink-400 fill-current" />
+                  <FiUsers className="w-4 h-4 text-profile-color" />
+                  <FiHeart className="absolute -top-0.5 -right-0.5 w-2 h-2 text-profile-color fill-current" />
                 </>
               ) : (
                 // 单向关注 - 用户图标 + 减号
@@ -152,7 +152,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
           ),
           action: onRemove,
           className: isMutual 
-            ? "text-pink-600 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-500/10 font-medium" 
+            ? "text-profile-color hover:bg-profile-color/10 dark:text-profile-color dark:hover:bg-profile-color/10 font-medium" 
             : "text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-500/10 font-medium",
         },
       ];
@@ -249,8 +249,8 @@ const FriendActions: React.FC<FriendActionsProps> = ({
         // 互相关注 - 双人图标 + 粉色心形 + 脉冲效果
         return (
           <span className="relative flex items-center justify-center">
-            <FiUsers className="w-4 h-4 text-pink-500" />
-            <FiHeart className="absolute -top-0.5 -right-0.5 w-2 h-2 text-pink-400 fill-current animate-pulse" />
+            <FiUsers className="w-4 h-4 text-profile-color" />
+            <FiHeart className="absolute -top-0.5 -right-0.5 w-2 h-2 text-profile-color fill-current animate-pulse" />
           </span>
         );
       } else {
