@@ -103,7 +103,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const { refreshUser, user: currentUser } = useAuth();
   const navigate = useNavigate();
   const { preferences, updatePreference } = useUserPreferences();
-  const { profileColor } = useProfileColor();
+  const { profileColor, setProfileColorLocal, resetProfileColor } = useProfileColor();
   
   const stats = user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
@@ -129,6 +129,15 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
   // 检查是否可以编辑（仅自己的页面）
   const canEdit = currentUser?.id === user.id;
+
+  // 进入用户资料页时，按查看的用户配色应用，离开时还原
+  useEffect(() => {
+    const viewedColor = user.profile_colour || '#ED8EA6';
+    setProfileColorLocal(viewedColor);
+    return () => {
+      resetProfileColor();
+    };
+  }, [user.profile_colour, user.id]);
 
   // 头图展开状态
   const [isCoverExpanded, setIsCoverExpanded] = useState(preferences.profile_cover_expanded ?? false);
