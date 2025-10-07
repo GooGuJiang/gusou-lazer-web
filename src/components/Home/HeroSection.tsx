@@ -1,7 +1,5 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../hooks/useAuth';
 
 import InfoCard from '../InfoCard';
 import { features } from '../../data/features';
@@ -14,16 +12,12 @@ import {
   FaCodeBranch,
   FaPaperPlane,
   FaChartBar,
-  FaQq,
-  FaDiscord,
-  FaGithub,
   FaChevronDown,
 } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const HeroSection: React.FC = () => {
-  const { isAuthenticated } = useAuth();
   const { t, i18n } = useTranslation();
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -32,8 +26,6 @@ const HeroSection: React.FC = () => {
   const logoRef = useRef<HTMLDivElement | null>(null);
   const subtitleRef = useRef<HTMLHeadingElement | null>(null);
   const descRef = useRef<HTMLParagraphElement | null>(null);
-  const badgesRef = useRef<HTMLDivElement | null>(null);
-  const ctasRef = useRef<HTMLDivElement | null>(null);
   // 将 logo 与 标题 作为一个整体分组，保证移动/缩放始终保持一致
   const brandRef = useRef<HTMLDivElement | null>(null);
 
@@ -81,7 +73,7 @@ const HeroSection: React.FC = () => {
   // 英文副标题的排版优化（更合理的字间距/行高/行宽/断行）
   const isEN = i18n?.language?.toLowerCase().startsWith('en') ?? false;
   const subtitleClasses = isEN
-    ? 'text-left md:text-right text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 leading-snug md:leading-snug tracking-tight max-w-4xl md:max-w-[42ch] xl:max-w-[56ch] break-words mt-3 md:mt-0'
+    ? 'text-left text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 leading-snug md:leading-snug tracking-tight max-w-4xl md:max-w-[42ch] xl:max-w-[56ch] break-words mt-3 md:mt-0'
     : 'text-left md:text-right text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-700 dark:text-gray-200 leading-tight max-w-4xl md:max-w-[40ch] mt-3 md:mt-0';
 
   useLayoutEffect(() => {
@@ -123,7 +115,7 @@ const HeroSection: React.FC = () => {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
-          markers: true,
+          markers: false,
           invalidateOnRefresh: true,
         },
       });
