@@ -271,7 +271,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; show
   );
 };
 
-const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMode, user, className = '' }) => {
+const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMode, className = '' }) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const [scores, setScores] = useState<BestScore[]>([]);
