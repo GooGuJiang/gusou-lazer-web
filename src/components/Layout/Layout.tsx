@@ -11,6 +11,9 @@ const Layout: React.FC = () => {
   
   // 检查是否在主页
   const isHomePage = location.pathname === '/';
+  // 登录/注册/找回密码页面不需要顶部内边距
+  const noTopPaddingRoutes = ['/', '/login', '/register', '/password-reset'];
+  const shouldApplyTopPadding = !noTopPaddingRoutes.includes(location.pathname);
 
   return (
     <NotificationProvider isAuthenticated={isAuthenticated} user={user}>
@@ -18,7 +21,7 @@ const Layout: React.FC = () => {
         background: 'var(--bg-primary)'
       }}>
         <Navbar />
-        <main className={isHomePage ? '' : 'pt-[56px] md:pt-20'} style={{
+        <main className={shouldApplyTopPadding ? 'pt-[56px] md:pt-20' : ''} style={{
           background: isHomePage ? 'transparent' : 'var(--bg-primary)'
         }}>
           <Outlet />
