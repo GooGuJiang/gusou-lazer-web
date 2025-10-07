@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
@@ -9,19 +9,37 @@ const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { user, isAuthenticated, isLoading, updateUserMode, updateUser } = useAuth();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
+  
+  // 使用 ref 跟踪是否正在更新模式，防止重复请求
+  const isUpdatingModeRef = useRef(false);
+  const latestModeRef = useRef<GameMode>(selectedMode);
 
   // 当用户数据加载后，根据用户的 g0v0_playmode 设置初始模式
   useEffect(() => {
     if (user?.g0v0_playmode && user.g0v0_playmode !== selectedMode) {
       setSelectedMode(user.g0v0_playmode);
+      latestModeRef.current = user.g0v0_playmode;
     }
   }, [user?.g0v0_playmode]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      updateUserMode(selectedMode).catch(() => {});
+    // 如果正在更新或未认证，跳过
+    if (!isAuthenticated || isUpdatingModeRef.current) return;
+    
+    // 如果模式没有变化，跳过
+    if (latestModeRef.current === selectedMode && user?.g0v0_playmode === selectedMode) {
+      return;
     }
-  }, [selectedMode, isAuthenticated, updateUserMode]);
+    
+    latestModeRef.current = selectedMode;
+    isUpdatingModeRef.current = true;
+    
+    updateUserMode(selectedMode)
+      .catch(() => {})
+      .finally(() => {
+        isUpdatingModeRef.current = false;
+      });
+  }, [selectedMode, isAuthenticated, updateUserMode, user?.g0v0_playmode]);
 
   if (isLoading) {
     return (

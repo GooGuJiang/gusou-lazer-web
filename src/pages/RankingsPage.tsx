@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FiLoader } from 'react-icons/fi';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useTranslation } from 'react-i18next';
 import { rankingsAPI, handleApiError } from '../utils/api';
@@ -8,6 +7,7 @@ import RankingTypeSelector from '../components/UI/RankingTypeSelector';
 import UserRankingsList from '../components/Rankings/UserRankingsList';
 import CountryRankingsList from '../components/Rankings/CountryRankingsList';
 import PaginationControls from '../components/Rankings/PaginationControls';
+import LoadingSpinner from '../components/UI/LoadingSpinner';
 import {
   GAME_MODE_NAMES,
   GAME_MODE_COLORS,
@@ -39,6 +39,9 @@ const RankingsPage: React.FC = () => {
   const [userRankings, setUserRankings] = useState<TopUsersResponse | null>(null);
   const [countryRankings, setCountryRankings] = useState<CountryResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // 使用 ref 跟踪请求，防止竞态条件
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // 获取实际的颜色值 - 如果是主题色模式，使用 profileColor
   const getBrandColor = (mode: GameMode): string => {
@@ -82,8 +85,16 @@ const RankingsPage: React.FC = () => {
     setShowSubModes(null);
   };
   
-  // Load user rankings
-  const loadUserRankings = async () => {
+  // Load user rankings with request cancellation
+  const loadUserRankings = useCallback(async () => {
+    // 取消之前的请求
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    
     setIsLoading(true);
     try {
       const response = await rankingsAPI.getUserRankings(
@@ -92,52 +103,73 @@ const RankingsPage: React.FC = () => {
         selectedCountry || undefined, 
         currentPage
       );
-      setUserRankings(response);
+      
+      // 只有当请求未被取消时才更新状态
+      if (!abortController.signal.aborted) {
+        setUserRankings(response);
+      }
     } catch (error) {
-      handleApiError(error);
-      console.error(t('rankings.errors.loadFailed'), error);
+      if (!abortController.signal.aborted) {
+        handleApiError(error);
+        console.error(t('rankings.errors.loadFailed'), error);
+      }
     } finally {
-      setIsLoading(false);
+      if (!abortController.signal.aborted) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, [selectedMode, rankingType, selectedCountry, currentPage, t]);
 
-  // Load country rankings
-  const loadCountryRankings = async () => {
+  // Load country rankings with request cancellation
+  const loadCountryRankings = useCallback(async () => {
+    // 取消之前的请求
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    
     setIsLoading(true);
     try {
       const response = await rankingsAPI.getCountryRankings(selectedMode, currentPage);
-      setCountryRankings(response);
+      
+      // 只有当请求未被取消时才更新状态
+      if (!abortController.signal.aborted) {
+        setCountryRankings(response);
+      }
     } catch (error) {
-      handleApiError(error);
-      console.error(t('rankings.errors.loadFailed'), error);
+      if (!abortController.signal.aborted) {
+        handleApiError(error);
+        console.error(t('rankings.errors.loadFailed'), error);
+      }
     } finally {
-      setIsLoading(false);
+      if (!abortController.signal.aborted) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, [selectedMode, currentPage, t]);
 
   // Reset pagination and load data
-  const resetAndLoad = () => {
-    setCurrentPage(1);
-    if (selectedTab === 'users') {
-      loadUserRankings();
-    } else {
-      loadCountryRankings();
-    }
-  };
-
-  // Reset and load data when mode changes
   useEffect(() => {
-    resetAndLoad();
+    setCurrentPage(1);
   }, [selectedMode, selectedTab, rankingType, selectedCountry]);
 
-  // Load data when pagination changes
+  // Load data when dependencies change
   useEffect(() => {
     if (selectedTab === 'users') {
       loadUserRankings();
     } else {
       loadCountryRankings();
     }
-  }, [currentPage]);
+    
+    // 清理函数：取消请求
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [selectedTab, loadUserRankings, loadCountryRankings]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -291,11 +323,9 @@ const RankingsPage: React.FC = () => {
         {/* Rankings content */}
         <div className="-mx-4 sm:mx-0 sm:bg-card sm:rounded-xl sm:shadow-sm sm:border-card sm:p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-16 px-4 sm:px-0">
-              <div className="text-center">
-                <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400 font-medium">{t('common.loading')}</p>
-              </div>
+            <div className="flex flex-col items-center justify-center py-16 px-4 sm:px-0">
+              <LoadingSpinner size="lg" className="mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 font-medium">{t('common.loading')}</p>
             </div>
           ) : selectedTab === 'users' ? (
             <UserRankingsList

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FiLoader, FiPlus, FiEdit, FiEye } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiEye } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
+import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { rankingsAPI, handleApiError } from '../utils/api';
 import TeamRankingsList from '../components/Rankings/TeamRankingsList';
 import RankingTypeSelector from '../components/UI/RankingTypeSelector';
@@ -242,11 +243,9 @@ const TeamsPage: React.FC = () => {
         {/* 排行榜内容 */}
         <div className="-mx-4 sm:mx-0 sm:bg-card sm:rounded-xl sm:shadow-sm sm:border-card sm:p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-16 px-4 sm:px-0">
-              <div className="text-center">
-                <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.loadingTeams')}</p>
-              </div>
+            <div className="flex flex-col items-center justify-center py-16 px-4 sm:px-0">
+              <LoadingSpinner size="lg" className="mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.loadingTeams')}</p>
             </div>
           ) : (
             <TeamRankingsList
