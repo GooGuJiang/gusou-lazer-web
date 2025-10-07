@@ -103,6 +103,8 @@ export const profilePage = {
       bbcodeDescription: 'BBCode is a lightweight markup language used to format text. You can use the following tags to beautify your personal introduction:',
       usePreview: 'Use preview function to see the final effect',
       editCover: 'Edit cover',
+      expandCover: 'Expand cover',
+      collapseCover: 'Collapse cover',
     },
     friendActions: {
       selfProfile: 'Own profile',

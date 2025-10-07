@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
+import { useProfileColor } from '../../contexts/ProfileColorContext';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
@@ -235,6 +236,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any }> = ({ score, t }) => {
 
 const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '' }) => {
   const { t } = useTranslation();
+  const { profileColor } = useProfileColor();
   const [scores, setScores] = useState<BestScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -311,7 +313,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
       <div className={`${className}`}>
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+            <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
               {t('profile.bestScores.title')}
             </h3>
@@ -327,7 +329,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
       <div className={`${className}`}>
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+            <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
               {t('profile.bestScores.title')}
             </h3>
@@ -344,7 +346,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
     <div className={`${className}`}>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+          <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {t('profile.bestScores.title')}
           </h3>
@@ -364,7 +366,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
         <div className="shadow-sm overflow-hidden rounded-lg">
           {/* 头部圆角div */}
           <div className="bg-white dark:bg-gray-800 h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-            <div className="w-16 h-1 bg-osu-pink rounded-full"></div>
+            <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
           </div>
           
           {/* 主要内容区域 - 无圆角 */}
@@ -378,7 +380,10 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
                 <button
                   onClick={handleLoadMore}
                   disabled={loadingMore}
-                  className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 bg-osu-pink hover:bg-osu-pink/90 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
+                  className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
+                  style={{ backgroundColor: loadingMore ? undefined : profileColor }}
+                  onMouseEnter={(e) => !loadingMore && (e.currentTarget.style.opacity = '0.9')}
+                  onMouseLeave={(e) => !loadingMore && (e.currentTarget.style.opacity = '1')}
                 >
                   {loadingMore ? (
                     <>

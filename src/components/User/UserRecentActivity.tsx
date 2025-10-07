@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { UserActivity } from '../../types';
+import { useProfileColor } from '../../contexts/ProfileColorContext';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import BeatmapLink from '../UI/BeatmapLink';
 import { FaTrophy, FaCrown, FaUpload, FaEdit, FaHeart, FaUser } from 'react-icons/fa';
@@ -218,6 +219,7 @@ const getActivityDescription = (activity: UserActivity, t: any) => {
 
 const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, className = '' }) => {
   const { t } = useTranslation();
+  const { profileColor } = useProfileColor();
   const [activities, setActivities] = useState<UserActivity[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -278,7 +280,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
       <div className={`${className}`}>
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+            <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
               {t('profile.activities.title')}
             </h3>
@@ -294,7 +296,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
       <div className={`${className}`}>
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+            <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
               {t('profile.activities.title')}
             </h3>
@@ -369,7 +371,10 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 bg-osu-pink hover:bg-osu-pink/90 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
+                className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
+                style={{ backgroundColor: loadingMore ? undefined : profileColor }}
+                onMouseEnter={(e) => !loadingMore && (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => !loadingMore && (e.currentTarget.style.opacity = '1')}
               >
                 {loadingMore ? (
                   <>

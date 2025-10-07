@@ -14,9 +14,11 @@ import UserBestScores from './UserBestScores';
 import UserPageDisplay from './UserPageDisplay';
 import RestrictedBanner from './RestrictedBanner';
 import { BiSolidPencil } from 'react-icons/bi';
-import { FaTools } from "react-icons/fa";
+import { FaTools, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip';
 import { useAuth } from '../../hooks/useAuth';
+import { useUserPreferences } from '../../hooks/useUserPreferences';
+import { useProfileColor } from '../../contexts/ProfileColorContext';
 
 interface UserProfileLayoutProps {
   user: User;
@@ -38,7 +40,7 @@ const formatPlayTime = (seconds: number | undefined): string => {
 };
 
 /** 头图懒加载 + blur 过渡 */
-const CoverImage: React.FC<{ src?: string; alt?: string }> = ({ src, alt = 'cover' }) => {
+const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> = ({ src, alt = 'cover', isExpanded }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -66,8 +68,13 @@ const CoverImage: React.FC<{ src?: string; alt?: string }> = ({ src, alt = 'cove
     return () => io.disconnect();
   }, []);
 
+  // 动态高度：展开时更高
+  const heightClass = isExpanded 
+    ? 'h-[280px] md:h-[420px]' 
+    : 'h-[180px] md:h-[288px]';
+
   return (
-    <div ref={ref} className="relative w-full overflow-hidden h-[180px] md:h-[288px]">
+    <div ref={ref} className={`relative w-full overflow-hidden transition-all duration-300 ${heightClass}`}>
       {/* 骨架 or 渐变背景兜底 */}
       <div className="absolute inset-0 cover-bg">
         <div className="h-full w-full bg-white/0 dark:bg-black/10" />
@@ -95,6 +102,8 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const { t } = useTranslation();
   const { refreshUser, user: currentUser } = useAuth();
   const navigate = useNavigate();
+  const { preferences, updatePreference } = useUserPreferences();
+  const { profileColor } = useProfileColor();
   
   const stats = user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
@@ -121,6 +130,14 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   // 检查是否可以编辑（仅自己的页面）
   const canEdit = currentUser?.id === user.id;
 
+  // 头图展开状态
+  const [isCoverExpanded, setIsCoverExpanded] = useState(preferences.profile_cover_expanded ?? false);
+
+  // 当偏好设置加载完成时，更新本地状态
+  useEffect(() => {
+    setIsCoverExpanded(preferences.profile_cover_expanded ?? false);
+  }, [preferences.profile_cover_expanded]);
+
   // 处理编辑按钮点击
   const handleEditClick = () => {
     navigate('/settings');
@@ -134,6 +151,17 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
       console.log('执行延迟刷新用户信息');
       await refreshUser();
     }, 3000); // 延迟3秒，给服务器更多时间处理
+  };
+
+  // 处理头图展开/收起
+  const handleToggleCover = async () => {
+    const newExpandedState = !isCoverExpanded;
+    setIsCoverExpanded(newExpandedState);
+    
+    // 仅在当前用户查看自己的页面时保存偏好设置
+    if (canEdit) {
+      await updatePreference('profile_cover_expanded', newExpandedState);
+    }
   };
 
   return (
@@ -167,24 +195,38 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
           </div>
 
           {/* 头图懒加载 */}
-          <CoverImage src={coverUrl} alt={`${user.username} cover`} />
+          <CoverImage src={coverUrl} alt={`${user.username} cover`} isExpanded={isCoverExpanded} />
 
-          {/* 编辑按钮 - 仅在自己的页面显示 */}
-          {canEdit && (
+          {/* 右下角按钮组 */}
+          <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3 flex gap-2">
+            {/* 展开/收起按钮 */}
             <button 
-              onClick={handleEditClick}
-              className="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-7 h-7 md:w-9 md:h-9 rounded-full bg-black/50 text-white grid place-items-center edit-button-shadow text-xs md:text-sm hover:bg-black/70 transition-colors" 
-              aria-label={t('profile.userPage.editCover')}
+              onClick={handleToggleCover}
+              className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-black/50 text-white grid place-items-center edit-button-shadow text-xs md:text-sm hover:bg-black/70 transition-colors" 
+              aria-label={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
+              data-tooltip-id="cover-toggle-tooltip"
+              data-tooltip-content={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
             >
-              <BiSolidPencil />
+              {isCoverExpanded ? <FaChevronUp /> : <FaChevronDown />}
             </button>
-          )}
+
+            {/* 编辑按钮 - 仅在自己的页面显示 */}
+            {canEdit && (
+              <button 
+                onClick={handleEditClick}
+                className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-black/50 text-white grid place-items-center edit-button-shadow text-xs md:text-sm hover:bg-black/70 transition-colors" 
+                aria-label={t('profile.userPage.editCover')}
+              >
+                <BiSolidPencil />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* 头像与基本信息条 */}
         <div className="bg-white/95 dark:bg-gray-900/85 px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-gray-200/60 dark:border-white/10 relative">
-          {/* 头像：渐变边 + 阴影，左下沉覆盖 */}
-          <div className="-mt-16">
+          {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时缩小 */}
+          <div className={isCoverExpanded ? "-mt-12" : "-mt-16"}>
             <Avatar
               userId={user.id}
               username={user.username}
@@ -192,7 +234,11 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
               size="xl"
               shape="rounded"
               editable={false}
-              className="mt-[10px]  md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32"
+              className={
+                isCoverExpanded 
+                  ? "mt-[10px] md:mt-[1px] md:!w-24 md:!h-24 md:!min-w-24 md:!min-h-24 transition-all duration-300" 
+                  : "mt-[10px] md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32 transition-all duration-300"
+              }
               onAvatarUpdate={handleAvatarUpdate}
             />
           </div>
@@ -244,6 +290,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         {/* Tooltips */}
         <Tooltip id="country-tooltip" />
         <Tooltip id="team-tooltip" />
+        <Tooltip id="cover-toggle-tooltip" />
 
 
 
@@ -269,7 +316,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
                 <RankHistoryChart
                   rankHistory={user.rank_history}
                   isUpdatingMode={isUpdatingMode}
-                  selectedModeColor="#ED8EA6"
+                  selectedModeColor={profileColor}
                   delay={0.4}
                   height="8rem"
                 />
@@ -305,7 +352,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
                 levelCurrent={levelCurrent}
                 levelProgress={levelProgress}
                 className="flex-1"
-                tint="#ED8EA6"
+                tint={profileColor}
               />
             </div>
           </div>

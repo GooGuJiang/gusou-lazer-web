@@ -103,6 +103,8 @@ export const profilePage = {
       bbcodeDescription: 'BBCode 是一种轻量级标记语言，用于格式化文本。您可以使用以下标签来美化您的个人介绍：',
       usePreview: '使用预览功能查看最终效果',
       editCover: '编辑封面',
+      expandCover: '展开封面',
+      collapseCover: '收起封面',
     },
     friendActions: {
       selfProfile: '自己的资料',

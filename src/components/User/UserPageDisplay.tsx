@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
+import { useProfileColor } from '../../contexts/ProfileColorContext';
 import { FaEdit, FaUser } from 'react-icons/fa';
 import ContentContainer from '../UI/ContentContainer';
 import UserPageEditModal from './UserPageEditModal';
@@ -20,6 +21,7 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
 }) => {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
+  const { profileColor } = useProfileColor();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // 移除图片边框的样式优化
@@ -65,7 +67,7 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
           <div className="pt-0 pb-16 min-h-[200px] md:min-h-[250px] flex flex-col">
             {/* 标题在左上角 */}
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+              <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {t('profile.userPage.title')}
               </h3>
@@ -78,7 +80,10 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
               </p>
               <button
                 onClick={handleEditClick}
-                className="flex items-center gap-2 px-6 py-3 bg-osu-pink hover:bg-pink-600 text-white rounded-lg transition-colors"
+                className="flex items-center gap-2 px-6 py-3 text-white rounded-lg transition-colors"
+                style={{ backgroundColor: profileColor }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
                 <FaEdit className="w-4 h-4" />
                 <span>{t('profile.userPage.writeButton')}</span>
@@ -90,7 +95,7 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
           <div className="pt-0 pb-16 min-h-[250px] md:min-h-[300px] flex flex-col">
             {/* 标题在左上角 */}
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+              <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {t('profile.userPage.title')}
               </h3>
@@ -126,7 +131,7 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
       {/* 头部标题和编辑按钮 */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
+          <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {t('profile.userPage.title')}
           </h3>
@@ -134,7 +139,10 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
         {canEdit && (
           <button
             onClick={handleEditClick}
-            className="flex items-center gap-2 px-4 py-2 text-sm bg-osu-pink hover:bg-pink-600 text-white rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg transition-colors"
+            style={{ backgroundColor: profileColor }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
             <FaEdit className="w-3 h-3" />
             <span>{t('profile.userPage.editButton')}</span>
