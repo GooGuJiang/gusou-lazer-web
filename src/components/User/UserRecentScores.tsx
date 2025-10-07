@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
-import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
-import ScoreActionsMenu from '../Score/ScoreActionsMenu';
 
-interface UserBestScoresProps {
+interface UserRecentScoresProps {
   userId: number;
   selectedMode: GameMode;
   user?: User;
@@ -88,13 +86,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ 
-  score: BestScore; 
-  t: any; 
-  profileColor: string;
-  canEdit?: boolean;
-  onRefresh?: () => void;
-}> = ({ score, t, profileColor, canEdit = false, onRefresh }) => {
+const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; showPP?: boolean }> = ({ score, t, profileColor, showPP = true }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -104,8 +96,7 @@ const ScoreCard: React.FC<{
   const accuracy = (score.accuracy * 100).toFixed(2); // 命中率（百分比）
   const originalPp = Math.round(score.pp || 0); // 原始pp
   const mods = score.mods || []; // MOD列表
-  const isPinned = score.current_user_attributes?.pin?.is_pinned || false; // 是否已置顶
-  const hasReplay = score.has_replay || false; // 是否有回放
+  const passed = score.passed; // 是否通过
 
   const beatmapUrl = score.beatmap?.url || '#';
   const coverImage = score.beatmapset?.covers?.['cover@2x'] || score.beatmapset?.covers?.cover;
@@ -135,6 +126,11 @@ const ScoreCard: React.FC<{
       />
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
       
+      {/* 失败标记 */}
+      {!passed && (
+        <div className="absolute inset-0 bg-red-500/10 dark:bg-red-500/20" />
+      )}
+      
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
@@ -145,7 +141,7 @@ const ScoreCard: React.FC<{
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-18 h-12 object-contain"
+                className={`w-18 h-12 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
             </div>
 
@@ -156,7 +152,7 @@ const ScoreCard: React.FC<{
                 <div className="flex items-baseline gap-1 text-sm leading-tight">
                   <BeatmapLink
                     beatmapUrl={beatmapUrl}
-                    className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
+                    className={`font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
                     title={title}
                   >
                     {title}
@@ -167,6 +163,11 @@ const ScoreCard: React.FC<{
                   <span className="text-gray-600 dark:text-gray-400 text-xs truncate">
                     {artist}
                   </span>
+                  {!passed && (
+                    <span className="text-red-500 dark:text-red-400 text-xs font-semibold ml-2">
+                      {t('profile.recentScores.failed')}
+                    </span>
+                  )}
                 </div>
                 
                 {/* 难度名和时间 */}
@@ -185,28 +186,21 @@ const ScoreCard: React.FC<{
             <div className="flex-shrink-0 flex items-center gap-2 mr-6">
               {/* MOD图标 + 准确率 */}
               <ModsDisplay mods={mods} />
-              <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              <div className={`text-sm font-bold ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}>
                 {accuracy}%
               </div>
             </div>
           </div>
 
           {/* 右侧性能区域 */}
-          <div className="absolute right-0 top-0 h-full flex items-center justify-center gap-2 pr-2">
-            {/* PP 值 */}
-            <div className="text-sm font-bold text-profile-color drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-              {originalPp} PP
+          {showPP && originalPp > 0 && (
+            <div className="absolute right-0 top-0 h-full w-20 flex items-center justify-center">
+              {/* PP 值 */}
+              <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}>
+                {originalPp} PP
+              </div>
             </div>
-            {/* 操作菜单 */}
-            {canEdit && (
-              <ScoreActionsMenu
-                scoreId={score.id}
-                isPinned={isPinned}
-                hasReplay={hasReplay}
-                onPinChange={onRefresh}
-              />
-            )}
-          </div>
+          )}
         </div>
 
         {/* 手机端布局 */}
@@ -217,7 +211,7 @@ const ScoreCard: React.FC<{
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-16 h-10 object-contain"
+                className={`w-16 h-10 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
             </div>
 
@@ -227,7 +221,7 @@ const ScoreCard: React.FC<{
               <div className="flex items-baseline gap-1 text-sm leading-tight mb-1">
                 <BeatmapLink
                   beatmapUrl={beatmapUrl}
-                  className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
+                  className={`font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
                   title={title}
                 >
                   {title}
@@ -238,6 +232,11 @@ const ScoreCard: React.FC<{
                 <span className="text-gray-600 dark:text-gray-400 text-xs truncate">
                   {artist}
                 </span>
+                {!passed && (
+                  <span className="text-red-500 dark:text-red-400 text-xs font-semibold ml-2">
+                    {t('profile.recentScores.failed')}
+                  </span>
+                )}
               </div>
               
               {/* 第二行：难度名和时间 */}
@@ -254,24 +253,15 @@ const ScoreCard: React.FC<{
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ModsDisplay mods={mods} />
-                  <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                  <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}>
                     {accuracy}%
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="text-sm font-bold text-profile-color drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                {showPP && originalPp > 0 && (
+                  <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}>
                     {originalPp} PP
                   </div>
-                  {/* 操作菜单 */}
-                  {canEdit && (
-                    <ScoreActionsMenu
-                      scoreId={score.id}
-                      isPinned={isPinned}
-                      hasReplay={hasReplay}
-                      onPinChange={onRefresh}
-                    />
-                  )}
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -281,19 +271,15 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '' }) => {
+const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMode, user, className = '' }) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
-  const { user: currentUser } = useAuth();
   const [scores, setScores] = useState<BestScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
-  
-  // 检查是否是当前用户自己的页面
-  const canEdit = currentUser?.id === userId;
 
   const loadScores = async (reset = false) => {
     try {
@@ -302,39 +288,34 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
       if (reset) {
         setLoading(true);
         setError(null);
-        // 重置时先重置 hasMore 状态
         setHasMore(true);
       } else {
         setLoadingMore(true);
       }
 
-      const response = await userAPI.getBestScores(userId, selectedMode, 6, currentOffset);
+      const response = await userAPI.getRecentScores(userId, selectedMode, 6, currentOffset, false);
       
-      // 处理 API 响应 - 根据 osu! API，应该直接返回 SoloScoreInfo[] 数组
+      // 处理 API 响应
       const newScores = Array.isArray(response) ? response : [];
       
-      // 判断是否还有更多数据的逻辑
+      // 判断是否还有更多数据
       let hasMoreData: boolean;
       
       if (reset) {
-        // 重置时：如果返回的数据数量等于请求的数量(6)，说明可能还有更多数据
         hasMoreData = newScores.length === 6;
         setScores(newScores);
         setOffset(newScores.length);
       } else {
-        // 加载更多时：检查返回数据数量和总数量
-        const totalScores = user?.scores_best_count || 0;
         const currentTotal = scores.length + newScores.length;
-        hasMoreData = newScores.length === 6 && currentTotal < totalScores;
+        hasMoreData = newScores.length === 6 && currentTotal < 100; // 最近成绩最多显示100条
         setScores(prev => [...prev, ...newScores]);
         setOffset(prev => prev + newScores.length);
       }
 
       setHasMore(hasMoreData);
     } catch (err) {
-      console.error('Failed to load user best scores:', err);
-      setError(t('profile.bestScores.loadFailed'));
-      // 出错时也重置 hasMore 状态
+      console.error('Failed to load user recent scores:', err);
+      setError(t('profile.recentScores.loadFailed'));
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -344,7 +325,6 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
 
   useEffect(() => {
     if (userId) {
-      // 重置所有相关状态
       setOffset(0);
       setScores([]);
       setError(null);
@@ -359,11 +339,6 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
     }
   };
 
-  const handleRefresh = () => {
-    // 刷新当前页面的成绩
-    loadScores(true);
-  };
-
   if (loading) {
     return (
       <div className={`${className}`}>
@@ -371,7 +346,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           <div className="flex items-center gap-3">
             <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              {t('profile.bestScores.title')}
+              {t('profile.recentScores.title')}
             </h3>
           </div>
         </div>
@@ -387,7 +362,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           <div className="flex items-center gap-3">
             <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              {t('profile.bestScores.title')}
+              {t('profile.recentScores.title')}
             </h3>
           </div>
         </div>
@@ -404,19 +379,17 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
         <div className="flex items-center gap-3">
           <div className="w-1 h-6 rounded-full" style={{ backgroundColor: profileColor }}></div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            {t('profile.bestScores.title')}
+            {t('profile.recentScores.title')}
           </h3>
-          {user?.scores_best_count && (
-            <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-              ({user.scores_best_count})
-            </span>
-          )}
+          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+            ({t('profile.recentScores.last24h')})
+          </span>
         </div>
       </div>
       
       {scores.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
-          {t('profile.bestScores.noScores')}
+          {t('profile.recentScores.noScores')}
         </div>
       ) : (
         <div className="shadow-sm overflow-hidden rounded-lg">
@@ -428,14 +401,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           {/* 主要内容区域 - 无圆角 */}
           <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
             {scores.map((score) => (
-              <ScoreCard 
-                key={score.id} 
-                score={score} 
-                t={t} 
-                profileColor={profileColor}
-                canEdit={canEdit}
-                onRefresh={handleRefresh}
-              />
+              <ScoreCard key={score.id} score={score} t={t} profileColor={profileColor} showPP={score.passed} />
             ))}
 
             {hasMore && (
@@ -451,10 +417,10 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
                   {loadingMore ? (
                     <>
                       <LoadingSpinner size="sm" />
-                      <span>{t('profile.bestScores.loading')}</span>
+                      <span>{t('profile.recentScores.loading')}</span>
                     </>
                   ) : (
-                    <span>{t('profile.bestScores.loadMore')}</span>
+                    <span>{t('profile.recentScores.loadMore')}</span>
                   )}
                 </button>
               </div>
@@ -470,4 +436,5 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
   );
 };
 
-export default UserBestScores;
+export default UserRecentScores;
+

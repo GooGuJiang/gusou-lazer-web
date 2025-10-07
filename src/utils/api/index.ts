@@ -12,3 +12,4 @@ export { notificationsAPI } from './notifications';
 export { beatmapAPI } from './beatmap';
 export { deviceAPI } from './device';
 export { preferencesAPI } from './preferences';
+export { scoreAPI } from './score';

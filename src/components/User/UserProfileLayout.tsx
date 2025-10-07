@@ -10,6 +10,7 @@ import { type User, type GameMode } from '../../types';
 import FriendStats from './FriendStats';
 import UserRecentActivity from './UserRecentActivity';
 import UserBestScores from './UserBestScores';
+import UserRecentScores from './UserRecentScores';
 import UserPageDisplay from './UserPageDisplay';
 import RestrictedBanner from './RestrictedBanner';
 import { FaTools, FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -386,6 +387,11 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         {/* 用户最佳成绩 */}
         <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserBestScores userId={user.id} selectedMode={selectedMode} user={user} />
+        </div>
+
+        {/* 用户最近成绩 */}
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+          <UserRecentScores userId={user.id} selectedMode={selectedMode} user={user} />
         </div>
 
         {/* 施工中 */}

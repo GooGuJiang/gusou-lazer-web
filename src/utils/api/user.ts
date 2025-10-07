@@ -225,6 +225,30 @@ export const userAPI = {
     return response.data;
   },
 
+  getRecentScores: async (
+    userId: number,
+    mode: string = 'osu',
+    limit: number = 6,
+    offset: number = 0,
+    include_fails: boolean = true
+  ) => {
+    console.log('获取用户最近成绩:', { userId, mode, limit, offset, include_fails });
+
+    const params = new URLSearchParams();
+    params.append('limit', limit.toString());
+    params.append('offset', offset.toString());
+    params.append('mode', mode);
+    params.append('include_fails', include_fails.toString());
+
+    const url = `/api/v2/users/${userId}/scores/recent?${params.toString()}`;
+    const response = await api.get(url, {
+      headers: {
+        'x-api-version': '20220705',
+      },
+    });
+    return response.data;
+  },
+
   // Change password with current password
   changePassword: async (currentPassword: string, newPassword: string) => {
     console.log('修改密码');
