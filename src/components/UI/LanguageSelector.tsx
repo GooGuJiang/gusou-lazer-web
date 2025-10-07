@@ -15,16 +15,16 @@ interface LanguageConfig {
 // 支持的语言列表
 const SUPPORTED_LANGUAGES: LanguageConfig[] = [
   {
-    code: 'zh',
-    name: 'Chinese',
-    nativeName: '中文',
-    flag: 'cn'
-  },
-  {
     code: 'en',
     name: 'English',
     nativeName: 'English',
     flag: 'us'
+  },
+  {
+    code: 'zh',
+    name: 'Chinese',
+    nativeName: '中文',
+    flag: 'cn'
   },
   // // 其他支持的语言
   // {

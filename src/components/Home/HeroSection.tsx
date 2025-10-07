@@ -173,7 +173,7 @@ const HeroSection: React.FC = () => {
               </h2>
             </div>
 
-            <p ref={descRef} className="text-center mx-auto text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl md:max-w-4xl leading-relaxed">
+            <p ref={descRef} className="text-left mx-auto text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl md:max-w-4xl leading-relaxed">
               {descriptionChars.map((charObj, index) => (
                 <span 
                   key={index} 

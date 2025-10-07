@@ -2,10 +2,10 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { resources, type AppLanguages } from './resources';
 
-const defaultLanguage: AppLanguages = 'zh';
+const defaultLanguage: AppLanguages = 'en';
 
 // 支持的语言列表
-const supportedLanguages: AppLanguages[] = ['zh', 'en'];
+const supportedLanguages: AppLanguages[] = ['en', 'zh'];
 
 // 获取浏览器语言偏好
 const getBrowserLanguage = (): AppLanguages => {
