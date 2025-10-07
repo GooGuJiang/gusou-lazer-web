@@ -129,12 +129,28 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
   // 进入用户资料页时，按查看的用户配色应用，离开时还原
   useEffect(() => {
-    const viewedColor = user.profile_colour || '#ED8EA6';
+    // 优先从本地存储获取颜色，避免 API 延迟导致的闪烁
+    const getViewedUserColor = () => {
+      // 如果是查看自己的页面，使用当前已保存的颜色（本地存储优先）
+      if (currentUser?.id === user.id) {
+        try {
+          const storedColor = localStorage.getItem('user_profile_color');
+          if (storedColor) return storedColor;
+        } catch (e) {
+          console.error('Failed to read from localStorage:', e);
+        }
+      }
+      // 查看他人页面或本地无存储时，使用用户的 profile_colour
+      return user.profile_colour || '#ED8EA6';
+    };
+
+    const viewedColor = getViewedUserColor();
     setProfileColorLocal(viewedColor);
+    
     return () => {
       resetProfileColor();
     };
-  }, [user.profile_colour, user.id]);
+  }, [user.profile_colour, user.id, currentUser?.id, setProfileColorLocal, resetProfileColor]);
 
   // 头图展开状态 - 确保有明确的初始值
   const [isCoverExpanded, setIsCoverExpanded] = useState(() => {
