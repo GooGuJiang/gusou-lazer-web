@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Avatar from '../UI/Avatar';
 import GameModeSelector from '../UI/GameModeSelector';
@@ -13,7 +12,6 @@ import UserRecentActivity from './UserRecentActivity';
 import UserBestScores from './UserBestScores';
 import UserPageDisplay from './UserPageDisplay';
 import RestrictedBanner from './RestrictedBanner';
-import { BiSolidPencil } from 'react-icons/bi';
 import { FaTools, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip';
 import { useAuth } from '../../hooks/useAuth';
@@ -68,10 +66,10 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
     return () => io.disconnect();
   }, []);
 
-  // 动态高度：展开时更高
+  // 动态高度：展开时显示，收起时不显示
   const heightClass = isExpanded 
-    ? 'h-[280px] md:h-[420px]' 
-    : 'h-[180px] md:h-[288px]';
+    ? 'h-[180px] md:h-[288px]' 
+    : 'h-0';
 
   return (
     <div ref={ref} className={`relative w-full overflow-hidden transition-all duration-300 ${heightClass}`}>
@@ -101,7 +99,6 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
 const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMode, onModeChange, onUserUpdate }) => {
   const { t } = useTranslation();
   const { refreshUser, user: currentUser } = useAuth();
-  const navigate = useNavigate();
   const { preferences, updatePreference } = useUserPreferences();
   const { profileColor, setProfileColorLocal, resetProfileColor } = useProfileColor();
   
@@ -139,18 +136,18 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
     };
   }, [user.profile_colour, user.id]);
 
-  // 头图展开状态
-  const [isCoverExpanded, setIsCoverExpanded] = useState(preferences.profile_cover_expanded ?? false);
+  // 头图展开状态 - 确保有明确的初始值
+  const [isCoverExpanded, setIsCoverExpanded] = useState(() => {
+    return preferences.profile_cover_expanded ?? false;
+  });
 
   // 当偏好设置加载完成时，更新本地状态
   useEffect(() => {
-    setIsCoverExpanded(preferences.profile_cover_expanded ?? false);
+    // 只在偏好设置实际存在时更新
+    if (preferences.profile_cover_expanded !== undefined) {
+      setIsCoverExpanded(preferences.profile_cover_expanded);
+    }
   }, [preferences.profile_cover_expanded]);
-
-  // 处理编辑按钮点击
-  const handleEditClick = () => {
-    navigate('/settings');
-  };
 
   // 处理头像更新
   const handleAvatarUpdate = async (newAvatarUrl: string) => {
@@ -205,37 +202,12 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
           {/* 头图懒加载 */}
           <CoverImage src={coverUrl} alt={`${user.username} cover`} isExpanded={isCoverExpanded} />
-
-          {/* 右下角按钮组 */}
-          <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3 flex gap-2">
-            {/* 展开/收起按钮 */}
-            <button 
-              onClick={handleToggleCover}
-              className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-black/50 text-white grid place-items-center edit-button-shadow text-xs md:text-sm hover:bg-black/70 transition-colors" 
-              aria-label={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
-              data-tooltip-id="cover-toggle-tooltip"
-              data-tooltip-content={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
-            >
-              {isCoverExpanded ? <FaChevronUp /> : <FaChevronDown />}
-            </button>
-
-            {/* 编辑按钮 - 仅在自己的页面显示 */}
-            {canEdit && (
-              <button 
-                onClick={handleEditClick}
-                className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-black/50 text-white grid place-items-center edit-button-shadow text-xs md:text-sm hover:bg-black/70 transition-colors" 
-                aria-label={t('profile.userPage.editCover')}
-              >
-                <BiSolidPencil />
-              </button>
-            )}
-          </div>
         </div>
 
         {/* 头像与基本信息条 */}
         <div className="bg-card px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-card relative">
-          {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时缩小 */}
-          <div className={isCoverExpanded ? "-mt-12" : "-mt-16"}>
+          {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时有负边距下沉效果，收起时无负边距 */}
+          <div className={isCoverExpanded ? "-mt-12" : "mt-0"}>
             <Avatar
               userId={user.id}
               username={user.username}
@@ -245,8 +217,8 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
               editable={false}
               className={
                 isCoverExpanded 
-                  ? "mt-[10px] md:mt-[1px] md:!w-24 md:!h-24 md:!min-w-24 md:!min-h-24 transition-all duration-300" 
-                  : "mt-[10px] md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32 transition-all duration-300"
+                  ? "mt-[10px] md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32 transition-all duration-300" 
+                  : "mt-[10px] md:mt-[1px] md:!w-24 md:!h-24 md:!min-w-24 md:!min-h-24 transition-all duration-300"
               }
               onAvatarUpdate={handleAvatarUpdate}
             />
@@ -294,6 +266,17 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
               )}
             </div>
           </div>
+
+          {/* 展开/收起按钮 - 移到右侧 */}
+          <button 
+            onClick={handleToggleCover}
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 grid place-items-center text-sm md:text-base hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex-shrink-0" 
+            aria-label={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
+            data-tooltip-id="cover-toggle-tooltip"
+            data-tooltip-content={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
+          >
+            {isCoverExpanded ? <FaChevronUp /> : <FaChevronDown />}
+          </button>
           </div>
 
         {/* Tooltips */}
