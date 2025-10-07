@@ -8,7 +8,20 @@ export default function FriendStats({ user, selfId }: { user: User; selfId?: num
   const { user: self } = useAuth();
   const resolvedSelfId = selfId ?? self?.id;
   
-  // 如果没有有效的用户ID，不显示好友操作
+  // 直接检查是否为自己
+  const isCurrentUserSelf = resolvedSelfId === user.id;
+  
+  // 始终调用 hook（遵循 React Hooks 规则），即使参数可能无效
+  const {
+    status,
+    isSelf,
+    add,
+    remove,
+    block,
+    unblock,
+  } = useFriendRelationship(user.id ?? 0, resolvedSelfId ?? 0);
+  
+  // 如果没有有效的用户ID，显示加载状态
   if (!resolvedSelfId || !user?.id) {
     console.log('Missing user IDs:', { resolvedSelfId, userId: user?.id });
     return (
@@ -23,17 +36,6 @@ export default function FriendStats({ user, selfId }: { user: User; selfId?: num
       </div>
     );
   }
-  // 直接检查是否为自己
-  const isCurrentUserSelf = resolvedSelfId === user.id;
-  
-  const {
-    status,
-    isSelf,
-    add,
-    remove,
-    block,
-    unblock,
-  } = useFriendRelationship(user.id, resolvedSelfId);
 
   // 优先使用直接比较的结果，只有当无法确定时才使用 hook 的结果
   const finalIsSelf = isCurrentUserSelf;
