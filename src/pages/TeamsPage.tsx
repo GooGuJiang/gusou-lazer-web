@@ -21,10 +21,12 @@ import type {
   TeamRankingsResponse,
   RankingType
 } from '../types';
+import { useProfileColor } from '../contexts/ProfileColorContext';
 
 const TeamsPage: React.FC = () => {
   const { t } = useTranslation();
   const { isAuthenticated, user } = useAuth();
+  const { profileColor } = useProfileColor();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   const [selectedMainMode, setSelectedMainMode] = useState<MainGameMode>('osu');
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
@@ -34,6 +36,16 @@ const TeamsPage: React.FC = () => {
   
   const [teamRankings, setTeamRankings] = useState<TeamRankingsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 获取实际的颜色值 - 如果是主题色模式，使用 profileColor
+  const getBrandColor = (mode: GameMode): string => {
+    const colorValue = GAME_MODE_COLORS[mode];
+    // 如果颜色值包含 CSS 变量，则使用当前的 profileColor
+    if (colorValue.includes('var(--profile-color')) {
+      return profileColor;
+    }
+    return colorValue;
+  };
 
   // 点击外部关闭子模式菜单
   useEffect(() => {
@@ -166,28 +178,34 @@ const TeamsPage: React.FC = () => {
                     className={`relative px-3 py-2 sm:px-4 sm:py-2.5 rounded-md sm:rounded-lg transition-all duration-200 focus:outline-none flex items-center justify-center min-h-[32px] sm:min-h-[36px] ${
                       selectedMainMode === mainMode
                         ? 'shadow-sm sm:shadow-md'
-                        : 'opacity-70 hover:opacity-100'
+                        : 'opacity-70 hover:opacity-100 hover:scale-105 hover:shadow-sm cursor-pointer'
                     }`}
                     data-tooltip-id={`main-mode-${mainMode}`}
-                    data-tooltip-content={mainMode === 'osu' ? 'osu!' : 
-                                        mainMode === 'taiko' ? 'osu!taiko' :
-                                        mainMode === 'fruits' ? 'osu!catch' :
-                                        'osu!mania'}
+                    data-tooltip-content={GAME_MODE_NAMES[GAME_MODE_GROUPS[mainMode][0]]}
                   >
                     <div
                       className="absolute inset-0 rounded-md sm:rounded-lg transition-all duration-200"
                       style={{
                         background: selectedMainMode === mainMode
-                          ? `linear-gradient(135deg, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]} 0%, ${GAME_MODE_COLORS[GAME_MODE_GROUPS[mainMode][0]]}CC 100%)`
+                          ? `linear-gradient(135deg, ${getBrandColor(GAME_MODE_GROUPS[mainMode][0])} 0%, ${getBrandColor(GAME_MODE_GROUPS[mainMode][0])}CC 100%)`
                           : 'var(--card-bg)'
                       }}
                     />
-                    <i
-                      className={`${MAIN_MODE_ICONS[mainMode]} relative z-10 text-xl sm:text-2xl transition-colors duration-200`}
-                      style={{
-                        color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)'
-                      }}
-                    />
+                    <div className="flex items-center justify-center gap-1">
+                      <i
+                        className={`${MAIN_MODE_ICONS[mainMode]} relative z-10 text-xl sm:text-2xl transition-colors duration-200`}
+                        style={{
+                          color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)'
+                        }}
+                      />
+                      <i
+                        className="fas fa-chevron-down relative z-10 text-[8px] sm:text-[10px] transition-all duration-200 opacity-60"
+                        style={{
+                          color: selectedMainMode === mainMode ? 'white' : 'var(--text-primary)',
+                          transform: showSubModes === mainMode ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}
+                      />
+                    </div>
                   </button>
 
                   {/* 子模式弹出选项 */}
@@ -203,7 +221,7 @@ const TeamsPage: React.FC = () => {
                               : 'hover:bg-card-hover'
                           }`}
                           style={{
-                            backgroundColor: selectedMode === mode ? GAME_MODE_COLORS[mode] : 'transparent',
+                            backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
                             color: selectedMode === mode ? 'white' : 'var(--text-primary)',
                           }}
                         >
