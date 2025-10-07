@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import InfoCard from '../InfoCard';
 import { features } from '../../data/features';
@@ -30,6 +31,7 @@ const HeroSection: React.FC = () => {
   const subtitleRef = useRef<HTMLHeadingElement | null>(null);
   const descRef = useRef<HTMLParagraphElement | null>(null);
   const communityRef = useRef<HTMLDivElement | null>(null);
+  const joinButtonRef = useRef<HTMLDivElement | null>(null);
   // 将 logo 与 标题 作为一个整体分组，保证移动/缩放始终保持一致
   const brandRef = useRef<HTMLDivElement | null>(null);
 
@@ -104,10 +106,11 @@ const HeroSection: React.FC = () => {
       if (descRef.current) {
         gsap.set(descRef.current, { autoAlpha: 0, display: 'none', y: 0 });
       }
-      // 初始隐藏社区按钮
-      if (communityRef.current) {
-        gsap.set(communityRef.current, { autoAlpha: 0, display: 'none', y: 0 });
+      // 初始隐藏加入按钮
+      if (joinButtonRef.current) {
+        gsap.set(joinButtonRef.current, { autoAlpha: 0, display: 'none', y: 0 });
       }
+      // 社区按钮初始显示（与品牌组、副标题并排下方展示），无需隐藏
 
       // 初始化所有字符为不可见
       descriptionChars.forEach((_, index) => {
@@ -129,14 +132,17 @@ const HeroSection: React.FC = () => {
       });
 
       tl
-        // 中段：将左侧的 logo+标题 平滑移动到屏幕正中，并轻微放大（以分组为单位）
+        // 中段:将左侧的 logo+标题 平滑移动到屏幕正中,并轻微放大(以分组为单位)
         .to(brandRef.current, { x: computeCenterX, y: -20, scale: 1.08 }, 0)
-        // 副标题先淡出（同时微微上移），随后描述淡入显示
-        .to(subtitleRef.current, { autoAlpha: 0, y: -10, duration: 0.35 }, '<+0.05')
+        // 副标题先淡出(同时微微上移)
+        .to(subtitleRef.current, { autoAlpha: 0, y: -10, duration: 0.35 }, 0.05)
+        // 社区按钮在副标题淡出完成后再开始淡出并上移
+        .to(communityRef.current, { autoAlpha: 0, y: -10, duration: 0.3 }, 0.4) // 0.05 + 0.35 = 0.4秒后开始
+        .set(communityRef.current, { display: 'none' })
         .set(descRef.current, { display: 'block' })
-        .to(descRef.current, { autoAlpha: 1, y: -10, duration: 0.2 }, '<')
+        .to(descRef.current, { autoAlpha: 1, y: -10, duration: 0.2 }, 0.7) // 0.4 + 0.3 = 0.7秒后开始
         // 品牌组进一步上移
-        .to(brandRef.current, { y: -160, duration: 0.45 }, '<')
+        .to(brandRef.current, { y: -160, duration: 0.45 }, 0.7)
         // 字符逐个出现动画
         .to(descriptionChars.map((_, index) => `.char-${index}`), {
           opacity: 1,
@@ -145,9 +151,11 @@ const HeroSection: React.FC = () => {
           stagger: 0.02, // 每个字符间隔 0.02 秒出现
           ease: 'power1.out'
         }, '<+0.3') // 在描述容器显示后延迟 0.3 秒开始字符动画
-        // 社区按钮淡入
-        .set(communityRef.current, { display: 'flex' })
-        .to(communityRef.current, { autoAlpha: 1, y: 0, duration: 0.3 }, '<+0.5');
+        // 字符动画完成后，社区按钮消失，加入按钮出现
+        .to(communityRef.current, { autoAlpha: 0, duration: 0.2 }, '>+0.2')
+        .set(joinButtonRef.current, { display: 'block' })
+        .to(joinButtonRef.current, { autoAlpha: 1, y: 0, duration: 0.3 }, '<')
+        ;
     }, sectionRef);
 
     return () => ctx.revert();
@@ -195,56 +203,69 @@ const HeroSection: React.FC = () => {
                 </span>
               ))}
             </p>
+          </div>
+        </div>
 
-            {/* 社区按钮 */}
-            <div ref={communityRef} className="w-full">
-              <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:gap-3 w-full max-w-sm sm:max-w-2xl mx-auto">
-                <a
-                  href="https://qm.qq.com/q/Uw8tOkgJSS"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
-                  </div>
-                  <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm">1059561526</span>
-                  </div>
-                </a>
-
-                <a
-                  href="https://discord.gg/AhzJXXWYfF"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
-                  </div>
-                  <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm">{t('hero.community.discordTag')}</span>
-                  </div>
-                </a>
-
-                <a
-                  href="https://github.com/GooGuTeam"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
-                  </div>
-                  <div className="hidden sm:block px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm">GooGuTeam</span>
-                  </div>
-                </a>
+        {/* 社区按钮 - 绝对定位在屏幕下方 */}
+        <div ref={communityRef} className="absolute bottom-64 left-1/2 -translate-x-1/2 w-full px-4">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:gap-3 w-full max-w-sm sm:max-w-2xl mx-auto">
+            <a
+              href="https://qm.qq.com/q/Uw8tOkgJSS"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+            >
+              <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
               </div>
-            </div>
+              <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                <span className="font-semibold text-xs sm:text-sm text-center">1059561526</span>
+              </div>
+            </a>
+
+            <a
+              href="https://discord.gg/AhzJXXWYfF"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+            >
+              <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
+              </div>
+              <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                <span className="font-semibold text-xs sm:text-sm text-center">{t('hero.community.discordTag')}</span>
+              </div>
+            </a>
+
+            <a
+              href="https://github.com/GooGuTeam"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+            >
+              <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
+              </div>
+              <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                <span className="font-semibold text-xs sm:text-sm text-center">GooGuTeam</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {/* 加入按钮 - 绝对定位在屏幕下方 */}
+        <div ref={joinButtonRef} className="absolute bottom-64 left-1/2 -translate-x-1/2 w-full px-4">
+          <div className="w-full max-w-sm sm:max-w-md mx-auto">
+            <Link
+              to="/how-to-join"
+              className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium shadow-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
+            >
+              <FaRocket className="w-4 h-4 sm:w-5 sm:h-5" />
+              {t('hero.joinCta')}
+            </Link>
           </div>
         </div>
 

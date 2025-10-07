@@ -5,7 +5,7 @@ export const homePage = {
       'g0v0! is a brand-new osu! private server <bold>built for the lazer client</bold>. We support the standard / taiko / catch / mania rulesets, RX/AP pp calculation, and unlimited renames so you can play your way.',
     statusOperational: 'All services are operational',
     statusCommunity: 'Join our QQ / Discord community for support and updates',
-    joinCta: 'How to join the server',
+    joinCta: 'Join Now',
     viewProfile: 'View profile',
     viewRankings: 'View rankings',
     register: 'Sign up',
