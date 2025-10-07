@@ -34,7 +34,7 @@ const HowToJoinPage: React.FC = () => {
 
   return (
     <PhotoProvider>
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 sm:py-12 lg:py-16">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 sm:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* 页面标题 */}
           <div className="text-center mb-12 sm:mb-16">
