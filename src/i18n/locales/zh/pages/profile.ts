@@ -64,6 +64,10 @@ export const profilePage = {
         activity: '进行了活动',
       },
     },
+    pinnedScores: {
+      title: '置顶成绩',
+      loadFailed: '加载置顶成绩失败',
+    },
     bestScores: {
       title: '最佳成绩',
       noScores: '暂无最佳成绩',

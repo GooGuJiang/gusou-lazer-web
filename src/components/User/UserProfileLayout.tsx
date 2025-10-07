@@ -9,6 +9,7 @@ import LevelProgress from '../UI/LevelProgress';
 import { type User, type GameMode } from '../../types';
 import FriendStats from './FriendStats';
 import UserRecentActivity from './UserRecentActivity';
+import UserPinnedScores from './UserPinnedScores';
 import UserBestScores from './UserBestScores';
 import UserRecentScores from './UserRecentScores';
 import UserPageDisplay from './UserPageDisplay';
@@ -382,6 +383,11 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         {/* 用户最近活动 */}
         <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
           <UserRecentActivity userId={user.id} />
+        </div>
+
+        {/* 用户置顶成绩 */}
+        <div className="bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
+          <UserPinnedScores userId={user.id} selectedMode={selectedMode} user={user} />
         </div>
 
         {/* 用户最佳成绩 */}

@@ -249,6 +249,24 @@ export const userAPI = {
     return response.data;
   },
 
+  getPinnedScores: async (
+    userId: number,
+    mode: string = 'osu'
+  ) => {
+    console.log('获取用户置顶成绩:', { userId, mode });
+
+    const params = new URLSearchParams();
+    params.append('mode', mode);
+
+    const url = `/api/v2/users/${userId}/scores/pinned?${params.toString()}`;
+    const response = await api.get(url, {
+      headers: {
+        'x-api-version': '20220705',
+      },
+    });
+    return response.data;
+  },
+
   // Change password with current password
   changePassword: async (currentPassword: string, newPassword: string) => {
     console.log('修改密码');

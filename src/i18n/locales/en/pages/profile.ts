@@ -64,6 +64,10 @@ export const profilePage = {
         activity: 'performed an activity',
       },
     },
+    pinnedScores: {
+      title: 'Pinned Scores',
+      loadFailed: 'Failed to load pinned scores',
+    },
     bestScores: {
       title: 'Best Scores',
       noScores: 'No best scores yet',
