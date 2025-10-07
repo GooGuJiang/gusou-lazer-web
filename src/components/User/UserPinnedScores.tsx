@@ -456,10 +456,6 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
     );
   }
 
-  if (scores.length === 0) {
-    return null; // 没有置顶成绩时不显示这个区块
-  }
-
   return (
     <div className={`${className}`}>
       <div className="flex justify-between items-center mb-6">
@@ -474,41 +470,61 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
         </div>
       </div>
       
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+      {scores.length === 0 ? (
         <div className="shadow-sm overflow-hidden rounded-lg">
           {/* 头部圆角div */}
           <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
             <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
           </div>
           
-          {/* 主要内容区域 */}
-          <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
-            <SortableContext
-              items={scores.map(score => score.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              {scores.map((score) => (
-                <SortableScoreCard
-                  key={score.id} 
-                  score={score} 
-                  t={t} 
-                  profileColor={profileColor}
-                  canEdit={canEdit}
-                  onRefresh={handleRefresh}
-                />
-              ))}
-            </SortableContext>
+          {/* 空状态提示 */}
+          <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30 py-12">
+            <div className="text-center text-gray-400 dark:text-gray-500 text-sm">
+              {t('profile.pinnedScores.empty')}
+            </div>
           </div>
           
           {/* 尾部圆角div */}
           <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
           </div>
         </div>
-      </DndContext>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="shadow-sm overflow-hidden rounded-lg">
+            {/* 头部圆角div */}
+            <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
+              <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
+            </div>
+            
+            {/* 主要内容区域 */}
+            <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
+              <SortableContext
+                items={scores.map(score => score.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {scores.map((score) => (
+                  <SortableScoreCard
+                    key={score.id} 
+                    score={score} 
+                    t={t} 
+                    profileColor={profileColor}
+                    canEdit={canEdit}
+                    onRefresh={handleRefresh}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+            
+            {/* 尾部圆角div */}
+            <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
+            </div>
+          </div>
+        </DndContext>
+      )}
     </div>
   );
 };

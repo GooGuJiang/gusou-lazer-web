@@ -15,8 +15,8 @@ export const authAPI = {
     formData.append('password', password);
     formData.append('scope', '*');
 
-    // 获取设备UUID
-    const deviceUUID = getDeviceUUID();
+    // 获取设备UUID（异步）
+    const deviceUUID = await getDeviceUUID();
 
     try {
       const response = await axios.post(`${API_BASE_URL}/oauth/token`, formData, {
@@ -64,8 +64,8 @@ export const authAPI = {
     formData.append('client_secret', clientSecret);
     formData.append('refresh_token', refreshToken);
 
-    // 获取设备UUID
-    const deviceUUID = getDeviceUUID();
+    // 获取设备UUID（异步）
+    const deviceUUID = await getDeviceUUID();
 
     const response = await axios.post(`${API_BASE_URL}/oauth/token`, formData, {
       headers: {

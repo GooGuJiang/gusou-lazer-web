@@ -21,14 +21,14 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // 添加设备UUID到所有请求
-    const deviceUUID = getDeviceUUID();
+    // 添加设备UUID到所有请求（使用异步获取）
+    const deviceUUID = await getDeviceUUID();
     config.headers['x-uuid'] = deviceUUID;
     
     return config;

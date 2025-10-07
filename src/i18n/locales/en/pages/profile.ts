@@ -68,6 +68,7 @@ export const profilePage = {
       title: 'Pinned Scores',
       loadFailed: 'Failed to load pinned scores',
       reorderSuccess: 'Reordered successfully',
+      empty: 'No pinned scores yet',
     },
     bestScores: {
       title: 'Best Scores',

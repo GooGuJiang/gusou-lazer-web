@@ -23,8 +23,8 @@ export const verificationAPI = {
     const formData = new URLSearchParams();
     formData.append('verification_key', verificationKey);
 
-    // 获取设备UUID
-    const deviceUUID = getDeviceUUID();
+    // 获取设备UUID（异步）
+    const deviceUUID = await getDeviceUUID();
 
     const response = await api.post('/api/v2/session/verify', formData, {
       headers: {

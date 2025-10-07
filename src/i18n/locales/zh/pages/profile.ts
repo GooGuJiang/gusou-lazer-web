@@ -68,6 +68,7 @@ export const profilePage = {
       title: '置顶成绩',
       loadFailed: '加载置顶成绩失败',
       reorderSuccess: '排序更新成功',
+      empty: '暂无置顶成绩',
     },
     bestScores: {
       title: '最佳成绩',
