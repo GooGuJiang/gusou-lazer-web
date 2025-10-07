@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 interface HueSliderProps {
   hue: number;
@@ -9,11 +9,12 @@ interface HueSliderProps {
 /**
  * HueSlider - 色相滑块组件
  * 参照 fuwari 的实现，使用 OKLCH 颜色空间
+ * 使用 memo 优化，避免不必要的重渲染
  */
-const HueSlider: React.FC<HueSliderProps> = ({ hue, onChange, className = '' }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const HueSlider: React.FC<HueSliderProps> = memo(({ hue, onChange, className = '' }) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(Number(e.target.value));
-  };
+  }, [onChange]);
 
   return (
     <div className={`hue-slider-wrapper ${className}`}>
@@ -29,7 +30,9 @@ const HueSlider: React.FC<HueSliderProps> = ({ hue, onChange, className = '' }) 
       />
     </div>
   );
-};
+});
+
+HueSlider.displayName = 'HueSlider';
 
 export default HueSlider;
 

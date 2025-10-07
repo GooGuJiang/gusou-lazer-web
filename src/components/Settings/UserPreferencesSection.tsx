@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
@@ -169,6 +169,9 @@ const UserPreferencesSection: React.FC = () => {
     await savePreference(key, value);
   };
 
+  // 使用 ref 来存储最新的颜色值，避免频繁更新状态
+  const pendingColorRef = useRef<string | null>(null);
+  
   // 防抖保存颜色（600ms 延迟）
   const debouncedSaveColor = useDebounce(
     async (color: string) => {
@@ -178,6 +181,7 @@ const UserPreferencesSection: React.FC = () => {
         await setProfileColor(color);
         setPreferences(prev => ({ ...prev, profile_colour: color }));
         setOriginalPreferences(prev => ({ ...prev, profile_colour: color }));
+        pendingColorRef.current = null;
         toast.success(t('settings.preferences.saveSuccess'));
       } catch (error) {
         console.error('Failed to save profile_colour:', error);
@@ -186,6 +190,20 @@ const UserPreferencesSection: React.FC = () => {
     },
     600
   );
+
+  // 优化：使用 useMemo 缓存颜色变化的回调函数
+  const handleHueChange = useMemo(() => (newHue: number) => {
+    // 立即更新滑块位置
+    setCurrentHue(newHue);
+    // 转换为颜色（只计算一次）
+    const newColor = hueToHex(newHue);
+    // 存储到 ref，避免频繁更新状态
+    pendingColorRef.current = newColor;
+    // 立即应用颜色到 CSS 变量（实时预览），但不触发状态更新
+    setProfileColorLocal(newColor);
+    // 防抖保存，避免频繁调用 API
+    debouncedSaveColor(newColor);
+  }, [setProfileColorLocal, debouncedSaveColor]);
 
   if (isLoading) {
     return (
@@ -388,31 +406,22 @@ const UserPreferencesSection: React.FC = () => {
                     {/* 彩虹渐变滑块 */}
                     <HueSlider
                       hue={currentHue}
-                      onChange={(newHue) => {
-                        // 立即更新滑块位置
-                        setCurrentHue(newHue);
-                        // 转换为颜色
-                        const newColor = hueToHex(newHue);
-                        setPreferences(prev => ({ ...prev, profile_colour: newColor }));
-                        // 立即应用颜色到 CSS 变量（实时预览）
-                        setProfileColorLocal(newColor);
-                        // 防抖保存，避免频繁调用 API
-                        debouncedSaveColor(newColor);
-                      }}
+                      onChange={handleHueChange}
                     />
                     
                     {/* 颜色预览 */}
                     <div className="flex items-center gap-3 pt-1">
                       <div 
-                        className="w-12 h-12 rounded-lg border-2 shadow-sm transition-colors"
+                        className="w-12 h-12 rounded-lg border-2 shadow-sm"
                         style={{ 
-                          backgroundColor: preferences.profile_colour ?? '#FF66AB',
-                          borderColor: preferences.profile_colour ?? '#FF66AB'
+                          backgroundColor: pendingColorRef.current || preferences.profile_colour || '#FF66AB',
+                          borderColor: pendingColorRef.current || preferences.profile_colour || '#FF66AB',
+                          transition: 'background-color 0.1s ease, border-color 0.1s ease'
                         }}
                       />
                       <div className="flex flex-col gap-1">
                         <span className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                          {preferences.profile_colour ?? '#FF66AB'}
+                          {pendingColorRef.current || preferences.profile_colour || '#FF66AB'}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           OKLCH (L: 0.70, C: 0.14)
