@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { userAPI, scoreAPI, handleApiError } from '../../utils/api';
+import { userAPI, scoreAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import { useAuth } from '../../hooks/useAuth';
@@ -33,6 +33,13 @@ interface UserPinnedScoresProps {
   user?: User;
   className?: string;
   refreshRef?: React.MutableRefObject<(() => void) | null>;
+  onPinActionRef?: React.MutableRefObject<{
+    handlePin: (score: BestScore) => void;
+    handleUnpin: (scoreId: number) => void;
+  } | null>;
+  bestScoresActionRef?: React.MutableRefObject<{
+    updatePinStatus: (scoreId: number, isPinned: boolean) => void;
+  } | null>; // 通知最佳成绩列表更新置顶状态
 }
 
 // 时间格式化函数
@@ -106,8 +113,8 @@ const SortableScoreCard: React.FC<{
   t: any;
   profileColor: string;
   canEdit?: boolean;
-  onRefresh?: () => void;
-}> = ({ score, t, profileColor, canEdit, onRefresh }) => {
+  onPinChange?: (scoreId: number, isPinned: boolean) => void;
+}> = ({ score, t, profileColor, canEdit, onPinChange }) => {
   const {
     attributes,
     listeners,
@@ -130,7 +137,7 @@ const SortableScoreCard: React.FC<{
         t={t}
         profileColor={profileColor}
         canEdit={canEdit}
-        onRefresh={onRefresh}
+        onPinChange={onPinChange}
         dragHandleProps={canEdit ? { ...attributes, ...listeners } : undefined}
       />
     </div>
@@ -143,9 +150,9 @@ const ScoreCard: React.FC<{
   t: any; 
   profileColor: string;
   canEdit?: boolean;
-  onRefresh?: () => void;
+  onPinChange?: (scoreId: number, isPinned: boolean) => void;
   dragHandleProps?: any;
-}> = ({ score, t, profileColor, canEdit = false, onRefresh, dragHandleProps }) => {
+}> = ({ score, t, profileColor, canEdit = false, onPinChange, dragHandleProps }) => {
   const rank = score.rank;
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
   const artist = score.beatmapset?.artist_unicode || score.beatmapset?.artist || 'Unknown Artist';
@@ -250,7 +257,7 @@ const ScoreCard: React.FC<{
                 scoreId={score.id}
                 isPinned={isPinned}
                 hasReplay={hasReplay}
-                onPinChange={onRefresh}
+                onPinChange={onPinChange}
               />
             )}
           </div>
@@ -317,7 +324,7 @@ const ScoreCard: React.FC<{
                       scoreId={score.id}
                       isPinned={isPinned}
                       hasReplay={hasReplay}
-                      onPinChange={onRefresh}
+                      onPinChange={onPinChange}
                     />
                   )}
                 </div>
@@ -330,7 +337,7 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMode, className = '', refreshRef }) => {
+const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMode, className = '', refreshRef, onPinActionRef, bestScoresActionRef }) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
@@ -347,14 +354,65 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
     })
   );
 
-  const loadScores = async () => {
+  // 本地缓存 key
+  const getCacheKey = useCallback(() => `pinned_scores_${userId}_${selectedMode}`, [userId, selectedMode]);
+
+  // 从本地缓存加载
+  const loadFromCache = useCallback((): BestScore[] | null => {
+    try {
+      const cached = localStorage.getItem(getCacheKey());
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        // 检查缓存时间（30分钟内有效，因为服务器也有缓存）
+        if (parsed.timestamp && Date.now() - parsed.timestamp < 30 * 60 * 1000) {
+          return parsed.scores;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load from cache:', e);
+    }
+    return null;
+  }, [getCacheKey]);
+
+  // 保存到本地缓存
+  const saveToCache = useCallback((scores: BestScore[]) => {
+    try {
+      localStorage.setItem(getCacheKey(), JSON.stringify({
+        scores,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.error('Failed to save to cache:', e);
+    }
+  }, [getCacheKey]);
+
+  const loadScores = async (useCache = true) => {
     try {
       setLoading(true);
       setError(null);
 
+      // 先尝试从缓存加载
+      if (useCache) {
+        const cachedScores = loadFromCache();
+        if (cachedScores) {
+          setScores(cachedScores);
+          setLoading(false);
+          // 后台更新
+          const response = await userAPI.getPinnedScores(userId, selectedMode);
+          const newScores = Array.isArray(response) ? response : [];
+          if (JSON.stringify(newScores) !== JSON.stringify(cachedScores)) {
+            setScores(newScores);
+            saveToCache(newScores);
+          }
+          return;
+        }
+      }
+
+      // 从服务器加载
       const response = await userAPI.getPinnedScores(userId, selectedMode);
       const newScores = Array.isArray(response) ? response : [];
       setScores(newScores);
+      saveToCache(newScores);
     } catch (err) {
       console.error('Failed to load user pinned scores:', err);
       setError(t('profile.pinnedScores.loadFailed'));
@@ -370,8 +428,44 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
   }, [userId, selectedMode]);
 
   const handleRefresh = () => {
-    loadScores();
+    // 优先使用本地缓存，然后后台更新
+    loadScores(true);
   };
+
+  // Pin 成绩时添加到列表
+  const handlePinScore = useCallback((score: BestScore) => {
+    // 乐观更新：立即添加到置顶列表末尾
+    setScores(prevScores => {
+      // 检查是否已存在，避免重复
+      if (prevScores.some(s => s.id === score.id)) {
+        return prevScores;
+      }
+      const newScores = [...prevScores, score];  // 添加到末尾
+      saveToCache(newScores);
+      return newScores;
+    });
+  }, [saveToCache]);
+
+  // Unpin 成绩时从列表移除
+  const handleUnpinScore = useCallback((scoreId: number) => {
+    // 乐观更新：立即从置顶列表移除
+    setScores(prevScores => {
+      const newScores = prevScores.filter(s => s.id !== scoreId);
+      saveToCache(newScores);
+      return newScores;
+    });
+  }, [saveToCache]);
+
+  // 处理 ScoreActionsMenu 的 pin 状态变化
+  const handlePinChangeFromMenu = useCallback((scoreId: number, isPinned: boolean) => {
+    if (isPinned) {
+      // 当前是置顶状态，点击后要取消置顶
+      handleUnpinScore(scoreId);
+      // 通知最佳成绩列表更新该成绩的置顶状态为 false
+      bestScoresActionRef?.current?.updatePinStatus(scoreId, false);
+    }
+    // 注意：置顶列表不会显示非置顶的成绩，所以不需要处理 pin 的情况
+  }, [handleUnpinScore, bestScoresActionRef]);
 
   // 将刷新函数暴露给父组件
   useEffect(() => {
@@ -379,6 +473,16 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
       refreshRef.current = handleRefresh;
     }
   }, [refreshRef]);
+
+  // 将 pin/unpin 操作暴露给父组件和兄弟组件
+  useEffect(() => {
+    if (onPinActionRef) {
+      onPinActionRef.current = {
+        handlePin: handlePinScore,
+        handleUnpin: handleUnpinScore,
+      };
+    }
+  }, [onPinActionRef, handlePinScore, handleUnpinScore]);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -394,31 +498,40 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
       return;
     }
 
-    // 乐观更新 UI
+    // 1. 立即更新 UI（乐观更新）
     const newScores = arrayMove(scores, oldIndex, newIndex);
     setScores(newScores);
+    
+    // 2. 立即保存到本地缓存
+    saveToCache(newScores);
 
+    // 3. 立即显示成功提示
+    toast.success(t('profile.pinnedScores.reorderSuccess'));
+
+    // 4. 后台发送到服务器（不等待响应，不回滚）
     try {
-      // 确定调用哪个 API：before 或 after
       const movedScoreId = active.id as number;
       
       if (newIndex === 0) {
         // 移动到第一位，使用 before_score_id
-        await scoreAPI.reorderPinnedScore(movedScoreId, {
+        scoreAPI.reorderPinnedScore(movedScoreId, {
           before_score_id: newScores[1]?.id,
+        }).catch(err => {
+          console.error('Reorder API failed:', err);
+          // 服务器失败不回滚，因为可能是缓存问题
         });
       } else {
         // 移动到其他位置，使用 after_score_id
-        await scoreAPI.reorderPinnedScore(movedScoreId, {
+        scoreAPI.reorderPinnedScore(movedScoreId, {
           after_score_id: newScores[newIndex - 1]?.id,
+        }).catch(err => {
+          console.error('Reorder API failed:', err);
+          // 服务器失败不回滚，因为可能是缓存问题
         });
       }
-
-      toast.success(t('profile.pinnedScores.reorderSuccess'));
     } catch (error) {
-      // 失败时还原
-      setScores(scores);
-      handleApiError(error);
+      // 捕获同步错误
+      console.error('Reorder failed:', error);
     }
   };
 
@@ -513,7 +626,7 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
                     t={t} 
                     profileColor={profileColor}
                     canEdit={canEdit}
-                    onRefresh={handleRefresh}
+                    onPinChange={handlePinChangeFromMenu}
                   />
                 ))}
               </SortableContext>

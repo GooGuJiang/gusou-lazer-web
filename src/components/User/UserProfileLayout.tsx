@@ -107,6 +107,13 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   // 用于跨组件刷新的 ref
   const pinnedScoresRefreshRef = useRef<(() => void) | null>(null);
   const bestScoresRefreshRef = useRef<(() => void) | null>(null);
+  const pinActionRef = useRef<{
+    handlePin: (score: any) => void;
+    handleUnpin: (scoreId: number) => void;
+  } | null>(null);
+  const bestScoresActionRef = useRef<{
+    updatePinStatus: (scoreId: number, isPinned: boolean) => void;
+  } | null>(null);
   
   const stats = user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
@@ -396,6 +403,8 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
             selectedMode={selectedMode} 
             user={user}
             refreshRef={pinnedScoresRefreshRef}
+            onPinActionRef={pinActionRef}
+            bestScoresActionRef={bestScoresActionRef}
           />
         </div>
 
@@ -407,6 +416,8 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
             user={user}
             refreshRef={bestScoresRefreshRef}
             onPinnedListRefresh={() => pinnedScoresRefreshRef.current?.()}
+            pinActionRef={pinActionRef}
+            bestScoresActionRef={bestScoresActionRef}
           />
         </div>
 

@@ -25,6 +25,13 @@ export const profilePage = {
       pp: 'PP',
       playTime: '游玩时间',
     },
+    rankHistory: {
+      loading: '数据加载中...',
+      noData: '暂无排名历史数据',
+      justNow: '刚刚',
+      daysAgo: '{{count}} 天前',
+      globalRank: '全球排名',
+    },
     activities: {
       title: '最近活动',
       noActivities: '暂无最近活动',

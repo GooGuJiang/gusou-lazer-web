@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { FiBarChart2 } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 
 interface RankHistoryData {
   data: number[];
@@ -26,6 +27,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
   height = '16rem',
   fullBleed = true,
 }) => {
+  const { t } = useTranslation();
   // 数据预处理：去除 0（视为缺失），保留时间顺序
   const chartData = React.useMemo(() => {
     const src = rankHistory?.data ?? [];
@@ -70,7 +72,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
           <div className="h-full flex items-center justify-center">
             <div className="animate-pulse text-center" style={{ color: 'var(--text-muted)' }}>
               <FiBarChart2 className="mx-auto text-4xl mb-2" />
-              <p>数据加载中...</p>
+              <p>{t('profile.rankHistory.loading')}</p>
             </div>
           </div>
         ) : chartData.length > 0 ? (
@@ -102,9 +104,11 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
                 labelFormatter={(label) => {
                   const idx = Number(label);
                   const daysAgo = total - 1 - idx; // 最右是最新
-                  return daysAgo === 0 ? '刚刚' : `${daysAgo} 天前`;
+                  return daysAgo === 0 
+                    ? t('profile.rankHistory.justNow') 
+                    : t('profile.rankHistory.daysAgo', { count: daysAgo });
                 }}
-                formatter={(value) => [`#${value}`, '全球排名']}
+                formatter={(value) => [`#${value}`, t('profile.rankHistory.globalRank')]}
               />
               <Line
                 type="monotone"
@@ -123,7 +127,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <FiBarChart2 className="mx-auto text-4xl mb-2" style={{ color: 'var(--text-muted)' }} />
-              <p style={{ color: 'var(--text-secondary)' }}>暂无排名历史数据</p>
+              <p style={{ color: 'var(--text-secondary)' }}>{t('profile.rankHistory.noData')}</p>
             </div>
           </div>
         )}

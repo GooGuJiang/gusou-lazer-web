@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
@@ -16,6 +16,13 @@ interface UserBestScoresProps {
   className?: string;
   refreshRef?: React.MutableRefObject<(() => void) | null>;
   onPinnedListRefresh?: () => void;
+  pinActionRef?: React.MutableRefObject<{
+    handlePin: (score: BestScore) => void;
+    handleUnpin: (scoreId: number) => void;
+  } | null>;
+  bestScoresActionRef?: React.MutableRefObject<{
+    updatePinStatus: (scoreId: number, isPinned: boolean) => void;
+  } | null>;
 }
 
 // 时间格式化函数
@@ -95,9 +102,9 @@ const ScoreCard: React.FC<{
   t: any; 
   profileColor: string;
   canEdit?: boolean;
-  onRefresh?: () => void;
+  onPinChange?: (scoreId: number, isPinned: boolean) => void;
   onPinnedListChange?: () => void;
-}> = ({ score, t, profileColor, canEdit = false, onRefresh, onPinnedListChange }) => {
+}> = ({ score, t, profileColor, canEdit = false, onPinChange, onPinnedListChange }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -206,7 +213,7 @@ const ScoreCard: React.FC<{
                 scoreId={score.id}
                 isPinned={isPinned}
                 hasReplay={hasReplay}
-                onPinChange={onRefresh}
+                onPinChange={onPinChange}
                 onPinnedListChange={onPinnedListChange}
               />
             )}
@@ -272,7 +279,7 @@ const ScoreCard: React.FC<{
                       scoreId={score.id}
                       isPinned={isPinned}
                       hasReplay={hasReplay}
-                      onPinChange={onRefresh}
+                      onPinChange={onPinChange}
                       onPinnedListChange={onPinnedListChange}
                     />
                   )}
@@ -286,7 +293,7 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '', refreshRef, onPinnedListRefresh }) => {
+const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '', refreshRef, onPinnedListRefresh, pinActionRef, bestScoresActionRef }) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
@@ -376,6 +383,74 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
     }
   }, [refreshRef]);
 
+  // 更新成绩的置顶状态（供置顶列表调用）
+  const updatePinStatus = (scoreId: number, isPinned: boolean) => {
+    setScores(prevScores => 
+      prevScores.map(s => 
+        s.id === scoreId 
+          ? {
+              ...s,
+              current_user_attributes: {
+                ...s.current_user_attributes,
+                pin: {
+                  ...s.current_user_attributes?.pin,
+                  is_pinned: isPinned,
+                }
+              }
+            }
+          : s
+      )
+    );
+  };
+
+  // 暴露 updatePinStatus 给置顶列表
+  useEffect(() => {
+    if (bestScoresActionRef) {
+      bestScoresActionRef.current = {
+        updatePinStatus,
+      };
+    }
+  }, [bestScoresActionRef, updatePinStatus]);
+
+  // Pin/Unpin 后的本地更新
+  const handlePinChange = useCallback((scoreId: number, isPinned: boolean) => {
+    // 1. 先找到成绩对象
+    const score = scores.find(s => s.id === scoreId);
+    
+    if (!score) {
+      console.error('Score not found:', scoreId);
+      return;
+    }
+
+    // 2. 创建更新后的成绩对象
+    const updatedScore = {
+      ...score,
+      current_user_attributes: {
+        ...score.current_user_attributes,
+        pin: {
+          ...score.current_user_attributes?.pin,
+          is_pinned: !isPinned,
+        }
+      }
+    };
+
+    // 3. 更新本地状态
+    setScores(prevScores => 
+      prevScores.map(s => s.id === scoreId ? updatedScore : s)
+    );
+
+    // 4. 同步更新置顶列表（在状态更新之外）
+    if (pinActionRef?.current) {
+      if (isPinned) {
+        // 取消置顶
+        pinActionRef.current.handleUnpin(scoreId);
+      } else {
+        // 置顶成绩 - 使用已更新的成绩对象
+        pinActionRef.current.handlePin(updatedScore);
+      }
+    }
+  }, [scores, pinActionRef]);
+
   if (loading) {
     return (
       <div className={`${className}`}>
@@ -440,13 +515,13 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           {/* 主要内容区域 - 无圆角 */}
           <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
             {scores.map((score) => (
-              <ScoreCard 
-                key={score.id} 
-                score={score} 
-                t={t} 
+              <ScoreCard
+                key={score.id}
+                score={score}
+                t={t}
                 profileColor={profileColor}
                 canEdit={canEdit}
-                onRefresh={handleRefresh}
+                onPinChange={handlePinChange}
                 onPinnedListChange={onPinnedListRefresh}
               />
             ))}

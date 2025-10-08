@@ -147,13 +147,6 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
                     </span>
                   </div>
                 </div>
-                
-                {/* 选中指示器 */}
-                {isSelected && (
-                  <div className="text-profile-color">
-                    <div className="w-2 h-2 bg-current rounded-full"></div>
-                  </div>
-                )}
               </button>
             );
           })}

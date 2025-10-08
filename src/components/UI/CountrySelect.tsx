@@ -1,52 +1,42 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getCountryName } from '../../utils/countryName';
 
-interface Country {
+export interface Country {
   code: string;
   name: string;
 }
-
-// 常见国家列表
-const COMMON_COUNTRIES: Country[] = [
-  { code: 'CN', name: '中国' },
-  { code: 'US', name: '美国' },
-  { code: 'JP', name: '日本' },
-  { code: 'KR', name: '韩国' },
-  { code: 'DE', name: '德国' },
-  { code: 'GB', name: '英国' },
-  { code: 'FR', name: '法国' },
-  { code: 'CA', name: '加拿大' },
-  { code: 'AU', name: '澳大利亚' },
-  { code: 'RU', name: '俄罗斯' },
-  { code: 'BR', name: '巴西' },
-  { code: 'TW', name: '台湾' },
-  { code: 'HK', name: '香港' },
-  { code: 'SG', name: '新加坡' },
-  { code: 'TH', name: '泰国' },
-  { code: 'MY', name: '马来西亚' },
-  { code: 'ID', name: '印度尼西亚' },
-  { code: 'PH', name: '菲律宾' },
-  { code: 'VN', name: '越南' },
-  { code: 'IN', name: '印度' },
-];
 
 interface CountrySelectProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  countries?: Country[]; // 新增：支持外部传入国家列表
+  isLoading?: boolean; // 新增：加载状态
 }
 
 const CountrySelect: React.FC<CountrySelectProps> = ({
   value,
   onChange,
-  placeholder = "选择国家或输入国家代码"
+  placeholder = "选择国家或输入国家代码",
+  countries = [],
+  isLoading = false
 }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [inputValue, setInputValue] = useState(value);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filteredCountries = COMMON_COUNTRIES.filter(country =>
+  // 为每个国家添加翻译名称
+  const translatedCountries = countries.map(country => ({
+    ...country,
+    translatedName: getCountryName(t, country.code, country.name)
+  }));
+
+  const filteredCountries = translatedCountries.filter(country =>
+    country.translatedName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     country.code.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -89,7 +79,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
     inputRef.current?.focus();
   };
 
-  const selectedCountry = COMMON_COUNTRIES.find(c => c.code === value);
+  const selectedCountry = translatedCountries.find(c => c.code === value);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -102,7 +92,8 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
             onChange={handleInputChange}
             onFocus={() => setIsOpen(true)}
             placeholder={placeholder}
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-card text-gray-900 dark:text-white shadow-sm min-h-[44px] sm:min-h-[48px] focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium text-sm sm:text-base"
+            disabled={isLoading}
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-card text-gray-900 dark:text-white shadow-sm min-h-[44px] sm:min-h-[48px] focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           />
           
           {/* 国旗显示 */}
@@ -112,7 +103,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
                 src={`/image/flag/${selectedCountry.code.toLowerCase()}.svg`}
                 alt={selectedCountry.code}
                 className="w-5 h-4 rounded-sm"
-                title={selectedCountry.name}
+                title={selectedCountry.translatedName}
               />
             </div>
           )}
@@ -143,7 +134,12 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
       {/* 下拉列表 */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-card border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl shadow-lg max-h-60 overflow-y-auto">
-          {filteredCountries.length > 0 ? (
+          {isLoading ? (
+            <div className="px-3 py-4 text-gray-500 dark:text-gray-400 text-center">
+              <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-gray-500"></div>
+              <span className="ml-2">加载中...</span>
+            </div>
+          ) : filteredCountries.length > 0 ? (
             filteredCountries.map((country) => (
               <button
                 key={country.code}
@@ -156,13 +152,17 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
                   className="w-5 h-4 rounded-sm"
                 />
                 <span className="text-gray-900 dark:text-white">
-                  {country.name}
+                  {country.translatedName}
                 </span>
                 <span className="text-gray-500 dark:text-gray-400 text-sm">
                   {country.code}
                 </span>
               </button>
             ))
+          ) : countries.length === 0 && !searchTerm ? (
+            <div className="px-3 py-2 text-gray-500 dark:text-gray-400 text-center">
+              暂无可用国家
+            </div>
           ) : searchTerm ? (
             <div className="px-3 py-2 text-gray-500 dark:text-gray-400 text-center">
               未找到匹配的国家

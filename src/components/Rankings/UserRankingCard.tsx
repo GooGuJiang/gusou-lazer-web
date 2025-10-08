@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
+import { useTranslation } from 'react-i18next';
 import RankBadge from '../UI/RankBadge';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import LazyAvatar from '../UI/LazyAvatar';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, rankingType }) => {
+  const { t } = useTranslation();
   const isTopThree = rank <= 3;
   
   // Filter out default cover URLs
@@ -103,11 +105,36 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
           </div>
 
           {/* Score display */}
-          <div className="text-right flex-shrink-0">
+          <div className="flex flex-col gap-1 text-right flex-shrink-0">
+            {/* PP/分数 */}
             <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
               {rankingType === 'performance'
                 ? `${Math.round(ranking.pp || 0).toLocaleString()}pp`
                 : `${(ranking.ranked_score || 0).toLocaleString()}`}
+            </div>
+            
+            {/* 分数/PP 和准确率 */}
+            <div className="flex flex-col sm:flex-row sm:gap-3 text-xs text-gray-500 dark:text-gray-400">
+              {rankingType === 'performance' ? (
+                // 按表现分排序时显示分数
+                ranking.ranked_score !== undefined && (
+                  <div className="whitespace-nowrap">
+                    {t('common.score')}: {ranking.ranked_score.toLocaleString()}
+                  </div>
+                )
+              ) : (
+                // 按分数排序时显示 PP
+                ranking.pp !== undefined && (
+                  <div className="whitespace-nowrap">
+                    PP: {Math.round(ranking.pp).toLocaleString()}
+                  </div>
+                )
+              )}
+              {ranking.hit_accuracy !== undefined && (
+                <div className="whitespace-nowrap">
+                  {t('rankings.userCard.accuracy')}: {ranking.hit_accuracy.toFixed(2)}%
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -194,11 +221,36 @@ const UserRankingCard: React.FC<Props> = ({ ranking, rank, selectedMode, ranking
         </div>
 
         {/* Score display */}
-        <div className="text-right flex-shrink-0">
+        <div className="flex flex-col gap-1 text-right flex-shrink-0">
+          {/* PP/分数 */}
           <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
             {rankingType === 'performance'
               ? `${Math.round(ranking.pp || 0).toLocaleString()}pp`
               : `${(ranking.ranked_score || 0).toLocaleString()}`}
+          </div>
+          
+          {/* 分数/PP 和准确率 */}
+          <div className="flex flex-col sm:flex-row sm:gap-3 text-xs text-gray-500 dark:text-gray-400">
+            {rankingType === 'performance' ? (
+              // 按表现分排序时显示分数
+              ranking.ranked_score !== undefined && (
+                <div className="whitespace-nowrap">
+                  {t('common.score')}: {ranking.ranked_score.toLocaleString()}
+                </div>
+              )
+            ) : (
+              // 按分数排序时显示 PP
+              ranking.pp !== undefined && (
+                <div className="whitespace-nowrap">
+                  PP: {Math.round(ranking.pp).toLocaleString()}
+                </div>
+              )
+            )}
+            {ranking.hit_accuracy !== undefined && (
+              <div className="whitespace-nowrap">
+                {t('rankings.userCard.accuracy')}: {ranking.hit_accuracy.toFixed(2)}%
+              </div>
+            )}
           </div>
         </div>
       </div>

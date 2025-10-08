@@ -25,6 +25,13 @@ export const profilePage = {
       pp: 'PP',
       playTime: 'Play Time',
     },
+    rankHistory: {
+      loading: 'Loading data...',
+      noData: 'No rank history data available',
+      justNow: 'Just now',
+      daysAgo: '{{count}} days ago',
+      globalRank: 'Global Rank',
+    },
     activities: {
       title: 'Recent Activity',
       noActivities: 'No recent activity',

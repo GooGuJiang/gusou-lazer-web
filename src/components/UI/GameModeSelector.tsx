@@ -98,19 +98,19 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                   onClick={() => handleMainModeClick(mainMode)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center justify-center rounded-xl font-medium text-sm transition-colors duration-200 overflow-hidden border ${
+                  className={`relative flex items-center justify-center rounded-lg font-medium text-sm transition-colors duration-200 overflow-hidden border ${
                     isActive
                       ? 'shadow-lg'
                       : 'shadow-sm'
                   }`}
                   style={{
-                    height: '36px',
+                    height: '40px',
                     backgroundColor: isActive ? brand : 'var(--card-bg)',
                     borderColor: isActive ? `${brand}66` : 'var(--border-color)',
                     boxShadow: isActive ? `0 4px 14px ${brand}30` : undefined,
                     color: isActive ? 'white' : 'var(--text-primary)',
                   }}
-                  animate={{ width: shouldExpand ? '56px' : '44px' }}
+                  animate={{ width: shouldExpand ? '60px' : '48px' }}
                   transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   {/* 图标容器 */}
@@ -120,7 +120,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                     transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
                     <i 
-                      className={`${MAIN_MODE_ICONS[mainMode]} text-lg transition-colors duration-200`}
+                      className={`${MAIN_MODE_ICONS[mainMode]} text-xl transition-colors duration-200`}
                       style={{ color: isActive ? 'white' : 'currentColor' }}
                     />
                   </motion.div>
@@ -138,7 +138,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
                         <FiChevronDown 
-                          size={12}
+                          size={13}
                           style={isActive ? { color: 'white', opacity: 0.8 } : { color: 'var(--text-secondary)', opacity: 0.6 }}
                         />
                       </motion.div>
@@ -148,7 +148,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                   {/* 悬停背景效果（品牌色薄罩） */}
                   {!isActive && (
                     <motion.div
-                      className="absolute inset-0 rounded-xl opacity-0"
+                      className="absolute inset-0 rounded-lg opacity-0"
                       animate={{ opacity: isHovered ? 0.08 : 0 }}
                       transition={{ duration: 0.2 }}
                       style={{ backgroundColor: brand }}
@@ -164,7 +164,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className="absolute top-full mt-2 right-0 z-30 min-w-36 rounded-xl p-1 backdrop-blur-xl shadow-2xl"
+                      className="absolute top-full mt-2 right-0 z-30 min-w-36 rounded-lg p-1.5 backdrop-blur-xl shadow-2xl"
                       style={{
                         background: 'var(--float-panel-bg)',
                         border: '1px solid var(--border-color)',
@@ -179,7 +179,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                           transition={{ delay: index * 0.05, duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`w-full text-left px-3 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
+                          className={`w-full text-left px-3 py-2.5 rounded-md font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
                           style={{ 
                             backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
                             color: selectedMode === mode ? 'white' : 'var(--text-primary)',
