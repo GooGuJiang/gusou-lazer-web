@@ -138,7 +138,7 @@ export const settingsPage = {
       errors: {
         createFailed: 'Failed to create TOTP secret',
         invalidCode: 'Invalid verification code',
-        invalidCodeLength: 'Verification code must be 6 digits',
+        invalidCodeLength: 'Verification code must be {{length}} digits',
         verificationFailed: 'Verification failed, please try again',
         disableFailed: 'Failed to disable TOTP, please try again'
       }

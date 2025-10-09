@@ -47,7 +47,7 @@ const TotpSetupModal: React.FC<TotpSetupModalProps> = ({
   // 验证TOTP代码
   const handleVerifyCode = async () => {
     if (verificationCode.length !== 6) {
-      setVerificationError(t('settings.totp.errors.invalidCodeLength'));
+      setVerificationError(t('settings.totp.errors.invalidCodeLength', { length: 6 }));
       return;
     }
 

@@ -24,7 +24,7 @@ const TotpDisableModal: React.FC<TotpDisableModalProps> = ({
   // 禁用TOTP
   const handleDisableTotp = async () => {
     if (verificationCode.length !== 6) {
-      setError(t('settings.totp.errors.invalidCodeLength'));
+      setError(t('settings.totp.errors.invalidCodeLength', { length: 6 }));
       return;
     }
 

@@ -138,7 +138,7 @@ export const settingsPage = {
       errors: {
         createFailed: '创建TOTP密钥失败',
         invalidCode: '验证码错误',
-        invalidCodeLength: '验证码必须是6位数字',
+        invalidCodeLength: '验证码必须是{{length}}位数字',
         verificationFailed: '验证失败，请重试',
         disableFailed: '禁用TOTP失败，请重试'
       }
