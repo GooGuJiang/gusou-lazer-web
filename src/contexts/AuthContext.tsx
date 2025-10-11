@@ -8,8 +8,8 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
-  register: (username: string, email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string, turnstileToken?: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string, turnstileToken?: string) => Promise<boolean>;
   logout: () => void;
   updateUserMode: (mode?: string) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -56,14 +56,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string, turnstileToken?: string): Promise<boolean> => {
     try {
       setIsLoading(true);
       const tokenResponse: TokenResponse = await authAPI.login(
         username,
         password,
         CLIENT_CONFIG.web_client_id,
-        CLIENT_CONFIG.web_client_secret
+        CLIENT_CONFIG.web_client_secret,
+        turnstileToken
       );
 
       // Store tokens
@@ -85,13 +86,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
+  const register = async (username: string, email: string, password: string, turnstileToken?: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      await authAPI.register(username, email, password);
+      await authAPI.register(username, email, password, turnstileToken);
       
       // After successful registration, automatically log in
-      const loginSuccess = await login(username, password);
+      const loginSuccess = await login(username, password, turnstileToken);
       if (loginSuccess) {
         toast.success('账户创建成功！');
       }

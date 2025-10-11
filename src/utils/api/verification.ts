@@ -29,7 +29,7 @@ export const verificationAPI = {
     const response = await api.post('/api/v2/session/verify', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'x-uuid': deviceUUID,
+        'X-UUID': deviceUUID,
       },
     });
     

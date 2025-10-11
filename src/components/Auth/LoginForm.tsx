@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import type { LoginForm as LoginFormType } from '../../types';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();
@@ -12,6 +15,8 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormType>({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileRef = useRef<any>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,11 +27,27 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     if (!formData.username || !formData.password) return;
 
-    const success = await login(formData.username, formData.password);
+    const success = await login(formData.username, formData.password, turnstileToken);
     if (success) {
       navigate('/profile');
+    } else {
+      // Refresh turnstile on error
+      if (turnstileRef.current) {
+        turnstileRef.current.reset();
+      }
     }
   };
+
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken('');
+    if (turnstileRef.current) {
+      turnstileRef.current.reset();
+    }
+  }, []);
 
   return (
     <div className="max-w-md w-full space-y-3">
@@ -63,9 +84,17 @@ const LoginForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              {t('auth.login.password')}
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('auth.login.password')}
+              </label>
+              <Link
+                to="/password-reset"
+                className="text-xs font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
+              >
+                {t('auth.login.forgotPassword')}
+              </Link>
+            </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiLock className="h-5 w-5 text-gray-400" />
@@ -98,20 +127,25 @@ const LoginForm: React.FC = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading || !formData.username || !formData.password}
+              disabled={isLoading || !formData.username || !formData.password || !turnstileToken}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-osu-pink disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
               {isLoading ? <LoadingSpinner size="sm" /> : t('auth.login.submit')}
             </button>
           </div>
 
-          <div className="flex items-center justify-between text-sm">
-            <Link
-              to="/password-reset"
-              className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
-            >
-              {t('auth.login.forgotPassword')}
-            </Link>
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={TURNSTILE_SITE_KEY}
+              onSuccess={handleTurnstileSuccess}
+              onError={handleTurnstileError}
+              onExpire={handleTurnstileError}
+              options={{
+                theme: 'auto',
+                size: 'normal',
+              }}
+            />
           </div>
 
           <div className="text-center">

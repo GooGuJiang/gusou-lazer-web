@@ -4,7 +4,7 @@ import { API_BASE_URL } from './client';
 import { getDeviceUUID } from '../deviceUUID';
 
 export const authAPI = {
-  login: async (username: string, password: string, clientId: number, clientSecret: string) => {
+  login: async (username: string, password: string, clientId: number, clientSecret: string, turnstileToken?: string) => {
     console.log('Login attempt with:', { username, clientId });
 
     const formData = new FormData();
@@ -14,6 +14,9 @@ export const authAPI = {
     formData.append('username', username);
     formData.append('password', password);
     formData.append('scope', '*');
+    if (turnstileToken) {
+      formData.append('cf_turnstile_response', turnstileToken);
+    }
 
     // 获取设备UUID（异步）
     const deviceUUID = await getDeviceUUID();
@@ -23,7 +26,7 @@ export const authAPI = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'x-api-version': '20250913',
-          'x-uuid': deviceUUID,
+          'X-UUID': deviceUUID,
         },
       });
       return response.data;
@@ -34,13 +37,16 @@ export const authAPI = {
     }
   },
 
-  register: async (username: string, email: string, password: string) => {
+  register: async (username: string, email: string, password: string, turnstileToken?: string) => {
     console.log('Register attempt with:', { username, email });
 
     const formData = new URLSearchParams();
     formData.append('user[username]', username);
     formData.append('user[user_email]', email);
     formData.append('user[password]', password);
+    if (turnstileToken) {
+      formData.append('cf_turnstile_response', turnstileToken);
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/users`, formData, {
@@ -71,18 +77,21 @@ export const authAPI = {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'x-api-version': '20250913',
-        'x-uuid': deviceUUID,
+        'X-UUID': deviceUUID,
       },
     });
     return response.data;
   },
 
   // Password reset - Request reset code
-  requestPasswordReset: async (email: string) => {
+  requestPasswordReset: async (email: string, turnstileToken?: string) => {
     console.log('Password reset request for:', email);
 
     const formData = new URLSearchParams();
     formData.append('email', email);
+    if (turnstileToken) {
+      formData.append('cf_turnstile_response', turnstileToken);
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/password-reset/request`, formData, {
@@ -100,13 +109,16 @@ export const authAPI = {
   },
 
   // Password reset - Reset password with code
-  resetPassword: async (email: string, resetCode: string, newPassword: string) => {
+  resetPassword: async (email: string, resetCode: string, newPassword: string, turnstileToken?: string) => {
     console.log('Password reset with code for:', email);
 
     const formData = new URLSearchParams();
     formData.append('email', email);
     formData.append('reset_code', resetCode);
     formData.append('new_password', newPassword);
+    if (turnstileToken) {
+      formData.append('cf_turnstile_response', turnstileToken);
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/password-reset/reset`, formData, {

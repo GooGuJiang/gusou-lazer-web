@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import type { RegisterForm } from '../types';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const RegisterPage: React.FC = () => {
   const { register, isLoading, isAuthenticated } = useAuth();
@@ -19,6 +22,8 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<RegisterForm>>({});
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileRef = useRef<any>(null);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -75,13 +80,30 @@ const RegisterPage: React.FC = () => {
     const success = await register(
       formData.username,
       formData.email,
-      formData.password
+      formData.password,
+      turnstileToken
     );
 
     if (success) {
       navigate('/profile');
+    } else {
+      // Refresh turnstile on error
+      if (turnstileRef.current) {
+        turnstileRef.current.reset();
+      }
     }
   };
+
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken('');
+    if (turnstileRef.current) {
+      turnstileRef.current.reset();
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -253,7 +275,7 @@ const RegisterPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !turnstileToken}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-osu-pink disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 {isLoading ? (
@@ -262,6 +284,20 @@ const RegisterPage: React.FC = () => {
                   t('auth.register.submit')
                 )}
               </button>
+            </div>
+
+            <div className="flex justify-center">
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITE_KEY}
+                onSuccess={handleTurnstileSuccess}
+                onError={handleTurnstileError}
+                onExpire={handleTurnstileError}
+                options={{
+                  theme: 'auto',
+                  size: 'normal',
+                }}
+              />
             </div>
 
             <div className="text-center">

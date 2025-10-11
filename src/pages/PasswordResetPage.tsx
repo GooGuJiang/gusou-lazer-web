@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiKey } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { authAPI } from '../utils/api';
 import toast from 'react-hot-toast';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 type ResetStep = 'request' | 'reset';
 
@@ -32,6 +35,8 @@ const PasswordResetPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [resendCountdown, setResendCountdown] = useState(0);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileRef = useRef<any>(null);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -102,12 +107,19 @@ const PasswordResetPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await authAPI.requestPasswordReset(formData.email);
+      await authAPI.requestPasswordReset(formData.email, turnstileToken);
       toast.success(t('auth.passwordReset.codeSent'));
       setStep('reset');
       setResendCountdown(60); // 60 seconds countdown
+      // Reset turnstile token for the next step
+      setTurnstileToken('');
     } catch (error: any) {
       console.error('Failed to request password reset:', error);
+      
+      // Refresh turnstile on error
+      if (turnstileRef.current) {
+        turnstileRef.current.reset();
+      }
       
       // 如果是请求过于频繁的错误，说明验证码已发送，直接跳转到重置步骤
       if (error.response?.data?.error === '请求过于频繁，请稍后再试' || 
@@ -116,6 +128,7 @@ const PasswordResetPage: React.FC = () => {
         toast.success(t('auth.passwordReset.codeSent'));
         setStep('reset');
         setResendCountdown(60);
+        setTurnstileToken('');
       } else {
         toast.error(t('auth.passwordReset.errors.sendFailed'));
       }
@@ -129,12 +142,16 @@ const PasswordResetPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await authAPI.requestPasswordReset(formData.email);
+      await authAPI.requestPasswordReset(formData.email, turnstileToken);
       toast.success(t('auth.passwordReset.codeSent'));
       setResendCountdown(60);
     } catch (error) {
       console.error('Failed to resend code:', error);
       toast.error(t('auth.passwordReset.errors.sendFailed'));
+      // Refresh turnstile on error
+      if (turnstileRef.current) {
+        turnstileRef.current.reset();
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,13 +181,17 @@ const PasswordResetPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await authAPI.resetPassword(formData.email, formData.resetCode, formData.newPassword);
+      await authAPI.resetPassword(formData.email, formData.resetCode, formData.newPassword, turnstileToken);
       toast.success(t('auth.passwordReset.success'));
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (error: any) {
       console.error('Failed to reset password:', error);
+      // Refresh turnstile on error
+      if (turnstileRef.current) {
+        turnstileRef.current.reset();
+      }
       if (error.response?.status === 400 || error.response?.status === 404) {
         toast.error(t('auth.passwordReset.errors.invalidCode'));
       } else {
@@ -180,6 +201,17 @@ const PasswordResetPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken('');
+    if (turnstileRef.current) {
+      turnstileRef.current.reset();
+    }
+  }, []);
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex justify-center px-4 sm:px-6 lg:px-8 overflow-auto pt-8 sm:pt-12 lg:pt-0 lg:items-center">
@@ -235,11 +267,25 @@ const PasswordResetPage: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading || !formData.email}
+                  disabled={isLoading || !formData.email || !turnstileToken}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-osu-pink disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {isLoading ? <LoadingSpinner size="sm" /> : t('auth.passwordReset.sendCode')}
                 </button>
+              </div>
+
+              <div className="flex justify-center">
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onSuccess={handleTurnstileSuccess}
+                  onError={handleTurnstileError}
+                  onExpire={handleTurnstileError}
+                  options={{
+                    theme: 'auto',
+                    size: 'normal',
+                  }}
+                />
               </div>
 
               <div className="text-center">
@@ -376,11 +422,25 @@ const PasswordResetPage: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading || !formData.resetCode || !formData.newPassword || !formData.confirmPassword}
+                  disabled={isLoading || !formData.resetCode || !formData.newPassword || !formData.confirmPassword || !turnstileToken}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-osu-pink disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {isLoading ? <LoadingSpinner size="sm" /> : t('auth.passwordReset.resetPassword')}
                 </button>
+              </div>
+
+              <div className="flex justify-center">
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onSuccess={handleTurnstileSuccess}
+                  onError={handleTurnstileError}
+                  onExpire={handleTurnstileError}
+                  options={{
+                    theme: 'auto',
+                    size: 'normal',
+                  }}
+                />
               </div>
 
               <div className="text-center">

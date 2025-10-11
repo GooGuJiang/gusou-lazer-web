@@ -29,7 +29,7 @@ api.interceptors.request.use(
     
     // 添加设备UUID到所有请求（使用异步获取）
     const deviceUUID = await getDeviceUUID();
-    config.headers['x-uuid'] = deviceUUID;
+    config.headers['X-UUID'] = deviceUUID;
     
     return config;
   },
