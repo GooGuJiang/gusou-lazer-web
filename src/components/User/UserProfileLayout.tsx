@@ -47,6 +47,11 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
   const [error, setError] = useState(false);
   //const [isUpdatingMode, setIsUpdatingMode] = useState(false);
 
+  // 默认背景图
+  const defaultCover = '/image/backgrounds/layered-waves-haikei.svg';
+  // 如果没有提供 src 或加载失败，使用默认背景
+  const displaySrc = (!src || error) ? defaultCover : src;
+
   useEffect(() => {
     if (!ref.current) return;
     if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
@@ -80,15 +85,20 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
         <div className="h-full w-full" style={{ background: 'transparent' }} />
       </div>
 
-      {inView && src && !error && (
+      {inView && displaySrc && (
         <img
-          src={src}
+          src={displaySrc}
           alt={alt}
           loading="lazy"
           decoding="async"
           className={`absolute inset-0 w-full h-full object-cover transition duration-500 ${loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-md'}`}
           onLoad={() => setLoaded(true)}
-          onError={() => setError(true)}
+          onError={() => {
+            // 如果不是默认图片才设置错误状态
+            if (displaySrc !== defaultCover) {
+              setError(true);
+            }
+          }}
         />
       )}
 

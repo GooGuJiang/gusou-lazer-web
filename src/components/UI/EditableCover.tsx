@@ -52,33 +52,28 @@ const EditableCover: React.FC<EditableCoverProps> = ({
     setImageError(true);
   };
 
+  // 默认背景图
+  const defaultCover = '/image/backgrounds/layered-waves-haikei.svg';
+  const displayCoverUrl = currentCoverUrl && !imageError ? currentCoverUrl : defaultCover;
+
   return (
     <>
       <div className={`relative group ${className}`}>
         <div className="w-full osu-gradient rounded-lg overflow-hidden" style={{ aspectRatio: '4/1' }}>
-          {currentCoverUrl && !imageError ? (
-            <div className="relative w-full h-full">
-              {isLoading && (
-                <div className="absolute inset-0 osu-gradient animate-pulse" />
-              )}
-              <img
-                src={currentCoverUrl}
-                alt={`${username}的头图`}
-                className={`w-full h-full object-cover transition-opacity duration-200 ${
-                  isLoading ? 'opacity-0' : 'opacity-100'
-                }`}
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-              />
-            </div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-white osu-gradient">
-              <div className="text-center">
-                <div className="text-6xl mb-2">🎨</div>
-                <p className="text-lg font-medium">暂无头图</p>
-              </div>
-            </div>
-          )}
+          <div className="relative w-full h-full">
+            {isLoading && (
+              <div className="absolute inset-0 osu-gradient animate-pulse" />
+            )}
+            <img
+              src={displayCoverUrl}
+              alt={`${username}的头图`}
+              className={`w-full h-full object-cover transition-opacity duration-200 ${
+                isLoading ? 'opacity-0' : 'opacity-100'
+              }`}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          </div>
         </div>
         
         {editable && (
