@@ -267,8 +267,8 @@ export const userAPI = {
     return response.data;
   },
 
-  // Change password with current password
-  changePassword: async (currentPassword: string, newPassword: string) => {
+  // Change password with current password or TOTP code
+  changePassword: async (newPassword: string, currentPassword?: string, totpCode?: string) => {
     console.log('修改密码');
 
     const token = localStorage.getItem('access_token');
@@ -277,8 +277,15 @@ export const userAPI = {
     }
 
     const formData = new URLSearchParams();
-    formData.append('current_password', currentPassword);
     formData.append('new_password', newPassword);
+    
+    if (currentPassword) {
+      formData.append('current_password', currentPassword);
+    }
+    
+    if (totpCode) {
+      formData.append('totp_code', totpCode);
+    }
 
     const response = await fetch(`${API_BASE_URL}/api/private/password/change`, {
       method: 'POST',
@@ -298,6 +305,12 @@ export const userAPI = {
       }
       console.error('修改密码失败响应:', errorData);
       throw new Error(errorData?.detail || errorData?.message || `HTTP ${response.status}`);
+    }
+
+    // 204 No Content 响应没有 body
+    if (response.status === 204) {
+      console.log('密码修改成功（无内容响应）');
+      return;
     }
 
     const result = await response.json();

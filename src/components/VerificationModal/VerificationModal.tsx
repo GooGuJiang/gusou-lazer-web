@@ -35,16 +35,20 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
       const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
       document.body.style.paddingRight = `${scrollBarWidth}px`;
+      // 防止整个页面滚动
+      document.documentElement.style.overflow = 'hidden';
     } else {
       // 恢复背景滚动
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
+      document.documentElement.style.overflow = '';
     }
 
     return () => {
       // 清理函数确保在组件卸载时恢复滚动
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isOpen, method]);
 
@@ -135,13 +139,13 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ overflow: 'hidden' }}>
           {/* 背景遮罩 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute m-[-10px] inset-1 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           />
           
