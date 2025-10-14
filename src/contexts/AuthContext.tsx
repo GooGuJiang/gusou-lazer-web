@@ -22,6 +22,74 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// 缓存键名
+const CACHE_KEYS = {
+  USER: 'cached_user',
+  AUTH_STATUS: 'cached_auth_status',
+  CACHE_TIMESTAMP: 'cache_timestamp',
+} as const;
+
+// 缓存有效期（毫秒）- 5分钟
+const CACHE_DURATION = 5 * 60 * 1000;
+
+// 缓存工具函数
+const CacheUtil = {
+  // 保存用户数据到缓存
+  saveUserCache: (user: User) => {
+    try {
+      sessionStorage.setItem(CACHE_KEYS.USER, JSON.stringify(user));
+      sessionStorage.setItem(CACHE_KEYS.AUTH_STATUS, 'true');
+      sessionStorage.setItem(CACHE_KEYS.CACHE_TIMESTAMP, Date.now().toString());
+    } catch (error) {
+      console.error('Failed to save user cache:', error);
+    }
+  },
+
+  // 从缓存获取用户数据
+  getUserCache: (): { user: User | null; isAuthenticated: boolean; isValid: boolean } => {
+    try {
+      const timestamp = sessionStorage.getItem(CACHE_KEYS.CACHE_TIMESTAMP);
+      const authStatus = sessionStorage.getItem(CACHE_KEYS.AUTH_STATUS);
+      const userJson = sessionStorage.getItem(CACHE_KEYS.USER);
+
+      // 检查缓存是否存在
+      if (!timestamp || !authStatus || !userJson) {
+        return { user: null, isAuthenticated: false, isValid: false };
+      }
+
+      // 检查缓存是否过期
+      const cacheAge = Date.now() - parseInt(timestamp, 10);
+      if (cacheAge > CACHE_DURATION) {
+        CacheUtil.clearCache();
+        return { user: null, isAuthenticated: false, isValid: false };
+      }
+
+      // 返回缓存数据
+      const user = JSON.parse(userJson) as User;
+      return {
+        user,
+        isAuthenticated: authStatus === 'true',
+        isValid: true,
+      };
+    } catch (error) {
+      console.error('Failed to read user cache:', error);
+      CacheUtil.clearCache();
+      return { user: null, isAuthenticated: false, isValid: false };
+    }
+  },
+
+  // 清除缓存
+  clearCache: () => {
+    try {
+      sessionStorage.removeItem(CACHE_KEYS.USER);
+      sessionStorage.removeItem(CACHE_KEYS.AUTH_STATUS);
+      sessionStorage.removeItem(CACHE_KEYS.CACHE_TIMESTAMP);
+    } catch (error) {
+      console.error('Failed to clear user cache:', error);
+    }
+  },
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,16 +101,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const token = localStorage.getItem('access_token');
       const refreshToken = localStorage.getItem('refresh_token');
       
+      // 如果没有 token，直接返回
       if (!token && !refreshToken) {
+        CacheUtil.clearCache();
         setIsLoading(false);
         return;
       }
 
+      // 尝试从缓存读取
+      const cachedData = CacheUtil.getUserCache();
+      if (cachedData.isValid && cachedData.user) {
+        console.log('使用缓存的登录状态');
+        setUser(cachedData.user);
+        setIsAuthenticated(cachedData.isAuthenticated);
+        setIsLoading(false);
+        return;
+      }
+
+      // 缓存无效或不存在，请求 API
       try {
-        // 尝试获取用户信息
+        console.log('缓存无效，从 API 获取用户信息');
         const userData = await userAPI.getMe();
         setUser(userData);
         setIsAuthenticated(true);
+        // 保存到缓存
+        CacheUtil.saveUserCache(userData);
       } catch (error) {
         // 如果获取用户信息失败，axios 拦截器会自动尝试刷新 token
         // 这里只需要处理刷新失败的情况
@@ -54,6 +137,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // 拦截器会处理重定向，这里只清理状态
           setUser(null);
           setIsAuthenticated(false);
+          CacheUtil.clearCache();
         } else {
           // 其他错误，保持登录状态，可能是网络问题
           console.error('Failed to fetch user data:', error);
@@ -85,6 +169,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userData = await userAPI.getMe();
       setUser(userData);
       setIsAuthenticated(true);
+
+      // 保存到缓存
+      CacheUtil.saveUserCache(userData);
 
       toast.success(`欢迎回来，${userData.username}！`);
       return true;
@@ -144,6 +231,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('refresh_token');
     setUser(null);
     setIsAuthenticated(false);
+    // 清除缓存
+    CacheUtil.clearCache();
     toast.success('成功退出登录');
   };
 
@@ -153,6 +242,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const userData = await userAPI.getMe(mode);
       setUser(userData);
+      // 更新缓存
+      CacheUtil.saveUserCache(userData);
     } catch (error) {
       handleApiError(error);
     }
@@ -164,6 +255,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const userData = await userAPI.getMe();
       setUser(userData);
+      // 更新缓存
+      CacheUtil.saveUserCache(userData);
     } catch (error) {
       handleApiError(error);
     }
@@ -171,6 +264,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateUser = useCallback((updatedUser: User) => {
     setUser(updatedUser);
+    // 更新缓存
+    CacheUtil.saveUserCache(updatedUser);
   }, []);
 
   const value: AuthContextType = {

@@ -12,6 +12,17 @@ export const setGlobalVerificationHandler = (handler: (error: any) => boolean) =
   globalVerificationHandler = handler;
 };
 
+// 缓存清除工具函数
+const clearAuthCache = () => {
+  try {
+    sessionStorage.removeItem('cached_user');
+    sessionStorage.removeItem('cached_auth_status');
+    sessionStorage.removeItem('cache_timestamp');
+  } catch (error) {
+    console.error('Failed to clear auth cache:', error);
+  }
+};
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -112,6 +123,7 @@ api.interceptors.response.use(
       if (originalRequest.url?.includes('/oauth/token')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(error);
       }
@@ -153,6 +165,7 @@ api.interceptors.response.use(
         processQueue(new Error('Token refresh failed'));
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(refreshError);
       } finally {
