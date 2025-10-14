@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
-import { useFloating, autoUpdate, offset, flip, shift, size } from '@floating-ui/react';
+import { 
+  useFloating, 
+  autoUpdate, 
+  offset, 
+  flip, 
+  shift, 
+  size,
+  useDismiss,
+  useInteractions,
+  FloatingFocusManager,
+} from '@floating-ui/react';
 import type { GameMode, MainGameMode } from '../../types';
 import { 
   GAME_MODE_NAMES, 
@@ -12,30 +21,35 @@ import {
 } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 
-interface GameModeSelectorProps {
-  selectedMode?: GameMode;
-  onModeChange: (mode: GameMode) => void;
-  className?: string;
-  variant?: 'compact' | 'full';
-  mainModesOnly?: boolean; // 新增：只显示主模式
+interface ModeDropdownProps {
+  mainMode: MainGameMode;
+  isOpen: boolean;
+  onClose: () => void;
+  selectedMode: GameMode;
+  onSelectMode: (mode: GameMode) => void;
+  getBrandColor: (mode: GameMode) => string;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-const GameModeSelector: React.FC<GameModeSelectorProps> = ({
-  selectedMode = 'osu',
-  onModeChange,
-  className = '',
-  variant = 'full',
-  mainModesOnly = false
+const ModeDropdown: React.FC<ModeDropdownProps> = ({
+  mainMode,
+  isOpen,
+  onClose,
+  selectedMode,
+  onSelectMode,
+  getBrandColor,
+  buttonRef,
 }) => {
-  const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
-  const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
-  const modeSelectRef = useRef<HTMLDivElement>(null);
-  const { profileColor } = useProfileColor();
-
-  // 使用 floating-ui 进行定位
-  const { refs, floatingStyles } = useFloating({
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: (open) => {
+      if (!open) onClose();
+    },
     placement: 'bottom-end',
-    strategy: 'fixed',
+    strategy: 'absolute',
+    elements: {
+      reference: buttonRef.current,
+    },
     middleware: [
       offset(8),
       flip({
@@ -56,6 +70,73 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
     ],
     whileElementsMounted: autoUpdate,
   });
+
+  const dismiss = useDismiss(context);
+  const { getFloatingProps } = useInteractions([dismiss]);
+
+  if (!isOpen) return null;
+
+  return (
+    <FloatingFocusManager context={context} modal={false}>
+      <motion.div
+        ref={refs.setFloating}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="z-50 min-w-36 rounded-lg p-1.5 backdrop-blur-xl shadow-2xl"
+        style={{
+          ...floatingStyles,
+          background: 'var(--float-panel-bg)',
+          border: '1px solid var(--border-color)',
+        }}
+        {...getFloatingProps()}
+      >
+        {GAME_MODE_GROUPS[mainMode].map((mode, index) => (
+          <motion.button
+            key={mode}
+            onClick={() => {
+              onSelectMode(mode);
+              onClose();
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: index * 0.05, duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`w-full text-left px-3 py-2.5 rounded-md font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
+            style={{ 
+              backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
+              color: selectedMode === mode ? 'white' : 'var(--text-primary)',
+            }}
+          >
+            {GAME_MODE_NAMES[mode]}
+          </motion.button>
+        ))}
+      </motion.div>
+    </FloatingFocusManager>
+  );
+};
+
+interface GameModeSelectorProps {
+  selectedMode?: GameMode;
+  onModeChange: (mode: GameMode) => void;
+  className?: string;
+  variant?: 'compact' | 'full';
+  mainModesOnly?: boolean; // 新增：只显示主模式
+}
+
+const GameModeSelector: React.FC<GameModeSelectorProps> = ({
+  selectedMode = 'osu',
+  onModeChange,
+  className = '',
+  variant = 'full',
+  mainModesOnly = false
+}) => {
+  const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
+  const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
+  const modeSelectRef = useRef<HTMLDivElement>(null);
+  const { profileColor } = useProfileColor();
 
   const selectedMainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
     .find(mainMode => GAME_MODE_GROUPS[mainMode].includes(selectedMode)) || 'osu';
@@ -95,13 +176,22 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
     setShowSubModes(showSubModes === mainMode ? null : mainMode);
   };
 
-    const handleSubModeSelect = (mode: GameMode) => {
-      onModeChange(mode);
-      setShowSubModes(null);
-      setHoveredMode(null);
+  if (variant === 'compact') {
+    // 为每个按钮创建 refs
+    const osuRef = useRef<HTMLButtonElement>(null);
+    const taikoRef = useRef<HTMLButtonElement>(null);
+    const fruitsRef = useRef<HTMLButtonElement>(null);
+    const maniaRef = useRef<HTMLButtonElement>(null);
+
+    const getButtonRef = (mainMode: MainGameMode) => {
+      switch (mainMode) {
+        case 'osu': return osuRef;
+        case 'taiko': return taikoRef;
+        case 'fruits': return fruitsRef;
+        case 'mania': return maniaRef;
+      }
     };
 
-  if (variant === 'compact') {
     return (
       <div className={`relative ${className}`} ref={modeSelectRef}>
         <div className="flex gap-2">
@@ -122,7 +212,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                 onMouseLeave={() => setHoveredMode(null)}
               >
                 <motion.button
-                  ref={showSubModes === mainMode ? refs.setReference : undefined}
+                  ref={getButtonRef(mainMode)}
                   onClick={() => handleMainModeClick(mainMode)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -185,42 +275,16 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                 </motion.button>
 
                 {/* 子模式下拉菜单 */}
-                {showSubModes === mainMode && createPortal(
-                  <AnimatePresence>
-                    <motion.div
-                      ref={refs.setFloating}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className="z-50 min-w-36 rounded-lg p-1.5 backdrop-blur-xl shadow-2xl"
-                      style={{
-                        ...floatingStyles,
-                        background: 'var(--float-panel-bg)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {GAME_MODE_GROUPS[mainMode].map((mode, index) => (
-                        <motion.button
-                          key={mode}
-                          onClick={() => handleSubModeSelect(mode)}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: index * 0.05, duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`w-full text-left px-3 py-2.5 rounded-md font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
-                          style={{ 
-                            backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
-                            color: selectedMode === mode ? 'white' : 'var(--text-primary)',
-                          }}
-                        >
-                          {GAME_MODE_NAMES[mode]}
-                        </motion.button>
-                      ))}
-                    </motion.div>
-                  </AnimatePresence>,
-                  document.body
+                {hasSubModes && (
+                  <ModeDropdown
+                    mainMode={mainMode}
+                    isOpen={showSubModes === mainMode}
+                    onClose={() => setShowSubModes(null)}
+                    selectedMode={selectedMode}
+                    onSelectMode={onModeChange}
+                    getBrandColor={getBrandColor}
+                    buttonRef={getButtonRef(mainMode)}
+                  />
                 )}
               </div>
             );
