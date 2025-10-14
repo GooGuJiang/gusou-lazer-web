@@ -31,26 +31,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('access_token');
-      if (token) {
-        try {
-          const userData = await userAPI.getMe();
-          setUser(userData);
-          setIsAuthenticated(true);
-        } catch {
-          // Token might be expired, try to refresh
-          const refreshToken = localStorage.getItem('refresh_token');
-          if (refreshToken) {
-            try {
-              await refreshAccessToken();
-            } catch {
-              logout();
-            }
-          } else {
-            logout();
-          }
-        }
+      const refreshToken = localStorage.getItem('refresh_token');
+      
+      if (!token && !refreshToken) {
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
+
+      try {
+        // 尝试获取用户信息
+        const userData = await userAPI.getMe();
+        setUser(userData);
+        setIsAuthenticated(true);
+      } catch (error) {
+        // 如果获取用户信息失败，axios 拦截器会自动尝试刷新 token
+        // 这里只需要处理刷新失败的情况
+        const err = error as { response?: { status?: number } };
+        
+        // 如果是 401 错误且已经重定向到登录页，说明刷新失败
+        // 否则可能是网络错误或其他问题，不应该清除 token
+        if (err.response?.status === 401) {
+          // 拦截器会处理重定向，这里只清理状态
+          setUser(null);
+          setIsAuthenticated(false);
+        } else {
+          // 其他错误，保持登录状态，可能是网络问题
+          console.error('Failed to fetch user data:', error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();
@@ -135,25 +145,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     toast.success('成功退出登录');
-  };
-
-  const refreshAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    if (!refreshToken) throw new Error('没有可用的刷新令牌');
-
-    const tokenResponse: TokenResponse = await authAPI.refreshToken(
-      refreshToken,
-      CLIENT_CONFIG.web_client_id,
-      CLIENT_CONFIG.web_client_secret
-    );
-
-    localStorage.setItem('access_token', tokenResponse.access_token);
-    localStorage.setItem('refresh_token', tokenResponse.refresh_token);
-
-    // Get updated user data
-    const userData = await userAPI.getMe();
-    setUser(userData);
-    setIsAuthenticated(true);
   };
 
   const updateUserMode = useCallback(async (mode?: string) => {

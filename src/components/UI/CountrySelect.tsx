@@ -26,6 +26,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [inputValue, setInputValue] = useState(value);
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,6 +45,23 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
   useEffect(() => {
     setInputValue(value);
   }, [value]);
+
+  // 检查下拉菜单应该向上还是向下展开
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const dropdownHeight = 240; // max-h-60 的高度
+
+      // 如果下方空间不足且上方空间更多，则向上展开
+      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -133,7 +151,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
 
       {/* 下拉列表 */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-card border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl shadow-lg max-h-60 overflow-y-auto">
+        <div className={`absolute z-50 w-full bg-card border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl shadow-lg max-h-60 overflow-y-auto ${dropdownPosition === 'bottom' ? 'mt-1' : 'mb-1 bottom-full'}`}>
           {isLoading ? (
             <div className="px-3 py-4 text-gray-500 dark:text-gray-400 text-center">
               <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-gray-500"></div>

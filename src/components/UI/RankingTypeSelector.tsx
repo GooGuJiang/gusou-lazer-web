@@ -16,7 +16,25 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 检查下拉菜单应该向上还是向下展开
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const dropdownHeight = 200; // 估计下拉菜单高度
+
+      // 如果下方空间不足且上方空间更多，则向上展开
+      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
+  }, [isOpen]);
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -110,10 +128,11 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
       {isOpen && (
         <div
           className={`
-            absolute top-full left-0 right-0 mt-1 z-50
+            absolute left-0 right-0 z-50
             bg-card border border-gray-200 dark:border-gray-700
             rounded-lg sm:rounded-xl shadow-lg min-w-full
             py-1 origin-top animate-in fade-in-0 zoom-in-95 duration-100
+            ${dropdownPosition === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1'}
           `}
         >
           {rankingTypes.map((type) => {
