@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
 import { useFloating, autoUpdate, offset, flip, shift, size } from '@floating-ui/react';
@@ -34,6 +35,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   // 使用 floating-ui 进行定位
   const { refs, floatingStyles } = useFloating({
     placement: 'bottom-end',
+    strategy: 'fixed',
     middleware: [
       offset(8),
       flip({
@@ -183,8 +185,8 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                 </motion.button>
 
                 {/* 子模式下拉菜单 */}
-                <AnimatePresence>
-                  {showSubModes === mainMode && (
+                {showSubModes === mainMode && createPortal(
+                  <AnimatePresence>
                     <motion.div
                       ref={refs.setFloating}
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -217,8 +219,9 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                         </motion.button>
                       ))}
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                  </AnimatePresence>,
+                  document.body
+                )}
               </div>
             );
           })}
