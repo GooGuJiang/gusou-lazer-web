@@ -89,6 +89,7 @@ const ModeDropdown: React.FC<ModeDropdownProps> = ({
           ...floatingStyles,
           background: 'var(--float-panel-bg)',
           border: '1px solid var(--border-color)',
+          marginTop: '40px',
         }}
         {...getFloatingProps()}
       >
