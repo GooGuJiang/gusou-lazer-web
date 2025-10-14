@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiChevronDown, FiTrendingUp, FiAward } from 'react-icons/fi';
 import type { RankingType } from '../../types';
@@ -80,6 +81,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
   ];
 
   const currentType = rankingTypes.find(type => type.value === value);
+  const shouldExpand = isOpen;
 
   return (
     <div 
@@ -88,10 +90,14 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
       onKeyDown={handleKeyDown}
     >
       {/* 排行类型选择按钮 */}
-      <button
+      <motion.button
         onClick={handleToggle}
+        animate={{ 
+          width: shouldExpand ? '160px' : '140px'
+        }}
+        transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
         className={`
-          flex items-center justify-between w-full px-3 sm:px-4 py-2 sm:py-2.5 
+          flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 
           border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl
           bg-card text-gray-900 dark:text-white 
           shadow-sm min-h-[44px] sm:min-h-[48px] font-medium text-sm sm:text-base
@@ -115,26 +121,30 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
         </div>
 
         {/* 下拉箭头 */}
-        <div
-          className={`transform transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : 'rotate-0'
-          }`}
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <FiChevronDown size={14} className="text-gray-500 dark:text-gray-400" />
-        </div>
-      </button>
+        </motion.div>
+      </motion.button>
 
       {/* 下拉菜单 */}
-      {isOpen && (
-        <div
-          className={`
-            absolute left-0 right-0 z-50
-            bg-card border border-gray-200 dark:border-gray-700
-            rounded-lg sm:rounded-xl shadow-lg min-w-full
-            py-1 origin-top animate-in fade-in-0 zoom-in-95 duration-100
-            ${dropdownPosition === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1'}
-          `}
-        >
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className={`
+              absolute left-0 right-0 z-50
+              bg-card border border-gray-200 dark:border-gray-700
+              rounded-lg sm:rounded-xl shadow-lg min-w-full
+              py-1
+              ${dropdownPosition === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1'}
+            `}
+          >
           {rankingTypes.map((type) => {
             const isSelected = type.value === value;
             const IconComponent = type.icon;
@@ -169,8 +179,9 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
               </button>
             );
           })}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
