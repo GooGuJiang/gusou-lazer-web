@@ -257,7 +257,7 @@ const HeroSection: React.FC = () => {
         </div>
 
         {/* 加入按钮 - 绝对定位在屏幕下方 */}
-        <div ref={joinButtonRef} className="absolute bottom-64 left-1/2 -translate-x-1/2 w-full px-4">
+        <div ref={joinButtonRef} className="absolute bottom-48 left-1/2 -translate-x-1/2 w-full px-4">
           <div className="w-full max-w-sm sm:max-w-md mx-auto">
             <Link
               to="/how-to-join"

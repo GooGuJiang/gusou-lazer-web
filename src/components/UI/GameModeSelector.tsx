@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
+import { useFloating, autoUpdate, offset, flip, shift, size } from '@floating-ui/react';
 import type { GameMode, MainGameMode } from '../../types';
 import { 
   GAME_MODE_NAMES, 
@@ -27,9 +28,32 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
 }) => {
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
   const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
   const modeSelectRef = useRef<HTMLDivElement>(null);
   const { profileColor } = useProfileColor();
+
+  // 使用 floating-ui 进行定位
+  const { refs, floatingStyles } = useFloating({
+    placement: 'bottom-end',
+    middleware: [
+      offset(8),
+      flip({
+        fallbackPlacements: ['top-end', 'bottom-start', 'top-start'],
+        padding: 8,
+      }),
+      shift({ padding: 8 }),
+      size({
+        apply({ availableWidth, availableHeight, elements }) {
+          Object.assign(elements.floating.style, {
+            maxWidth: `${Math.max(144, Math.min(availableWidth, 320))}px`,
+            maxHeight: `${Math.min(availableHeight - 16, 300)}px`,
+            overflowY: 'auto',
+          });
+        },
+        padding: 8,
+      }),
+    ],
+    whileElementsMounted: autoUpdate,
+  });
 
   const selectedMainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
     .find(mainMode => GAME_MODE_GROUPS[mainMode].includes(selectedMode)) || 'osu';
@@ -53,23 +77,6 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // 检查下拉菜单应该向上还是向下展开
-  useEffect(() => {
-    if (showSubModes && modeSelectRef.current) {
-      const rect = modeSelectRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const dropdownHeight = 150; // 估计下拉菜单高度
-
-      // 如果下方空间不足且上方空间更多，则向上展开
-      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
-        setDropdownPosition('top');
-      } else {
-        setDropdownPosition('bottom');
-      }
-    }
-  }, [showSubModes]);
 
   const handleMainModeClick = (mainMode: MainGameMode) => {
     // 如果只显示主模式，直接选择第一个（主模式）
@@ -113,6 +120,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                 onMouseLeave={() => setHoveredMode(null)}
               >
                 <motion.button
+                  ref={showSubModes === mainMode ? refs.setReference : undefined}
                   onClick={() => handleMainModeClick(mainMode)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -178,12 +186,14 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                 <AnimatePresence>
                   {showSubModes === mainMode && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      ref={refs.setFloating}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className={`absolute right-0 z-30 min-w-36 rounded-lg p-1.5 backdrop-blur-xl shadow-2xl ${dropdownPosition === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2'}`}
+                      className="z-50 min-w-36 rounded-lg p-1.5 backdrop-blur-xl shadow-2xl"
                       style={{
+                        ...floatingStyles,
                         background: 'var(--float-panel-bg)',
                         border: '1px solid var(--border-color)',
                       }}
