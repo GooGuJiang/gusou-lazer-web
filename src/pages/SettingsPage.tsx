@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock, FiSettings } from 'react-icons/fi';
+import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock, FiSettings, FiKey } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import SessionManagement from '../components/Device/SessionManagement';
 import TrustedDeviceManagement from '../components/Device/TrustedDeviceManagement';
 import PasswordResetSection from '../components/Settings/PasswordResetSection';
 import UserPreferencesSection from '../components/Settings/UserPreferencesSection';
+import OAuthAppsSection from '../components/Settings/OAuthAppsSection';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -415,6 +416,23 @@ const SettingsPage: React.FC = () => {
             </p>
           </div>
         </div>
+      </motion.div>
+
+      {/* OAuth 应用管理 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.26 }}
+        className="bg-card rounded-xl shadow-lg p-6"
+      >
+        <div className="flex items-center gap-3 mb-6">
+          <FiKey className="w-6 h-6 text-osu-pink" />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {t('settings.oauth.title')}
+          </h2>
+        </div>
+
+        <OAuthAppsSection />
       </motion.div>
 
       {/* 用户偏好设置 */}

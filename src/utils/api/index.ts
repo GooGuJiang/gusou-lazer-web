@@ -13,3 +13,4 @@ export { beatmapAPI } from './beatmap';
 export { deviceAPI } from './device';
 export { preferencesAPI } from './preferences';
 export { scoreAPI } from './score';
+export { oauthAPI } from './oauth';

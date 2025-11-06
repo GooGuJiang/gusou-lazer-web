@@ -11,3 +11,4 @@ export * from './scores';
 export * from './beatmap';
 export * from './device';
 export * from './preferences';
+export * from './oauth';

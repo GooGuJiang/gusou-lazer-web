@@ -227,6 +227,70 @@ export const settingsPage = {
         unknown: 'Unknown Browser'
       }
     },
+    oauth: {
+      title: 'OAuth Applications',
+      description: 'Manage your OAuth applications for third-party service integration',
+      create: 'Create Application',
+      createFirst: 'Create Your First Application',
+      createApp: 'Create OAuth Application',
+      editApp: 'Edit OAuth Application',
+      noApps: 'You haven\'t created any OAuth applications yet',
+      
+      // Application info
+      appName: 'Application Name',
+      appNamePlaceholder: 'Enter application name',
+      appDescription: 'Application Description',
+      appDescriptionPlaceholder: 'Enter application description (optional)',
+      clientId: 'Client ID',
+      clientSecret: 'Client Secret',
+      redirectUris: 'Redirect URIs',
+      addRedirectUri: 'Add Redirect URI',
+      
+      // Actions
+      edit: 'Edit',
+      delete: 'Delete',
+      refreshSecret: 'Refresh Secret',
+      expand: 'Show Details',
+      collapse: 'Hide Details',
+      cancel: 'Cancel',
+      save: 'Save',
+      update: 'Update',
+      saving: 'Saving...',
+      confirm: 'I\'ve Saved It',
+      
+      // Status
+      created: 'Created',
+      
+      // Confirmation dialogs
+      deleteTitle: 'Delete Application',
+      confirmDelete: 'Are you sure you want to delete application "{{name}}"? This action cannot be undone and all associated tokens will be invalidated.',
+      confirmDeleteButton: 'Confirm Delete',
+      refreshTitle: 'Refresh Secret',
+      confirmRefresh: 'Are you sure you want to refresh the secret for application "{{name}}"? This will invalidate all existing tokens.',
+      confirmRefreshButton: 'Confirm Refresh',
+      
+      // Secret display
+      secretTitle: 'Important: Save Your Client Secret',
+      secretWarning: 'This is the only time you can see the client secret. Please copy it now and save it in a secure location.',
+      
+      // Success messages
+      createSuccess: 'OAuth application created successfully',
+      updateSuccess: 'OAuth application updated successfully',
+      deleteSuccess: 'OAuth application deleted successfully',
+      refreshSuccess: 'Client secret has been refreshed',
+      copied: 'Copied to clipboard',
+      
+      // Error messages
+      errors: {
+        loadFailed: 'Failed to load OAuth applications',
+        createFailed: 'Failed to create application',
+        updateFailed: 'Failed to update application',
+        deleteFailed: 'Failed to delete application',
+        refreshFailed: 'Failed to refresh secret',
+        copyFailed: 'Failed to copy',
+        noRedirectUri: 'At least one redirect URI is required'
+      }
+    },
     preferences: {
       title: 'User Preferences',
       description: 'Customize your gaming experience and profile settings',

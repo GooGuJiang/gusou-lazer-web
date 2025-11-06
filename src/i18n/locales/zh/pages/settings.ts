@@ -227,6 +227,70 @@ export const settingsPage = {
         unknown: '未知浏览器'
       }
     },
+    oauth: {
+      title: 'OAuth 应用',
+      description: '管理您的 OAuth 应用程序，用于第三方服务集成',
+      create: '创建应用',
+      createFirst: '创建第一个应用',
+      createApp: '创建 OAuth 应用',
+      editApp: '编辑 OAuth 应用',
+      noApps: '您还没有创建任何 OAuth 应用',
+      
+      // 应用信息
+      appName: '应用名称',
+      appNamePlaceholder: '输入应用名称',
+      appDescription: '应用描述',
+      appDescriptionPlaceholder: '输入应用描述（可选）',
+      clientId: '客户端 ID',
+      clientSecret: '客户端密钥',
+      redirectUris: '重定向 URI',
+      addRedirectUri: '添加重定向 URI',
+      
+      // 操作
+      edit: '编辑',
+      delete: '删除',
+      refreshSecret: '刷新密钥',
+      expand: '展开详情',
+      collapse: '收起详情',
+      cancel: '取消',
+      save: '保存',
+      update: '更新',
+      saving: '保存中...',
+      confirm: '我已保存',
+      
+      // 状态
+      created: '创建于',
+      
+      // 确认对话框
+      deleteTitle: '删除应用',
+      confirmDelete: '确定要删除应用"{{name}}"吗？此操作无法撤销，所有关联的令牌都将失效。',
+      confirmDeleteButton: '确认删除',
+      refreshTitle: '刷新密钥',
+      confirmRefresh: '确定要刷新应用"{{name}}"的密钥吗？这将使所有现有令牌失效。',
+      confirmRefreshButton: '确认刷新',
+      
+      // 密钥显示
+      secretTitle: '重要：保存您的客户端密钥',
+      secretWarning: '这是您唯一一次可以看到客户端密钥。请立即将其复制并保存在安全的地方。',
+      
+      // 成功消息
+      createSuccess: 'OAuth 应用创建成功',
+      updateSuccess: 'OAuth 应用更新成功',
+      deleteSuccess: 'OAuth 应用删除成功',
+      refreshSuccess: '客户端密钥已刷新',
+      copied: '已复制到剪贴板',
+      
+      // 错误消息
+      errors: {
+        loadFailed: '加载 OAuth 应用失败',
+        createFailed: '创建应用失败',
+        updateFailed: '更新应用失败',
+        deleteFailed: '删除应用失败',
+        refreshFailed: '刷新密钥失败',
+        copyFailed: '复制失败',
+        noRedirectUri: '至少需要一个重定向 URI'
+      }
+    },
     preferences: {
       title: '用户偏好',
       description: '自定义您的游戏体验和个人资料设置',
