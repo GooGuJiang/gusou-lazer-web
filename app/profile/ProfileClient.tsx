@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState, useTransition } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import UserProfileLayout from '@/components/User/UserProfileLayout';
 import type { GameMode, User } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { userAPI, handleApiError } from '@/utils/api';
 
 interface ProfileClientProps {
   initialUser: User;
@@ -13,51 +13,59 @@ interface ProfileClientProps {
 }
 
 export const ProfileClient: React.FC<ProfileClientProps> = ({ initialUser, initialMode }) => {
-  const { updateUserMode, updateUser } = useAuth();
+  const { updateUser } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
   const [user, setUser] = useState<User>(initialUser);
   const [selectedMode, setSelectedMode] = useState<GameMode>(initialMode);
-  const isUpdatingModeRef = useRef(false);
-  const latestModeRef = useRef<GameMode>(initialMode);
 
   useEffect(() => {
     setUser(initialUser);
-  }, [initialUser]);
+    updateUser(initialUser);
+  }, [initialUser, updateUser]);
+
+  useEffect(() => {
+    setSelectedMode(initialMode);
+  }, [initialMode]);
 
   useEffect(() => {
     if (initialUser.g0v0_playmode && initialUser.g0v0_playmode !== initialMode) {
-      setSelectedMode(initialUser.g0v0_playmode);
-      latestModeRef.current = initialUser.g0v0_playmode;
+      setSelectedMode(initialUser.g0v0_playmode as GameMode);
     }
   }, [initialMode, initialUser.g0v0_playmode]);
 
-  useEffect(() => {
-    const loadModeData = async () => {
-      if (isUpdatingModeRef.current) return;
-      if (latestModeRef.current === selectedMode) return;
-
-      latestModeRef.current = selectedMode;
-      isUpdatingModeRef.current = true;
-
-      try {
-        const data = await userAPI.getMe(selectedMode);
-        setUser(data);
-        updateUser(data);
-        await updateUserMode(selectedMode);
-      } catch (error) {
-        handleApiError(error);
-      } finally {
-        isUpdatingModeRef.current = false;
+  const buildQueryString = useCallback(
+    (nextMode: GameMode) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (nextMode === 'osu') {
+        params.delete('mode');
+      } else {
+        params.set('mode', nextMode);
       }
-    };
+      return params.toString();
+    },
+    [searchParams],
+  );
 
-    void loadModeData();
-  }, [selectedMode, updateUserMode, updateUser]);
+  const handleModeChange = useCallback(
+    (mode: GameMode) => {
+      if (mode === selectedMode) return;
+      setSelectedMode(mode);
+      startTransition(() => {
+        const queryString = buildQueryString(mode);
+        router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+      });
+    },
+    [buildQueryString, pathname, router, selectedMode, startTransition],
+  );
 
   return (
     <UserProfileLayout
       user={user}
       selectedMode={selectedMode}
-      onModeChange={setSelectedMode}
+      onModeChange={handleModeChange}
       onUserUpdate={(updated) => {
         setUser(updated);
         updateUser(updated);

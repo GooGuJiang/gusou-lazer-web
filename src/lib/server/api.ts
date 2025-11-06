@@ -8,8 +8,8 @@ import type {
   RankingType,
   TeamDetailResponse,
   TeamRankingsResponse,
+  TopUsersResponse,
   User,
-  UserRankingsResponse,
 } from '@/types';
 
 const API_BASE_URL =
@@ -116,10 +116,10 @@ export const fetchUserRankings = async (
   type: RankingType,
   page: number = 1,
   country?: string,
-): Promise<UserRankingsResponse> => {
+): Promise<TopUsersResponse> => {
   const params = new URLSearchParams({ page: page.toString() });
   if (country) params.append('country', country);
-  return fetchFromApi<UserRankingsResponse>(`/api/v2/rankings/${mode}/${type}?${params}`);
+  return fetchFromApi<TopUsersResponse>(`/api/v2/rankings/${mode}/${type}?${params}`);
 };
 
 export const fetchBeatmapset = async (beatmapsetId: number | string): Promise<Beatmapset> => {
