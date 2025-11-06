@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fuwari-inspired card components */
+@layer components {
+  /* 基础卡片样式 */
+  .card-base {
+    @apply rounded-2xl overflow-hidden transition-all duration-300;
+    background: var(--card-bg);
+  }
+
+  .card-shadow {
+    @apply shadow-lg;
+  }
+
+  .card-bordered {
+    border: 1px solid var(--border-color);
+  }
+
+  .card-hover {
+    @apply hover:shadow-xl;
+  }
+
+  .card-hover:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--border-hover);
+  }
+
+  /* 浮动面板 */
+  .float-panel {
+    @apply rounded-2xl overflow-hidden transition-shadow shadow-xl;
+    background: var(--float-panel-bg);
+  }
+
+  /* 常用卡片组合 */
+  .card-standard {
+    @apply rounded-2xl shadow-lg transition-all duration-300;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+
+  .card-standard:hover {
+    @apply shadow-xl;
+    background: var(--card-bg-hover);
+    border-color: var(--border-hover);
+  }
+
+  /* Modal 样式 */
+  .modal-card {
+    @apply rounded-2xl shadow-2xl;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+
+  /* 紧凑卡片 */
+  .card-compact {
+    @apply rounded-xl shadow transition-all duration-300;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+
+  /* 背景样式 - 用于替换 bg-white dark:bg-gray-xxx */
+  .bg-card {
+    background: var(--card-bg);
+  }
+
+  .bg-card-hover {
+    background: var(--card-bg-hover);
+  }
+
+  .bg-panel {
+    background: var(--float-panel-bg);
+  }
+
+  .bg-page {
+    background: var(--page-bg);
+  }
+
+  /* 边框样式 */
+  .border-card {
+    border-color: var(--border-color);
+  }
+
+  .border-card-hover {
+    border-color: var(--border-hover);
+  }
+}
+
+/* 导入 Extra 字体 */
+@font-face {
+  font-family: 'Extra';
+  src: url('/fonts/extra.96448ca7.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 游戏模式图标字体样式 */
+.fa-extra-mode-osu::before {
+  font-family: 'Extra';
+  content: "\e800";
+}
+
+.fa-extra-mode-fruits::before {
+  font-family: 'Extra';
+  content: "\e801";
+}
+
+.fa-extra-mode-mania::before {
+  font-family: 'Extra';
+  content: "\e802";
+}
+
+.fa-extra-mode-taiko::before {
+  font-family: 'Extra';
+  content: "\e803";
+}
+
+.fa-extra-osu::before {
+  font-family: 'Extra';
+  content: "\e804";
+}
+
+.fa-extra-heart::before {
+  font-family: 'Extra';
+  content: "\e805";
+}
+
+.fa-extra-hands::before {
+  font-family: 'Extra';
+  content: "\e806";
+}
+
+.fa-extra-start::before {
+  font-family: 'Extra';
+  content: "\e807";
+}
+
+.fa-extra-team::before {
+  font-family: 'Extra';
+  content: "\e808";
+}
+
+.fa-extra-user::before {
+  font-family: 'Extra';
+  content: "\e809";
+}
+
+.fa-extra-edit::before {
+  font-family: 'Extra';
+  content: "\e80a";
+}
+
+.fa-extra-search::before {
+  font-family: 'Extra';
+  content: "\e80b";
+}
+
+.fa-extra-bell::before {
+  font-family: 'Extra';
+  content: "\e80c";
+}
+
+.fa-extra-mail::before {
+  font-family: 'Extra';
+  content: "\e80d";
+}
+
+.fa-extra-settings::before {
+  font-family: 'Extra';
+  content: "\e80e";
+}
+
+.fa-extra-puzzle::before {
+  font-family: 'Extra';
+  content: "\e80f";
+}
+
+.fa-extra-flag::before {
+  font-family: 'Extra';
+  content: "\e810";
+}
+
+.fa-extra-trophy::before {
+  font-family: 'Extra';
+  content: "\e811";
+}
+
+.fa-extra-news::before {
+  font-family: 'Extra';
+  content: "\e812";
+}
+
+.fa-extra-refresh::before {
+  font-family: 'Extra';
+  content: "\e813";
+}
+
+.fa-extra-arrow::before {
+  font-family: 'Extra';
+  content: "\e814";
+}
+
+.fa-extra-star::before {
+  font-family: 'Extra';
+  content: "\e815";
+}
+
+.fa-extra-fire::before {
+  font-family: 'Extra';
+  content: "\e816";
+}
+
+.fa-extra-check::before {
+  font-family: 'Extra';
+  content: "\e817";
+}
+
+.fa-extra-cross::before {
+  font-family: 'Extra';
+  content: "\e818";
+}
+
+.fa-extra-info::before {
+  font-family: 'Extra';
+  content: "\e819";
+}
+
+.fa-extra-warning::before {
+  font-family: 'Extra';
+  content: "\e81a";
+}
+
+.fa-extra-calendar::before {
+  font-family: 'Extra';
+  content: "\e81b";
+}
+
+.fa-extra-clock::before {
+  font-family: 'Extra';
+  content: "\e81c";
+}
+
+.fa-extra-chat::before {
+  font-family: 'Extra';
+  content: "\e81d";
+}
+
+.fa-extra-chart::before {
+  font-family: 'Extra';
+  content: "\e81e";
+}
+
+.fa-extra-play::before {
+  font-family: 'Extra';
+  content: "\e81f";
+}
+
+@import '../src/styles/bbcode.css';
