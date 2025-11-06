@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useNotifications } from '../hooks/useNotifications';

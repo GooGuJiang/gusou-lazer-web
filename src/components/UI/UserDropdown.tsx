@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiUser, FiLogOut, FiSettings, FiChevronDown, FiChevronRight, FiCheck } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
@@ -171,14 +173,14 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
             {/* Menu Items */}
             <div className="py-2">
               <DropdownItem
-                to="/profile"
+                href="/profile"
                 icon={FiUser}
                 label={t('nav.profile')}
                 onClick={handleMenuItemClick}
               />
               
               <DropdownItem
-                to="/settings"
+                href="/settings"
                 icon={FiSettings}
                 label={t('nav.settings')}
                 onClick={handleMenuItemClick}
@@ -282,21 +284,21 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
 
 // Dropdown item component for consistency
 interface DropdownItemProps {
-  to: string;
+  href: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   label: string;
   onClick: () => void;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = memo(({ 
-  to, 
-  icon: Icon, 
-  label, 
+const DropdownItem: React.FC<DropdownItemProps> = memo(({
+  href,
+  icon: Icon,
+  label,
   onClick
 }) => {
   return (
     <Link
-      to={to}
+      href={href}
       onClick={onClick}
       className="block"
     >

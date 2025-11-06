@@ -1,4 +1,4 @@
-export { API_BASE_URL, api } from './client';
+export { API_BASE_URL, api, setAuthCookies, clearAuthCookies } from './client';
 export { CLIENT_CONFIG } from './config';
 export { authAPI } from './auth';
 export { userAPI, type TOTPStatus, type TOTPCreateStart, type TOTPBackupCodes } from './user';

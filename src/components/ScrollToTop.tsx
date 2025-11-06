@@ -1,16 +1,20 @@
+"use client";
+
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 /**
  * ScrollToTop 组件
  * 在路由切换时自动滚动到页面顶部
  */
 const ScrollToTop = () => {
-  const { pathname, hash } = useLocation();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // 如果有 hash (锚点),不自动滚动到顶部
     // 让浏览器处理锚点导航
+    const hash = typeof window !== 'undefined' ? window.location.hash : '';
     if (hash) {
       return;
     }
@@ -19,9 +23,9 @@ const ScrollToTop = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'instant', // 使用 instant 而不是 smooth,确保立即跳转
+      behavior: 'auto',
     });
-  }, [pathname, hash]);
+  }, [pathname, searchParams?.toString()]);
 
   return null;
 };

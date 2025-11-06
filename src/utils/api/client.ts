@@ -3,7 +3,8 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getDeviceUUID } from '../deviceUUID';
 
 // 从环境变量读取 API 地址，如果没有设置则使用默认值
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
 // 全局验证处理器，由 VerificationProvider 设置
 let globalVerificationHandler: ((error: any) => boolean) | null = null;
@@ -21,6 +22,29 @@ const clearAuthCache = () => {
   } catch (error) {
     console.error('Failed to clear auth cache:', error);
   }
+};
+
+const TOKEN_COOKIE_NAMES = {
+  ACCESS: 'access_token',
+  REFRESH: 'refresh_token',
+} as const;
+
+const TOKEN_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+
+const setCookie = (name: string, value: string, maxAge: number = TOKEN_COOKIE_MAX_AGE) => {
+  if (typeof document === 'undefined') return;
+  const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`;
+};
+
+export const setAuthCookies = (accessToken: string, refreshToken: string) => {
+  setCookie(TOKEN_COOKIE_NAMES.ACCESS, accessToken);
+  setCookie(TOKEN_COOKIE_NAMES.REFRESH, refreshToken, TOKEN_COOKIE_MAX_AGE * 2);
+};
+
+export const clearAuthCookies = () => {
+  setCookie(TOKEN_COOKIE_NAMES.ACCESS, '', -1);
+  setCookie(TOKEN_COOKIE_NAMES.REFRESH, '', -1);
 };
 
 export const api = axios.create({
@@ -79,10 +103,11 @@ const refreshToken = async (): Promise<string> => {
   });
 
   const { access_token, refresh_token: new_refresh_token } = response.data;
-  
+
   // 更新 localStorage
   localStorage.setItem('access_token', access_token);
   localStorage.setItem('refresh_token', new_refresh_token);
+  setAuthCookies(access_token, new_refresh_token);
   
   return access_token;
 };
@@ -123,6 +148,7 @@ api.interceptors.response.use(
       if (originalRequest.url?.includes('/oauth/token')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        clearAuthCookies();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(error);
@@ -165,6 +191,7 @@ api.interceptors.response.use(
         processQueue(new Error('Token refresh failed'));
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        clearAuthCookies();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(refreshError);

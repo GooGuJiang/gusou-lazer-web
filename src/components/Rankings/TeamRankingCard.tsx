@@ -1,5 +1,7 @@
+"use client";
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FiUsers, FiTrendingUp } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import RankBadge from '../UI/RankBadge';

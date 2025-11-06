@@ -1,6 +1,8 @@
+"use client";
+
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const HomeFooter: React.FC = () => {
   const { t } = useTranslation();
@@ -24,14 +26,14 @@ const HomeFooter: React.FC = () => {
           {/* Legal Links */}
           <div className="flex items-center space-x-4 text-xs">
             <Link 
-              to="/privacy-policy" 
+              href="/privacy-policy" 
               className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               {t('common.privacyPolicy')}
             </Link>
             <span className="text-gray-300 dark:text-gray-600">•</span>
             <Link 
-              to="/terms-of-service" 
+              href="/terms-of-service" 
               className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               {t('common.termsOfService')}

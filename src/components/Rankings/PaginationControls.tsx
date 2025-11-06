@@ -1,3 +1,5 @@
+"use client";
+
 import { type ReactNode } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 

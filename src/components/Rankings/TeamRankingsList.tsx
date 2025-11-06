@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';

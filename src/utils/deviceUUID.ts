@@ -6,6 +6,12 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const DEVICE_UUID_KEY = 'device_uuid';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+
+const setDeviceCookie = (uuid: string) => {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${DEVICE_UUID_KEY}=${uuid}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+};
 
 // FingerprintJS 实例缓存
 let fpPromise: Promise<any> | null = null;
@@ -67,12 +73,15 @@ export async function getDeviceUUID(): Promise<string> {
       localStorage.setItem(DEVICE_UUID_KEY, uuid);
       console.log('Generated new device fingerprint UUID:', uuid);
     }
-    
+    setDeviceCookie(uuid);
+
     return uuid;
   } catch (error) {
     console.error('Error getting device UUID:', error);
     // 如果localStorage不可用，生成一个临时UUID（会话级别）
-    return generateFallbackUUID();
+    const fallback = generateFallbackUUID();
+    setDeviceCookie(fallback);
+    return fallback;
   }
 }
 
@@ -84,11 +93,14 @@ export async function resetDeviceUUID(): Promise<string> {
   try {
     const newUUID = await generateFingerprintUUID();
     localStorage.setItem(DEVICE_UUID_KEY, newUUID);
+    setDeviceCookie(newUUID);
     console.log('Reset device UUID:', newUUID);
     return newUUID;
   } catch (error) {
     console.error('Error resetting device UUID:', error);
-    return generateFallbackUUID();
+    const fallback = generateFallbackUUID();
+    setDeviceCookie(fallback);
+    return fallback;
   }
 }
 
@@ -113,11 +125,14 @@ export async function forceRegenerateFingerprint(): Promise<string> {
     fpPromise = null;
     const newUUID = await generateFingerprintUUID();
     localStorage.setItem(DEVICE_UUID_KEY, newUUID);
+    setDeviceCookie(newUUID);
     console.log('Force regenerated device fingerprint:', newUUID);
     return newUUID;
   } catch (error) {
     console.error('Error force regenerating fingerprint:', error);
-    return generateFallbackUUID();
+    const fallback = generateFallbackUUID();
+    setDeviceCookie(fallback);
+    return fallback;
   }
 }
 

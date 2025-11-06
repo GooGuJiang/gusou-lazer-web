@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSun, FiMoon, FiHome, FiTrendingUp, FiMusic, FiBell, FiUsers, FiMenu, FiX, FiSettings, FiServer, FiGlobe, FiCheck, FiLogOut } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +19,9 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [forceShowText, setForceShowText] = useState(false);
   const prevIsActiveRef = useRef<boolean | undefined>(undefined);
-  const location = useLocation();
+  const pathname = usePathname();
   const IconComponent = item.icon;
-  const isActive = location.pathname === item.path;
+  const isActive = pathname === item.path;
   
   // 文字显示逻辑：活跃时强制显示，或者悬停时显示
   const shouldShowText = isActive || forceShowText || isHovered;
@@ -67,7 +70,7 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
       className="relative flex-shrink-0"
     >
       <Link
-        to={item.path}
+        href={item.path}
         className={`relative flex items-center rounded-xl font-medium text-sm transition-all duration-200 group ${
           isActive
             ? 'text-white bg-osu-pink shadow-lg shadow-osu-pink/25'
@@ -246,7 +249,7 @@ const MobileMenuDropdown = memo<{
 }>(({ items, isAuthenticated, unreadCount, isDark, onThemeToggle, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+  const pathname = usePathname();
   const { t, i18n } = useTranslation();
 
   // 关闭下拉菜单
@@ -276,7 +279,7 @@ const MobileMenuDropdown = memo<{
   // 路由变化时关闭菜单
   useEffect(() => {
     setIsOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -340,7 +343,7 @@ const MobileMenuDropdown = memo<{
                 return (
                   <Link
                     key={item.path}
-                    to={item.path}
+                    href={item.path}
                     onClick={handleClose}
                     className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                       isActive
@@ -359,7 +362,7 @@ const MobileMenuDropdown = memo<{
                 <>
                   <div className="border-t border-gray-200/50 dark:border-gray-700/50 my-1" />
                   <Link
-                    to="/settings"
+                    href="/settings"
                     onClick={handleClose}
                     className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                       location.pathname === '/settings'
@@ -379,7 +382,7 @@ const MobileMenuDropdown = memo<{
               {/* 通知 - 仅已登录时显示 */}
               {isAuthenticated && (
                 <Link
-                  to="/messages"
+                  href="/messages"
                   onClick={handleClose}
                   className="flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink transition-all duration-200"
                 >
@@ -503,7 +506,7 @@ const Navbar: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center space-x-2 lg:space-x-3 group"
               >
-                <Link to="/" className="flex items-center space-x-2 lg:space-x-3 transition-transform duration-200">
+                <Link href="/" className="flex items-center space-x-2 lg:space-x-3 transition-transform duration-200">
                   <div className="relative">
                     <img
                       src="/image/logos/logo.svg"
@@ -542,7 +545,7 @@ const Navbar: React.FC = () => {
 
               {/* Notification (if authenticated) */}
               {isAuthenticated && (
-                <Link to="/messages">
+                <Link href="/messages">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -600,7 +603,7 @@ const Navbar: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                   >
                   <Link
-                    to="/login"
+                    href="/login"
                     className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
                   >
                     {t('nav.login')}
@@ -611,7 +614,7 @@ const Navbar: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link
-                    to="/register"
+                    href="/register"
                     className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
                   >
                     {t('nav.register')}
@@ -636,7 +639,7 @@ const Navbar: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/" className="flex items-center space-x-3 group">
+            <Link href="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <img
                   src="/image/logos/logo.svg"
@@ -666,7 +669,7 @@ const Navbar: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Link to="/profile" className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                  <Link href="/profile" className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
                     <Avatar
                       userId={user.id}
                       username={user.username}
@@ -682,7 +685,7 @@ const Navbar: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  to="/login"
+                  href="/login"
                   className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
                 >
                   {t('nav.login')}

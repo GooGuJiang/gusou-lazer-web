@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FiEdit, FiTrash2, FiUserPlus, FiLogOut, FiMoreHorizontal } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { teamsAPI, handleApiError } from '../../utils/api';
@@ -16,7 +19,7 @@ interface Props {
 const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showActions, setShowActions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,7 +65,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
     try {
       await teamsAPI.deleteTeam(team.id);
       toast.success(t('teams.detail.teamDeleted'));
-      navigate('/teams');
+      router.push('/teams');
     } catch (error) {
       handleApiError(error);
     } finally {

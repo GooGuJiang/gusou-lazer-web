@@ -6,7 +6,7 @@ import AvatarUpload from './AvatarUpload';
 import { useAuth } from '../../contexts/AuthContext';
 
 const debugLog = (message: string, data?: unknown) => {
-  if (import.meta.env.DEV) console.log(message, data);
+  if (process.env.NODE_ENV !== 'production') console.log(message, data);
 };
 
 interface AvatarProps {

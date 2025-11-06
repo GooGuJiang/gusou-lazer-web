@@ -1,6 +1,8 @@
+"use client";
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { authAPI, userAPI, handleApiError, CLIENT_CONFIG } from '../utils/api';
+import { authAPI, userAPI, handleApiError, CLIENT_CONFIG, setAuthCookies, clearAuthCookies } from '../utils/api';
 import type { User, TokenResponse } from '../types';
 import toast from 'react-hot-toast';
 
@@ -105,6 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (!token && !refreshToken) {
         CacheUtil.clearCache();
         setIsLoading(false);
+        clearAuthCookies();
         return;
       }
 
@@ -164,6 +167,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store tokens
       localStorage.setItem('access_token', tokenResponse.access_token);
       localStorage.setItem('refresh_token', tokenResponse.refresh_token);
+      setAuthCookies(tokenResponse.access_token, tokenResponse.refresh_token);
 
       // Get user data
       const userData = await userAPI.getMe();
@@ -229,6 +233,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    clearAuthCookies();
     setUser(null);
     setIsAuthenticated(false);
     // 清除缓存

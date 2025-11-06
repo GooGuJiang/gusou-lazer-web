@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
@@ -137,7 +139,26 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
   const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
   const modeSelectRef = useRef<HTMLDivElement>(null);
+  const osuRef = useRef<HTMLButtonElement>(null);
+  const taikoRef = useRef<HTMLButtonElement>(null);
+  const fruitsRef = useRef<HTMLButtonElement>(null);
+  const maniaRef = useRef<HTMLButtonElement>(null);
   const { profileColor } = useProfileColor();
+
+  const getButtonRef = (mainMode: MainGameMode) => {
+    switch (mainMode) {
+      case 'osu':
+        return osuRef;
+      case 'taiko':
+        return taikoRef;
+      case 'fruits':
+        return fruitsRef;
+      case 'mania':
+        return maniaRef;
+      default:
+        return osuRef;
+    }
+  };
 
   const selectedMainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
     .find(mainMode => GAME_MODE_GROUPS[mainMode].includes(selectedMode)) || 'osu';
@@ -178,21 +199,6 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   };
 
   if (variant === 'compact') {
-    // 为每个按钮创建 refs
-    const osuRef = useRef<HTMLButtonElement>(null);
-    const taikoRef = useRef<HTMLButtonElement>(null);
-    const fruitsRef = useRef<HTMLButtonElement>(null);
-    const maniaRef = useRef<HTMLButtonElement>(null);
-
-    const getButtonRef = (mainMode: MainGameMode) => {
-      switch (mainMode) {
-        case 'osu': return osuRef;
-        case 'taiko': return taikoRef;
-        case 'fruits': return fruitsRef;
-        case 'mania': return maniaRef;
-      }
-    };
-
     return (
       <div className={`relative ${className}`} ref={modeSelectRef}>
         <div className="flex gap-2">
