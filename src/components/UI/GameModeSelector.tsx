@@ -201,7 +201,8 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             const isHovered = hoveredMode === mainMode;
             const hasSubModes = !mainModesOnly && GAME_MODE_GROUPS[mainMode].length > 1;
             const isExpanded = showSubModes === mainMode;
-            const shouldExpand = isExpanded || (isHovered && hasSubModes && !showSubModes);
+            // 修复：当主模式被选中且有子模式时，保持展开状态；或者在悬停/下拉打开时展开
+            const shouldExpand = isExpanded || (isHovered && hasSubModes && !showSubModes) || (isActive && hasSubModes);
 
             const brand = getBrandColor(GAME_MODE_GROUPS[mainMode][0]);
 
