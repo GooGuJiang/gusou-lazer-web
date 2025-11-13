@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['api.memesearch.app', 'assets.ppy.sh', 'a.ppy.sh', 's.ppy.sh', 'b.ppy.sh'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,7 +9,19 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**.ppy.sh',
+        hostname: 'assets.ppy.sh',
+      },
+      {
+        protocol: 'https',
+        hostname: 'a.ppy.sh',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.ppy.sh',
+      },
+      {
+        protocol: 'https',
+        hostname: 'b.ppy.sh',
       },
     ],
   },
