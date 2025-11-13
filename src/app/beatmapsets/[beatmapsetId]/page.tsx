@@ -1,6 +1,8 @@
 'use client';
 
-import BeatmapPage from '@/pages/BeatmapPage';
+export const dynamic = 'force-dynamic';
+
+import BeatmapPage from '@/page-components/BeatmapPage';
 
 export default function Beatmapset() {
   return <BeatmapPage />;

@@ -1,6 +1,8 @@
 'use client';
 
-import TeamDetailPage from '@/pages/TeamDetailPage';
+export const dynamic = 'force-dynamic';
+
+import TeamDetailPage from '@/page-components/TeamDetailPage';
 
 export default function TeamDetail() {
   return <TeamDetailPage />;

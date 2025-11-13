@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React from 'react';
 import HeroSection from '@/components/Home/HeroSection';
 import HomeFooter from '@/components/Home/HomeFooter';

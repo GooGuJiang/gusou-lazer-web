@@ -1,6 +1,8 @@
 'use client';
 
-import UserPage from '@/pages/UserPage';
+export const dynamic = 'force-dynamic';
+
+import UserPage from '@/page-components/UserPage';
 
 export default function User() {
   return <UserPage />;

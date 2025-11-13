@@ -1,6 +1,8 @@
 'use client';
 
-import HowToJoinPage from '@/pages/HowToJoinPage';
+export const dynamic = 'force-dynamic';
+
+import HowToJoinPage from '@/page-components/HowToJoinPage';
 
 export default function HowToJoin() {
   return <HowToJoinPage />;

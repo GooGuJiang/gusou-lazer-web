@@ -1,6 +1,8 @@
 'use client';
 
-import MessagesPage from '@/pages/MessagesPage';
+export const dynamic = 'force-dynamic';
+
+import MessagesPage from '@/page-components/MessagesPage';
 
 export default function Messages() {
   return <MessagesPage />;
