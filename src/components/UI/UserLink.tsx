@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface UserLinkProps {
   userId: number;
@@ -16,7 +16,7 @@ const UserLink: React.FC<UserLinkProps> = ({
 }) => {
   return (
     <Link
-      to={`/users/${userId}`}
+      href={`/users/${userId}`}
       className={`hover:text-osu-pink transition-colors duration-200 ${className}`}
       title={`查看 ${username} 的个人资料`}
     >

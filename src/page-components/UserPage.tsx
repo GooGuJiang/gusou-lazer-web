@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import UserProfileLayout from '../components/User/UserProfileLayout';
 import { userAPI } from '../utils/api';
@@ -7,14 +7,15 @@ import type { User, GameMode } from '../types';
 
 const UserPage: React.FC = () => {
   const { t } = useTranslation();
-  const { userId } = useParams<{ userId: string }>();
-  const [searchParams] = useSearchParams();
+  const params = useParams<{ userId: string }>();
+  const userId = params?.userId;
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   // 从 URL 参数获取模式
-  const modeFromUrl = searchParams.get('mode') as GameMode | null;
+  const modeFromUrl = searchParams?.get('mode') as GameMode | null;
   const [selectedMode, setSelectedMode] = useState<GameMode>(modeFromUrl || 'osu');
   
   // 使用 ref 来跟踪最新的请求，防止竞态条件

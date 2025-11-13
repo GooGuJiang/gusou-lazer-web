@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FiPlus, FiEdit, FiEye } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
@@ -87,7 +87,7 @@ const TeamsPage: React.FC = () => {
                 // 检查用户是否是队长
                 user.id === user.team.leader_id ? (
                   <Link
-                    to={`/teams/${user.team.id}/edit`}
+                    href={`/teams/${user.team.id}/edit`}
                     className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 transition-colors self-start sm:self-auto"
                   >
                     <FiEdit className="mr-2" />
@@ -95,7 +95,7 @@ const TeamsPage: React.FC = () => {
                   </Link>
                 ) : (
                   <Link
-                      to={`/teams/${user.team.id}`}
+                      href={`/teams/${user.team.id}`}
                       className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/80 transition-colors self-start sm:self-auto"
                     >
                     <FiEye className="mr-2" />
@@ -104,7 +104,7 @@ const TeamsPage: React.FC = () => {
                 )
               ) : (
                 <Link
-                  to="/teams/create"
+                  href="/teams/create"
                   className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 transition-colors self-start sm:self-auto"
                 >
                   <FiPlus className="mr-2" />

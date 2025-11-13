@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock, FiSettings, FiKey } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
-import { Navigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { userAPI, type TOTPStatus } from '../utils/api';
 import EditableCover from '../components/UI/EditableCover';
@@ -20,6 +20,7 @@ import OAuthAppsSection from '../components/Settings/OAuthAppsSection';
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { user, isAuthenticated, isLoading, refreshUser } = useAuth();
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,7 +74,8 @@ const SettingsPage: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    router.push('/login');
+    return null;
   }
 
   if (!user) {
@@ -310,7 +312,7 @@ const SettingsPage: React.FC = () => {
               coverUrl={user.cover_url}
               editable={true}
               onCoverUpdate={(newCoverUrl) => {
-                if (import.meta.env.DEV) {
+                if (process.env.NODE_ENV === 'development') {
                   console.log('头图已更新:', newCoverUrl);
                 }
                 // 这里可以选择是否立即刷新用户信息

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -7,12 +8,12 @@ import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import type { LoginForm as LoginFormType } from '../../types';
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginFormType>({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
@@ -29,7 +30,7 @@ const LoginForm: React.FC = () => {
 
     const success = await login(formData.username, formData.password, turnstileToken);
     if (success) {
-      navigate('/profile');
+      router.push('/profile');
     } else {
       // Refresh turnstile on error
       if (turnstileRef.current) {
@@ -89,7 +90,7 @@ const LoginForm: React.FC = () => {
                 {t('auth.login.password')}
               </label>
               <Link
-                to="/password-reset"
+                href="/password-reset"
                 className="text-xs font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
               >
                 {t('auth.login.forgotPassword')}
@@ -151,7 +152,7 @@ const LoginForm: React.FC = () => {
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('auth.login.noAccount')}{' '}
-              <Link to="/register" className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80">
+              <Link href="/register" className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80">
                 {t('auth.login.registerNow')}
               </Link>
             </p>

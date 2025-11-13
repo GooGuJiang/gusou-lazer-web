@@ -1,5 +1,6 @@
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { FiEdit, FiTrash2, FiUserPlus, FiLogOut, FiMoreHorizontal } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { teamsAPI, handleApiError } from '../../utils/api';
@@ -16,7 +17,7 @@ interface Props {
 const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showActions, setShowActions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,7 +63,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
     try {
       await teamsAPI.deleteTeam(team.id);
       toast.success(t('teams.detail.teamDeleted'));
-      navigate('/teams');
+      router.push('/teams');
     } catch (error) {
       handleApiError(error);
     } finally {
@@ -105,7 +106,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
           <>
             {/* 编辑按钮 */}
             <Link
-              to={`/teams/${team.id}/edit`}
+              href={`/teams/${team.id}/edit`}
               className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 transition-colors"
             >
               <FiEdit className="mr-2" />
