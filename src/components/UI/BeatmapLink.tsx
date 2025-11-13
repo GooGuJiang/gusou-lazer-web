@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { beatmapAPI } from '../../utils/api';
 
 interface BeatmapLinkProps {
@@ -32,7 +32,7 @@ const BeatmapLink: React.FC<BeatmapLinkProps> = ({
   if (internalUrl && !external) {
     return (
       <Link
-        to={internalUrl}
+        href={internalUrl}
         className={className}
         title={title}
       >

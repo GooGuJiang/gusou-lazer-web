@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { beatmapAPI } from '../../utils/api';
 import toast from 'react-hot-toast';
@@ -13,7 +13,7 @@ interface BeatmapUrlLoaderProps {
 const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className = '' }) => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
       
       if (internalUrl) {
         // 如果可以转换为内部路由，直接导航
-        navigate(internalUrl);
+        router.push(internalUrl);
       } else {
         // 否则尝试直接从 URL 获取数据
         const data = await beatmapAPI.getBeatmapFromUrl(url);
@@ -39,7 +39,7 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
           const targetUrl = data.beatmap 
             ? `/beatmapsets/${data.beatmapset.id}#${data.beatmap.mode || 'osu'}/${data.beatmap.id}`
             : `/beatmapsets/${data.beatmapset.id}`;
-          navigate(targetUrl);
+          router.push(targetUrl);
         }
       }
       

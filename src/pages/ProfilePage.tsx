@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import UserProfileLayout from '../components/User/UserProfileLayout';
@@ -8,6 +8,7 @@ import type { GameMode } from '../types';
 const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { user, isAuthenticated, isLoading, updateUserMode, updateUser } = useAuth();
+  const router = useRouter();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   
   // 使用 ref 跟踪是否正在更新模式，防止重复请求
@@ -50,7 +51,8 @@ const ProfilePage: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    router.push("/login");
+    return null;
   }
 
   if (!user) {

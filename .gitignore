@@ -12,9 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Next.js
+/.next/
+/out/
+
 # Environment variables
 .env
 .env.local
+.env*.local
 
 # Editor directories and files
 .vscode/*
@@ -32,3 +37,7 @@ gashamkal-main/*
 osu-web-master/*
 fuwari-main/*
 .vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

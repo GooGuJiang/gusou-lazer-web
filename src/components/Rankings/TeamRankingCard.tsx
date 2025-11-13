@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FiUsers, FiTrendingUp } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import RankBadge from '../UI/RankBadge';
@@ -115,7 +115,7 @@ const TeamRankingCard: React.FC<Props> = ({
           {/* 战队信息 */}
           <div className="flex-1 min-w-0">
             <Link
-              to={`/teams/${team.id}?mode=${selectedMode}`}
+              href={`/teams/${team.id}?mode=${selectedMode}`}
               className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
             >
               {team.name}
@@ -186,7 +186,7 @@ const TeamRankingCard: React.FC<Props> = ({
         {/* 战队信息 */}
         <div className="flex-1 min-w-0">
           <Link
-            to={`/teams/${team.id}?mode=${selectedMode}`}
+            href={`/teams/${team.id}?mode=${selectedMode}`}
             className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
           >
             {team.name}
@@ -220,7 +220,7 @@ const TeamRankingCard: React.FC<Props> = ({
   );
 
   return (
-    <Link to={`/teams/${team.id}?mode=${selectedMode}`}>
+    <Link href={`/teams/${team.id}?mode=${selectedMode}`}>
       {teamContent}
     </Link>
   );

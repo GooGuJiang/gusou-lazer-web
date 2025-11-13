@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams, useSearchParams } from 'next/navigation';
 import { FiArrowLeft, FiLoader, FiUsers, FiCalendar, FiAward } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { teamsAPI, handleApiError } from '../utils/api';
@@ -10,13 +11,14 @@ import type { TeamDetailResponse, User, GameMode } from '../types';
 
 const TeamDetailPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { teamId } = useParams<{ teamId: string }>();
-  const [searchParams] = useSearchParams();
+  const params = useParams<{ teamId: string }>();
+  const teamId = params?.teamId;
+  const searchParams = useSearchParams();
   const [teamDetail, setTeamDetail] = useState<TeamDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
   // 从 URL 参数获取模式,如果没有则默认为 'osu'
-  const modeFromUrl = searchParams.get('mode') as GameMode | null;
+  const modeFromUrl = searchParams?.get('mode') as GameMode | null;
   const selectedMode: GameMode = modeFromUrl || 'osu';
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const TeamDetailPage: React.FC = () => {
             {t('teams.detail.notFoundDescription')}
           </p>
           <Link
-            to="/teams"
+            href="/teams"
             className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 transition-colors"
           >
             <FiArrowLeft className="mr-2" />
@@ -117,7 +119,7 @@ const TeamDetailPage: React.FC = () => {
         {/* 返回按钮 */}
         <div className="mb-6">
           <Link
-            to="/teams"
+            href="/teams"
             className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <FiArrowLeft className="mr-2" />

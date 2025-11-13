@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 import InfoCard from '../InfoCard';
 import { features } from '../../data/features';
@@ -260,7 +260,7 @@ const HeroSection: React.FC = () => {
         <div ref={joinButtonRef} className="absolute bottom-48 left-1/2 -translate-x-1/2 w-full px-4">
           <div className="w-full max-w-sm sm:max-w-md mx-auto">
             <Link
-              to="/how-to-join"
+              href="/how-to-join"
               className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium shadow-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
             >
               <FaRocket className="w-4 h-4 sm:w-5 sm:h-5" />

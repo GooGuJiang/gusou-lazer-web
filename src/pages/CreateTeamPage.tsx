@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter, useParams } from 'next/navigation';
 import { FiArrowLeft, FiSave, FiImage, FiFlag, FiUsers, FiLoader } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { teamsAPI, handleApiError } from '../utils/api';
@@ -11,8 +11,9 @@ import type { User, TeamDetailResponse } from '../types';
 
 const CreateTeamPage: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { teamId } = useParams<{ teamId: string }>();
+  const router = useRouter();
+  const params = useParams<{ teamId: string }>();
+  const teamId = params?.teamId;
   const { user } = useAuth();
   const isEditing = Boolean(teamId);
 
@@ -50,14 +51,14 @@ const CreateTeamPage: React.FC = () => {
         setCoverPreview(team.cover_url);
       } catch (error) {
         handleApiError(error);
-        navigate('/teams');
+        router.push('/teams');
       } finally {
         setIsLoading(false);
       }
     };
 
     loadTeamData();
-  }, [isEditing, teamId, navigate]);
+  }, [isEditing, teamId, router]);
 
 
 
@@ -141,11 +142,11 @@ const CreateTeamPage: React.FC = () => {
       } else {
         const result = await teamsAPI.createTeam(data);
         toast.success(t('teams.create.createSuccess'));
-        navigate(`/teams/${result.id}`);
+        router.push(`/teams/${result.id}`);
         return;
       }
       
-      navigate(`/teams/${teamId}`);
+      router.push(`/teams/${teamId}`);
     } catch (error) {
       handleApiError(error);
       console.error('操作失败:', error);
@@ -186,7 +187,7 @@ const CreateTeamPage: React.FC = () => {
         {/* 返回按钮 */}
         <div className="mb-6">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => router.back()}
             className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <FiArrowLeft className="mr-2" />
@@ -374,7 +375,7 @@ const CreateTeamPage: React.FC = () => {
             <div className="flex justify-end gap-4">
               <button
                 type="button"
-                onClick={() => navigate(-1)}
+                onClick={() => router.back()}
                 className="px-6 py-3 border border-card text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 {t('teams.create.cancel')}

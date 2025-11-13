@@ -3,7 +3,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getDeviceUUID } from '../deviceUUID';
 
 // 从环境变量读取 API 地址，如果没有设置则使用默认值
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
 // 全局验证处理器，由 VerificationProvider 设置
 let globalVerificationHandler: ((error: any) => boolean) | null = null;

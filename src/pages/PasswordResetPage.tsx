@@ -1,5 +1,6 @@
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiKey } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -8,7 +9,7 @@ import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { authAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 type ResetStep = 'request' | 'reset';
 
@@ -21,7 +22,7 @@ interface FormData {
 
 const PasswordResetPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { t } = useTranslation();
   const [step, setStep] = useState<ResetStep>('request');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,9 +42,9 @@ const PasswordResetPage: React.FC = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/profile');
+      router.push('/profile');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, router]);
 
   // Countdown timer for resend
   useEffect(() => {
@@ -184,7 +185,7 @@ const PasswordResetPage: React.FC = () => {
       await authAPI.resetPassword(formData.email, formData.resetCode, formData.newPassword, turnstileToken);
       toast.success(t('auth.passwordReset.success'));
       setTimeout(() => {
-        navigate('/login');
+        router.push('/login');
       }, 2000);
     } catch (error: any) {
       console.error('Failed to reset password:', error);
@@ -290,7 +291,7 @@ const PasswordResetPage: React.FC = () => {
 
               <div className="text-center">
                 <Link
-                  to="/login"
+                  href="/login"
                   className="text-sm font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80 flex items-center justify-center gap-1"
                 >
                   <FiArrowLeft className="w-4 h-4" />

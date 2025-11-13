@@ -1,5 +1,6 @@
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -11,8 +12,10 @@ import { AudioPlayButton, AudioPlayerControls } from '../components/UI/AudioPlay
 import toast from 'react-hot-toast';
 
 const BeatmapPage: React.FC = () => {
-  const { beatmapId, beatmapsetId } = useParams<{ beatmapId?: string; beatmapsetId?: string }>();
-  const navigate = useNavigate();
+  const params = useParams<{ beatmapId?: string; beatmapsetId?: string }>();
+  const beatmapId = params?.beatmapId;
+  const beatmapsetId = params?.beatmapsetId;
+  const router = useRouter();
   const { t } = useTranslation();
   
   const [beatmapset, setBeatmapset] = useState<Beatmapset | null>(null);
@@ -79,7 +82,7 @@ const BeatmapPage: React.FC = () => {
           const mode = targetBeatmap.mode || 'osu';
           const newUrl = `/beatmapsets/${beatmapsetData.id}#${mode}/${targetBeatmap.id}`;
           if (window.location.pathname + window.location.hash !== newUrl) {
-            navigate(newUrl, { replace: true });
+            router.replace(newUrl);
           }
         } else {
           // 如果没找到，选择第一个
@@ -88,7 +91,7 @@ const BeatmapPage: React.FC = () => {
             setSelectedBeatmap(firstBeatmap);
             const mode = firstBeatmap.mode || 'osu';
             const newUrl = `/beatmapsets/${beatmapsetData.id}#${mode}/${firstBeatmap.id}`;
-            navigate(newUrl, { replace: true });
+            router.replace(newUrl);
           }
         }
 
@@ -102,14 +105,14 @@ const BeatmapPage: React.FC = () => {
     };
 
     fetchBeatmapData();
-  }, [beatmapId, beatmapsetId, navigate, t]);
+  }, [beatmapId, beatmapsetId, router, t]);
 
   const handleDifficultySelect = (beatmap: Beatmap) => {
     setSelectedBeatmap(beatmap);
     // 更新URL为标准格式
     if (beatmapset) {
       const mode = beatmap.mode || 'osu';
-      navigate(`/beatmapsets/${beatmapset.id}#${mode}/${beatmap.id}`, { replace: true });
+      router.replace(`/beatmapsets/${beatmapset.id}#${mode}/${beatmap.id}`);
     }
   };
 
@@ -168,7 +171,7 @@ const BeatmapPage: React.FC = () => {
             {error || t('beatmap.notFound')}
           </h1>
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => router.back()}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             {t('beatmap.goBack')}

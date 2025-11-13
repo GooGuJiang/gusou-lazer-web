@@ -1,5 +1,6 @@
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -7,11 +8,11 @@ import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import type { RegisterForm } from '../types';
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const RegisterPage: React.FC = () => {
   const { register, isLoading, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { t } = useTranslation();
   const [formData, setFormData] = useState<RegisterForm>({
     username: '',
@@ -28,9 +29,9 @@ const RegisterPage: React.FC = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/profile');
+      router.push('/profile');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, router]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<RegisterForm> = {};
@@ -85,7 +86,7 @@ const RegisterPage: React.FC = () => {
     );
 
     if (success) {
-      navigate('/profile');
+      router.push('/profile');
     } else {
       // Refresh turnstile on error
       if (turnstileRef.current) {
@@ -304,7 +305,7 @@ const RegisterPage: React.FC = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {t('auth.register.hasAccount')}{' '}
                 <Link
-                  to="/login"
+                  href="/login"
                   className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
                 >
                   {t('auth.register.loginNow')}
