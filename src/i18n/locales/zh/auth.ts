@@ -6,6 +6,8 @@ export const auth = {
     password: '密码',
     usernamePlaceholder: '输入用户名',
     passwordPlaceholder: '输入密码',
+    usernameOrEmail: '用户名或邮箱',
+    usernameOrEmailPlaceholder: '输入用户名或邮箱',
     submit: '登录',
     noAccount: '还没有账户？',
     registerNow: '立即注册',

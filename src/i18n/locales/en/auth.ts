@@ -6,6 +6,8 @@ export const auth = {
     password: 'Password',
     usernamePlaceholder: 'Enter username',
     passwordPlaceholder: 'Enter password',
+    usernameOrEmail: 'Username or Email',
+    usernameOrEmailPlaceholder: 'Enter your username or email',
     submit: 'Sign in',
     noAccount: "Don't have an account?",
     registerNow: 'Create one',
