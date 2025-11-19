@@ -76,4 +76,21 @@ export const auth = {
       invalidCode: 'Invalid or expired reset code',
     },
   },
+  context: {
+    cache: {
+      usingCachedState: 'Using cached login state',
+      fetchingFromApi: 'Cache invalid, fetching user information from API',
+    },
+    messages: {
+      welcomeBack: 'Welcome back, {{username}}!',
+      registerSuccess: 'Account created successfully!',
+      logoutSuccess: 'Signed out successfully',
+    },
+    errors: {
+      username: 'Username: {{message}}',
+      email: 'Email: {{message}}',
+      password: 'Password: {{message}}',
+      hookUsage: 'useAuth must be used within an AuthProvider',
+    },
+  },
 } as const;
