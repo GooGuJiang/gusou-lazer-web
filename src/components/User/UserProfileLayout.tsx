@@ -125,7 +125,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
     updatePinStatus: (scoreId: number, isPinned: boolean) => void;
   } | null>(null);
   
-  const stats = user.statistics;
+  const stats =
+    user.statistics_rulesets?.[selectedMode] ??
+    user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
   const levelProgress = stats?.level?.progress ?? 0;
   const levelCurrent = stats?.level?.current ?? 0;
