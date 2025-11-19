@@ -152,7 +152,8 @@ const ScoreCard: React.FC<{
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
   dragHandleProps?: any;
-}> = ({ score, t, profileColor, canEdit = false, onPinChange, dragHandleProps }) => {
+  className?: string;
+}> = ({ score, t, profileColor, canEdit = false, onPinChange, dragHandleProps, className = '' }) => {
   const rank = score.rank;
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
   const artist = score.beatmapset?.artist_unicode || score.beatmapset?.artist || 'Unknown Artist';
@@ -180,7 +181,7 @@ const ScoreCard: React.FC<{
   return (
     <LazyBackgroundImage 
       src={coverImage}
-      className="relative overflow-hidden border-b border-gray-100 dark:border-gray-700/50 last:border-b-0"
+      className={`relative overflow-hidden rounded-lg border border-gray-200/70 dark:border-gray-600/40 bg-card ${className}`}
     >
       {/* 渐变遮罩层 - 使用主题颜色 */}
       <div 
@@ -207,7 +208,7 @@ const ScoreCard: React.FC<{
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-18 h-12 object-contain"
+                className="w-14 h-10 object-contain"
               />
             </div>
 
@@ -278,7 +279,7 @@ const ScoreCard: React.FC<{
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className="w-16 h-10 object-contain"
+                className="w-12 h-8 object-contain"
               />
             </div>
 
@@ -584,22 +585,8 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
       </div>
       
       {scores.length === 0 ? (
-        <div className="shadow-sm overflow-hidden rounded-lg">
-          {/* 头部圆角div */}
-          <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-            <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
-          </div>
-          
-          {/* 空状态提示 */}
-          <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30 py-12">
-            <div className="text-center text-gray-400 dark:text-gray-500 text-sm">
-              {t('profile.pinnedScores.empty')}
-            </div>
-          </div>
-          
-          {/* 尾部圆角div */}
-          <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-          </div>
+        <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
+          {t('profile.pinnedScores.empty')}
         </div>
       ) : (
         <DndContext
@@ -607,34 +594,22 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
         >
-          <div className="shadow-sm overflow-hidden rounded-lg">
-            {/* 头部圆角div */}
-            <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-              <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
-            </div>
-            
-            {/* 主要内容区域 */}
-            <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
-              <SortableContext
-                items={scores.map(score => score.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {scores.map((score) => (
-                  <SortableScoreCard
-                    key={score.id} 
-                    score={score} 
-                    t={t} 
-                    profileColor={profileColor}
-                    canEdit={canEdit}
-                    onPinChange={handlePinChangeFromMenu}
-                  />
-                ))}
-              </SortableContext>
-            </div>
-            
-            {/* 尾部圆角div */}
-            <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-            </div>
+          <div className="flex flex-col gap-1">
+            <SortableContext
+              items={scores.map(score => score.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {scores.map((score) => (
+                <SortableScoreCard
+                  key={score.id} 
+                  score={score} 
+                  t={t} 
+                  profileColor={profileColor}
+                  canEdit={canEdit}
+                  onPinChange={handlePinChangeFromMenu}
+                />
+              ))}
+            </SortableContext>
           </div>
         </DndContext>
       )}
@@ -643,4 +618,3 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
 };
 
 export default UserPinnedScores;
-

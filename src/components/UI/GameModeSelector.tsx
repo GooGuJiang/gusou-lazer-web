@@ -89,7 +89,7 @@ const ModeDropdown: React.FC<ModeDropdownProps> = ({
           ...floatingStyles,
           background: 'var(--float-panel-bg)',
           border: '1px solid var(--border-color)',
-          marginTop: '40px',
+          marginTop: '46px',
         }}
         {...getFloatingProps()}
       >
@@ -254,7 +254,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                       transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                     >
                       <motion.div
-                        animate={{ rotate: isExpanded ? 0 : -180 }}
+                        animate={{ rotate: isExpanded ? -180 : 0 }}
                         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
                         <FiChevronDown 

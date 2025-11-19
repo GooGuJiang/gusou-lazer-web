@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { authAPI, userAPI, handleApiError, CLIENT_CONFIG } from '../utils/api';
 import type { User, TokenResponse } from '../types';
 import toast from 'react-hot-toast';
@@ -94,6 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { t } = useTranslation();
 
   // Check if user is authenticated on mount
   useEffect(() => {
@@ -111,7 +113,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // 尝试从缓存读取
       const cachedData = CacheUtil.getUserCache();
       if (cachedData.isValid && cachedData.user) {
-        console.log('使用缓存的登录状态');
+        console.log(t('auth.context.cache.usingCachedState'));
         setUser(cachedData.user);
         setIsAuthenticated(cachedData.isAuthenticated);
         setIsLoading(false);
@@ -120,7 +122,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // 缓存无效或不存在，请求 API
       try {
-        console.log('缓存无效，从 API 获取用户信息');
+        console.log(t('auth.context.cache.fetchingFromApi'));
         const userData = await userAPI.getMe();
         setUser(userData);
         setIsAuthenticated(true);
@@ -173,7 +175,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // 保存到缓存
       CacheUtil.saveUserCache(userData);
 
-      toast.success(`欢迎回来，${userData.username}！`);
+      toast.success(t('auth.context.messages.welcomeBack', { username: userData.username }));
       return true;
     } catch (error) {
       handleApiError(error);
@@ -191,7 +193,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // After successful registration, automatically log in
       const loginSuccess = await login(username, password, turnstileToken);
       if (loginSuccess) {
-        toast.success('账户创建成功！');
+        toast.success(t('auth.context.messages.registerSuccess'));
       }
       return loginSuccess;
     } catch (error) {
@@ -208,11 +210,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           } = formError.user;
 
           if (usernameErrors.length > 0) {
-            toast.error(`用户名：${usernameErrors[0]}`);
+            toast.error(t('auth.context.errors.username', { message: usernameErrors[0] }));
           } else if (emailErrors.length > 0) {
-            toast.error(`邮箱：${emailErrors[0]}`);
+            toast.error(t('auth.context.errors.email', { message: emailErrors[0] }));
           } else if (passwordErrors.length > 0) {
-            toast.error(`密码：${passwordErrors[0]}`);
+            toast.error(t('auth.context.errors.password', { message: passwordErrors[0] }));
           }
         } else if (formError.message) {
           toast.error(formError.message);
@@ -233,7 +235,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsAuthenticated(false);
     // 清除缓存
     CacheUtil.clearCache();
-    toast.success('成功退出登录');
+    toast.success(t('auth.context.messages.logoutSuccess'));
   };
 
   const updateUserMode = useCallback(async (mode?: string) => {
@@ -290,8 +292,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
+  const { t } = useTranslation();
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error(t('auth.context.errors.hookUsage'));
   }
   return context;
 };

@@ -86,7 +86,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; showPP?: boolean }> = ({ score, t, profileColor, showPP = true }) => {
+const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; showPP?: boolean; className?: string }> = ({ score, t, profileColor, showPP = true, className = '' }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -115,7 +115,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; show
   return (
     <LazyBackgroundImage 
       src={coverImage}
-      className="relative overflow-hidden border-b border-gray-100 dark:border-gray-700/50 last:border-b-0"
+      className={`relative overflow-hidden rounded-lg border border-gray-200/70 dark:border-gray-600/40 bg-card ${className}`}
     >
       {/* 渐变遮罩层确保文字可读性 - 使用主题颜色 */}
       <div 
@@ -141,7 +141,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; show
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className={`w-18 h-12 object-contain ${!passed ? 'opacity-50' : ''}`}
+                className={`w-14 h-10 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
             </div>
 
@@ -211,7 +211,7 @@ const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; show
               <img 
                 src={getRankIcon(rank)} 
                 alt={rank}
-                className={`w-16 h-10 object-contain ${!passed ? 'opacity-50' : ''}`}
+                className={`w-12 h-8 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
             </div>
 
@@ -392,49 +392,44 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
           {t('profile.recentScores.noScores')}
         </div>
       ) : (
-        <div className="shadow-sm overflow-hidden rounded-lg">
-          {/* 头部圆角div */}
-          <div className="bg-card h-[30px] rounded-t-lg border-x border-t border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-            <div className="w-16 h-1 rounded-full" style={{ backgroundColor: profileColor }}></div>
-          </div>
-          
-          {/* 主要内容区域 - 无圆角 */}
-          <div className="bg-card border-x border-gray-200/50 dark:border-gray-600/30">
+        <>
+          <div className="flex flex-col gap-1">
             {scores.map((score) => (
-              <ScoreCard key={score.id} score={score} t={t} profileColor={profileColor} showPP={score.passed} />
+              <ScoreCard
+                key={score.id}
+                score={score}
+                t={t}
+                profileColor={profileColor}
+                showPP={score.passed}
+              />
             ))}
+          </div>
 
-            {hasMore && (
-              <div className="flex justify-center p-4 border-t border-gray-100 dark:border-gray-700/50">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={loadingMore}
-                  className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
-                  style={{ backgroundColor: loadingMore ? undefined : profileColor }}
-                  onMouseEnter={(e) => !loadingMore && (e.currentTarget.style.opacity = '0.9')}
-                  onMouseLeave={(e) => !loadingMore && (e.currentTarget.style.opacity = '1')}
-                >
-                  {loadingMore ? (
-                    <>
-                      <LoadingSpinner size="sm" />
-                      <span>{t('profile.recentScores.loading')}</span>
-                    </>
-                  ) : (
-                    <span>{t('profile.recentScores.loadMore')}</span>
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-          
-          {/* 尾部圆角div */}
-          <div className="bg-card h-[30px] rounded-b-lg border-x border-b border-gray-200/50 dark:border-gray-600/30 flex items-center justify-center">
-          </div>
-        </div>
+          {hasMore && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="min-w-[80px] sm:min-w-[100px] h-[32px] px-3 py-1.5 disabled:bg-gray-400 text-white rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5"
+                style={{ backgroundColor: loadingMore ? undefined : profileColor }}
+                onMouseEnter={(e) => !loadingMore && (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => !loadingMore && (e.currentTarget.style.opacity = '1')}
+              >
+                {loadingMore ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    <span>{t('profile.recentScores.loading')}</span>
+                  </>
+                ) : (
+                  <span>{t('profile.recentScores.loadMore')}</span>
+                )}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 };
 
 export default UserRecentScores;
-
