@@ -122,7 +122,7 @@ export class BBCodeParser {
       closeTag: '[/centre]',
       allowNested: true,
       isBlock: true,
-      renderer: (content: string) => `<center>${content}</center>`
+      renderer: (content: string) => `<div style="text-align: center;">${content}</div>`
     });
 
     // 标题
@@ -154,10 +154,17 @@ export class BBCodeParser {
       paramRequired: false,
       allowNested: true,
       isBlock: true,
+      validator: (param?: string) => {
+        if (!param) return true;
+
+        // 必须包围双引号
+        const trimmed = param.trim();
+        return trimmed.startsWith('"') && trimmed.endsWith('"');
+      },
       renderer: (content: string, param?: string) => {
         if (param) {
           // 去掉引号
-          const author = param.replace(/^="?|"?$/g, '');
+          const author = param.replace(/^"?|"?$/g, '');
           return `<blockquote><h4>${this.escapeHtml(author)} wrote:</h4>${content}</blockquote>`;
         }
         return `<blockquote>${content}</blockquote>`;
