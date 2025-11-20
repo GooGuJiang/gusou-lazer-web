@@ -541,28 +541,46 @@ export class BBCodeParser {
   }
 
   private processAutoLinks(text: string): string {
-    // 只在非BBCode标签区域处理自动链接
-    const urlRegex = /(https?:\/\/[^\s\[\]<>"]+)/g;
-    return text.replace(urlRegex, (match, url, offset) => {
-      // 检查URL是否已经在BBCode标签中
-      const beforeMatch = text.substring(0, offset);
-      const afterMatch = text.substring(offset + match.length);
-      
-      // 简单检查是否在URL标签中
-      if (beforeMatch.includes('[url') && afterMatch.includes('[/url]')) {
-        return match;
+    // 避免在已生成的 HTML 标签或属性中二次转换
+    const urlRegex = /(https?:\/\/[^\s<>"]+)/g;
+
+    return text.replace(urlRegex, (match: string, _p: string, offset: number) => {
+      // 检查是否在标签内部（属性）
+      const lastLt = text.lastIndexOf('<', offset);
+      const lastGt = text.lastIndexOf('>', offset);
+
+      // 位于未闭合标签内，跳过
+      if (lastLt > lastGt) return match;
+
+      // 链接元素检测
+      const anchorStart = text.lastIndexOf('<a', offset);
+      if (anchorStart !== -1) {
+        const anchorEndTag = text.indexOf('</a>', anchorStart);
+        const anchorOpenEnd = text.indexOf('>', anchorStart);
+
+        // <a> 内
+        if (anchorOpenEnd !== -1 && anchorOpenEnd < offset && anchorEndTag !== -1 && anchorEndTag > offset) {
+          return match;
+        }
+
+        // href="..." 属性值中
+        if (anchorOpenEnd === -1 || anchorOpenEnd > offset) return match;
       }
-      
-      // 检查是否在其他标签中
-      const openBrackets = (beforeMatch.match(/\[/g) || []).length;
-      const closeBrackets = (beforeMatch.match(/\]/g) || []).length;
-      
-      // 如果在未闭合的标签中，不处理
-      if (openBrackets > closeBrackets) {
-        return match;
+
+      // 跳过 code/pre 标签内容自动链接
+      if (isInTag("code") || isInTag("pre")) return match;
+
+      return `<a rel="nofollow" href="${this.escapeHtml(match)}">${this.escapeHtml(match)}</a>`;
+
+      function isInTag(tagName: string) : boolean {
+        const start = text.lastIndexOf(`<${tagName}`, offset);
+        if (start !== -1) {
+          const close = text.indexOf(`</${tagName}>`, start);
+          const openEnd = text.indexOf('>', start);
+          if (openEnd !== -1 && openEnd < offset && close !== -1 && close > offset) return true;
+        }
+        return false;
       }
-      
-      return `<a rel="nofollow" href="${this.escapeHtml(url)}">${this.escapeHtml(url)}</a>`;
     });
   }
 
