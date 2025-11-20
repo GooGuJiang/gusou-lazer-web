@@ -95,7 +95,11 @@
 }
 
 /* 列表样式 */
-.bbcode ol.unordered {
+.bbcode ol {
+  list-style-type: decimal;
+}
+
+.bbcode ul {
   list-style-type: disc;
 }
 
