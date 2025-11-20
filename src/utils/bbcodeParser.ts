@@ -2,11 +2,42 @@
  * BBCode Parser for osu! style BBCode
  * 基于官方osu-web BBCodeFromDB.php实现，确保输出与官方网站一致
  */
+import i18next from 'i18next';
+
+// useTranslation() 钩子不可用，直接引用
+type TranslationOptions = { [key: string]: unknown } | undefined;
+function t(key: string, options?: TranslationOptions): string {
+  if (i18next.isInitialized) {
+    try {
+      return i18next.t(key, options);
+    } catch {
+      return key;
+    }
+  }
+  return key;
+}
+
+// 用于翻译错误消息的便捷方法
+function et(key: string, options?: TranslationOptions): string {
+  return t(`${errorMessageNamespace}.${key}`, options);
+}
+
+const errorMessageNamespace = "profile.bbcodeEditor.validation";
 
 export interface BBCodeParseResult {
   html: string;
   errors: string[];
   valid: boolean;
+}
+
+class TagValidationResult {
+  success: boolean;
+  message?: string;
+
+  constructor(success: boolean, message?: string) {
+    this.success = success;
+    this.message = message;
+  }
 }
 
 export interface BBCodeTag {
@@ -17,7 +48,7 @@ export interface BBCodeTag {
   paramRequired?: boolean;
   allowNested?: boolean;
   isBlock?: boolean;  // 标记是否为块级元素
-  validator?: (param?: string, content?: string) => boolean;
+  validator?: (param?: string, content?: string) => TagValidationResult;
   renderer: (content: string, param?: string) => string;
 }
 
@@ -85,11 +116,11 @@ export class BBCodeParser {
       paramRequired: true,
       allowNested: true,
       validator: (param?: string) => {
-        if (!param) return false;
+        if (!param) return new TagValidationResult(false, et("missingColor"));
         // 支持十六进制颜色和HTML颜色名
         const hexPattern = /^#[0-9A-Fa-f]{3,6}$/;
         const htmlColors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
-        return hexPattern.test(param) || htmlColors.includes(param.toLowerCase());
+        return new TagValidationResult(hexPattern.test(param) || htmlColors.includes(param.toLowerCase()), et("invalidColor"));
       },
       renderer: (content: string, param?: string) => `<span style="color: ${param};">${content}</span>`
     });
@@ -103,9 +134,9 @@ export class BBCodeParser {
       paramRequired: true,
       allowNested: true,
       validator: (param?: string) => {
-        if (!param) return false;
+        if (!param) return new TagValidationResult(false, et("missingSize"));
         const size = parseInt(param);
-        return !isNaN(size) && size >= 30 && size <= 200;
+        return new TagValidationResult(!isNaN(size) && size >= 30 && size <= 200, et("invalidSize"));
       },
       renderer: (content: string, param?: string) => {
         const size = Math.min(Math.max(parseInt(param || '100'), 30), 200);
@@ -155,11 +186,12 @@ export class BBCodeParser {
       allowNested: true,
       isBlock: true,
       validator: (param?: string) => {
-        if (!param) return true;
+        if (!param) return new TagValidationResult(true);
 
         // 必须包围双引号
         const trimmed = param.trim();
-        return trimmed.startsWith('"') && trimmed.endsWith('"');
+        return new TagValidationResult(trimmed.startsWith('"') && trimmed.endsWith('"'),
+            et("missingQuotes"));
       },
       renderer: (content: string, param?: string) => {
         if (param) {
@@ -266,9 +298,9 @@ export class BBCodeParser {
       paramRequired: false,
       allowNested: false,
       validator: (param?: string) => {
-        if (!param) return true;
+        if (!param) return new TagValidationResult(true);
         const url = param.replace(/^=/, '');
-        return /^https?:\/\/.+/.test(url);
+        return new TagValidationResult(/^https?:\/\/.+/.test(url), et("invalidUrl"));
       },
       renderer: (content: string, param?: string) => {
         const url = param ? param.replace(/^=/, '') : content;
@@ -287,8 +319,8 @@ export class BBCodeParser {
       allowNested: false,
       validator: (param?: string, content?: string) => {
         const email = param ? param.replace(/^=/, '') : content;
-        if (!email) return false;
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!email) return new TagValidationResult(false, et("missingEmail"));
+        return new TagValidationResult(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), et("invalidEmail"));
       },
       renderer: (content: string, param?: string) => {
         const email = param ? param.replace(/^=/, '') : content;
@@ -306,9 +338,9 @@ export class BBCodeParser {
       paramRequired: false,
       allowNested: false,
       validator: (param?: string) => {
-        if (!param) return true;
+        if (!param) return new TagValidationResult(true);
         const userId = param.replace(/^=/, '');
-        return /^\d+$/.test(userId);
+        return new TagValidationResult(/^\d+$/.test(userId), et("invalidUserId"));
       },
       renderer: (content: string, param?: string) => {
         if (param) {
@@ -329,8 +361,8 @@ export class BBCodeParser {
       allowNested: false,
       isBlock: true,
       validator: (_param?: string, content?: string) => {
-        if (!content) return false;
-        return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(content);
+        if (!content) return new TagValidationResult(false, et("missingUrl"));
+        return new TagValidationResult(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(content), et("invalidImageUrl"));
       },
       renderer: (content: string) => {
         return `<img alt="" src="${this.escapeHtml(content)}" loading="lazy" />`;
@@ -346,7 +378,7 @@ export class BBCodeParser {
       isBlock: true,
       validator: (_param?: string, content?: string) => {
         const videoId = content?.trim();
-        return !!videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId);
+        return new TagValidationResult(!!videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId), et("invalidYouTubeVideoId"));
       },
       renderer: (content: string) => {
         const videoId = content.trim();
@@ -362,8 +394,8 @@ export class BBCodeParser {
       allowNested: false,
       isBlock: true,
       validator: (_param?: string, content?: string) => {
-        if (!content) return false;
-        return /^https?:\/\/.+\.(mp3|wav|ogg|m4a)$/i.test(content);
+        if (!content) return new TagValidationResult(false, et("missingUrl"));
+        return new TagValidationResult(/^https?:\/\/.+\.(mp3|wav|ogg|m4a)$/i.test(content), et("invalidAudioUrl"));
       },
       renderer: (content: string) => {
         return `<audio controls preload="none" src="${this.escapeHtml(content)}"></audio>`;
@@ -501,7 +533,7 @@ export class BBCodeParser {
         valid: this.errors.length === 0
       };
     } catch (error) {
-      this.errors.push(`解析错误: ${error}`);
+      this.errors.push(et("parsingError", { error: error }));
       return {
         html: `<div class="bbcode">${this.escapeHtml(String(input))}</div>`,
         errors: [...this.errors],
@@ -605,9 +637,17 @@ export class BBCodeParser {
     const regex = new RegExp(`${openPattern}(.*?)${closePattern}`, 'gis');
 
     return text.replace(regex, (match, content) => {
-      if (tag.validator && !tag.validator(undefined, content)) {
-        this.errors.push(`标签 [${tag.name}] 的内容验证失败`);
-        return match;
+      if (tag.validator) {
+        const result = tag.validator(undefined, content);
+
+        if (!result.success)
+        {
+          this.errors.push(et("contentValidationFailed", {
+            tag: tag.name,
+            message: result.message,
+          }));
+          return match;
+        }
       }
 
       const processedContent = tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content);
@@ -649,9 +689,17 @@ export class BBCodeParser {
             content = typeof g2 === 'string' ? g2 : '';
           }
 
-          if (tag.validator && !tag.validator(param, content)) {
-            this.errors.push(`标签 [${tag.name}] 的参数验证失败: ${param}`);
-            return match;
+          if (tag.validator) {
+            const result = tag.validator(param, content);
+            if (!result.success)
+            {
+              this.errors.push(et("paramValidationFailed", {
+                tag: tag.name,
+                param: param,
+                message: result.message,
+              }));
+              return match;
+            }
           }
 
           // 不要处理 list
