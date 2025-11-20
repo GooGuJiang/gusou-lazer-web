@@ -625,21 +625,35 @@ export class BBCodeParser {
     let result = text;
 
     for (const pattern of patterns) {
-      result = result.replace(pattern, (match, param, content) => {
-        // 如果是无参数匹配，内容在第一个捕获组
-        if (!content) {
-          content = param;
-          param = undefined;
+      const isNoParam = pattern.source.includes(`\\[${tag.name}\\](.*?)\\[\\/${tag.name}\\]`);
+      result = result.replace(
+        pattern,
+        (match: string, g1: string, g2: string | number | undefined) => {
+          let param: string | undefined;
+          let content: string;
+
+          if (isNoParam) {
+            // 无参：[tag]content[/tag] —— g1 即内容
+            param = undefined;
+            content = g1;
+          } else {
+            // 有参：g1=参数 g2=内容
+            param = g1;
+            content = typeof g2 === 'string' ? g2 : '';
+          }
+
+          if (tag.validator && !tag.validator(param, content)) {
+            this.errors.push(`标签 [${tag.name}] 的参数验证失败: ${param}`);
+            return match;
+          }
+
+          // 不要处理 list
+          const processedContent = tag.name === 'list'
+            ? content
+            : (tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content));
+          return tag.renderer(processedContent, param);
         }
-        
-        if (tag.validator && !tag.validator(param, content)) {
-          this.errors.push(`标签 [${tag.name}] 的参数验证失败: ${param}`);
-          return match;
-        }
-        
-        const processedContent = tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content);
-        return tag.renderer(processedContent, param);
-      });
+      );
     }
 
     return result;
