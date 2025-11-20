@@ -31,7 +31,7 @@ export class BBCodeParser {
 
   private initializeTags(): void {
     // === 基础格式化标签 ===
-    
+
     // 粗体
     this.addTag({
       name: 'b',
@@ -381,7 +381,7 @@ export class BBCodeParser {
     if (typeof text !== 'string') {
       text = String(text || '');
     }
-    
+
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
@@ -405,7 +405,7 @@ export class BBCodeParser {
 
     const linksData = lines.slice(1);
     const links: string[] = [];
-    
+
     // 解析链接数据
     for (const line of linksData) {
       const trimmedLine = line.trim();
@@ -447,7 +447,7 @@ export class BBCodeParser {
               `<a class="imagemap__link" href="${safeHref}" style="${style}" title="${safeTitle}"></a>`
             );
           }
-        } catch (error) {
+        } catch {
           // 忽略解析错误的行
           continue;
         }
@@ -462,7 +462,7 @@ export class BBCodeParser {
     // 构建HTML（按官方格式）
     const imageHtml = `<img class="imagemap__image" loading="lazy" src="${this.escapeHtml(imageUrl)}" width="1280" height="720" alt="${this.escapeHtml(altText)}" />`;
     const linksHtml = links.join('');
-    
+
     return `<div class="imagemap">${imageHtml}${linksHtml}</div>`;
   }
 
@@ -471,17 +471,7 @@ export class BBCodeParser {
    */
   public parse(input: string): BBCodeParseResult {
     this.errors.length = 0;
-    
-    // 类型检查：确保输入是字符串
-    if (typeof input !== 'string') {
-      this.errors.push(`解析错误: 输入必须是字符串，但收到了 ${typeof input}`);
-      return {
-        html: `<div class="bbcode">无效的输入类型</div>`,
-        errors: [...this.errors],
-        valid: false
-      };
-    }
-    
+
     // 空输入检查
     if (!input || input.trim() === '') {
       return {
@@ -490,7 +480,7 @@ export class BBCodeParser {
         valid: true
       };
     }
-    
+
     try {
       const html = this.parseRecursive(input);
       const wrappedHtml = `<div class="bbcode">${html}</div>`;
@@ -514,11 +504,11 @@ export class BBCodeParser {
     if (typeof input !== 'string') {
       return this.escapeHtml(String(input || ''));
     }
-    
+
     let result = input;
-    
+
     // 按官方顺序处理：先处理块级元素，再处理内联元素
-    
+
     // === 块级元素 ===
     const blockTags = ['imagemap', 'box', 'spoilerbox', 'code', 'list', 'notice', 'quote', 'heading'];
     for (const tagName of blockTags) {
@@ -527,7 +517,7 @@ export class BBCodeParser {
         result = this.processTag(result, tag);
       }
     }
-    
+
     // === 内联元素 ===
     const inlineTags = ['audio', 'b', 'centre', 'c', 'color', 'email', 'img', 'i', 'size', 'spoiler', 's', 'strike', 'u', 'url', 'youtube', 'profile'];
     for (const tagName of inlineTags) {
@@ -536,13 +526,13 @@ export class BBCodeParser {
         result = this.processTag(result, tag);
       }
     }
-    
+
     // 处理自动链接（纯URL转换为链接）- 在所有BBCode处理之后
     result = this.processAutoLinks(result);
-    
+
     // 最后处理换行
     result = result.replace(/\n/g, '<br />');
-    
+
     return result;
   }
 
@@ -584,13 +574,13 @@ export class BBCodeParser {
     const openPattern = this.escapeRegex(tag.openTag);
     const closePattern = this.escapeRegex(tag.closeTag);
     const regex = new RegExp(`${openPattern}(.*?)${closePattern}`, 'gis');
-    
+
     return text.replace(regex, (match, content) => {
       if (tag.validator && !tag.validator(undefined, content)) {
         this.errors.push(`标签 [${tag.name}] 的内容验证失败`);
         return match;
       }
-      
+
       const processedContent = tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content);
       return tag.renderer(processedContent);
     });
@@ -604,14 +594,14 @@ export class BBCodeParser {
       // [tag="param"]content[/tag]
       new RegExp(`\\[${tag.name}="([^"]+)"\\](.*?)\\[\\/${tag.name}\\]`, 'gis'),
     ];
-    
+
     // 如果参数不是必需的，也支持无参数形式
     if (!tag.paramRequired) {
       patterns.push(new RegExp(`\\[${tag.name}\\](.*?)\\[\\/${tag.name}\\]`, 'gis'));
     }
-    
+
     let result = text;
-    
+
     for (const pattern of patterns) {
       result = result.replace(pattern, (match, param, content) => {
         // 如果是无参数匹配，内容在第一个捕获组
@@ -629,7 +619,7 @@ export class BBCodeParser {
         return tag.renderer(processedContent, param);
       });
     }
-    
+
     return result;
   }
 
@@ -642,7 +632,7 @@ export class BBCodeParser {
 export const bbcodeParser = new BBCodeParser();
 
 // 便捷函数
-export function parseBBCode(input: string | any): BBCodeParseResult {
+export function parseBBCode(input: unknown): BBCodeParseResult {
   // 确保输入是字符串
   if (typeof input !== 'string') {
     console.warn('parseBBCode: 输入不是字符串类型，尝试转换', { input, type: typeof input });
@@ -653,6 +643,6 @@ export function parseBBCode(input: string | any): BBCodeParseResult {
       input = String(input);
     }
   }
-  
-  return bbcodeParser.parse(input);
+
+  return bbcodeParser.parse(input as string);
 }
