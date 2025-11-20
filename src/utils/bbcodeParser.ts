@@ -225,22 +225,26 @@ export class BBCodeParser {
       paramRequired: false,
       allowNested: true,
       isBlock: true,
-      renderer: (content: string, param?: string) => {
-        // 处理列表项
-        const processedContent = content
-          .replace(/^\s*\[?\*\]?\s*/gm, '') // 移除开头的 [*]
-          .split(/\s*\[\*\]\s*/) // 用 [*] 分割
-          .filter(item => item.trim()) // 过滤空项
-          .map(item => `<li>${item}</li>`)
-          .join('');
-        
-        if (param && param !== '=') {
-          // 有序列表
-          return `<ol>${processedContent}</ol>`;
-        } else {
-          // 无序列表
-          return `<ol class="unordered">${processedContent}</ol>`;
+      renderer: (content: string, param?: string): string => {
+        // 去除首尾空白与 <br /> 前缀
+        const cleaned = content.replace(/^[\r\n]+|[\r\n]+$/g, '')
+            .replace(/^<br\s*\/?>/i, '').trim();
+
+        // 列表项解析
+        const segments = cleaned.split(/\[\*]/).map((seg: string) => seg.trim());
+        let items = segments.slice(1).filter((seg: string) => seg.length > 0);
+
+        // 回退策略：若未解析出项目，尝试逐行匹配以防输入格式轻微异常
+        // TODO: 是否需要
+        if (items.length === 0) {
+          items = cleaned.split(/\r?\n/)
+            .map((l: string) => l.trim())
+            .filter((l: string) => l.startsWith('[*]'))
+            .map((l: string) => l.replace(/^\[\*]\s*/, ''));
         }
+
+        const liHtml = items.map((item: string) => `<li>${this.parseRecursive(item)}</li>`).join('');
+        return (param && param !== '=') ? `<ol>${liHtml}</ol>` : `<ul>${liHtml}</ul>`;
       }
     });
 
