@@ -262,26 +262,11 @@ export class BBCodeParser {
       closeTag: '[/list]',
       hasParam: true,
       paramRequired: false,
-      allowNested: true,
+      // 避免整体递归破坏分隔符，由 renderer 逐项递归
+      allowNested: false,
       isBlock: true,
       renderer: (content: string, param?: string): string => {
-        // 去除首尾空白与 <br /> 前缀
-        const cleaned = content.replace(/^[\r\n]+|[\r\n]+$/g, '')
-            .replace(/^<br\s*\/?>/i, '').trim();
-
-        // 列表项解析
-        const segments = cleaned.split(/\[\*]/).map((seg: string) => seg.trim());
-        let items = segments.slice(1).filter((seg: string) => seg.length > 0);
-
-        // 回退策略：若未解析出项目，尝试逐行匹配以防输入格式轻微异常
-        // TODO: 是否需要
-        if (items.length === 0) {
-          items = cleaned.split(/\r?\n/)
-            .map((l: string) => l.trim())
-            .filter((l: string) => l.startsWith('[*]'))
-            .map((l: string) => l.replace(/^\[\*]\s*/, ''));
-        }
-
+        const items = this.splitTopLevelListItems(content);
         const liHtml = items.map((item: string) => `<li>${this.parseRecursive(item)}</li>`).join('');
         return (param && param !== '=') ? `<ol>${liHtml}</ol>` : `<ul>${liHtml}</ul>`;
       }
@@ -419,6 +404,66 @@ export class BBCodeParser {
     this.tags.set(tag.name, tag);
   }
 
+  // 仅在当前 list 顶层分割 [*]，支持嵌套 [list]
+  private splitTopLevelListItems(source: string): string[] {
+    const text = typeof source === 'string' ? source : String(source ?? '');
+    const items: string[] = [];
+    let depth = 1; // 顶层 [list] 的内容起始深度
+    let i = 0;
+    let current = '';
+    const len = text.length;
+
+    const pushCurrent = () => {
+      const trimmed = current.trim();
+      if (trimmed.length > 0) items.push(trimmed);
+      current = '';
+    };
+
+    while (i < len) {
+      const ch = text[i];
+      if (ch === '[') {
+        const close = text.indexOf(']', i + 1);
+        if (close === -1) {
+          current += ch;
+          i += 1;
+          continue;
+        }
+        const tagContent = text.slice(i + 1, close);
+        const tagLower = tagContent.trim().toLowerCase();
+
+        if (tagLower.startsWith('list')) {
+          depth += 1;
+          current += text.slice(i, close + 1);
+          i = close + 1;
+          continue;
+        }
+        if (tagLower === '/list') {
+          depth = Math.max(0, depth - 1);
+          current += text.slice(i, close + 1);
+          i = close + 1;
+          continue;
+        }
+        if (depth === 1 && tagLower === '*') {
+          // 顶层项分隔符
+          pushCurrent();
+          i = close + 1;
+          continue;
+        }
+
+        // 其他标签原样写入
+        current += text.slice(i, close + 1);
+        i = close + 1;
+        continue;
+      }
+
+      current += ch;
+      i += 1;
+    }
+
+    pushCurrent();
+    return items;
+  }
+
   private escapeHtml(text: string): string {
     // 类型检查
     if (typeof text !== 'string') {
@@ -552,8 +597,11 @@ export class BBCodeParser {
 
     // 按官方顺序处理：先处理块级元素，再处理内联元素
 
+    // 先单独处理可嵌套的同名块标签：list 需要平衡匹配
+    result = this.processListsBalanced(result);
+
     // === 块级元素 ===
-    const blockTags = ['imagemap', 'box', 'spoilerbox', 'code', 'list', 'notice', 'quote', 'heading'];
+    const blockTags = ['imagemap', 'box', 'spoilerbox', 'code', 'notice', 'quote', 'heading'];
     for (const tagName of blockTags) {
       const tag = this.tags.get(tagName);
       if (tag) {
@@ -577,6 +625,88 @@ export class BBCodeParser {
     result = result.replace(/\n/g, '<br />');
 
     return result;
+  }
+
+  // 基于深度平衡的 [list]...[/list] 处理，支持嵌套
+  private processListsBalanced(text: string): string {
+    let i = 0;
+    const len = text.length;
+    let out = '';
+
+    while (i < len) {
+      const startList = text.indexOf('[list', i);
+      if (startList === -1) {
+        out += text.slice(i);
+        break;
+      }
+      // 复制前置文本
+      out += text.slice(i, startList);
+
+      // 解析参数到右括号
+      const openBracketEnd = text.indexOf(']', startList + 1);
+      if (openBracketEnd === -1) {
+        // 不完整，作为普通文本处理
+        out += text.slice(startList);
+        break;
+      }
+
+      // 提取 param（若有）
+      const openContent = text.slice(startList + 1, openBracketEnd); // e.g. "list" 或 "list=1"
+      let param: string | undefined;
+      const eqIdx = openContent.indexOf('=');
+      if (eqIdx !== -1) {
+        param = openContent.slice(eqIdx + 1);
+        // 保留原样（不去引号）——与现有 renderer 兼容
+      }
+
+      // 扫描寻找匹配的闭合 [/list]
+      let depth = 1;
+      let j = openBracketEnd + 1;
+      let closingStart = -1;
+      while (j < len) {
+        const nextOpen = text.indexOf('[', j);
+        if (nextOpen === -1) break;
+        const nextClose = text.indexOf(']', nextOpen + 1);
+        if (nextClose === -1) break;
+        const tagContent = text.slice(nextOpen + 1, nextClose).trim().toLowerCase();
+        if (tagContent.startsWith('list')) {
+          depth += 1;
+        } else if (tagContent === '/list') {
+          depth -= 1;
+          if (depth === 0) {
+            closingStart = nextOpen;
+            j = nextClose + 1;
+            break;
+          }
+        }
+        j = nextClose + 1;
+      }
+
+      if (depth !== 0 || closingStart === -1) {
+        // 没有找到匹配闭合，当作普通文本
+        out += text.slice(startList);
+        break;
+      }
+
+      // 完整块：内容位于 openBracketEnd+1 ... (closing tag 的起始 '[')
+      const inner = text.slice(openBracketEnd + 1, closingStart);
+
+      // 使用现有 list 渲染器
+      const listTag = this.tags.get('list');
+      if (listTag) {
+        // list 的 renderer 负责逐项递归解析
+        const rendered = listTag.renderer(inner, param ? `=${param}` : undefined);
+        out += rendered;
+      } else {
+        // 不应发生：保底原样输出
+        out += text.slice(startList, j);
+      }
+
+      // 继续向后
+      i = j;
+    }
+
+    return out;
   }
 
   private processAutoLinks(text: string): string {
