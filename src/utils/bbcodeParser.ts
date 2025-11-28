@@ -607,19 +607,18 @@ export class BBCodeParser {
       }
 
       // 跳过 code/pre 标签内容自动链接
-      if (isInTag("code") || isInTag("pre")) return match;
-
-      return `<a rel="nofollow" href="${this.escapeHtml(match)}">${this.escapeHtml(match)}</a>`;
-
-      function isInTag(tagName: string) : boolean {
+      const isInside = (tagName: string) => {
         const start = text.lastIndexOf(`<${tagName}`, offset);
         if (start !== -1) {
           const close = text.indexOf(`</${tagName}>`, start);
           const openEnd = text.indexOf('>', start);
-          if (openEnd !== -1 && openEnd < offset && close !== -1 && close > offset) return true;
+          return openEnd !== -1 && openEnd < offset && close !== -1 && close > offset;
         }
         return false;
-      }
+      };
+      if (isInside('code') || isInside('pre')) return match;
+
+      return `<a rel="nofollow" href="${this.escapeHtml(match)}">${this.escapeHtml(match)}</a>`;
     });
   }
 
