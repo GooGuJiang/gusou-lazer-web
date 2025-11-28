@@ -78,6 +78,12 @@
   }
 }
 
+/* 标题样式，被 TailwindCSS 覆盖了需要重写 */
+.bbcode h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
 /* 剧透条样式 */
 .spoiler {
   background-color: #000;
@@ -95,8 +101,15 @@
 }
 
 /* 列表样式 */
-.bbcode ol.unordered {
+/* Tailwind 会移除 ul/ol 的默认缩进，依然重写 */
+.bbcode ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+}
+
+.bbcode ul {
   list-style-type: disc;
+  padding-left: 1.25rem;
 }
 
 .bbcode__list-title {
