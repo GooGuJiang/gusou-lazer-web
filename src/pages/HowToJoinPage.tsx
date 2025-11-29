@@ -1,40 +1,138 @@
 import React, { useState } from 'react';
-import { FaDownload, FaExclamationTriangle, FaCog, FaGamepad, FaCopy, FaCheck } from 'react-icons/fa';
+import { 
+  FaDownload, 
+  FaExclamationTriangle, 
+  FaGamepad, 
+  FaCopy, 
+  FaCheck, 
+  FaWindows, 
+  FaLinux, 
+  FaApple, 
+  FaAndroid, 
+  FaGlobe,
+  FaChevronLeft
+} from 'react-icons/fa';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import { useTranslation } from 'react-i18next';
 import 'react-photo-view/dist/react-photo-view.css';
 
-const HowToJoinPage: React.FC = () => {
-  const { t } = useTranslation();
-  const [copiedText, setCopiedText] = useState<string | null>(null);
+// --- Sub-components for cleaner code ---
 
-  const copyToClipboard = async (text: string, label: string) => {
+/**
+ * A copy-paste snippet component that looks like a code block
+ */
+const CodeSnippet: React.FC<{ text: string; label: string }> = ({ text, label }) => {
+  const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
+
+  const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedText(label);
-      setTimeout(() => setCopiedText(null), 2000);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error(`${t('howToJoin.copyFailed')}`, err);
+      console.error("Failed to copy", err);
     }
   };
 
-  const CopyButton: React.FC<{ text: string; label: string }> = ({ text, label }) => (
-    <button
-      onClick={() => copyToClipboard(text, label)}
-      className="ml-2 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-      title={t('howToJoin.clickToCopy')}
-    >
-      {copiedText === label ? (
-        <FaCheck className="w-3 h-3 text-green-500" />
-      ) : (
-        <FaCopy className="w-3 h-3 text-gray-500" />
-      )}
-    </button>
+  return (
+    <div className="flex flex-col gap-1 w-full max-w-md">
+      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">
+        {label}
+      </span>
+      <div 
+        onClick={handleCopy}
+        className="group relative flex items-center justify-between bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-3 cursor-pointer hover:border-osu-pink/50 transition-all duration-200"
+      >
+        <code className="font-mono text-sm sm:text-base text-gray-800 dark:text-gray-200 truncate pr-8 select-all">
+          {text}
+        </code>
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          {copied ? (
+            <FaCheck className="w-4 h-4 text-green-500" />
+          ) : (
+            <FaCopy className="w-4 h-4 text-gray-400 group-hover:text-osu-pink transition-colors" />
+          )}
+        </div>
+        {/* Tooltip hint */}
+        <span className="absolute -top-8 right-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          {t('howToJoin.clickToCopy')}
+        </span>
+      </div>
+    </div>
   );
+};
+
+/**
+ * Styled Download Button Card
+ */
+const DownloadCard: React.FC<{ 
+  href: string; 
+  icon: React.ReactNode; 
+  title: string; 
+  subtitle: string;
+  variant?: 'primary' | 'secondary' 
+}> = ({ href, icon, title, subtitle, variant = 'primary' }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
+      variant === 'primary' 
+        ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-osu-pink dark:hover:border-osu-pink' 
+        : 'bg-gray-50 dark:bg-gray-800/50 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+    }`}
+  >
+    <div className={`p-3 rounded-full ${
+      variant === 'primary' 
+        ? 'bg-osu-pink/10 text-osu-pink' 
+        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+    }`}>
+      {icon}
+    </div>
+    <div className="flex-1 min-w-0">
+      <h4 className="font-bold text-gray-900 dark:text-white truncate">{title}</h4>
+      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{subtitle}</p>
+    </div>
+    <FaDownload className="text-gray-300 dark:text-gray-600" />
+  </a>
+);
+
+/**
+ * Step Container
+ */
+const StepItem: React.FC<{ number: number; children: React.ReactNode }> = ({ number, children }) => (
+  <div className="flex gap-4 sm:gap-6">
+    <div className="flex-shrink-0 flex flex-col items-center">
+      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-osu-pink to-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-osu-pink/20">
+        {number}
+      </div>
+      {/* Connector Line */}
+      <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-2 min-h-[2rem]"></div>
+    </div>
+    <div className="flex-1 pb-8">
+      {children}
+    </div>
+  </div>
+);
+
+// --- Main Page Component ---
+
+const HowToJoinPage: React.FC = () => {
+  const { t } = useTranslation();
 
   return (
-    <PhotoProvider>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 sm:py-12 lg:py-16">
+    <PhotoProvider maskOpacity={0.8}>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+        
+        {/* Header Section */}
+        <div className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
+          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+             <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+              {t('howToJoin.title')}
+            </h1>
+            <p className="text-l      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 sm:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* 页面标题 */}
           <div className="text-center mb-12 sm:mb-16">
