@@ -439,7 +439,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 施工中 */}
-        <div className="p-3 md:rounded-lg h-[500px] flex flex-col justify-center" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="p-3 md:rounded-b-lg h-[500px] flex flex-col justify-center" style={{ background: 'var(--bg-secondary)' }}>
           <div className="flex justify-center items-center h-full">
             <p className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
               <FaTools className="text-lg" />
