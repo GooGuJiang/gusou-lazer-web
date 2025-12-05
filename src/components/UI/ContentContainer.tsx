@@ -20,12 +20,14 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [measuredHeight, setMeasuredHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkHeight = () => {
       if (contentRef.current) {
         const contentHeight = contentRef.current.scrollHeight;
+        setMeasuredHeight(contentHeight);
         setShowButton(contentHeight > maxHeight);
       }
     };
@@ -51,7 +53,9 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         ref={contentRef}
         className="overflow-hidden transition-all duration-300 ease-in-out"
         style={{
-          maxHeight: !isExpanded && showButton ? `${maxHeight}px` : 'none',
+          maxHeight: measuredHeight
+            ? `${showButton ? (isExpanded ? measuredHeight : Math.min(measuredHeight, maxHeight)) : measuredHeight}px`
+            : undefined,
         }}
       >
         {children}
