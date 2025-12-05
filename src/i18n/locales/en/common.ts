@@ -68,4 +68,6 @@ export const common = {
   score: 'score',
   noDataFound: 'No data found',
   members: 'members',
+  showMore: 'Show more',
+  showLess: 'Show less',
 } as const;

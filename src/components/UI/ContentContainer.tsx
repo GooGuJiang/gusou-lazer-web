@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { t } from "i18next";
 
 interface ContentContainerProps {
   children: React.ReactNode;
@@ -13,8 +14,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   children,
   maxHeight = 400,
   className = '',
-  expandText = '显示更多',
-  collapseText = '收起',
+  expandText = t("common.showMore"),
+  collapseText = t("common.showLess"),
   showExpandButton = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
