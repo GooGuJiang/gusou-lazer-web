@@ -22,7 +22,6 @@ import MessagesPage from './pages/MessagesPage';
 import HowToJoinPage from './pages/HowToJoinPage';
 import BeatmapPage from './pages/BeatmapPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import BBCodeTester from './components/BBCode/BBCodeTester';
 
 function App() {
   const { t } = useTranslation();
@@ -61,7 +60,6 @@ function App() {
                 </div>
               }
             />
-            <Route path="bbcode-test" element={<BBCodeTester />} />
             <Route
               path="*"
               element={
