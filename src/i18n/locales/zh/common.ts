@@ -68,4 +68,6 @@ export const common = {
   score: '分数',
   noDataFound: '暂无数据',
   members: '名成员',
+  showMore: '显示更多',
+  showLess: '收起',
 } as const;
