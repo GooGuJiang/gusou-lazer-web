@@ -78,4 +78,21 @@ export const auth = {
       invalidCode: '无效或过期的重置验证码',
     },
   },
+  context: {
+    cache: {
+      usingCachedState: '使用缓存的登录状态',
+      fetchingFromApi: '缓存无效，从 API 获取用户信息',
+    },
+    messages: {
+      welcomeBack: '欢迎回来，{{username}}！',
+      registerSuccess: '账户创建成功！',
+      logoutSuccess: '成功退出登录',
+    },
+    errors: {
+      username: '用户名：{{message}}',
+      email: '邮箱：{{message}}',
+      password: '密码：{{message}}',
+      hookUsage: 'useAuth 必须在 AuthProvider 中使用',
+    },
+  },
 } as const;

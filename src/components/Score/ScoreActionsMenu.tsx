@@ -42,7 +42,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
     open: isOpen,
     onOpenChange: setIsOpen,
     middleware: [
-      offset(8),
+      offset(12),
       flip({ padding: 8 }),
       shift({ padding: 8 }),
     ],
@@ -123,7 +123,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
       <button
         ref={refs.setReference}
         {...getReferenceProps()}
-        className={`w-8 h-8 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors text-gray-600 dark:text-gray-400 ${className}`}
+        className={`h-8 px-3 rounded-lg hover:bg-gray-200/60 dark:hover:bg-gray-700/60 flex items-center justify-center transition-colors text-gray-600 dark:text-gray-400 sm:mr ${className}`}
         aria-label={t('profile.bestScores.actions.more')}
       >
         <FaEllipsisV className="w-3 h-3" />
@@ -170,4 +170,3 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
 };
 
 export default ScoreActionsMenu;
-
