@@ -2,20 +2,8 @@
  * BBCode Parser for osu! style BBCode
  * 基于官方osu-web BBCodeFromDB.php实现，确保输出与官方网站一致
  */
-import i18next from 'i18next';
+import { t, type TranslationOptions } from "./i18n.ts";
 
-// useTranslation() 钩子不可用，直接引用
-type TranslationOptions = { [key: string]: unknown } | undefined;
-function t(key: string, options?: TranslationOptions): string {
-  if (i18next.isInitialized) {
-    try {
-      return i18next.t(key, options);
-    } catch {
-      return key;
-    }
-  }
-  return key;
-}
 
 // 用于翻译错误消息的便捷方法
 function et(key: string, options?: TranslationOptions): string {
