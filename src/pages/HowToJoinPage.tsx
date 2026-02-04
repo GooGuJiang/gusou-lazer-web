@@ -167,56 +167,61 @@ const HowToJoinPage: React.FC = () => {
                     {t('howToJoin.method1.steps.step2.description')}
                   </h3>
                   <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
-                    <div className="flex flex-col lg:flex-row gap-6 items-start">
-                      {/* Left: Copy section with character */}
-                      <div className="flex-1 w-full">
-                        <div className="flex items-end gap-0">
-                          <div className="flex-1">
-                            <CodeSnippet 
-                              label="Server Address"
-                              text="lazer-api.g0v0.top" 
-                            />
-                          </div>
-                          {/* Character pointing to copy button */}
-                          <div className="hidden sm:block flex-shrink-0 -ml-8 -mb-2">
-                            <img 
-                              src="/htj/p2.webp" 
-                              alt="Character pointing"
-                              className="w-24 h-auto object-contain"
-                            />
+                    {/* Copy section with character */}
+                    <div className="relative mb-4">
+                      <div className="max-w-lg">
+                        <CodeSnippet 
+                          label="Server Address"
+                          text="lazer-api.g0v0.top" 
+                        />
+                      </div>
+                      {/* Character pointing to copy button - absolute positioned */}
+                      <div className="hidden sm:block absolute top-0 z-10 pointer-events-none mt-[-35px]" style={{ left: 'min(100%, 32rem)', marginLeft: '-5rem' }}>
+                        <img 
+                          src="/htj/p2.webp" 
+                          alt="Character pointing"
+                          className="w-36 h-auto object-contain"
+                        />
+                      </div>
+                    </div>
+                    {/* Screenshot below */}
+                    <div className="w-full max-w-xs">
+                       <PhotoView src="/image/join_photos/1.png">
+                        <div className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                          <img 
+                            src="/image/join_photos/1.png" 
+                            alt={t('howToJoin.method1.steps.step2.imageAlt')}
+                            className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">View</span>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-500 mt-4 leading-relaxed">
-                          {t('howToJoin.method1.steps.step2.imageHint')}
-                        </p>
-                      </div>
-                      {/* Right: Screenshot */}
-                      <div className="w-full lg:w-56 flex-shrink-0">
-                         <PhotoView src="/image/join_photos/1.png">
-                          <div className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                            <img 
-                              src="/image/join_photos/1.png" 
-                              alt={t('howToJoin.method1.steps.step2.imageAlt')}
-                              className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">View</span>
-                            </div>
-                          </div>
-                        </PhotoView>
-                      </div>
+                      </PhotoView>
                     </div>
                   </div>
                 </StepItem>
 
                 {/* Step 3 */}
                 <StepItem number={3}>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                    {t('howToJoin.method1.steps.step3.description')}
-                  </h3>
-                  <p className="text-gray-500 dark:text-gray-400 mt-1">
-                    Enjoy the game!
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {t('howToJoin.method1.steps.step3.description')}
+                      </h3>
+                      <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        Enjoy the game!
+                      </p>
+                    </div>
+                    {/* Character */}
+                    <div className="hidden sm:block flex-shrink-0 mt-4">
+                      <img 
+                        src="/htj/p3.webp" 
+                        alt="Character"
+                        className="w-40 h-auto object-contain"
+                      />
+                    </div>
+                  </div>
                 </StepItem>
               </div>
             </div>
@@ -242,10 +247,10 @@ const HowToJoinPage: React.FC = () => {
               </div>
 
               {/* Warning Box */}
-              <div className="bg-amber-50 dark:bg-amber-900/10 border-l-4 border-amber-500 p-4 mb-8 rounded-r-lg">
-                <div className="flex gap-3">
+              <div className="bg-amber-50 dark:bg-amber-900/10 border-l-4 border-amber-500 p-4 mb-8 rounded-r-lg relative overflow-visible">
+                <div className="flex gap-3 items-start">
                   <FaExclamationTriangle className="text-amber-500 text-xl flex-shrink-0 mt-0.5" />
-                  <div>
+                  <div className="flex-1 sm:mr-28">
                     <h4 className="font-bold text-amber-800 dark:text-amber-400 text-sm">
                       {t('howToJoin.method2.warning.title')}
                     </h4>
@@ -253,6 +258,14 @@ const HowToJoinPage: React.FC = () => {
                       {t('howToJoin.method2.warning.description')}
                     </p>
                   </div>
+                </div>
+                {/* Character - absolute positioned to not affect height */}
+                <div className="hidden sm:block absolute right-2 bottom-0 pointer-events-none">
+                  <img 
+                    src="/htj/p6.webp" 
+                    alt="Character"
+                    className="w-32 h-auto object-contain translate-y-9 translate-x-4"
+                  />
                 </div>
               </div>
 
