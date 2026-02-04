@@ -8,7 +8,6 @@ import {
   FaWindows, 
   FaLinux, 
   FaApple, 
-  FaAndroid,
   FaChevronLeft
 } from 'react-icons/fa';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
@@ -41,21 +40,31 @@ const CodeSnippet: React.FC<{ text: string; label: string }> = ({ text, label })
       </span>
       <div 
         onClick={handleCopy}
-        className="group relative flex items-center justify-between bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-3 cursor-pointer hover:border-osu-pink/50 transition-all duration-200"
+        className={`group relative flex items-center justify-between bg-gray-100 dark:bg-gray-900 border rounded-xl p-3 cursor-pointer transition-all duration-200 active:scale-[0.98] ${
+          copied 
+            ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
+            : 'border-gray-200 dark:border-gray-700 hover:border-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800'
+        }`}
       >
-        <code className="font-mono text-sm sm:text-base text-gray-800 dark:text-gray-200 truncate pr-8 select-all">
+        <code className="font-mono text-sm sm:text-base text-gray-800 dark:text-gray-200 truncate pr-12 select-all">
           {text}
         </code>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all duration-200 ${
+          copied 
+            ? 'bg-green-500 text-white' 
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 group-hover:bg-osu-pink group-hover:text-white'
+        }`}>
           {copied ? (
-            <FaCheck className="w-4 h-4 text-green-500" />
+            <FaCheck className="w-4 h-4" />
           ) : (
-            <FaCopy className="w-4 h-4 text-gray-400 group-hover:text-osu-pink transition-colors" />
+            <FaCopy className="w-4 h-4" />
           )}
         </div>
         {/* Tooltip hint */}
-        <span className="absolute -top-8 right-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-          {t('howToJoin.clickToCopy')}
+        <span className={`absolute -top-8 right-0 text-white text-xs px-2 py-1 rounded pointer-events-none transition-opacity ${
+          copied ? 'bg-green-600 opacity-100' : 'bg-black opacity-0 group-hover:opacity-100'
+        }`}>
+          {copied ? t('common.copied') : t('howToJoin.clickToCopy')}
         </span>
       </div>
     </div>
@@ -63,47 +72,12 @@ const CodeSnippet: React.FC<{ text: string; label: string }> = ({ text, label })
 };
 
 /**
- * Styled Download Button Card
- */
-const DownloadCard: React.FC<{ 
-  href: string; 
-  icon: React.ReactNode; 
-  title: string; 
-  subtitle: string;
-  variant?: 'primary' | 'secondary' 
-}> = ({ href, icon, title, subtitle, variant = 'primary' }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
-      variant === 'primary' 
-        ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-osu-pink dark:hover:border-osu-pink' 
-        : 'bg-gray-50 dark:bg-gray-800/50 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
-    }`}
-  >
-    <div className={`p-3 rounded-full ${
-      variant === 'primary' 
-        ? 'bg-osu-pink/10 text-osu-pink' 
-        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-    }`}>
-      {icon}
-    </div>
-    <div className="flex-1 min-w-0">
-      <h4 className="font-bold text-gray-900 dark:text-white truncate">{title}</h4>
-      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{subtitle}</p>
-    </div>
-    <FaDownload className="text-gray-300 dark:text-gray-600" />
-  </a>
-);
-
-/**
  * Step Container
  */
 const StepItem: React.FC<{ number: number; children: React.ReactNode }> = ({ number, children }) => (
   <div className="flex gap-4 sm:gap-6">
     <div className="flex-shrink-0 flex flex-col items-center">
-      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-osu-pink to-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-osu-pink/20">
+      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-osu-pink text-white flex items-center justify-center font-bold text-lg">
         {number}
       </div>
       {/* Connector Line */}
@@ -122,40 +96,36 @@ const HowToJoinPage: React.FC = () => {
 
   return (
     <PhotoProvider maskOpacity={0.8}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-        
-        {/* Header Section */}
-        <div className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800">
-          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
-          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-             <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+      <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          
+          {/* Page Header */}
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {t('howToJoin.title')}
             </h1>
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
               {t('howToJoin.subtitle')}
             </p>
           </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-8">
           
           {/* --- Method 1: Custom Client (Recommended) --- */}
-          <section className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mb-12 relative">
+          <section className="bg-card rounded-xl shadow-sm border-card overflow-hidden mb-6 relative">
             {/* Top Badge */}
-            <div className="absolute top-0 right-0 bg-gradient-to-l from-osu-pink to-purple-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl shadow-sm">
+            <div className="absolute top-0 right-0 bg-osu-pink text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl">
                {t('howToJoin.method1.recommended')}
             </div>
 
-            <div className="p-6 sm:p-10">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 bg-osu-pink/10 rounded-2xl">
-                   <FaGamepad className="w-8 h-8 text-osu-pink" />
+            <div className="p-6">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-osu-pink/10 rounded-xl">
+                   <FaGamepad className="w-7 h-7 text-osu-pink" />
                 </div>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {t('howToJoin.method1.title')}
                   </h2>
-                  <p className="text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {t('howToJoin.method1.description')}
                   </p>
                 </div>
@@ -169,24 +139,25 @@ const HowToJoinPage: React.FC = () => {
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                     {t('howToJoin.method1.steps.step1.title')}
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
-                    <DownloadCard 
+                  <div className="flex items-center gap-0">
+                    {/* Download button */}
+                    <a
                       href="https://github.com/GooGuTeam/osu/releases/latest"
-                      icon={<FaWindows className="w-5 h-5" />}
-                      title={t('howToJoin.method1.steps.step1.downloadPc')}
-                      subtitle={t('howToJoin.method1.steps.step1.pcVersion')}
-                    />
-                     <DownloadCard 
-                      href="https://pan.wo.cn/s/1D1e0H30675"
-                      icon={<FaAndroid className="w-5 h-5" />}
-                      title={t('howToJoin.method1.steps.step1.downloadAndroidDomestic')}
-                      subtitle={t('howToJoin.method1.steps.step1.androidVersion')}
-                    />
-                  </div>
-                  <div className="mt-3">
-                     <a href="#" className="text-sm text-gray-500 hover:text-osu-pink transition-colors underline decoration-dotted">
-                        {t('howToJoin.method1.steps.step1.downloadAndroidOverseas')}
-                     </a>
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 px-10 py-4 bg-osu-pink text-white font-bold rounded-xl shadow-lg shadow-osu-pink/20 transition-all duration-200 hover:bg-osu-pink/90 hover:scale-105 hover:shadow-xl hover:shadow-osu-pink/30 active:scale-95"
+                    >
+                      <FaDownload className="w-5 h-5" />
+                      <span>{t('howToJoin.method1.steps.step1.downloadClient')}</span>
+                    </a>
+                    {/* Character pointing to button */}
+                    <div className="hidden sm:block flex-shrink-0 -ml-2">
+                      <img 
+                        src="/htj/p1.webp" 
+                        alt="Character"
+                        className="w-32 h-auto object-contain"
+                      />
+                    </div>
                   </div>
                 </StepItem>
 
@@ -195,18 +166,32 @@ const HowToJoinPage: React.FC = () => {
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                     {t('howToJoin.method1.steps.step2.description')}
                   </h3>
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
-                    <div className="flex flex-col md:flex-row gap-8 items-start">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
+                    <div className="flex flex-col lg:flex-row gap-6 items-start">
+                      {/* Left: Copy section with character */}
                       <div className="flex-1 w-full">
-                        <CodeSnippet 
-                          label="Server Address"
-                          text="lazer-api.g0v0.top" 
-                        />
+                        <div className="flex items-end gap-0">
+                          <div className="flex-1">
+                            <CodeSnippet 
+                              label="Server Address"
+                              text="lazer-api.g0v0.top" 
+                            />
+                          </div>
+                          {/* Character pointing to copy button */}
+                          <div className="hidden sm:block flex-shrink-0 -ml-8 -mb-2">
+                            <img 
+                              src="/htj/p2.webp" 
+                              alt="Character pointing"
+                              className="w-24 h-auto object-contain"
+                            />
+                          </div>
+                        </div>
                         <p className="text-sm text-gray-500 mt-4 leading-relaxed">
                           {t('howToJoin.method1.steps.step2.imageHint')}
                         </p>
                       </div>
-                      <div className="w-full md:w-64 flex-shrink-0">
+                      {/* Right: Screenshot */}
+                      <div className="w-full lg:w-56 flex-shrink-0">
                          <PhotoView src="/image/join_photos/1.png">
                           <div className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                             <img 
@@ -238,14 +223,14 @@ const HowToJoinPage: React.FC = () => {
           </section>
 
           {/* --- Method 2: Authlib Injector --- */}
-          <section className="bg-white dark:bg-slate-800 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
-            <div className="p-6 sm:p-10">
+          <section className="bg-card rounded-xl shadow-sm border-card overflow-hidden mb-6">
+            <div className="p-6">
               <div className="flex items-center gap-4 mb-6">
-                 <div className="p-3 bg-osu-blue/10 rounded-2xl">
-                   <FaGamepad className="w-8 h-8 text-osu-blue" />
+                 <div className="p-3 bg-blue-500/10 rounded-xl">
+                   <FaGamepad className="w-7 h-7 text-blue-500" />
                 </div>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {t('howToJoin.method2.title')}
                   </h2>
                   <div className="flex gap-3 mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -307,7 +292,7 @@ const HowToJoinPage: React.FC = () => {
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                      {t('howToJoin.method2.steps.step3.description')}
                   </h3>
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700 grid gap-4">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700 grid gap-4">
                      <CodeSnippet 
                         label={t('howToJoin.method2.steps.step3.apiUrl')}
                         text="https://lazer-api.g0v0.top"
@@ -330,10 +315,10 @@ const HowToJoinPage: React.FC = () => {
           </section>
 
           {/* Footer Back Button */}
-          <div className="flex justify-center mt-16 mb-8">
+          <div className="flex justify-center mt-8">
             <button
               onClick={() => window.history.back()}
-              className="group flex items-center gap-2 px-8 py-4 bg-white dark:bg-slate-800 text-gray-900 dark:text-white font-semibold rounded-full shadow-lg shadow-gray-200/50 dark:shadow-black/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+              className="group flex items-center gap-2 px-6 py-3 bg-card border-card text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <FaChevronLeft className="text-osu-pink group-hover:-translate-x-1 transition-transform" />
               {t('common.backToPrevious')}

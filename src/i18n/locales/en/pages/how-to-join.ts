@@ -16,7 +16,8 @@ export const howToJoinPage = {
           "androidVersion": "Android Version:",
           "downloadPc": "Download from GitHub Releases",
           "downloadAndroidDomestic": "Download (China Only)",
-          "downloadAndroidOverseas": "Download (For global network)"
+          "downloadAndroidOverseas": "Download (For global network)",
+          "downloadClient": "Download Custom Client"
         },
         "step2": {
           "title": "Launch the game, go to Settings → Online, and enter in the \"Custom API Server URL\" field:",

@@ -16,7 +16,8 @@ export const howToJoinPage = {
           "androidVersion": "安卓版本：",
           "downloadPc": "从 GitHub Releases 下载",
           "downloadAndroidDomestic": "国内网盘下载",
-          "downloadAndroidOverseas": "国外网盘下载"
+          "downloadAndroidOverseas": "国外网盘下载",
+          "downloadClient": "下载自定义客户端"
         },
         "step2": {
           "title": "启动游戏，打开 设置 → 在线，在\"Custom API Server URL\"字段中填入：",
