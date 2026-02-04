@@ -1,8 +1,10 @@
 export const homePage = {
   hero: {
     tagline: 'Probably the best osu! private server',
-    description:
-      'g0v0! is a brand-new osu! private server <bold>built for the lazer client</bold>. We support the standard / taiko / catch / mania rulesets, RX/AP pp calculation, and unlimited renames so you can play your way.',
+    descriptionPrefix: 'g0v0! is a brand-new osu! private server ',
+    descriptionHighlight: 'built for the lazer client',
+    descriptionSuffix:
+      '. We support the standard / taiko / catch / mania rulesets, RX/AP pp calculation, and unlimited renames so you can play your way.',
     statusOperational: 'All services are operational',
     statusCommunity: 'Join our QQ / Discord community for support and updates',
     joinCta: 'Join Now',

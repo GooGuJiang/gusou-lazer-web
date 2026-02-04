@@ -1,8 +1,10 @@
 export const homePage = {
   hero: {
     tagline: '可能是最好的 osu! 私服',
-    description:
-      'g0v0! 是一个全新的<bold>支持 lazer 客户端</bold>的 osu! 第三方服务器。提供了 standard / taiko / catch / mania 四大模式支持，支持 RX/AP pp计算与无限制改名，让你的节奏旅程更自由。',
+    descriptionPrefix: 'g0v0! 是一个全新的',
+    descriptionHighlight: '支持 lazer 客户端',
+    descriptionSuffix:
+      '的 osu! 第三方服务器。提供了 standard / taiko / catch / mania 四大模式支持，支持 RX/AP pp计算与无限制改名，让你的节奏旅程更自由。',
     statusOperational: '服务正常运行中',
     statusCommunity: '加入 QQ / Discord 社区获取支持与更新',
     joinCta: '快来加入',

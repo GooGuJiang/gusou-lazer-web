@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ import {
   FaGithub,
 } from 'react-icons/fa';
 
-// 果冻动画样式
+// 果冻动画 + 呼吸动画样式
 const jellyKeyframes = `
   @keyframes jelly {
     0%, 100% {
@@ -35,45 +35,21 @@ const jellyKeyframes = `
       transform: scale(1.12, 1.08) translateY(-3px);
     }
   }
+  
+  @keyframes breathe {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+  }
 `;
 
 const HeroSection: React.FC = () => {
   const { t, i18n } = useTranslation();
 
-  // 用于存储分割后的文本字符
-  const [descriptionChars, setDescriptionChars] = useState<Array<{ char: string; isBold: boolean }>>([]);
 
-  // 分割文本为字符的函数
-  const splitTextIntoChars = (text: string) => {
-    const chars: Array<{ char: string; isBold: boolean }> = [];
-    let i = 0;
-    let isBold = false;
-
-    while (i < text.length) {
-      if (text.substring(i, i + 6) === '<bold>') {
-        isBold = true;
-        i += 6;
-        continue;
-      }
-
-      if (text.substring(i, i + 7) === '</bold>') {
-        isBold = false;
-        i += 7;
-        continue;
-      }
-
-      chars.push({ char: text[i], isBold });
-      i++;
-    }
-
-    return chars;
-  };
-
-  useEffect(() => {
-    const description = t('hero.description');
-    const chars = splitTextIntoChars(description);
-    setDescriptionChars(chars);
-  }, [t, i18n.language]);
 
   const isEN = i18n?.language?.toLowerCase().startsWith('en') ?? false;
 
@@ -98,35 +74,121 @@ const HeroSection: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
             {/* 左侧：标题、副标题、描述 */}
             <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 sm:space-y-8">
-              {/* Logo + 标题 */}
+              {/* 标题 */}
               <div className="flex items-center justify-center lg:justify-start">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 flex items-center justify-center mr-3 sm:mr-4 md:mr-5 lg:mr-6 p-1 sm:p-2">
-                  <img src="/image/logos/logo.svg" alt={t('common.brandAlt')} className="w-full h-full object-contain drop-shadow-lg" />
+                <div className="relative">
+                  {/* 泛光层 - 模糊效果 */}
+                  <h1
+                    aria-hidden="true"
+                    className="absolute inset-0 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight blur-xl opacity-70"
+                  >
+                    <span className="gradient-text">{t('common.brandName')}</span>
+                  </h1>
+                  {/* 原标题层 */}
+                  <h1 className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
+                    <span className="gradient-text">{t('common.brandName')}</span>
+                  </h1>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
-                  <span className="gradient-text">{t('common.brandName')}</span>
-                </h1>
               </div>
 
               {/* 副标题 */}
-              <h2
-                lang={isEN ? 'en' : undefined}
-                className={`text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-700 dark:text-gray-200 leading-snug tracking-tight max-w-2xl ${isEN ? 'lg:max-w-[36ch] xl:max-w-[42ch]' : 'lg:max-w-[32ch]'}`}
-              >
-                {t('hero.tagline')}
-              </h2>
+              <div className="relative">
+                {/* 泛光层 - 模糊效果 */}
+                <h2
+                  aria-hidden="true"
+                  lang={isEN ? 'en' : undefined}
+                  className={`absolute inset-0 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-700 dark:text-gray-200 leading-snug tracking-tight max-w-2xl blur-lg opacity-60 ${isEN ? 'lg:max-w-[36ch] xl:max-w-[42ch]' : 'lg:max-w-[32ch]'}`}
+                >
+                  {t('hero.tagline')}
+                </h2>
+                {/* 原副标题层 */}
+                <h2
+                  lang={isEN ? 'en' : undefined}
+                  className={`relative text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-700 dark:text-gray-200 leading-snug tracking-tight max-w-2xl ${isEN ? 'lg:max-w-[36ch] xl:max-w-[42ch]' : 'lg:max-w-[32ch]'}`}
+                >
+                  {t('hero.tagline')}
+                </h2>
+              </div>
 
               {/* 描述文本 */}
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-xl lg:max-w-2xl leading-relaxed">
-                {descriptionChars.map((charObj, index) => (
+                {t('hero.descriptionPrefix')}
+                <span className="relative inline-block">
+                  {/* 泛光层 */}
                   <span
-                    key={index}
-                    className={`inline-block ${charObj.isBold ? 'font-bold text-profile-color' : ''}`}
+                    aria-hidden="true"
+                    className="absolute inset-0 font-bold text-profile-color blur-md opacity-70"
                   >
-                    {charObj.char === ' ' ? '\u00A0' : charObj.char}
+                    {t('hero.descriptionHighlight')}
                   </span>
-                ))}
+                  {/* 原文本层 */}
+                  <span className="relative font-bold text-profile-color">
+                    {t('hero.descriptionHighlight')}
+                  </span>
+                </span>
+                {t('hero.descriptionSuffix')}
               </p>
+
+              {/* 社区按钮 */}
+              <div className="w-full max-w-sm sm:max-w-xl lg:max-w-2xl">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:gap-3 w-full">
+                  <a
+                    href="https://qm.qq.com/q/Uw8tOkgJSS"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  >
+                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                      <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
+                    </div>
+                    <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                      <span className="font-semibold text-xs sm:text-sm text-center">1059561526</span>
+                    </div>
+                  </a>
+
+                  <a
+                    href="https://discord.gg/AhzJXXWYfF"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  >
+                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                      <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
+                    </div>
+                    <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                      <span className="font-semibold text-xs sm:text-sm text-center">{t('hero.community.discordTag')}</span>
+                    </div>
+                  </a>
+
+                  <a
+                    href="https://github.com/GooGuTeam"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  >
+                    <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                      <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
+                    </div>
+                    <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
+                      <span className="font-semibold text-xs sm:text-sm text-center">GooGuTeam</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              {/* 加入按钮 */}
+              <div className="w-full max-w-sm sm:max-w-xl lg:max-w-2xl">
+                <Link
+                  to="/how-to-join"
+                  className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium shadow-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
+                >
+                  <FaRocket className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {t('hero.joinCta')}
+                </Link>
+              </div>
             </div>
 
             {/* 右侧：带泛光效果的图片 */}
@@ -148,70 +210,6 @@ const HeroSection: React.FC = () => {
                   alt="g0v0"
                   className="relative w-full h-auto object-contain rounded-2xl"
                 />
-              </div>
-            </div>
-          </div>
-
-          {/* 下方内容区域 */}
-          <div className="mt-10 sm:mt-12 md:mt-16 flex flex-col items-center space-y-6 sm:space-y-8">
-            {/* 加入按钮 */}
-            <div className="w-full max-w-sm sm:max-w-md mx-auto pt-4">
-              <Link
-                to="/how-to-join"
-                className="btn-primary text-sm sm:text-base md:text-lg lg:text-xl px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 w-full rounded-xl text-center font-medium shadow-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
-              >
-                <FaRocket className="w-4 h-4 sm:w-5 sm:h-5" />
-                {t('hero.joinCta')}
-              </Link>
-            </div>
-
-            {/* 社区按钮 */}
-            <div className="w-full px-4 pt-4">
-              <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:gap-3 w-full max-w-sm sm:max-w-2xl mx-auto">
-                <a
-                  href="https://qm.qq.com/q/Uw8tOkgJSS"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
-                  </div>
-                  <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm text-center">1059561526</span>
-                  </div>
-                </a>
-
-                <a
-                  href="https://discord.gg/AhzJXXWYfF"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
-                  </div>
-                  <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm text-center">{t('hero.community.discordTag')}</span>
-                  </div>
-                </a>
-
-                <a
-                  href="https://github.com/GooGuTeam"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full flex flex-col sm:flex-row items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg text-xs transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
-                    <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
-                  </div>
-                  <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                    <span className="font-semibold text-xs sm:text-sm text-center">GooGuTeam</span>
-                  </div>
-                </a>
               </div>
             </div>
           </div>
