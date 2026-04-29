@@ -38,16 +38,15 @@ const CreateTeamPage: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await teamsAPI.getTeam(parseInt(teamId));
-        const { team, members: teamMembers } = response;
         setTeamDetail(response);
-        setMembers(teamMembers);
+        setMembers(response.members);
         setFormData({
-          name: team.name,
-          short_name: team.short_name,
-          leader_id: team.leader_id,
+          name: response.name,
+          short_name: response.short_name,
+          leader_id: response.leader?.id ?? null,
         });
-        setFlagPreview(team.flag_url);
-        setCoverPreview(team.cover_url);
+        setFlagPreview(response.flag_url);
+        setCoverPreview(response.cover_url);
       } catch (error) {
         handleApiError(error);
         navigate('/teams');
@@ -110,15 +109,15 @@ const CreateTeamPage: React.FC = () => {
       
       if (isEditing) {
         // 编辑模式：只有当名称或简称发生变化时才添加到FormData
-        if (formData.name.trim() !== teamDetail?.team.name) {
+        if (formData.name.trim() !== teamDetail?.name) {
           data.append('name', formData.name.trim());
         }
-        if (formData.short_name.trim() !== teamDetail?.team.short_name) {
+        if (formData.short_name.trim() !== teamDetail?.short_name) {
           data.append('short_name', formData.short_name.trim());
         }
-        
+
         // 只有在选择了新队长时才添加leader_id
-        if (formData.leader_id !== null && formData.leader_id !== teamDetail?.team.leader_id) {
+        if (formData.leader_id !== null && formData.leader_id !== teamDetail?.leader?.id) {
           data.append('leader_id', formData.leader_id.toString());
         }
       } else {
@@ -310,7 +309,7 @@ const CreateTeamPage: React.FC = () => {
                     value={formData.leader_id}
                     onChange={(value) => setFormData(prev => ({ ...prev, leader_id: value }))}
                     members={members}
-                    currentLeaderId={teamDetail?.team.leader_id}
+                    currentLeaderId={teamDetail?.leader?.id}
                     placeholder={t('teams.create.keepCurrentLeader')}
                   />
                   <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -339,12 +338,12 @@ const CreateTeamPage: React.FC = () => {
                             <p className="font-medium text-gray-900 dark:text-white">
                               {member.username}
                             </p>
-                            {member.id === teamDetail?.team.leader_id && (
+                            {member.id === teamDetail?.leader?.id && (
                               <p className="text-xs text-yellow-600 dark:text-yellow-400">
                                 {t('teams.create.currentLeader')}
                               </p>
                             )}
-                            {member.id === formData.leader_id && formData.leader_id !== teamDetail?.team.leader_id && (
+                            {member.id === formData.leader_id && formData.leader_id !== teamDetail?.leader?.id && (
                               <p className="text-xs text-green-600 dark:text-green-400">
                                 {t('teams.create.willBecomeLeader')}
                               </p>

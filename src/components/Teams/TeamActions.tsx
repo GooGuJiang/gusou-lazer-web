@@ -20,7 +20,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
   const [showActions, setShowActions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isLeader = user?.id === team.leader_id;
+  const isLeader = user?.id === (team.leader?.id ?? team.leader_id);
   const isMember = members.some(member => member.id === user?.id);
 
   // 请求加入战队

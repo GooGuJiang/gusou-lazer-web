@@ -2,7 +2,12 @@ import { api } from './client';
 
 export const teamsAPI = {
   getTeam: async (teamId: number) => {
-    const response = await api.get(`/api/private/team/${teamId}`);
+    const response = await api.get(`/api/v2/team/${teamId}/`);
+    return response.data;
+  },
+
+  getTeamByRuleset: async (teamId: number, ruleset: string) => {
+    const response = await api.get(`/api/v2/team/${teamId}/${ruleset}`);
     return response.data;
   },
 

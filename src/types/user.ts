@@ -1,5 +1,14 @@
 import type { GameMode } from './common';
 
+export interface TeamStatistics {
+  play_count: number;
+  ranked_score: number;
+  performance: number;
+  rank: number;
+  ruleset_id: number;
+  team_id: number;
+}
+
 export interface Team {
   id: number;
   flag_url: string;
@@ -7,7 +16,13 @@ export interface Team {
   short_name: string;
   name: string;
   cover_url: string;
-  leader_id: number;
+  leader_id?: number;
+  leader?: { id: number; [key: string]: unknown };
+  description?: string | null;
+  default_ruleset_id?: number;
+  is_open?: boolean;
+  empty_slots?: number;
+  statistics?: TeamStatistics;
 }
 
 export interface UserStatistics {

@@ -18,8 +18,9 @@ const MemberActions: React.FC<Props> = ({ member, team, onMemberRemoved }) => {
   const [showActions, setShowActions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isLeader = user?.id === team.leader_id;
-  const isTargetLeader = member.id === team.leader_id;
+  const leaderId = team.leader?.id ?? team.leader_id;
+  const isLeader = user?.id === leaderId;
+  const isTargetLeader = member.id === leaderId;
   const canKick = isLeader && !isTargetLeader && user?.id !== member.id;
 
   // 踢出成员

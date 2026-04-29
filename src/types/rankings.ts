@@ -1,4 +1,4 @@
-import type { Team, User } from './user';
+import type { Team, TeamStatistics, User } from './user';
 
 export interface TopUsersResponse {
   ranking: UserRanking[];
@@ -55,6 +55,17 @@ export interface TeamRanking {
 }
 
 export interface TeamDetailResponse {
-  team: Team;
+  id: number;
+  flag_url: string;
+  name: string;
+  short_name: string;
+  cover_url: string;
+  created_at: string;
+  description?: string | null;
+  default_ruleset_id: number;
+  is_open: boolean;
+  empty_slots: number;
+  leader: { id: number; [key: string]: unknown };
   members: User[];
+  statistics: TeamStatistics;
 }

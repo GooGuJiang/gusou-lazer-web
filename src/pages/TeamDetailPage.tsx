@@ -48,12 +48,12 @@ const TeamDetailPage: React.FC = () => {
 
   const getLeader = () => {
     if (!teamDetail) return null;
-    return teamDetail.members.find(member => member.id === teamDetail.team.leader_id);
+    return teamDetail.members.find(member => member.id === teamDetail.leader?.id);
   };
 
   const getNonLeaderMembers = () => {
     if (!teamDetail) return [];
-    return teamDetail.members.filter(member => member.id !== teamDetail.team.leader_id);
+    return teamDetail.members.filter(member => member.id !== teamDetail.leader?.id);
   };
 
   const handleTeamUpdate = () => {
@@ -107,7 +107,8 @@ const TeamDetailPage: React.FC = () => {
     );
   }
 
-  const { team, members } = teamDetail;
+  const team = teamDetail;
+  const { members } = teamDetail;
   const leader = getLeader();
   const nonLeaderMembers = getNonLeaderMembers();
 
