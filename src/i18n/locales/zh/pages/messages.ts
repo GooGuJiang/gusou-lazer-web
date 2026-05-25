@@ -97,6 +97,7 @@ export const messagesPage = {
       },
       noMessage: '暂无消息',
       avatarAlt: '用户头像',
+      medalAlt: '奖章图像',
       openSidebar: '打开频道列表',
       selectPromptTitle: '选择一个频道开始聊天',
       selectPromptDescription: '从左侧选择一个频道或私聊开始对话',
@@ -129,6 +130,7 @@ export const messagesPage = {
         groupMessage: '新群组消息：{{title}}',
         systemMessage: '新系统消息：{{title}}',
         announcementMessage: '新公告：{{title}}',
+        achievementUnlocked: '新成就解锁：{{title}}',
       },
       contents: {
         teamApplication: '{{userName}} 申请加入您的团队',
@@ -149,6 +151,7 @@ export const messagesPage = {
         groupChannel: '群组频道：{{title}}',
         systemChannel: '系统频道：{{title}}',
         announcementChannel: '公告频道：{{title}}',
+        achievement: '{{description}}',
         genericFrom: '来自 {{source}}',
       },
       fallbacks: {
@@ -170,6 +173,8 @@ export const messagesPage = {
         systemMessage: '系统消息',
         announcement: '公告频道',
         announcementMessage: '公告消息',
+        achievement: '新成就解锁',
+        achievementDescription: '获得了神秘的新成就',
         unknownSource: '未知来源',
       },
     },
