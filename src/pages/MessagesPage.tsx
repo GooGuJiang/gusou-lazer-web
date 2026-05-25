@@ -8,7 +8,8 @@ import {
   FiCheck,
   FiUserPlus,
   FiPlus,
-  FiRefreshCw
+  FiRefreshCw,
+  FiAward
 } from 'react-icons/fi';
 import { useAuth } from '../hooks/useAuth';
 // 使用全局通知上下文，避免与 Navbar 各自实例不同步
@@ -1566,6 +1567,10 @@ const MessagesPage: React.FC = () => {
         return t('messages.notificationsPanel.titles.announcementMessage', {
           title: resolveTitle(notification.details?.title, 'announcement'),
         });
+      case 'user_achievement_unlock':
+        return t('messages.notificationsPanel.titles.achievementUnlocked', {
+          title: resolveTitle(notification.details?.title, 'achievement'),
+        });
       default:
         return notification.name;
     }
@@ -1671,6 +1676,10 @@ const MessagesPage: React.FC = () => {
       case 'channel_announce':
         return t('messages.notificationsPanel.contents.announcementChannel', {
           title: resolveTitle(notification.details?.title, 'announcementMessage'),
+        });
+      case 'user_achievement_unlock':
+        return t('messages.notificationsPanel.contents.achievement', {
+          description: resolveTitle(notification.details?.description, 'achievementDescription'),
         });
       default:
         return JSON.stringify(notification.details);
@@ -1985,6 +1994,18 @@ const MessagesPage: React.FC = () => {
                                     }}
                                   />
                                 ) : null}
+
+                                {notification.name.includes('user_achievement_unlock') && (
+                                  <img
+                                    src={String(notification.details?.cover_url)}
+                                    alt={t('messages.sidebar.medalAlt')}
+                                    className="w-10 h-10 object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = 'none';
+                                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                    }}
+                                  />
+                                )}
                                 
                                 {/* 默认图标 - 在没有用户信息或头像加载失败时显示 */}
                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -1994,13 +2015,18 @@ const MessagesPage: React.FC = () => {
                                     ? 'bg-orange-500/20' 
                                     : notification.name.includes('channel') 
                                     ? 'bg-blue-500/20' 
-                                    : 'bg-gray-500/20'
+                                    : notification.name.includes('user_achievement_unlock')
+                                    ? 'bg-yellow-500/20'
+                                    :'bg-gray-500/20'
                                 }`}>
                                   {notification.name.includes('team_application') && (
                                     <FiUserPlus className="text-orange-500" size={20} />
                                   )}
                                   {notification.name.includes('channel') && (
                                     <FiMessageCircle className="text-blue-500" size={20} />
+                                  )}
+                                  {notification.name.includes('user_achievement_unlock') && (
+                                    <FiAward className="text-yellow-500" size={20} />
                                   )}
                                   {!notification.name.includes('team_application') && !notification.name.includes('channel') && (
                                     <FiBell className="text-gray-500" size={20} />
