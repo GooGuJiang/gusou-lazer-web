@@ -97,6 +97,7 @@ export const messagesPage = {
       },
       noMessage: 'No messages yet',
       avatarAlt: 'User avatar',
+      medalAlt: 'Medal image',
       openSidebar: 'Open channel list',
       selectPromptTitle: 'Select a channel to start chatting',
       selectPromptDescription: 'Choose a channel or private chat from the left to begin.',
@@ -129,6 +130,7 @@ export const messagesPage = {
         groupMessage: 'New group message: {{title}}',
         systemMessage: 'New system message: {{title}}',
         announcementMessage: 'New announcement: {{title}}',
+        achievementUnlocked: 'New achievement unlocked: {{title}}',
       },
       contents: {
         teamApplication: '{{userName}} applied to join your team',
@@ -149,6 +151,7 @@ export const messagesPage = {
         groupChannel: 'Group channel: {{title}}',
         systemChannel: 'System channel: {{title}}',
         announcementChannel: 'Announcement channel: {{title}}',
+        achievement: '{{description}}',
         genericFrom: 'From {{source}}',
       },
       fallbacks: {
@@ -170,6 +173,8 @@ export const messagesPage = {
         systemMessage: 'System message',
         announcement: 'Announcement channel',
         announcementMessage: 'Announcement message',
+        achievement: 'New achievement unlocked',
+        achievementDescription: 'You\'ve got a new achievement',
         unknownSource: 'Unknown source',
       },
     },

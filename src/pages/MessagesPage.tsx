@@ -2017,7 +2017,7 @@ const MessagesPage: React.FC = () => {
                                     ? 'bg-blue-500/20' 
                                     : notification.name.includes('user_achievement_unlock')
                                     ? 'bg-yellow-500/20'
-                                    :'bg-gray-500/20'
+                                    : 'bg-gray-500/20'
                                 }`}>
                                   {notification.name.includes('team_application') && (
                                     <FiUserPlus className="text-orange-500" size={20} />
