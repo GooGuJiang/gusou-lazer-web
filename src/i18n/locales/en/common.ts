@@ -14,6 +14,7 @@ export const common = {
     ru: 'Russian',
   },
   theme: {
+    label: 'Theme',
     light: 'Light Mode',
     dark: 'Dark Mode',
     system: 'System',

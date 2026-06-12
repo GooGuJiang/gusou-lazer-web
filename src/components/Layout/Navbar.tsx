@@ -414,13 +414,8 @@ const MobileMenuDropdown = memo<{
                 </Link>
               )}
 
-              {/* 主题切换 */}
-              <div className="px-4 py-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('common.theme.light')}
-                </span>
-                <ThemeSelector />
-              </div>
+              {/* 主题选择 */}
+              <ThemeSelector variant="menu" />
 
               {/* 语言选择 */}
               <LanguageMenuSection i18n={i18n} t={t} />

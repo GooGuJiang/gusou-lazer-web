@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FiSun, FiMoon, FiMonitor } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMonitor, FiCheck } from 'react-icons/fi';
 import { useTheme } from '../../hooks/useTheme';
 import type { Theme } from '../../types';
 
@@ -19,9 +19,10 @@ const THEME_OPTIONS: ThemeOption[] = [
 
 interface ThemeSelectorProps {
   className?: string;
+  variant?: 'dropdown' | 'menu';
 }
 
-const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) => {
+const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '', variant = 'dropdown' }) => {
   const { t } = useTranslation();
   const { theme, setTheme, isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +73,61 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
       setIsOpen(false);
     }
   }, []);
+
+  if (variant === 'menu') {
+    const CurrentMenuIcon = getCurrentIcon();
+
+    if (!isOpen) {
+      return (
+        <button
+          onClick={handleToggle}
+          className={`w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink transition-all duration-200 ${className}`}
+          aria-expanded={isOpen}
+        >
+          <CurrentMenuIcon size={16} className="mr-3" />
+          <span>
+            {t('common.theme.label')}: {t(`common.theme.${theme}`)}
+          </span>
+        </button>
+      );
+    }
+
+    return (
+      <div className={`px-2 py-1 ${className}`} onKeyDown={handleKeyDown}>
+        <button
+          onClick={handleToggle}
+          className="w-full flex items-center px-2 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-osu-pink transition-all duration-200"
+        >
+          ← {t('common.back')}
+        </button>
+        <div className="mt-1">
+          {THEME_OPTIONS.map((option) => {
+            const isSelected = option.value === theme;
+            const IconComponent = option.icon;
+
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleThemeSelect(option.value)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 ${
+                  isSelected
+                    ? 'text-osu-pink bg-osu-pink/10'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                }`}
+                aria-current={isSelected ? 'true' : undefined}
+              >
+                <div className="flex items-center">
+                  <IconComponent size={16} className="mr-3" />
+                  <span>{t(`common.theme.${option.value}`)}</span>
+                </div>
+                {isSelected && <FiCheck size={16} />}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef} onKeyDown={handleKeyDown}>
