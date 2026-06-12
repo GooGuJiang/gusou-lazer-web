@@ -34,7 +34,7 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
 
   const getChannelIcon = () => {
     switch (channel.type) {
-      case 'PM':
+      case 'PM': {
         // 对于私聊频道，优先使用 user_info 中的头像信息
         if (channel.user_info) {
           return (
@@ -60,6 +60,7 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
             size="sm"
           />
         );
+      }
       case 'TEAM':
         return (
           <div className="w-10 h-10 bg-osu-pink/20 rounded-lg flex items-center justify-center">

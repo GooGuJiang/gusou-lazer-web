@@ -8,7 +8,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 const DEVICE_UUID_KEY = 'device_uuid';
 
 // FingerprintJS 实例缓存
-let fpPromise: Promise<any> | null = null;
+let fpPromise: Promise<unknown> | null = null;
 
 /**
  * 初始化 FingerprintJS

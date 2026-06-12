@@ -83,11 +83,11 @@ export interface RevokeSessionRequest {
 export interface RevokeSessionResponse {
   success: boolean;
   message: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 export interface DeviceSummary {
   success: boolean;
   message: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }

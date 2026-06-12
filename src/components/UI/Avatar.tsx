@@ -193,9 +193,7 @@ const Avatar: React.FC<AvatarProps> = ({
     }, 2000); // 延迟2秒
   };
 
-  const handleAvatarClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const openUploadModal = () => {
     debugLog('Avatar点击事件触发', {
       shouldShowUpload,
       editable,
@@ -251,7 +249,11 @@ const Avatar: React.FC<AvatarProps> = ({
           .filter(Boolean)
           .join(' ')}
         style={{ display: 'inline-block', transform: 'translateZ(0)' }} // 关键点四：强制合成层，减少抖动
-        onClick={shouldShowUpload ? handleAvatarClick : undefined}
+        onClick={shouldShowUpload ? (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openUploadModal();
+        } : undefined}
         onMouseEnter={
           shouldShowUpload
             ? () => {
@@ -276,7 +278,7 @@ const Avatar: React.FC<AvatarProps> = ({
             ? (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  handleAvatarClick(e as any);
+                  openUploadModal();
                 }
               }
             : undefined

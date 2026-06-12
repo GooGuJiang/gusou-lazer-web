@@ -1,4 +1,5 @@
 import { api } from './client';
+import { getApiErrorStatus } from '../typeGuards';
 
 export const chatAPI = {
   getChannels: async () => {
@@ -74,8 +75,8 @@ export const chatAPI = {
     try {
       const response = await api.get(`/api/v2/chat/private/${targetUserId}`);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: unknown) {
+      if (getApiErrorStatus(error) === 404) {
         return null;
       }
       throw error;

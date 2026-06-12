@@ -162,6 +162,22 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+
+  // 为每个按钮创建 refs，必须保持 Hook 调用顺序稳定
+  const osuRef = useRef<HTMLButtonElement>(null);
+  const taikoRef = useRef<HTMLButtonElement>(null);
+  const fruitsRef = useRef<HTMLButtonElement>(null);
+  const maniaRef = useRef<HTMLButtonElement>(null);
+
+  const getButtonRef = (mainMode: MainGameMode) => {
+    switch (mainMode) {
+      case 'osu': return osuRef;
+      case 'taiko': return taikoRef;
+      case 'fruits': return fruitsRef;
+      case 'mania': return maniaRef;
+    }
+  };
+
   const handleMainModeClick = (mainMode: MainGameMode) => {
     // 如果只显示主模式，直接选择第一个（主模式）
     if (mainModesOnly) {
@@ -178,21 +194,6 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   };
 
   if (variant === 'compact') {
-    // 为每个按钮创建 refs
-    const osuRef = useRef<HTMLButtonElement>(null);
-    const taikoRef = useRef<HTMLButtonElement>(null);
-    const fruitsRef = useRef<HTMLButtonElement>(null);
-    const maniaRef = useRef<HTMLButtonElement>(null);
-
-    const getButtonRef = (mainMode: MainGameMode) => {
-      switch (mainMode) {
-        case 'osu': return osuRef;
-        case 'taiko': return taikoRef;
-        case 'fruits': return fruitsRef;
-        case 'mania': return maniaRef;
-      }
-    };
-
     return (
       <div className={`relative ${className}`} ref={modeSelectRef}>
         <div className="flex gap-2">

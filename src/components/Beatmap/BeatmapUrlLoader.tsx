@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { beatmapAPI } from '../../utils/api';
 import toast from 'react-hot-toast';
 import { ExternalLink, Search } from 'lucide-react';
+import type { Beatmap, Beatmapset } from '../../types';
 
 interface BeatmapUrlLoaderProps {
-  onLoad?: (data: { beatmapset: any; beatmap?: any }) => void;
+  onLoad?: (data: { beatmapset: Beatmapset; beatmap?: Beatmap }) => void;
   className?: string;
 }
 

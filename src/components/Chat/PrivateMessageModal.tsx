@@ -18,7 +18,6 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
   isOpen,
   onClose,
   onMessageSent,
-  currentUser: _currentUser, // 目前未使用，但保留以便后续扩展
 }) => {
   const { t } = useTranslation();
   const [targetUserId, setTargetUserId] = useState<number | null>(null);
@@ -45,12 +44,12 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
 
   // 检查是否有预选用户
   useEffect(() => {
-    const selectedUser = (window as any).selectedUserForPM as User;
+    const selectedUser = (window as Window & { selectedUserForPM?: User }).selectedUserForPM as User;
     if (selectedUser) {
       setTargetUserId(selectedUser.id);
       setTargetUsername(selectedUser.username);
       // 清除全局变量
-      delete (window as any).selectedUserForPM;
+      delete (window as Window & { selectedUserForPM?: User }).selectedUserForPM;
     }
   }, [isOpen]);
 

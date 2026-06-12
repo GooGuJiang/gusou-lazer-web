@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { notificationsAPI } from '../utils/api';
+import { isRecord } from '../utils/typeGuards';
 import type { 
   SocketMessage, 
   ChatEvent, 
@@ -8,12 +9,36 @@ import type {
   ChatMessage,
   User
 } from '../types';
-import { showCustomToast } from '../components/CustomToast';
+import { showCustomToast } from '../components/customToastUtils';
 
 // 生成唯一通知 ID 的函数
 let notificationIdCounter = 0;
 const generateUniqueNotificationId = (): number => {
   return Date.now() * 10000 + (++notificationIdCounter % 10000);
+};
+
+
+const toOptionalString = (value: unknown): string | undefined => typeof value === 'string' ? value : undefined;
+const toStringValue = (value: unknown): string => typeof value === 'string' ? value : String(value ?? '');
+const toNumberValue = (value: unknown): number => typeof value === 'number' ? value : Number(value ?? 0);
+const toBooleanValue = (value: unknown): boolean => typeof value === 'boolean' ? value : Boolean(value);
+const getTitleFromDetails = (details: unknown): string | undefined => {
+  if (!isRecord(details)) return undefined;
+  return typeof details.title === 'string' ? details.title : undefined;
+};
+const toChatMessage = (value: unknown): ChatMessage | null => {
+  if (!isRecord(value)) return null;
+  if (!('message_id' in value) || !('channel_id' in value) || !('content' in value) || !('sender_id' in value) || !('timestamp' in value)) return null;
+  return {
+    message_id: toNumberValue(value.message_id),
+    channel_id: toNumberValue(value.channel_id),
+    content: toStringValue(value.content),
+    timestamp: toStringValue(value.timestamp),
+    sender_id: toNumberValue(value.sender_id),
+    is_action: toBooleanValue(value.is_action),
+    sender: isRecord(value.sender) ? value.sender as User : undefined,
+    uuid: toOptionalString(value.uuid),
+  };
 };
 
 interface UseWebSocketNotificationsProps {
@@ -127,9 +152,10 @@ export const useWebSocketNotifications = ({
             console.log('发送他人消息到回调:', msg);
             dispatchChatMessage(msg);
           });
-        } else if ((chatEvent.data as any)?.message) {
+        } else if (isRecord(chatEvent.data) && chatEvent.data.message) {
           // 可能是单个消息而不是数组
-          const msg = (chatEvent.data as any).message as ChatMessage;
+          const msg = toChatMessage(chatEvent.data.message);
+          if (!msg) return;
           // 过滤自己的消息
           if (msg.sender_id && currentUser && msg.sender_id === currentUser.id) {
             console.log(`✓ 过滤自己的单个聊天消息: ${msg.message_id}, 发送者ID: ${msg.sender_id}`);
@@ -166,7 +192,7 @@ export const useWebSocketNotifications = ({
           timestamp: message.data.timestamp as string,
           sender_id: message.data.sender_id as number,
           is_action: (message.data.is_action as boolean) || false,
-          sender: message.data.sender as any,
+          sender: isRecord(message.data.sender) ? message.data.sender as User : undefined,
           uuid: message.data.uuid as string | undefined
         };
         
@@ -186,16 +212,8 @@ export const useWebSocketNotifications = ({
                'timestamp' in message) {
         // 消息直接是ChatMessage格式
         console.log('处理直接消息格式（无嵌套）:', message);
-        const chatMessage: ChatMessage = {
-          message_id: (message as any).message_id,
-          channel_id: (message as any).channel_id,
-          content: (message as any).content,
-          timestamp: (message as any).timestamp,
-          sender_id: (message as any).sender_id,
-          is_action: (message as any).is_action || false,
-          sender: (message as any).sender,
-          uuid: (message as any).uuid
-        };
+        const chatMessage = toChatMessage(message);
+        if (!chatMessage) return;
         
         // 过滤自己的消息
         if (chatMessage.sender_id && currentUser && chatMessage.sender_id === currentUser.id) {
@@ -247,7 +265,7 @@ export const useWebSocketNotifications = ({
         console.log('处理新通知事件:', message);
         
         if (message.data && typeof message.data === 'object') {
-          const data = message.data as any;
+          const data = message.data;
           
           // 根据频道类型创建相应的通知
           if (data.category === 'channel' && data.name === 'channel_message') {
@@ -340,9 +358,9 @@ export const useWebSocketNotifications = ({
               
               let toastMessage = '';
               switch (channelType) {
-                case 'pm':
+                case 'pm': {
                   // 显示实际的消息内容
-                  const messageContent = data.details?.title as string;
+                  const messageContent = getTitleFromDetails(data.details);
                   if (messageContent && messageContent.length > 0 && messageContent !== '来自用户') {
                     // 如果消息被截断，显示提示
                     if (messageContent.length >= 36) {
@@ -354,18 +372,22 @@ export const useWebSocketNotifications = ({
                     toastMessage = '发送了一条私聊消息';
                   }
                   break;
-                case 'team':
-                  const teamMessage = data.details?.title as string;
+                }
+                case 'team': {
+                  const teamMessage = getTitleFromDetails(data.details);
                   toastMessage = teamMessage || '在团队频道发送了消息';
                   break;
-                case 'public':
-                  const publicMessage = data.details?.title as string;
+                }
+                case 'public': {
+                  const publicMessage = getTitleFromDetails(data.details);
                   toastMessage = publicMessage || '在公共频道发送了消息';
                   break;
-                default:
-                  const generalMessage = data.details?.title as string;
+                }
+                default: {
+                  const generalMessage = getTitleFromDetails(data.details);
                   toastMessage = generalMessage || '发送了一条消息';
                   break;
+                }
               }
               
               showCustomToast({
@@ -453,11 +475,11 @@ export const useWebSocketNotifications = ({
     // 回放缓冲（只在新增监听器时执行一次）
     if (onNewMessage && messageBuffer.length) {
       console.log(`[WebSocket] 回放缓冲消息 ${messageBuffer.length} 条`);
-      messageBuffer.splice(0).forEach(m => { try { onNewMessage(m); } catch {} });
+      messageBuffer.splice(0).forEach(m => { try { onNewMessage(m); } catch (error) { console.error('回放缓冲处理失败', error); } });
     }
     if (onNewNotification && notificationBuffer.length) {
       console.log(`[WebSocket] 回放缓冲通知 ${notificationBuffer.length} 条`);
-      notificationBuffer.splice(0).forEach(n => { try { onNewNotification(n); } catch {} });
+      notificationBuffer.splice(0).forEach(n => { try { onNewNotification(n); } catch (error) { console.error('回放缓冲处理失败', error); } });
     }
     return () => {
       globalConnectionStateListeners.delete(connectionStateListener);

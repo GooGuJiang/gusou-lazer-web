@@ -1,24 +1,26 @@
 import { api } from './client';
+import { getApiErrorStatus } from '../typeGuards';
+import type { Beatmap, Beatmapset } from '../../types';
 
 export const beatmapAPI = {
-  getBeatmapByBeatmapId: async (beatmapId: number) => {
+  getBeatmapByBeatmapId: async (beatmapId: number): Promise<Beatmapset> => {
     try {
       const response = await api.get(`/api/v2/beatmapsets/lookup?beatmap_id=${beatmapId}`);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: unknown) {
+      if (getApiErrorStatus(error) === 404) {
         throw new Error('Beatmap not found');
       }
       throw error;
     }
   },
 
-  getBeatmapset: async (beatmapsetId: number) => {
+  getBeatmapset: async (beatmapsetId: number): Promise<Beatmapset> => {
     try {
       const response = await api.get(`/api/v2/beatmapsets/${beatmapsetId}`);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: unknown) {
+      if (getApiErrorStatus(error) === 404) {
         throw new Error('Beatmapset not found');
       }
       throw error;
@@ -90,13 +92,13 @@ export const beatmapAPI = {
     return {};
   },
 
-  getBeatmapFromUrl: async (url: string): Promise<{ beatmapset: any; beatmap?: any }> => {
+  getBeatmapFromUrl: async (url: string): Promise<{ beatmapset: Beatmapset; beatmap?: Beatmap }> => {
     const urlInfo = beatmapAPI.parseUrlBeatmapInfo(url);
 
     if (urlInfo.beatmapsetId) {
       const beatmapset = await beatmapAPI.getBeatmapset(urlInfo.beatmapsetId);
       const beatmap = urlInfo.beatmapId
-        ? beatmapset.beatmaps.find((b: any) => b.id === urlInfo.beatmapId)
+        ? beatmapset.beatmaps.find((b: Beatmap) => b.id === urlInfo.beatmapId)
         : beatmapset.beatmaps[0];
 
       return { beatmapset, beatmap };

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { friendsAPI, handleApiError } from '../utils/api';
+import { getApiErrorStatus, getApiErrorMessage, getErrorMessage } from '../utils/typeGuards';
 
 export type FriendStatus = {
   isFriend: boolean;
@@ -18,7 +19,7 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
   console.log('useFriendRelationship called with:', { targetUserId, selfUserId });
   
   // 参数验证
-  const isValidUserId = (id: any): id is number => {
+  const isValidUserId = (id: unknown): id is number => {
     return typeof id === 'number' && !isNaN(id) && id > 0;
   };
   
@@ -82,14 +83,14 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
           followsMe: !!res?.is_followed,
         }
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log('API call failed:', err);
       
       // 检查是否是"不能查看自己"的错误
-      const errorMessage = err?.response?.data?.message || err?.message || '';
+      const errorMessage = getApiErrorMessage(err) || getErrorMessage(err);
       const isSelfError = errorMessage.includes('Cannot check relationship with yourself') || 
                          errorMessage.includes('yourself') ||
-                         (err?.response?.status === 422 && errorMessage.includes('relationship'));
+                         (getApiErrorStatus(err) === 422 && errorMessage.includes('relationship'));
       
       if (isSelfError) {
         console.log('Detected self-relationship error, setting isSelf to true');
@@ -111,7 +112,7 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
         targetUserId,
         selfUserId,
         errorMessage,
-        status: err?.response?.status
+        status: getApiErrorStatus(err)
       });
       
       if (mountedRef.current) {
@@ -119,7 +120,7 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
       }
       handleApiError(err);
     }
-  }, [targetUserId]);
+  }, [targetUserId, selfUserId]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -140,7 +141,7 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
   // 乐观更新辅助函数
   const withOptimisticUpdate = useCallback((
     updater: (prev: FriendStatus) => FriendStatus,
-    action: () => Promise<any>,
+    action: () => Promise<unknown>,
     okMsg?: string
   ) => {
     const prev = status;

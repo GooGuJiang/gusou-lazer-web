@@ -1,24 +1,9 @@
-import React, { createContext, useContext } from 'react';
-import type { ReactNode } from 'react';
+import React from 'react';
 import { useNotifications } from '../hooks/useNotifications';
-import type { APINotification, UnreadCount, User } from '../types';
+import { NotificationContext } from './notificationContextCore';
+import type { NotificationProviderProps } from './notificationContextCore';
 
-interface NotificationContextValue {
-  unreadCount: UnreadCount;
-  notifications: APINotification[];
-  isLoading: boolean;
-  isConnected: boolean;
-  chatConnected: boolean; // 添加聊天连接状态
-  connectionError: string | null;
-  markAsRead: (id: number) => Promise<void> | void;
-  removeNotification: (id: number) => void;
-  removeNotificationByObject: (objectId: string, objectType: string) => Promise<void> | void;
-  refresh: () => void;
-}
-
-const NotificationContext = createContext<NotificationContextValue | null>(null);
-
-export const NotificationProvider: React.FC<{ isAuthenticated: boolean; user?: User | null; children: ReactNode; }> = ({
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   isAuthenticated,
   user,
   children,
@@ -55,12 +40,4 @@ export const NotificationProvider: React.FC<{ isAuthenticated: boolean; user?: U
       {children}
     </NotificationContext.Provider>
   );
-};
-
-export const useNotificationContext = () => {
-  const ctx = useContext(NotificationContext);
-  if (!ctx) {
-    throw new Error('useNotificationContext must be used within NotificationProvider');
-  }
-  return ctx;
 };

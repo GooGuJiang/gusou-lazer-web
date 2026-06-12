@@ -99,9 +99,9 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       toast.success('头像上传成功');
       onUploadSuccess(response.avatar_url);
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('头像上传失败:', error);
-      if (error.response?.data?.message) {
+      if (getApiErrorMessage(error)) {
         toast.error(error.response.data.message);
       } else {
         toast.error('头像上传失败，请重试');

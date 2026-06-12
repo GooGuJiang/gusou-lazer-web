@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI, scoreAPI } from '../../utils/api';
@@ -43,7 +44,7 @@ interface UserPinnedScoresProps {
 }
 
 // 时间格式化函数
-const formatTimeAgo = (dateString: string, t: any): string => {
+const formatTimeAgo = (dateString: string, t: TFunction): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -110,7 +111,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 // 可拖拽的成绩卡片组件
 const SortableScoreCard: React.FC<{
   score: BestScore;
-  t: any;
+  t: TFunction;
   profileColor: string;
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
@@ -147,11 +148,11 @@ const SortableScoreCard: React.FC<{
 // 单个成绩卡片组件
 const ScoreCard: React.FC<{ 
   score: BestScore; 
-  t: any; 
+  t: TFunction; 
   profileColor: string;
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
-  dragHandleProps?: any;
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
   className?: string;
 }> = ({ score, t, profileColor, canEdit = false, onPinChange, dragHandleProps, className = '' }) => {
   const rank = score.rank;

@@ -1,5 +1,6 @@
 import { api } from './client';
 import { getDeviceUUID } from '../deviceUUID';
+import { isRecord } from '../typeGuards';
 
 export interface VerificationError {
   error: {
@@ -50,15 +51,18 @@ export const verificationAPI = {
 };
 
 // 检查错误是否为用户验证错误
-export const isVerificationError = (error: any): error is { response: { data: VerificationError } } => {
+export const isVerificationError = (error: unknown): error is { response: { data: VerificationError } } => {
+  if (!isRecord(error) || !isRecord(error.response)) return false;
+  const data = error.response.data;
+  if (!isRecord(data) || !isRecord(data.error)) return false;
   return (
-    error?.response?.data?.error?.error === 'User not verified' &&
-    (error?.response?.data?.error?.method === 'totp' || error?.response?.data?.error?.method === 'mail')
+    data.error.error === 'User not verified' &&
+    (data.error.method === 'totp' || data.error.method === 'mail')
   );
 };
 
 // 从错误中获取验证方法
-export const getVerificationMethod = (error: any): 'totp' | 'mail' | null => {
+export const getVerificationMethod = (error: unknown): 'totp' | 'mail' | null => {
   if (isVerificationError(error)) {
     return error.response.data.error.method;
   }

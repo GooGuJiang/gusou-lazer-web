@@ -47,7 +47,7 @@ const OAuthAppsSection: React.FC = () => {
       setCopiedField(field);
       toast.success(t('settings.oauth.copied'));
       setTimeout(() => setCopiedField(null), 2000);
-    } catch (error) {
+    } catch {
       toast.error(t('settings.oauth.errors.copyFailed'));
     }
   };

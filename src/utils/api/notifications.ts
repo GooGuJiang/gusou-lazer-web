@@ -42,11 +42,11 @@ export const notificationsAPI = {
 
   getGroupedNotifications: async () => {
     const response = await api.get('/api/v2/notifications');
-    const notifications = response.data.notifications || [];
+    const notifications = (response.data.notifications || []) as Array<{ object_type: string; object_id: string | number; created_at: string }>;
 
     const groupedMap = new Map<string, typeof notifications[0]>();
 
-    notifications.forEach((notification: any) => {
+    notifications.forEach((notification) => {
       const key = `${notification.object_type}-${notification.object_id}`;
 
       if (!groupedMap.has(key) ||

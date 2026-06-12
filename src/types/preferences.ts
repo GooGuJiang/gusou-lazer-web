@@ -58,7 +58,7 @@ export interface UserPreferences {
   user_list_view?: UserListView;
 
   // Extra custom settings
-  extra?: Record<string, any>;
+  extra?: Record<string, unknown>;
 
   // Game mode and profile info
   playmode?: GameMode;
@@ -79,7 +79,7 @@ export interface LegacyUserPreferences {
 }
 
 // 获取用户偏好设置响应 - 直接返回UserPreferences对象
-export interface GetUserPreferencesResponse extends UserPreferences {}
+export type GetUserPreferencesResponse = UserPreferences;
 
 // PATCH request body for updating preferences
-export interface UpdateUserPreferencesRequest extends Partial<UserPreferences> {}
+export type UpdateUserPreferencesRequest = Partial<UserPreferences>;

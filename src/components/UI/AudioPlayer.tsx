@@ -24,7 +24,7 @@ interface AudioContextType extends AudioState {
 
 const AudioContext = createContext<AudioContextType | null>(null);
 
-export const useAudio = () => {
+const useAudio = () => {
   const context = useContext(AudioContext);
   if (!context) {
     throw new Error('useAudio must be used within an AudioProvider');

@@ -36,7 +36,7 @@ const TotpDisableModal: React.FC<TotpDisableModalProps> = ({
       toast.success(t('settings.totp.disableSuccess'));
       onSuccess();
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('TOTP禁用失败:', error);
       if (error.response?.data?.error === 'Invalid TOTP code') {
         setError(t('settings.totp.errors.invalidCode'));

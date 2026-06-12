@@ -5,7 +5,7 @@ import { FiHome, FiTrendingUp, FiMusic, FiBell, FiUsers, FiMenu, FiX, FiSettings
 import ThemeSelector from '../UI/ThemeSelector';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
-import { useNotificationContext } from '../../contexts/NotificationContext';
+import { useNotificationContext } from '../../contexts/useNotificationContext';
 import UserDropdown from '../UI/UserDropdown';
 import Avatar from '../UI/Avatar';
 import LanguageSelector from '../UI/LanguageSelector';

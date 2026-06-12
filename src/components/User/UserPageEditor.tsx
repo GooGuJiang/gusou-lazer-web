@@ -85,7 +85,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
           onClose();
         }
       }, 1500);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to save user page:', err);
       const errorMessage = err.response?.data?.error || t('profile.userPage.saveError');
       setError(errorMessage);

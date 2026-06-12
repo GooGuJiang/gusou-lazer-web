@@ -59,7 +59,7 @@ const TotpSetupModal: React.FC<TotpSetupModalProps> = ({
       setBackupCodes(response);
       setStep('backup');
       toast.success(t('settings.totp.setupSuccess'));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('TOTP验证失败:', error);
       console.error('错误详情:', error.response?.data);
       

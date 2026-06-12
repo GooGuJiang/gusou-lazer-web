@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
@@ -15,7 +16,7 @@ interface UserRecentScoresProps {
 }
 
 // 时间格式化函数
-const formatTimeAgo = (dateString: string, t: any): string => {
+const formatTimeAgo = (dateString: string, t: TFunction): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -86,7 +87,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ score: BestScore; t: any; profileColor: string; showPP?: boolean; className?: string }> = ({ score, t, profileColor, showPP = true, className = '' }) => {
+const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string; showPP?: boolean; className?: string }> = ({ score, t, profileColor, showPP = true, className = '' }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';

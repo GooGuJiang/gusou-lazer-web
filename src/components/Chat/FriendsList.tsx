@@ -12,7 +12,7 @@ interface FriendsListProps {
   onClose: () => void;
 }
 
-const FriendsList: React.FC<FriendsListProps> = ({ currentUser: _currentUser, onStartPrivateChat, onClose }) => {
+const FriendsList: React.FC<FriendsListProps> = ({ onStartPrivateChat, onClose }) => {
   const [friends, setFriends] = useState<FriendRelation[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);

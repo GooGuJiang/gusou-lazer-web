@@ -99,9 +99,9 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
       toast.success('头图上传成功');
       onUploadSuccess(response.cover_url);
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('头图上传失败:', error);
-      if (error.response?.data?.message) {
+      if (getApiErrorMessage(error)) {
         toast.error(error.response.data.message);
       } else {
         toast.error('头图上传失败，请重试');

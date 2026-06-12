@@ -6,9 +6,9 @@ import { getDeviceUUID } from '../deviceUUID';
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
 // 全局验证处理器，由 VerificationProvider 设置
-let globalVerificationHandler: ((error: any) => boolean) | null = null;
+let globalVerificationHandler: ((error: unknown) => boolean) | null = null;
 
-export const setGlobalVerificationHandler = (handler: (error: any) => boolean) => {
+export const setGlobalVerificationHandler = (handler: (error: unknown) => boolean) => {
   globalVerificationHandler = handler;
 };
 
@@ -36,7 +36,7 @@ export const api = axios.create({
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value?: unknown) => void;
-  reject: (reason?: any) => void;
+  reject: (reason?: unknown) => void;
 }> = [];
 
 // 处理等待队列

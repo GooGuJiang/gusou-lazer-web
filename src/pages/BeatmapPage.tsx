@@ -52,8 +52,8 @@ const BeatmapPage: React.FC = () => {
           
           try {
             beatmapsetData = await beatmapAPI.getBeatmapByBeatmapId(targetBeatmapId);
-          } catch (error: any) {
-            if (error.message === 'Beatmap not found') {
+          } catch (error: unknown) {
+            if (getErrorMessage(error) === 'Beatmap not found') {
               throw new Error(t('beatmap.notFound'));
             }
             throw error;
@@ -92,10 +92,10 @@ const BeatmapPage: React.FC = () => {
           }
         }
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to fetch beatmap data:', error);
-        setError(error.message || t('beatmap.error'));
-        toast.error(error.message || t('beatmap.error'));
+        setError(getErrorMessage(error) || t('beatmap.error'));
+        toast.error(getErrorMessage(error) || t('beatmap.error'));
       } finally {
         setLoading(false);
       }

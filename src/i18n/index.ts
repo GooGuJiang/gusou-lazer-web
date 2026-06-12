@@ -11,7 +11,7 @@ const supportedLanguages: AppLanguages[] = ['en', 'zh'];
 const getBrowserLanguage = (): AppLanguages => {
   if (typeof window === 'undefined') return defaultLanguage;
   
-  const browserLang = navigator.language || (navigator as any).userLanguage;
+  const browserLang = navigator.language || (navigator as Navigator & { userLanguage?: string }).userLanguage;
   const langCode = browserLang.split('-')[0].toLowerCase();
   
   // 检查是否是支持的语言

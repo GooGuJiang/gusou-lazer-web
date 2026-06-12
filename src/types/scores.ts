@@ -100,7 +100,7 @@ export interface BestScore {
     creator: string;
     favourite_count: number;
     genre_id: number;
-    hype: any;
+    hype: unknown;
     id: number;
     language_id: number;
     nsfw: boolean;

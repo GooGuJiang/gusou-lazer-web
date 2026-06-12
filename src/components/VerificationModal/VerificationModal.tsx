@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Smartphone, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { getErrorMessage, isRecord } from '../../utils/typeGuards';
 
 interface VerificationModalProps {
   isOpen: boolean;
@@ -62,13 +63,14 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
     try {
       await onVerify(code.trim());
       setCode('');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('验证失败:', err);
       
       // 处理特定的 TOTP 错误
-      const errorMessage = err?.response?.data?.error;
-      const errorDetail = err?.response?.data?.detail;
-      const errorString = err?.message || JSON.stringify(err?.response?.data || err);
+      const responseData = isRecord(err) && isRecord(err.response) && isRecord(err.response.data) ? err.response.data : undefined;
+      const errorMessage = responseData?.error;
+      const errorDetail = responseData?.detail;
+      const errorString = getErrorMessage(err);
       
       // 检查多种可能的错误格式
       if (errorMessage === 'No TOTP setup in progress or invalid data' || 
@@ -92,7 +94,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
     
     try {
       await onSwitchMethod();
-    } catch (err) {
+    } catch {
       setError(t('verification.errors.switchFailed'));
     } finally {
       setIsLoading(false);
@@ -109,7 +111,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
     try {
       await onResendCode();
       setResendMessage(t('verification.codeResent'));
-    } catch (err) {
+    } catch {
       setError(t('verification.errors.resendFailed'));
     } finally {
       setResendLoading(false);

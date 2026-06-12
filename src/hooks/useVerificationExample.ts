@@ -1,5 +1,5 @@
 // 这是一个使用示例，展示如何手动触发验证流程
-import { useVerification } from '../contexts/VerificationContext';
+import { useVerification } from '../contexts/useVerification';
 
 export const useVerificationExample = () => {
   const { showVerificationModal } = useVerification();
@@ -9,7 +9,7 @@ export const useVerificationExample = () => {
       await showVerificationModal(method);
       console.log('验证成功完成');
       // 在这里处理验证成功后的逻辑
-    } catch (error) {
+    } catch {
       console.log('验证失败或被取消');
       // 在这里处理验证失败的逻辑
     }

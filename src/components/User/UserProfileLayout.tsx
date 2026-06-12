@@ -6,7 +6,7 @@ import RankHistoryChart from '../UI/RankHistoryChart';
 import PlayerRankCard from '../User/PlayerRankCard';
 import StatsCard from '../User/StatsCard';
 import LevelProgress from '../UI/LevelProgress';
-import { type User, type GameMode } from '../../types';
+import { type User, type GameMode, type BestScore } from '../../types';
 import FriendStats from './FriendStats';
 import UserRecentActivity from './UserRecentActivity';
 import UserPinnedScores from './UserPinnedScores';
@@ -118,7 +118,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const pinnedScoresRefreshRef = useRef<(() => void) | null>(null);
   const bestScoresRefreshRef = useRef<(() => void) | null>(null);
   const pinActionRef = useRef<{
-    handlePin: (score: any) => void;
+    handlePin: (score: BestScore) => void;
     handleUnpin: (scoreId: number) => void;
   } | null>(null);
   const bestScoresActionRef = useRef<{
@@ -134,11 +134,12 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const playTime = formatPlayTime(stats?.play_time);
   const user_achievements = Array.isArray(user.user_achievements)
     ? user.user_achievements.filter(
-        (a): a is { achievement_id: number; achieved_at: string } =>
-          typeof a === 'object' &&
-          a !== null &&
-          typeof (a as any).achievement_id === 'number' &&
-          typeof (a as any).achieved_at === 'string'
+        (a): a is { achievement_id: number; achieved_at: string } => {
+          if (typeof a !== 'object' || a === null) return false;
+          const achievement = a as { achievement_id?: unknown; achieved_at?: unknown };
+          return typeof achievement.achievement_id === 'number' &&
+            typeof achievement.achieved_at === 'string';
+        }
       )
     : undefined;
 

@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-interface LazyFlagProps {
+interface LazyFlagProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt' | 'title'> {
   src: string;
   alt: string;
   className?: string;
   title?: string;
-  [key: string]: any; // 允许传递额外的属性
 }
 
 const LazyFlag: React.FC<LazyFlagProps> = ({

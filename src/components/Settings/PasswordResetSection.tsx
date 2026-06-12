@@ -127,9 +127,9 @@ const PasswordResetSection: React.FC = () => {
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to change password:', error);
-      const errorMessage = error?.message || error?.toString() || '';
+      const errorMessage = getErrorMessage(error);
       
       if (errorMessage.includes('Invalid') || errorMessage.includes('incorrect')) {
         if (totpStatus?.enabled) {

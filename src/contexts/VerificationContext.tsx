@@ -1,19 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { VerificationModal } from '../components/VerificationModal/VerificationModal';
 import { verificationAPI, isVerificationError, getVerificationMethod } from '../utils/api/verification';
 import { setGlobalVerificationHandler } from '../utils/api/client';
-
-interface VerificationContextType {
-  showVerificationModal: (method: 'totp' | 'mail') => Promise<void>;
-  handleVerificationError: (error: any) => boolean;
-}
-
-const VerificationContext = createContext<VerificationContextType | undefined>(undefined);
-
-interface VerificationProviderProps {
-  children: ReactNode;
-}
+import { VerificationContext } from './verificationContextCore';
+import type { VerificationContextType, VerificationProviderProps } from './verificationContextCore';
 
 export const VerificationProvider: React.FC<VerificationProviderProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,34 +21,25 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
   };
 
   const handleVerify = async (code: string): Promise<void> => {
-    try {
-      await verificationAPI.verify(code);
-      setIsModalOpen(false);
-      if (resolveVerification) {
-        resolveVerification();
-        setResolveVerification(null);
-        setRejectVerification(null);
-      }
-      // 验证成功后刷新页面以重新请求API
-      window.location.reload();
-    } catch (error) {
-      // 如果验证失败，抛出错误让模态框显示错误信息
-      throw error;
+    await verificationAPI.verify(code);
+    setIsModalOpen(false);
+    if (resolveVerification) {
+      resolveVerification();
+      setResolveVerification(null);
+      setRejectVerification(null);
     }
+    // 验证成功后刷新页面以重新请求API
+    window.location.reload();
   };
 
   const handleSwitchMethod = async (): Promise<void> => {
-    try {
-      if (currentMethod === 'totp') {
-        // 从 TOTP 切换到邮箱验证
-        await verificationAPI.switchToMailFallback();
-        setCurrentMethod('mail');
-      } else {
-        // 从邮箱切换到 TOTP（这里可能需要根据API设计调整）
-        setCurrentMethod('totp');
-      }
-    } catch (error) {
-      throw error;
+    if (currentMethod === 'totp') {
+      // 从 TOTP 切换到邮箱验证
+      await verificationAPI.switchToMailFallback();
+      setCurrentMethod('mail');
+    } else {
+      // 从邮箱切换到 TOTP（这里可能需要根据API设计调整）
+      setCurrentMethod('totp');
     }
   };
 
@@ -68,7 +49,7 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
     }
   };
 
-  const handleVerificationError = (error: any): boolean => {
+  const handleVerificationError = useCallback((error: unknown): boolean => {
     if (isVerificationError(error)) {
       const method = getVerificationMethod(error);
       if (method) {
@@ -79,7 +60,7 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
       }
     }
     return false;
-  };
+  }, [showVerificationModal]);
 
   // 在组件挂载时设置全局验证处理器
   useEffect(() => {
@@ -89,7 +70,7 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
     return () => {
       setGlobalVerificationHandler(() => false);
     };
-  }, []);
+  }, [handleVerificationError]);
 
   const contextValue: VerificationContextType = {
     showVerificationModal,
@@ -108,12 +89,4 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
       />
     </VerificationContext.Provider>
   );
-};
-
-export const useVerification = (): VerificationContextType => {
-  const context = useContext(VerificationContext);
-  if (context === undefined) {
-    throw new Error('useVerification must be used within a VerificationProvider');
-  }
-  return context;
 };

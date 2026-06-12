@@ -62,7 +62,7 @@ export interface Beatmapset {
   title_unicode: string;
   user_id: number;
   video: boolean;
-  current_nominations: any;
+  current_nominations: unknown;
   description: string | null;
   pack_tags: string[];
   track_id: number | null;
@@ -105,5 +105,5 @@ export interface Beatmapset {
   };
   has_favourited: boolean;
   favourite_count: number;
-  recent_favourites: any[];
+  recent_favourites: unknown[];
 }

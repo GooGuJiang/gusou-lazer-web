@@ -38,7 +38,7 @@ export const useAvailableCountries = (mode: GameMode) => {
         const response = await rankingsAPI.getCountryRankings(mode, 1);
         
         if (!abortController.signal.aborted && response.ranking) {
-          const availableCountries: Country[] = response.ranking.map((ranking: any) => ({
+          const availableCountries: Country[] = response.ranking.map((ranking: { code: string; name: string }) => ({
             code: ranking.code,
             name: ranking.name,
           }));

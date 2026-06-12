@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../hooks/useAuth';
 // 使用全局通知上下文，避免与 Navbar 各自实例不同步
-import { useNotificationContext } from '../contexts/NotificationContext';
+import { useNotificationContext } from '../contexts/useNotificationContext';
 import { useWebSocketNotifications } from '../hooks/useWebSocketNotifications';
 import { chatAPI, teamsAPI, userAPI } from '../utils/api';
 import { apiCache } from '../utils/apiCache';
@@ -127,7 +127,7 @@ const MessagesPage: React.FC = () => {
 
   // 使用WebSocket处理实时消息
   // chatConnected 当前未在 UI 中使用，改名为 _chatConnected 以消除未使用警告
-  const { isConnected: _chatConnected } = useWebSocketNotifications({
+  const { isConnected: chatConnected } = useWebSocketNotifications({
     isAuthenticated,
     currentUser: user,
     onNewMessage: (message) => {
@@ -366,11 +366,13 @@ const MessagesPage: React.FC = () => {
     }
   }, [notifications, channels, user?.id]);
 
+  void chatConnected;
+
   // 清理定时器
   useEffect(() => {
     return () => {
       // 组件卸载时清理所有回退定时器
-      const fallbackTimers = (window as any).messageFallbackTimers;
+      const fallbackTimers = (window as WindowWithMessageFallbackTimers).messageFallbackTimers;
       if (fallbackTimers) {
         fallbackTimers.forEach((timer: NodeJS.Timeout) => clearTimeout(timer));
         fallbackTimers.clear();
@@ -411,7 +413,7 @@ const MessagesPage: React.FC = () => {
     selectedChannelRef.current = channel;
   // 记录本次请求，用于竞态检测
   const requestToken = Symbol('channel-load');
-  (selectChannelAndAddMessage as any).currentToken = requestToken;
+  (selectChannelAndAddMessage as TokenizedCallback).currentToken = requestToken;
     
     if (isMobile) {
       setShowSidebar(false);
@@ -423,7 +425,7 @@ const MessagesPage: React.FC = () => {
       
       if (channelMessages && channelMessages.length > 0) {
         // 如果在请求完成前频道被再次切换，放弃本次结果
-        if ((selectChannelAndAddMessage as any).currentToken !== requestToken) {
+        if ((selectChannelAndAddMessage as TokenizedCallback).currentToken !== requestToken) {
           console.log('放弃过期的频道历史消息结果 (addMessage path)');
           return;
         }
@@ -496,7 +498,7 @@ const MessagesPage: React.FC = () => {
       toast.error(t('messages.toasts.loadMessagesFailed'));
       // 即使加载失败，也要显示新消息
       setMessages(prev => {
-        let allMessages = [...prev];
+        const allMessages = [...prev];
         
         const newMessageWithLocalTime = {
           ...newMessage,
@@ -538,7 +540,7 @@ const MessagesPage: React.FC = () => {
     selectedChannelRef.current = channel;
   // 记录请求 token 用于竞态
   const requestToken = Symbol('channel-load');
-  (selectChannel as any).currentToken = requestToken;
+  (selectChannel as TokenizedCallback).currentToken = requestToken;
     
     if (isMobile) {
       setShowSidebar(false);
@@ -585,7 +587,7 @@ const MessagesPage: React.FC = () => {
       const channelMessages = await loadChannelMessages(channel.channel_id);
       
       if (channelMessages && channelMessages.length > 0) {
-        if ((selectChannel as any).currentToken !== requestToken) {
+        if ((selectChannel as TokenizedCallback).currentToken !== requestToken) {
           console.log('放弃过期的频道消息结果');
           return;
         }
@@ -1411,7 +1413,7 @@ const MessagesPage: React.FC = () => {
   // 批量处理私聊通知标记已读
   const batchMarkPrivateNotificationsAsRead = async () => {
     console.log('开始批量处理私聊通知...');
-    let privateNotifications = notifications.filter(notification => 
+    const privateNotifications = notifications.filter(notification => 
       notification.name === 'channel_message' && 
       notification.details?.type === 'pm'
     );

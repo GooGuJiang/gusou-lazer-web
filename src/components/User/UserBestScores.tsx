@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
@@ -26,7 +27,7 @@ interface UserBestScoresProps {
 }
 
 // 时间格式化函数
-const formatTimeAgo = (dateString: string, t: any): string => {
+const formatTimeAgo = (dateString: string, t: TFunction): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -99,7 +100,7 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 // 单个成绩卡片组件 - 基于 osu! 官方设计
 const ScoreCard: React.FC<{ 
   score: BestScore; 
-  t: any; 
+  t: TFunction; 
   profileColor: string;
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;

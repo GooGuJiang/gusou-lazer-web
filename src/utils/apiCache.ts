@@ -6,7 +6,7 @@ class APICache {
   private userCache = new Map<number, { data: User; timestamp: number }>();
   private channelMessagesCache = new Map<number, { data: ChatMessage[]; timestamp: number }>();
   private channelListCache: { data: ChatChannel[]; timestamp: number } | null = null;
-  private pendingRequests = new Map<string, Promise<any>>();
+  private pendingRequests = new Map<string, Promise<unknown>>();
   
   private readonly USER_CACHE_DURATION = 5 * 60 * 1000; // 5分钟
   private readonly CHANNEL_MESSAGES_CACHE_DURATION = 2 * 60 * 1000; // 2分钟
@@ -24,7 +24,7 @@ class APICache {
     
     // 检查是否有正在进行的请求
     if (this.pendingRequests.has(cacheKey)) {
-      return this.pendingRequests.get(cacheKey);
+      return this.pendingRequests.get(cacheKey) as Promise<User | null>;
     }
     
     try {
@@ -100,7 +100,7 @@ class APICache {
     
     // 检查是否有正在进行的请求
     if (this.pendingRequests.has(cacheKey)) {
-      return this.pendingRequests.get(cacheKey);
+      return this.pendingRequests.get(cacheKey) as Promise<ChatMessage[] | null>;
     }
     
     try {
@@ -138,7 +138,7 @@ class APICache {
     
     // 检查是否有正在进行的请求
     if (this.pendingRequests.has(cacheKey)) {
-      return this.pendingRequests.get(cacheKey);
+      return this.pendingRequests.get(cacheKey) as Promise<ChatChannel[] | null>;
     }
     
     try {

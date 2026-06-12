@@ -6,6 +6,10 @@ interface BBCodeRendererProps {
   className?: string;
 }
 
+type SpoilerButtonElement = Element & {
+  __spoilerClickHandler?: EventListener;
+};
+
 /**
  * BBCode HTML 渲染组件
  * 安全地渲染BBCode解析器生成的HTML，并添加交互功能
@@ -25,7 +29,7 @@ const BBCodeRenderer: React.FC<BBCodeRendererProps> = ({ html, className = '' })
       
       spoilerLinks.forEach((button) => {
         // 先移除可能存在的旧事件监听器
-        const existingHandler = (button as any).__spoilerClickHandler;
+        const existingHandler = (button as SpoilerButtonElement).__spoilerClickHandler;
         if (existingHandler) {
           button.removeEventListener('click', existingHandler);
         }
@@ -50,7 +54,7 @@ const BBCodeRenderer: React.FC<BBCodeRendererProps> = ({ html, className = '' })
         };
 
         // 存储事件处理器引用以便清理
-        (button as any).__spoilerClickHandler = handleClick;
+        (button as SpoilerButtonElement).__spoilerClickHandler = handleClick;
         button.addEventListener('click', handleClick);
         
         // 设置初始状态 - button元素默认就有正确的属性
@@ -59,7 +63,7 @@ const BBCodeRenderer: React.FC<BBCodeRendererProps> = ({ html, className = '' })
         // 添加清理函数
         cleanupFunctions.push(() => {
           button.removeEventListener('click', handleClick);
-          delete (button as any).__spoilerClickHandler;
+          delete (button as SpoilerButtonElement).__spoilerClickHandler;
         });
       });
       

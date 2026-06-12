@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
@@ -13,7 +14,7 @@ interface UserRecentActivityProps {
 }
 
 // 时间格式化函数
-const formatTimeAgo = (dateString: string, t: any): string => {
+const formatTimeAgo = (dateString: string, t: TFunction): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -106,7 +107,7 @@ const getActivityIcon = (type: string) => {
 };
 
 // 获取活动描述
-const getActivityDescription = (activity: UserActivity, t: any) => {
+const getActivityDescription = (activity: UserActivity, t: TFunction) => {
   switch (activity.type) {
     case 'rank':
       return (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../utils/api';
 import { FiMessageCircle, FiUsers, FiBell, FiX } from 'react-icons/fi';
@@ -155,21 +154,5 @@ export const CustomToast: React.FC<CustomToastProps> = ({
         </p>
       </div>
     </div>
-  );
-};
-
-// 自定义 toast 显示函数
-export const showCustomToast = (props: CustomToastProps) => {
-  return toast.custom(
-    (t: any) => (
-      <CustomToast 
-        {...props} 
-        onDismiss={() => toast.dismiss(t.id)}
-      />
-    ),
-    {
-      duration: 5000,
-      position: 'top-right',
-    }
   );
 };
