@@ -41,12 +41,12 @@
 }
 
 .bbcode-spoilerbox__link-icon::before {
-  content: "▶";
+  content: '▶';
   margin-right: 6px;
   transition: transform 0.2s;
 }
 
-.bbcode-spoilerbox__link[aria-expanded="true"] .bbcode-spoilerbox__link-icon::before {
+.bbcode-spoilerbox__link[aria-expanded='true'] .bbcode-spoilerbox__link-icon::before {
   transform: rotate(90deg);
 }
 
@@ -65,13 +65,13 @@
     border-color: #404040;
     background: #1a1a1a;
   }
-  
+
   .bbcode-spoilerbox__link {
     background: #2a2a2a !important;
     color: #e0e0e0 !important;
     border-bottom-color: #404040 !important;
   }
-  
+
   .bbcode-spoilerbox__link:hover {
     background: #333 !important;
     color: #fff !important;
@@ -179,33 +179,33 @@
     border-color: #444;
     background: #2a2a2a;
   }
-  
+
   .bbcode-spoilerbox__link {
     background: #3a3a3a;
     color: #e0e0e0;
     border-color: #444;
   }
-  
+
   .bbcode-spoilerbox__link:hover {
     background: #4a4a4a;
     color: #e0e0e0;
   }
-  
+
   .bbcode blockquote {
     background: rgba(237, 110, 160, 0.2);
     border-left-color: #ed6ea0;
   }
-  
+
   .bbcode blockquote h4 {
     color: #ccc;
   }
-  
+
   .bbcode pre {
     background: #1e1e1e;
     border-color: #444;
     color: #e0e0e0;
   }
-  
+
   .bbcode code {
     background: #1e1e1e;
     border-color: #444;
@@ -263,7 +263,7 @@
 
 /* 暗色主题变量 */
 .dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   --imagemap-tooltip-bg: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   --imagemap-tooltip-color: #ffffff;
   --imagemap-tooltip-border: rgba(255, 255, 255, 0.2);
@@ -272,7 +272,7 @@
 }
 
 /* CSS Tooltip for ImageMap - 使用CSS变量实现主题适配 */
-.imagemap__link[title]:not([title=""]):hover::before {
+.imagemap__link[title]:not([title='']):hover::before {
   content: attr(title);
   position: absolute;
   bottom: 100%;
@@ -296,8 +296,8 @@
 }
 
 /* 暗色主题下添加text-shadow增强可读性 */
-.dark .imagemap__link[title]:not([title=""]):hover::before,
-[data-theme="dark"] .imagemap__link[title]:not([title=""]):hover::before {
+.dark .imagemap__link[title]:not([title='']):hover::before,
+[data-theme='dark'] .imagemap__link[title]:not([title='']):hover::before {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -322,25 +322,25 @@
   .bbcode {
     font-size: 0.9em;
   }
-  
+
   .bbcode-spoilerbox__link {
     padding: 6px 10px;
   }
-  
+
   .bbcode-spoilerbox__body {
     padding: 10px;
   }
-  
+
   .bbcode blockquote {
     margin: 8px 0;
     padding: 8px 12px;
   }
-  
+
   .bbcode pre {
     padding: 8px;
     font-size: 0.8em;
   }
-  
+
   .u-embed-wide--bbcode {
     height: 200px;
   }
@@ -351,18 +351,18 @@
   .bbcode-spoilerbox__link {
     display: none;
   }
-  
+
   .bbcode-spoilerbox__body {
     display: block !important;
     border: 1px solid #000;
     padding: 8px;
   }
-  
+
   .spoiler {
     background: transparent !important;
     color: inherit !important;
   }
-  
+
   .u-embed-wide--bbcode {
     display: none;
   }
@@ -385,11 +385,11 @@
     border-left-color: #000;
     background: #f0f0f0;
   }
-  
+
   .bbcode-spoilerbox {
     border-color: #000;
   }
-  
+
   .bbcode-spoilerbox__link {
     border-bottom-color: #000;
   }

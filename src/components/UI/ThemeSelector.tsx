@@ -40,14 +40,17 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
 
   // 切换下拉菜单
   const handleToggle = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   // 选择主题
-  const handleThemeSelect = useCallback((newTheme: Theme) => {
-    setTheme(newTheme);
-    setIsOpen(false);
-  }, [setTheme]);
+  const handleThemeSelect = useCallback(
+    (newTheme: Theme) => {
+      setTheme(newTheme);
+      setIsOpen(false);
+    },
+    [setTheme]
+  );
 
   // 点击外部关闭
   useEffect(() => {
@@ -71,11 +74,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
   }, []);
 
   return (
-    <div
-      className={`relative ${className}`}
-      ref={dropdownRef}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={`relative ${className}`} ref={dropdownRef} onKeyDown={handleKeyDown}>
       {/* 主题切换按钮 */}
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -83,9 +82,10 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
         onClick={handleToggle}
         className={`
           p-2 md:p-2.5 rounded-xl transition-all duration-200
-          ${isOpen
-            ? 'text-osu-pink bg-osu-pink/10'
-            : 'text-gray-600 dark:text-gray-300 hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50'
+          ${
+            isOpen
+              ? 'text-osu-pink bg-osu-pink/10'
+              : 'text-gray-600 dark:text-gray-300 hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50'
           }
         `}
         aria-label={t(`common.theme.${theme}`)}
@@ -102,21 +102,21 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
             initial={{
               opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
             animate={{
               opacity: 1,
               scale: 1,
-              y: 0
+              y: 0,
             }}
             exit={{
               opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
             transition={{
               duration: 0.15,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="
               absolute left-0 mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
@@ -124,7 +124,8 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
               py-2 z-50 overflow-hidden whitespace-nowrap
             "
             style={{
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+              boxShadow:
+                '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             }}
             role="listbox"
             aria-label={t('common.theme.light')}
@@ -141,9 +142,10 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) =>
                     className={`
                       w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium
                       transition-all duration-200 group
-                      ${isSelected
-                        ? 'text-osu-pink bg-osu-pink/10'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink'
+                      ${
+                        isSelected
+                          ? 'text-osu-pink bg-osu-pink/10'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink'
                       }
                     `}
                     role="option"

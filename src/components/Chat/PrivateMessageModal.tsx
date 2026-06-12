@@ -44,7 +44,8 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
 
   // 检查是否有预选用户
   useEffect(() => {
-    const selectedUser = (window as Window & { selectedUserForPM?: User }).selectedUserForPM as User;
+    const selectedUser = (window as Window & { selectedUserForPM?: User })
+      .selectedUserForPM as User;
     if (selectedUser) {
       setTargetUserId(selectedUser.id);
       setTargetUsername(selectedUser.username);
@@ -63,12 +64,12 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
       toast.success(t('messages.privateMessage.toasts.sent'));
       onMessageSent(result?.channel);
       onClose();
-      
+
       // 重置表单
       setTargetUserId(null);
       setTargetUsername('');
       setMessage('');
-      
+
       // 如果创建成功，可以尝试自动选择新创建的频道
       if (result?.channel) {
         console.log('私聊频道创建成功:', result.channel);
@@ -118,7 +119,7 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
           className="absolute inset-0 bg-black bg-opacity-50"
           onClick={onClose}
         />
-        
+
         {/* 模态框 */}
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -155,13 +156,13 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
                   onChange={(e) => {
                     const value = e.target.value;
                     setTargetUsername(value);
-                    
+
                     if (value) {
                       // 防抖搜索
                       const timeoutId = setTimeout(() => {
                         searchUsers(value);
                       }, 300);
-                      
+
                       return () => clearTimeout(timeoutId);
                     } else {
                       setSearchResults([]);
@@ -170,13 +171,16 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
                   }}
                   className="w-full px-4 py-3 pl-10 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-osu-pink focus:border-transparent"
                 />
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <FiSearch
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
               </div>
 
               {/* 搜索结果 */}
               {searchResults.length > 0 && (
                 <div className="mt-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                  {searchResults.map(user => (
+                  {searchResults.map((user) => (
                     <button
                       key={user.id}
                       onClick={() => selectUser(user)}
@@ -237,7 +241,11 @@ const PrivateMessageModal: React.FC<PrivateMessageModalProps> = ({
               className="flex items-center space-x-2 px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <FiSend size={16} />
-              <span>{isLoading ? t('messages.privateMessage.sending') : t('messages.privateMessage.send')}</span>
+              <span>
+                {isLoading
+                  ? t('messages.privateMessage.sending')
+                  : t('messages.privateMessage.send')}
+              </span>
             </button>
           </div>
         </motion.div>

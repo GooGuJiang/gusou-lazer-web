@@ -23,7 +23,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
   const [step, setStep] = useState<'select' | 'crop'>('select');
   const [originalFileName, setOriginalFileName] = useState<string>('');
   const [isDragOver, setIsDragOver] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 防止背景滚动
@@ -79,7 +79,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       processFile(files[0]);
@@ -172,7 +172,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              
+
               {currentCoverUrl && (
                 <div className="mb-6">
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">当前头图</p>
@@ -184,10 +184,10 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
                 </div>
               )}
 
-              <div 
+              <div
                 className={`border-2 border-dashed rounded-lg p-8 mb-4 transition-colors cursor-pointer ${
-                  isDragOver 
-                    ? 'border-osu-pink bg-osu-pink/10' 
+                  isDragOver
+                    ? 'border-osu-pink bg-osu-pink/10'
                     : 'border-gray-300 dark:border-gray-600 hover:border-osu-pink/50'
                 }`}
                 onDragOver={handleDragOver}
@@ -195,8 +195,12 @@ const CoverUpload: React.FC<CoverUploadProps> = ({
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <FiUpload className={`w-12 h-12 mx-auto mb-4 ${isDragOver ? 'text-osu-pink' : 'text-gray-400'}`} />
-                <p className={`mb-2 ${isDragOver ? 'text-osu-pink' : 'text-gray-600 dark:text-gray-400'}`}>
+                <FiUpload
+                  className={`w-12 h-12 mx-auto mb-4 ${isDragOver ? 'text-osu-pink' : 'text-gray-400'}`}
+                />
+                <p
+                  className={`mb-2 ${isDragOver ? 'text-osu-pink' : 'text-gray-600 dark:text-gray-400'}`}
+                >
                   {isDragOver ? '释放文件开始上传' : '点击选择图片或拖拽图片到此处'}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">

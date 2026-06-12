@@ -67,10 +67,7 @@ const MemberActions: React.FC<Props> = ({ member, team, onMemberRemoved }) => {
           </div>
 
           {/* 点击外部关闭菜单 */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setShowActions(false)}
-          />
+          <div className="fixed inset-0 z-40" onClick={() => setShowActions(false)} />
         </>
       )}
     </div>

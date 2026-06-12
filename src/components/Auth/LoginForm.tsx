@@ -21,7 +21,7 @@ const LoginForm: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +54,11 @@ const LoginForm: React.FC = () => {
     <div className="max-w-md w-full space-y-3">
       <div className="text-center">
         <div className="w-12 h-12 mx-auto flex items-center justify-center mb-2">
-          <img src="/image/logos/logo.svg" alt={t('common.brandAlt')} className="w-12 h-12 object-contain" />
+          <img
+            src="/image/logos/logo.svg"
+            alt={t('common.brandAlt')}
+            className="w-12 h-12 object-contain"
+          />
         </div>
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('auth.login.title')}</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t('auth.login.subtitle')}</p>
@@ -63,7 +67,10 @@ const LoginForm: React.FC = () => {
       <div className="sm:bg-white sm:dark:bg-gray-800 sm:py-4 sm:px-6 sm:shadow-sm sm:rounded-lg sm:border sm:border-gray-200 sm:dark:border-gray-700 py-2">
         <form className="space-y-3" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               {t('auth.login.usernameOrEmail')}
             </label>
             <div className="relative">
@@ -86,7 +93,10 @@ const LoginForm: React.FC = () => {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 {t('auth.login.password')}
               </label>
               <Link
@@ -152,7 +162,10 @@ const LoginForm: React.FC = () => {
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('auth.login.noAccount')}{' '}
-              <Link to="/register" className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80">
+              <Link
+                to="/register"
+                className="font-medium text-osu-pink hover:text-osu-pink/80 dark:text-osu-pink dark:hover:text-osu-pink/80"
+              >
                 {t('auth.login.registerNow')}
               </Link>
             </p>
@@ -161,9 +174,7 @@ const LoginForm: React.FC = () => {
       </div>
 
       <div className="text-center">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {t('common.authAgreement')}
-        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">{t('common.authAgreement')}</p>
       </div>
     </div>
   );

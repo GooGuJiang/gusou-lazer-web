@@ -20,16 +20,16 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
     if (channel.last_read_id !== undefined && channel.last_message_id !== undefined) {
       return channel.last_read_id < channel.last_message_id;
     }
-    
+
     // 如果没有这些字段，检查recent_messages中是否有未读消息
     if (channel.recent_messages && channel.recent_messages.length > 0) {
       // 这里可以根据需要添加更复杂的未读检测逻辑
       return false; // 暂时返回false，因为recent_messages可能不包含未读状态
     }
-    
+
     return false;
   }, [channel.last_read_id, channel.last_message_id, channel.recent_messages]);
-  
+
   const lastMessage = channel.recent_messages?.[0];
 
   const getChannelIcon = () => {
@@ -39,8 +39,8 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
         if (channel.user_info) {
           return (
             <div className="w-10 h-10 rounded-lg overflow-hidden">
-              <img 
-                src={channel.user_info.avatar_url} 
+              <img
+                src={channel.user_info.avatar_url}
                 alt={channel.user_info.username}
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -52,14 +52,8 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
           );
         }
         // 如果没有用户信息，使用默认的头像组件
-        const targetUserId = channel.users.find(id => id !== 0) || channel.users[0] || 0;
-        return (
-          <Avatar 
-            userId={targetUserId} 
-            username={channel.name}
-            size="sm"
-          />
-        );
+        const targetUserId = channel.users.find((id) => id !== 0) || channel.users[0] || 0;
+        return <Avatar userId={targetUserId} username={channel.name} size="sm" />;
       }
       case 'TEAM':
         return (
@@ -95,11 +89,11 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
 
     const senderName = lastMessage.sender?.username || t('messages.sidebar.unknownUser');
     const content = lastMessage.content;
-    
+
     if (lastMessage.is_action) {
       return `* ${senderName} ${content}`;
     }
-    
+
     return `${senderName}: ${content}`;
   };
 
@@ -111,9 +105,10 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
       className={`
         w-full p-3 rounded-lg text-left transition-all duration-200
         hover:bg-gray-50 dark:hover:bg-gray-700/50
-        ${isSelected
-          ? 'bg-osu-pink/10 border border-osu-pink/20 shadow-sm'
-          : 'border border-transparent'
+        ${
+          isSelected
+            ? 'bg-osu-pink/10 border border-osu-pink/20 shadow-sm'
+            : 'border border-transparent'
         }
       `}
     >
@@ -125,21 +120,20 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-osu-pink rounded-full border-2 border-white dark:border-gray-800" />
           )}
         </div>
-        
+
         {/* 频道信息 */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
-            <h3 className={`
+            <h3
+              className={`
               font-medium truncate
-              ${isSelected 
-                ? 'text-osu-pink' 
-                : 'text-gray-900 dark:text-white'
-              }
+              ${isSelected ? 'text-osu-pink' : 'text-gray-900 dark:text-white'}
               ${hasUnreadMessages ? 'font-semibold' : ''}
-            `}>
+            `}
+            >
               {channel.name}
             </h3>
-            
+
             {/* 未读消息指示器 */}
             {hasUnreadMessages && (
               <motion.div
@@ -149,18 +143,21 @@ const ChannelItem: React.FC<ChannelItemProps> = ({ channel, isSelected, onClick 
               />
             )}
           </div>
-          
+
           {/* 最后一条消息 */}
-          <p className={`
+          <p
+            className={`
             text-sm truncate
-            ${hasUnreadMessages 
-              ? 'text-gray-700 dark:text-gray-200 font-medium' 
-              : 'text-gray-500 dark:text-gray-400'
+            ${
+              hasUnreadMessages
+                ? 'text-gray-700 dark:text-gray-200 font-medium'
+                : 'text-gray-500 dark:text-gray-400'
             }
-          `}>
+          `}
+          >
             {formatLastMessage()}
           </p>
-          
+
           {/* 频道类型标签 */}
           <div className="flex items-center space-x-1 mt-1">
             {channel.type === 'PM' && (

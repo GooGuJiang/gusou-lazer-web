@@ -33,7 +33,7 @@ export const verificationAPI = {
         'X-UUID': deviceUUID,
       },
     });
-    
+
     return response.data;
   },
 
@@ -51,7 +51,9 @@ export const verificationAPI = {
 };
 
 // 检查错误是否为用户验证错误
-export const isVerificationError = (error: unknown): error is { response: { data: VerificationError } } => {
+export const isVerificationError = (
+  error: unknown
+): error is { response: { data: VerificationError } } => {
   if (!isRecord(error) || !isRecord(error.response)) return false;
   const data = error.response.data;
   if (!isRecord(data) || !isRecord(data.error)) return false;
@@ -68,8 +70,3 @@ export const getVerificationMethod = (error: unknown): 'totp' | 'mail' | null =>
   }
   return null;
 };
-
-
-
-
-

@@ -56,23 +56,23 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     audio.volume = state.volume;
 
     const handleLoadStart = () => {
-      setState(prev => ({ ...prev, isLoading: true }));
+      setState((prev) => ({ ...prev, isLoading: true }));
     };
 
     const handleCanPlay = () => {
-      setState(prev => ({ ...prev, isLoading: false }));
+      setState((prev) => ({ ...prev, isLoading: false }));
     };
 
     const handlePlay = () => {
-      setState(prev => ({ ...prev, isPlaying: true }));
+      setState((prev) => ({ ...prev, isPlaying: true }));
     };
 
     const handlePause = () => {
-      setState(prev => ({ ...prev, isPlaying: false }));
+      setState((prev) => ({ ...prev, isPlaying: false }));
     };
 
     const handleTimeUpdate = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         currentTime: audio.currentTime,
         duration: audio.duration || 0,
@@ -80,7 +80,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
 
     const handleEnded = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         isPlaying: false,
         currentTime: 0,
@@ -88,7 +88,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
 
     const handleVolumeChange = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         volume: audio.volume,
         isMuted: audio.muted,
@@ -96,7 +96,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
 
     const handleError = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         isLoading: false,
         isPlaying: false,
@@ -127,17 +127,20 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const play = useCallback((url: string) => {
-    const audio = audioRef.current;
-    if (!audio) return;
+  const play = useCallback(
+    (url: string) => {
+      const audio = audioRef.current;
+      if (!audio) return;
 
-    if (state.currentUrl !== url) {
-      audio.src = url;
-      setState(prev => ({ ...prev, currentUrl: url, currentTime: 0 }));
-    }
+      if (state.currentUrl !== url) {
+        audio.src = url;
+        setState((prev) => ({ ...prev, currentUrl: url, currentTime: 0 }));
+      }
 
-    audio.play().catch(console.error);
-  }, [state.currentUrl]);
+      audio.play().catch(console.error);
+    },
+    [state.currentUrl]
+  );
 
   const pause = useCallback(() => {
     const audio = audioRef.current;
@@ -150,7 +153,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     if (!audio) return;
     audio.pause();
     audio.currentTime = 0;
-    setState(prev => ({ ...prev, currentTime: 0 }));
+    setState((prev) => ({ ...prev, currentTime: 0 }));
   }, []);
 
   const seek = useCallback((time: number) => {
@@ -182,11 +185,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     audioElement: audioRef.current,
   };
 
-  return (
-    <AudioContext.Provider value={contextValue}>
-      {children}
-    </AudioContext.Provider>
-  );
+  return <AudioContext.Provider value={contextValue}>{children}</AudioContext.Provider>;
 };
 
 // 播放按钮组件（类似 osu-web 的设计）
@@ -204,10 +203,10 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
   showProgress = false,
 }) => {
   const { play, pause, stop, isPlaying, currentUrl, currentTime, duration, isLoading } = useAudio();
-  
+
   const isCurrentTrack = currentUrl === audioUrl;
   const isCurrentlyPlaying = isCurrentTrack && isPlaying;
-  
+
   const progress = isCurrentTrack && duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const sizeClasses = {
@@ -245,7 +244,7 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
       disabled={isLoading}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
     >
       {/* 进度环 */}
       {showProgress && isCurrentTrack && (
@@ -270,13 +269,13 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
             fill="none"
             strokeDasharray={`${progress}, 100`}
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-            initial={{ strokeDasharray: "0, 100" }}
+            initial={{ strokeDasharray: '0, 100' }}
             animate={{ strokeDasharray: `${progress}, 100` }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           />
         </motion.svg>
       )}
-      
+
       {/* 播放/暂停图标 */}
       <div className="relative z-10">
         <AnimatePresence mode="wait">
@@ -347,46 +346,64 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
   };
 
   // 进度条拖动处理
-  const updateProgressFromMouse = useCallback((e: MouseEvent | React.MouseEvent) => {
-    if (!progressRef.current || !duration) return;
-    
-    const rect = progressRef.current.getBoundingClientRect();
-    const progress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    seek(progress * duration);
-  }, [duration, seek]);
+  const updateProgressFromMouse = useCallback(
+    (e: MouseEvent | React.MouseEvent) => {
+      if (!progressRef.current || !duration) return;
 
-  const handleProgressMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDraggingProgress(true);
-    updateProgressFromMouse(e);
-  }, [updateProgressFromMouse]);
+      const rect = progressRef.current.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      seek(progress * duration);
+    },
+    [duration, seek]
+  );
 
-  const handleProgressClick = useCallback((e: React.MouseEvent) => {
-    if (!isDraggingProgress) {
+  const handleProgressMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setIsDraggingProgress(true);
       updateProgressFromMouse(e);
-    }
-  }, [isDraggingProgress, updateProgressFromMouse]);
+    },
+    [updateProgressFromMouse]
+  );
+
+  const handleProgressClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDraggingProgress) {
+        updateProgressFromMouse(e);
+      }
+    },
+    [isDraggingProgress, updateProgressFromMouse]
+  );
 
   // 音量条拖动处理
-  const updateVolumeFromMouse = useCallback((e: MouseEvent | React.MouseEvent) => {
-    if (!volumeRef.current) return;
-    
-    const rect = volumeRef.current.getBoundingClientRect();
-    const volume = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    setVolume(volume);
-  }, [setVolume]);
+  const updateVolumeFromMouse = useCallback(
+    (e: MouseEvent | React.MouseEvent) => {
+      if (!volumeRef.current) return;
 
-  const handleVolumeMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDraggingVolume(true);
-    updateVolumeFromMouse(e);
-  }, [updateVolumeFromMouse]);
+      const rect = volumeRef.current.getBoundingClientRect();
+      const volume = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      setVolume(volume);
+    },
+    [setVolume]
+  );
 
-  const handleVolumeClick = useCallback((e: React.MouseEvent) => {
-    if (!isDraggingVolume) {
+  const handleVolumeMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setIsDraggingVolume(true);
       updateVolumeFromMouse(e);
-    }
-  }, [isDraggingVolume, updateVolumeFromMouse]);
+    },
+    [updateVolumeFromMouse]
+  );
+
+  const handleVolumeClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDraggingVolume) {
+        updateVolumeFromMouse(e);
+      }
+    },
+    [isDraggingVolume, updateVolumeFromMouse]
+  );
 
   // 全局鼠标事件处理
   useEffect(() => {
@@ -420,7 +437,8 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
   if (!currentUrl) return null;
 
   return (
-    <div className={`
+    <div
+      className={`
       fixed bottom-4 right-4 z-50
       w-1/3 min-w-[280px] max-w-[400px]
       sm:min-w-[320px] md:w-1/3 lg:w-1/4
@@ -429,14 +447,15 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
       px-3 py-2 flex items-center gap-2 sm:gap-3
       max-sm:bottom-2 max-sm:right-2 max-sm:left-2 max-sm:w-auto
       ${className}
-    `}>
+    `}
+    >
       {/* 播放/暂停按钮 */}
       <motion.button
         onClick={isPlaying ? pause : () => currentUrl && play(currentUrl)}
         className="flex items-center justify-center w-8 h-8 rounded-full bg-osu-pink hover:bg-osu-pink/80 text-white transition-colors shadow-lg flex-shrink-0"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -456,7 +475,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
         <span className="text-xs text-gray-600 dark:text-gray-400 min-w-[28px] sm:min-w-[32px] hidden xs:block">
           {formatTime(currentTime)}
         </span>
-        
+
         <motion.div
           ref={progressRef}
           onClick={handleProgressClick}
@@ -469,7 +488,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
         >
           <div
             className="h-full bg-osu-pink rounded-full relative group-hover:bg-osu-pink/90 shadow-sm transition-all duration-100"
-            style={{ 
+            style={{
               width: `${progress}%`,
             }}
           >
@@ -480,18 +499,16 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 1
+                ease: 'easeInOut',
+                repeatDelay: 1,
               }}
             />
-            
+
             {/* 悬停时的拖拽点 */}
-            <div 
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-osu-pink rounded-full shadow-lg border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-osu-pink rounded-full shadow-lg border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
         </motion.div>
-        
+
         <span className="text-xs text-gray-600 dark:text-gray-400 min-w-[28px] sm:min-w-[32px] hidden xs:block">
           {formatTime(duration)}
         </span>
@@ -504,7 +521,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
           className="p-1 text-gray-600 dark:text-gray-400 hover:text-osu-pink transition-colors rounded"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -518,7 +535,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
             </motion.div>
           </AnimatePresence>
         </motion.button>
-        
+
         <motion.div
           ref={volumeRef}
           onClick={handleVolumeClick}
@@ -531,13 +548,11 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
         >
           <div
             className="h-full bg-osu-pink rounded-full relative group-hover:bg-osu-pink/90 transition-all duration-100"
-            style={{ 
+            style={{
               width: `${volumeProgress}%`,
             }}
           >
-            <div 
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-osu-pink rounded-full shadow-md border border-white opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-osu-pink rounded-full shadow-md border border-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
         </motion.div>
       </div>

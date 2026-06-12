@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   FiUserPlus,
@@ -10,9 +10,9 @@ import {
   FiUser,
   FiUserCheck,
   FiUserMinus,
-} from "react-icons/fi";
-import { FaUserFriends } from "react-icons/fa";
-import { motion } from "framer-motion";
+} from 'react-icons/fi';
+import { FaUserFriends } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import {
   useFloating,
   autoUpdate,
@@ -24,7 +24,7 @@ import {
   useRole,
   useInteractions,
   FloatingFocusManager,
-} from "@floating-ui/react";
+} from '@floating-ui/react';
 
 /** ===================== 类型定义 ===================== */
 export type FriendshipStatus = {
@@ -63,7 +63,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
   onBlock,
   onUnblock,
   followerCount = 0,
-  className = "",
+  className = '',
   isSelf = false,
 }) => {
   const { t } = useTranslation();
@@ -75,17 +75,18 @@ const FriendActions: React.FC<FriendActionsProps> = ({
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen && !isActionLoading, // 在执行操作时不打开菜单
     onOpenChange: (open) => {
-      if (!isActionLoading) { // 只有在没有操作进行时才允许状态改变
+      if (!isActionLoading) {
+        // 只有在没有操作进行时才允许状态改变
         setIsOpen(open);
       }
     },
-    placement: "bottom-start", // 恢复 bottom-start
-    strategy: "absolute", // 改回 absolute 定位策略
+    placement: 'bottom-start', // 恢复 bottom-start
+    strategy: 'absolute', // 改回 absolute 定位策略
     //transform: false, // 禁用 transform，使用原生定位
     middleware: [
       offset({ mainAxis: 12, crossAxis: 0 }), // 增加主轴偏移确保在下方
       flip({
-        fallbackAxisSideDirection: "start",
+        fallbackAxisSideDirection: 'start',
         padding: 5,
       }),
       shift({
@@ -99,11 +100,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
   const dismiss = useDismiss(context);
   const role = useRole(context);
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    click,
-    dismiss,
-    role,
-  ]);
+  const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role]);
 
   // osu! 单向好友系统菜单配置
   const menuItems: MenuItemType[] = useMemo(() => {
@@ -113,7 +110,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
     if (isBlocked) {
       return [
         {
-          key: "unblock",
+          key: 'unblock',
           label: t('profile.friendActions.unblock'),
           icon: (
             <span className="relative flex items-center justify-center w-4 h-4">
@@ -122,17 +119,20 @@ const FriendActions: React.FC<FriendActionsProps> = ({
             </span>
           ),
           action: onUnblock,
-          className: "text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10 font-medium",
+          className:
+            'text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10 font-medium',
         },
       ];
     }
-    
+
     // 已关注状态 (我关注了对方)
     if (isFriend) {
       const items = [
         {
-          key: "remove",
-          label: isMutual ? t('profile.friendActions.cancelMutualFollow') : t('profile.friendActions.unfollow'),
+          key: 'remove',
+          label: isMutual
+            ? t('profile.friendActions.cancelMutualFollow')
+            : t('profile.friendActions.unfollow'),
           icon: (
             <span className="relative flex items-center justify-center w-4 h-4">
               {isMutual ? (
@@ -151,15 +151,15 @@ const FriendActions: React.FC<FriendActionsProps> = ({
             </span>
           ),
           action: onRemove,
-          className: isMutual 
-            ? "text-profile-color hover:bg-profile-color/10 dark:text-profile-color dark:hover:bg-profile-color/10 font-medium" 
-            : "text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-500/10 font-medium",
+          className: isMutual
+            ? 'text-profile-color hover:bg-profile-color/10 dark:text-profile-color dark:hover:bg-profile-color/10 font-medium'
+            : 'text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-500/10 font-medium',
         },
       ];
 
       // 添加屏蔽选项
       items.push({
-        key: "block",
+        key: 'block',
         label: t('profile.friendActions.block'),
         icon: (
           <span className="relative flex items-center justify-center w-4 h-4">
@@ -168,17 +168,20 @@ const FriendActions: React.FC<FriendActionsProps> = ({
           </span>
         ),
         action: onBlock,
-        className: "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 font-medium",
+        className:
+          'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 font-medium',
       });
 
       return items;
     }
-    
+
     // 未关注状态
     const items = [
       {
-        key: "add",
-        label: followsMe ? t('profile.friendActions.followBack') : t('profile.friendActions.follow'),
+        key: 'add',
+        label: followsMe
+          ? t('profile.friendActions.followBack')
+          : t('profile.friendActions.follow'),
         icon: (
           <span className="relative flex items-center justify-center w-4 h-4">
             {followsMe ? (
@@ -197,15 +200,15 @@ const FriendActions: React.FC<FriendActionsProps> = ({
           </span>
         ),
         action: onAdd,
-        className: followsMe 
-          ? "text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10 font-medium" 
-          : "text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10 font-medium",
+        className: followsMe
+          ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10 font-medium'
+          : 'text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10 font-medium',
       },
     ];
 
     // 添加屏蔽选项
     items.push({
-      key: "block",
+      key: 'block',
       label: t('profile.friendActions.block'),
       icon: (
         <span className="relative flex items-center justify-center w-4 h-4">
@@ -214,7 +217,8 @@ const FriendActions: React.FC<FriendActionsProps> = ({
         </span>
       ),
       action: onBlock,
-      className: "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 font-medium",
+      className:
+        'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 font-medium',
     });
 
     return items;
@@ -320,7 +324,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
           `}
         >
           <div className="flex items-center gap-2">
-            {(loading || isActionLoading) ? (
+            {loading || isActionLoading ? (
               <FiLoader className="w-4 h-4 animate-spin text-blue-500" />
             ) : (
               getMainIcon()
@@ -356,7 +360,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
       >
         {/* 图标和数字 */}
         <div className="flex items-center gap-2">
-          {(loading || isActionLoading) ? (
+          {loading || isActionLoading ? (
             <FiLoader className="w-4 h-4 animate-spin text-blue-500" />
           ) : (
             getMainIcon()
@@ -371,12 +375,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
             animate={{ rotate: isOpen ? -180 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -401,7 +400,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: -5 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -5 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
             className="mt-10 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1 overflow-hidden focus:outline-none z-[9999]"
           >
             {menuItems.map((item) => (
@@ -410,13 +409,13 @@ const FriendActions: React.FC<FriendActionsProps> = ({
                 onClick={async () => {
                   // 防止重复点击
                   if (isActionLoading) return;
-                  
+
                   try {
                     setIsActionLoading(true);
                     setIsOpen(false); // 立即关闭菜单
                     await item.action();
                   } catch (error) {
-                    console.error("Action failed:", error);
+                    console.error('Action failed:', error);
                   } finally {
                     setIsActionLoading(false);
                   }
@@ -430,11 +429,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
                   ${item.className || 'text-gray-700 dark:text-gray-300'}
                 `}
               >
-                {isActionLoading ? (
-                  <FiLoader className="w-4 h-4 animate-spin" />
-                ) : (
-                  item.icon
-                )}
+                {isActionLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : item.icon}
                 <span>{item.label}</span>
               </button>
             ))}

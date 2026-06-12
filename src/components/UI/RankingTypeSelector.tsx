@@ -12,7 +12,7 @@ interface RankingTypeSelectorProps {
 const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
   value,
   onChange,
-  className = ''
+  className = '',
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -93,24 +93,20 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
       value: 'performance' as RankingType,
       label: t('rankings.rankingTypes.performance'),
       icon: FiTrendingUp,
-      description: 'pp'
+      description: 'pp',
     },
     {
       value: 'score' as RankingType,
       label: t('rankings.rankingTypes.score'),
       icon: FiAward,
-      description: 'Total Score'
-    }
+      description: 'Total Score',
+    },
   ];
 
-  const currentType = rankingTypes.find(type => type.value === value);
+  const currentType = rankingTypes.find((type) => type.value === value);
 
   return (
-    <div 
-      className={`relative ${className}`} 
-      ref={dropdownRef}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={`relative ${className}`} ref={dropdownRef} onKeyDown={handleKeyDown}>
       {/* 排行类型选择按钮 */}
       <button
         onClick={handleToggle}
@@ -121,9 +117,10 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
           shadow-sm min-h-[44px] sm:min-h-[48px] font-medium text-sm sm:text-base
           transition-all duration-200 transform group
           ${isClosing ? 'scale-95' : ''}
-          ${isOpen
-            ? 'ring-2 ring-profile-color border-transparent'
-            : 'hover:border-profile-color hover:ring-1 hover:ring-profile-color/50'
+          ${
+            isOpen
+              ? 'ring-2 ring-profile-color border-transparent'
+              : 'hover:border-profile-color hover:ring-1 hover:ring-profile-color/50'
           }
         `}
         aria-label="Ranking Type Selector"
@@ -163,7 +160,7 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
           {rankingTypes.map((type) => {
             const isSelected = type.value === value;
             const IconComponent = type.icon;
-            
+
             return (
               <button
                 key={type.value}
@@ -172,20 +169,22 @@ const RankingTypeSelector: React.FC<RankingTypeSelectorProps> = ({
                   w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left
                   transition-colors duration-150
                   flex items-center justify-between
-                  ${isSelected
-                    ? 'bg-profile-color/10 text-profile-color'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                  ${
+                    isSelected
+                      ? 'bg-profile-color/10 text-profile-color'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }
                 `}
                 role="option"
                 aria-selected={isSelected}
               >
                 <div className="flex items-center space-x-2">
-                  <IconComponent size={16} className={isSelected ? 'text-profile-color' : 'text-gray-500'} />
+                  <IconComponent
+                    size={16}
+                    className={isSelected ? 'text-profile-color' : 'text-gray-500'}
+                  />
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm sm:text-base">
-                      {type.label}
-                    </span>
+                    <span className="font-medium text-sm sm:text-base">{type.label}</span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
                       {type.description}
                     </span>

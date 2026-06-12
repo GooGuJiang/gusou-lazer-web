@@ -10,7 +10,12 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (username: string, password: string, turnstileToken?: string) => Promise<User | null>;
-  register: (username: string, email: string, password: string, turnstileToken?: string) => Promise<User | null>;
+  register: (
+    username: string,
+    email: string,
+    password: string,
+    turnstileToken?: string
+  ) => Promise<User | null>;
   logout: () => void;
   updateUserMode: (mode?: string) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -102,7 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkAuth = async () => {
       const token = localStorage.getItem('access_token');
       const refreshToken = localStorage.getItem('refresh_token');
-      
+
       // 如果没有 token，直接返回
       if (!token && !refreshToken) {
         CacheUtil.clearCache();
@@ -132,7 +137,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // 如果获取用户信息失败，axios 拦截器会自动尝试刷新 token
         // 这里只需要处理刷新失败的情况
         const err = error as { response?: { status?: number } };
-        
+
         // 如果是 401 错误且已经重定向到登录页，说明刷新失败
         // 否则可能是网络错误或其他问题，不应该清除 token
         if (err.response?.status === 401) {
@@ -152,7 +157,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (username: string, password: string, turnstileToken?: string): Promise<User | null> => {
+  const login = async (
+    username: string,
+    password: string,
+    turnstileToken?: string
+  ): Promise<User | null> => {
     try {
       setIsLoading(true);
       const tokenResponse: TokenResponse = await authAPI.login(
@@ -185,11 +194,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (username: string, email: string, password: string, turnstileToken?: string): Promise<User | null> => {
+  const register = async (
+    username: string,
+    email: string,
+    password: string,
+    turnstileToken?: string
+  ): Promise<User | null> => {
     try {
       setIsLoading(true);
       await authAPI.register(username, email, password, turnstileToken);
-      
+
       // After successful registration, automatically log in
       const loginUser = await login(username, password, turnstileToken);
       if (loginUser) {
@@ -198,7 +212,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return loginUser;
     } catch (error) {
       const err = error as {
-        response?: { status?: number; data?: { form_error?: { user?: { username?: string[]; user_email?: string[]; password?: string[] }; message?: string } } };
+        response?: {
+          status?: number;
+          data?: {
+            form_error?: {
+              user?: { username?: string[]; user_email?: string[]; password?: string[] };
+              message?: string;
+            };
+          };
+        };
       };
       if (err.response?.status === 422 && err.response?.data?.form_error) {
         const formError = err.response.data.form_error;
@@ -238,22 +260,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     toast.success(t('auth.context.messages.logoutSuccess'));
   };
 
-  const updateUserMode = useCallback(async (mode?: string) => {
-    if (!isAuthenticated) return;
-    
-    try {
-      const userData = await userAPI.getMe(mode);
-      setUser(userData);
-      // 更新缓存
-      CacheUtil.saveUserCache(userData);
-    } catch (error) {
-      handleApiError(error);
-    }
-  }, [isAuthenticated]);
+  const updateUserMode = useCallback(
+    async (mode?: string) => {
+      if (!isAuthenticated) return;
+
+      try {
+        const userData = await userAPI.getMe(mode);
+        setUser(userData);
+        // 更新缓存
+        CacheUtil.saveUserCache(userData);
+      } catch (error) {
+        handleApiError(error);
+      }
+    },
+    [isAuthenticated]
+  );
 
   const refreshUser = useCallback(async () => {
     if (!isAuthenticated) return;
-    
+
     try {
       const userData = await userAPI.getMe();
       setUser(userData);
@@ -282,11 +307,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     updateUser,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

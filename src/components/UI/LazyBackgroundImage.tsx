@@ -11,7 +11,7 @@ const LazyBackgroundImage: React.FC<LazyBackgroundImageProps> = ({
   src,
   fallback,
   className = '',
-  children
+  children,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -29,7 +29,7 @@ const LazyBackgroundImage: React.FC<LazyBackgroundImageProps> = ({
       },
       {
         threshold: 0.1,
-        rootMargin: '50px'
+        rootMargin: '50px',
       }
     );
 
@@ -82,14 +82,12 @@ const LazyBackgroundImage: React.FC<LazyBackgroundImageProps> = ({
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           opacity: backgroundOpacity,
-          transition: 'opacity 0.5s ease-in-out'
+          transition: 'opacity 0.5s ease-in-out',
         }}
       />
-      
+
       {/* 内容层 - 立即显示 */}
-      <div className="relative">
-        {children}
-      </div>
+      <div className="relative">{children}</div>
     </div>
   );
 };

@@ -8,12 +8,7 @@ interface UserLinkProps {
   children?: React.ReactNode;
 }
 
-const UserLink: React.FC<UserLinkProps> = ({ 
-  userId, 
-  username, 
-  className = '', 
-  children 
-}) => {
+const UserLink: React.FC<UserLinkProps> = ({ userId, username, className = '', children }) => {
   return (
     <Link
       to={`/users/${userId}`}

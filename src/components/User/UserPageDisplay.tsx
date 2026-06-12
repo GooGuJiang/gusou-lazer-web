@@ -47,8 +47,8 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
   // 从用户对象中获取页面内容
   const userPage = user.page;
   // 更健壮的内容检查：检查HTML或原始内容
-  const hasContent = (userPage?.html && userPage.html.trim()) || 
-                    (userPage?.raw && userPage.raw.trim());
+  const hasContent =
+    (userPage?.html && userPage.html.trim()) || (userPage?.raw && userPage.raw.trim());
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -72,7 +72,7 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
                 {t('profile.userPage.title')}
               </h3>
             </div>
-            
+
             {/* 中心内容 */}
             <div className="flex-1 flex flex-col items-center justify-center text-center">
               <p className="text-gray-600 dark:text-gray-400 mb-8">
@@ -82,8 +82,8 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
                 onClick={handleEditClick}
                 className="flex items-center gap-2 px-6 py-3 text-white rounded-lg transition-colors"
                 style={{ backgroundColor: profileColor }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
                 <FaEdit className="w-4 h-4" />
                 <span>{t('profile.userPage.writeButton')}</span>
@@ -100,16 +100,14 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
                 {t('profile.userPage.title')}
               </h3>
             </div>
-            
+
             {/* 中心内容 */}
             <div className="flex-1 flex flex-col items-center justify-center text-center">
               <FaUser className="w-16 h-16 text-gray-400 mx-auto mb-6" />
               <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
                 {user.username} {t('profile.userPage.noContent')}
               </h4>
-              <p className="text-gray-600 dark:text-gray-400">
-                {t('profile.userPage.noContent')}
-              </p>
+              <p className="text-gray-600 dark:text-gray-400">{t('profile.userPage.noContent')}</p>
             </div>
           </div>
         )}
@@ -141,8 +139,8 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
             onClick={handleEditClick}
             className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg transition-colors"
             style={{ backgroundColor: profileColor }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             <FaEdit className="w-3 h-3" />
             <span>{t('profile.userPage.editButton')}</span>
@@ -157,7 +155,9 @@ const UserPageDisplay: React.FC<UserPageDisplayProps> = ({
             <div dangerouslySetInnerHTML={{ __html: userPage.html }} />
           ) : userPage.raw ? (
             // 如果没有HTML但有原始内容，使用本地BBCode解析器
-            <div dangerouslySetInnerHTML={{ __html: parseBBCode(String(userPage.raw || '')).html }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: parseBBCode(String(userPage.raw || '')).html }}
+            />
           ) : (
             <div className="text-gray-500 dark:text-gray-400 italic">
               {t('profile.userPage.processing')}

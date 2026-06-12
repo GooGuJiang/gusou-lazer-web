@@ -16,13 +16,13 @@ interface Props {
   isLoading?: boolean;
 }
 
-const TeamRankingCard: React.FC<Props> = ({ 
-  ranking, 
-  team, 
-  rank, 
-  selectedMode, 
+const TeamRankingCard: React.FC<Props> = ({
+  ranking,
+  team,
+  rank,
+  selectedMode,
   rankingType,
-  isLoading = false 
+  isLoading = false,
 }) => {
   const { t } = useTranslation();
   const formatNumber = (num: number): string => {
@@ -38,11 +38,13 @@ const TeamRankingCard: React.FC<Props> = ({
 
   if (isLoading || !team) {
     return (
-      <div className={`relative overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 animate-pulse ${
-        isTopThree 
-          ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10' 
-          : 'bg-card'
-      }`}>
+      <div
+        className={`relative overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 animate-pulse ${
+          isTopThree
+            ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10'
+            : 'bg-card'
+        }`}
+      >
         <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
           {/* 排名徽章 */}
           <div className="flex-shrink-0">
@@ -87,8 +89,8 @@ const TeamRankingCard: React.FC<Props> = ({
     return (
       <div
         className={`relative overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 ${
-          isTopThree 
-            ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10' 
+          isTopThree
+            ? 'bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10'
             : 'bg-card'
         }`}
       >
@@ -138,7 +140,10 @@ const TeamRankingCard: React.FC<Props> = ({
 
           {/* 分数显示 */}
           <div className="text-right flex-shrink-0">
-            <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
+            <div
+              className="text-base sm:text-lg font-bold"
+              style={{ color: GAME_MODE_COLORS[selectedMode] }}
+            >
               {rankingType === 'performance'
                 ? `${formatNumber(ranking.performance || 0)}pp`
                 : `${formatNumber(ranking.ranked_score || 0)}`}
@@ -151,18 +156,18 @@ const TeamRankingCard: React.FC<Props> = ({
 
   // 有背景图片时，使用 LazyBackgroundImage
   const teamContent = (
-    <LazyBackgroundImage 
-      src={coverUrl} 
+    <LazyBackgroundImage
+      src={coverUrl}
       className="overflow-hidden transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50"
     >
       {/* 背景遮罩层 */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80 dark:from-gray-900/90 dark:via-gray-900/85 dark:to-gray-900/80 hover:from-white/85 hover:via-white/80 hover:to-white/75 dark:hover:from-gray-900/85 dark:hover:via-gray-900/80 dark:hover:to-gray-900/75 transition-all duration-300" />
-      
+
       {/* TOP 3 特效遮罩 */}
       {isTopThree && (
         <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-orange-400/5 to-transparent" />
       )}
-      
+
       <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
         {/* 排名徽章 */}
         <div className="flex-shrink-0">
@@ -209,7 +214,10 @@ const TeamRankingCard: React.FC<Props> = ({
 
         {/* 分数显示 */}
         <div className="text-right flex-shrink-0">
-          <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
+          <div
+            className="text-base sm:text-lg font-bold"
+            style={{ color: GAME_MODE_COLORS[selectedMode] }}
+          >
             {rankingType === 'performance'
               ? `${formatNumber(ranking.performance || 0)}pp`
               : `${formatNumber(ranking.ranked_score || 0)}`}
@@ -219,11 +227,7 @@ const TeamRankingCard: React.FC<Props> = ({
     </LazyBackgroundImage>
   );
 
-  return (
-    <Link to={`/teams/${team.id}?mode=${selectedMode}`}>
-      {teamContent}
-    </Link>
-  );
+  return <Link to={`/teams/${team.id}?mode=${selectedMode}`}>{teamContent}</Link>;
 };
 
 export default TeamRankingCard;

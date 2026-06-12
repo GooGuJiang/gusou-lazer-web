@@ -22,11 +22,7 @@ export const userAPI = {
     return response.data;
   },
 
-  getUser: async (
-    userIdOrName: string | number,
-    ruleset?: string,
-    config?: AxiosRequestConfig,
-  ) => {
+  getUser: async (userIdOrName: string | number, ruleset?: string, config?: AxiosRequestConfig) => {
     const url = ruleset
       ? `/api/v2/users/${userIdOrName}/${ruleset}`
       : `/api/v2/users/${userIdOrName}`;
@@ -65,7 +61,7 @@ export const userAPI = {
     const response = await fetch(`${API_BASE_URL}/api/private/avatar/upload`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
@@ -94,7 +90,7 @@ export const userAPI = {
     const response = await fetch(`${API_BASE_URL}/api/private/rename`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newUsername),
@@ -142,7 +138,7 @@ export const userAPI = {
     const response = await fetch(`${API_BASE_URL}/api/private/cover/upload`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
@@ -165,11 +161,7 @@ export const userAPI = {
     return result;
   },
 
-  getRecentActivity: async (
-    userId: number,
-    limit: number = 6,
-    offset: number = 0
-  ) => {
+  getRecentActivity: async (userId: number, limit: number = 6, offset: number = 0) => {
     console.log('获取用户最近活动:', { userId, limit, offset });
 
     const params = new URLSearchParams();
@@ -249,10 +241,7 @@ export const userAPI = {
     return response.data;
   },
 
-  getPinnedScores: async (
-    userId: number,
-    mode: string = 'osu'
-  ) => {
+  getPinnedScores: async (userId: number, mode: string = 'osu') => {
     console.log('获取用户置顶成绩:', { userId, mode });
 
     const params = new URLSearchParams();
@@ -278,11 +267,11 @@ export const userAPI = {
 
     const formData = new URLSearchParams();
     formData.append('new_password', newPassword);
-    
+
     if (currentPassword) {
       formData.append('current_password', currentPassword);
     }
-    
+
     if (totpCode) {
       formData.append('totp_code', totpCode);
     }
@@ -290,7 +279,7 @@ export const userAPI = {
     const response = await fetch(`${API_BASE_URL}/api/private/password/change`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: formData,

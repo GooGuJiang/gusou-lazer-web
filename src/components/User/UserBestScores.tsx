@@ -57,23 +57,22 @@ const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
     // SS 系列
     XH: '/image/grades/SS-Silver.svg', // 银 SS（SSH）
-    X:  '/image/grades/SS.svg',        // 金 SS（SS）
+    X: '/image/grades/SS.svg', // 金 SS（SS）
 
     // S 系列
-    SH: '/image/grades/S-Silver.svg',  // 银 S
-    S:  '/image/grades/S.svg',         // 金 S
+    SH: '/image/grades/S-Silver.svg', // 银 S
+    S: '/image/grades/S.svg', // 金 S
 
     // 其他等级
-    A:  '/image/grades/A.svg',
-    B:  '/image/grades/B.svg',
-    C:  '/image/grades/C.svg',
-    D:  '/image/grades/D.svg',
-    F:  '/image/grades/F.svg', 
+    A: '/image/grades/A.svg',
+    B: '/image/grades/B.svg',
+    C: '/image/grades/C.svg',
+    D: '/image/grades/D.svg',
+    F: '/image/grades/F.svg',
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
 };
-
 
 // MOD 图标组件
 const ModIcon: React.FC<{ mod: { acronym: string } }> = ({ mod }) => {
@@ -98,15 +97,23 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ 
-  score: BestScore; 
-  t: TFunction; 
+const ScoreCard: React.FC<{
+  score: BestScore;
+  t: TFunction;
   profileColor: string;
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
   onPinnedListChange?: () => void;
   className?: string;
-}> = ({ score, t, profileColor, canEdit = false, onPinChange, onPinnedListChange, className = '' }) => {
+}> = ({
+  score,
+  t,
+  profileColor,
+  canEdit = false,
+  onPinChange,
+  onPinnedListChange,
+  className = '',
+}) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -134,19 +141,19 @@ const ScoreCard: React.FC<{
   const themeRgb = hexToRgb(profileColor);
 
   return (
-    <LazyBackgroundImage 
+    <LazyBackgroundImage
       src={coverImage}
       className={`relative overflow-hidden rounded-lg border border-gray-200/70 dark:border-gray-600/40 bg-card ${className}`}
     >
       {/* 渐变遮罩层确保文字可读性 - 使用主题颜色 */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-r" 
+      <div
+        className="absolute inset-0 bg-gradient-to-r"
         style={{
-          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`
+          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
-      
+
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
@@ -154,11 +161,7 @@ const ScoreCard: React.FC<{
           <div className="flex items-center h-12 pl-5 pr-24">
             {/* 等级徽章 */}
             <div className="flex-shrink-0 mr-3">
-              <img 
-                src={getRankIcon(rank)} 
-                alt={rank}
-                className="w-14 h-10 object-contain"
-              />
+              <img src={getRankIcon(rank)} alt={rank} className="w-14 h-10 object-contain" />
             </div>
 
             {/* 谱面信息 */}
@@ -180,15 +183,13 @@ const ScoreCard: React.FC<{
                     {artist}
                   </span>
                 </div>
-                
+
                 {/* 难度名和时间 */}
                 <div className="flex items-center gap-3 text-xs">
                   <span className="text-yellow-600 dark:text-yellow-400 font-medium">
                     {version}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400">
-                    {endedAt}
-                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
                 </div>
               </div>
             </div>
@@ -227,11 +228,7 @@ const ScoreCard: React.FC<{
           <div className="flex items-start gap-3">
             {/* 等级徽章 */}
             <div className="flex-shrink-0">
-              <img 
-                src={getRankIcon(rank)} 
-                alt={rank}
-                className="w-12 h-8 object-contain"
-              />
+              <img src={getRankIcon(rank)} alt={rank} className="w-12 h-8 object-contain" />
             </div>
 
             {/* 主要内容 */}
@@ -248,19 +245,13 @@ const ScoreCard: React.FC<{
                 <span className="text-gray-600 dark:text-gray-400 text-xs flex-shrink-0">
                   {t('profile.bestScores.by')}
                 </span>
-                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">
-                  {artist}
-                </span>
+                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">{artist}</span>
               </div>
-              
+
               {/* 第二行：难度名和时间 */}
               <div className="flex items-center gap-3 text-xs mb-2">
-                <span className="text-yellow-600 dark:text-yellow-400 font-medium">
-                  {version}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  {endedAt}
-                </span>
+                <span className="text-yellow-600 dark:text-yellow-400 font-medium">{version}</span>
+                <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
               </div>
 
               {/* 第三行：MOD、准确率和PP */}
@@ -295,7 +286,16 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, user, className = '', refreshRef, onPinnedListRefresh, pinActionRef, bestScoresActionRef }) => {
+const UserBestScores: React.FC<UserBestScoresProps> = ({
+  userId,
+  selectedMode,
+  user,
+  className = '',
+  refreshRef,
+  onPinnedListRefresh,
+  pinActionRef,
+  bestScoresActionRef,
+}) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
@@ -305,14 +305,14 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
-  
+
   // 检查是否是当前用户自己的页面
   const canEdit = currentUser?.id === userId;
 
   const loadScores = async (reset = false) => {
     try {
       const currentOffset = reset ? 0 : offset;
-      
+
       if (reset) {
         setLoading(true);
         setError(null);
@@ -323,13 +323,13 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
       }
 
       const response = await userAPI.getBestScores(userId, selectedMode, 6, currentOffset);
-      
+
       // 处理 API 响应 - 根据 osu! API，应该直接返回 SoloScoreInfo[] 数组
       const newScores = Array.isArray(response) ? response : [];
-      
+
       // 判断是否还有更多数据的逻辑
       let hasMoreData: boolean;
-      
+
       if (reset) {
         // 重置时：如果返回的数据数量等于请求的数量(6)，说明可能还有更多数据
         hasMoreData = newScores.length === 6;
@@ -340,8 +340,8 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
         const totalScores = user?.scores_best_count || 0;
         const currentTotal = scores.length + newScores.length;
         hasMoreData = newScores.length === 6 && currentTotal < totalScores;
-        setScores(prev => [...prev, ...newScores]);
-        setOffset(prev => prev + newScores.length);
+        setScores((prev) => [...prev, ...newScores]);
+        setOffset((prev) => prev + newScores.length);
       }
 
       setHasMore(hasMoreData);
@@ -387,9 +387,9 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
 
   // 更新成绩的置顶状态（供置顶列表调用）
   const updatePinStatus = (scoreId: number, isPinned: boolean) => {
-    setScores(prevScores => 
-      prevScores.map(s => 
-        s.id === scoreId 
+    setScores((prevScores) =>
+      prevScores.map((s) =>
+        s.id === scoreId
           ? {
               ...s,
               current_user_attributes: {
@@ -397,8 +397,8 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
                 pin: {
                   ...s.current_user_attributes?.pin,
                   is_pinned: isPinned,
-                }
-              }
+                },
+              },
             }
           : s
       )
@@ -415,43 +415,44 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
   }, [bestScoresActionRef, updatePinStatus]);
 
   // Pin/Unpin 后的本地更新
-  const handlePinChange = useCallback((scoreId: number, isPinned: boolean) => {
-    // 1. 先找到成绩对象
-    const score = scores.find(s => s.id === scoreId);
-    
-    if (!score) {
-      console.error('Score not found:', scoreId);
-      return;
-    }
+  const handlePinChange = useCallback(
+    (scoreId: number, isPinned: boolean) => {
+      // 1. 先找到成绩对象
+      const score = scores.find((s) => s.id === scoreId);
 
-    // 2. 创建更新后的成绩对象
-    const updatedScore = {
-      ...score,
-      current_user_attributes: {
-        ...score.current_user_attributes,
-        pin: {
-          ...score.current_user_attributes?.pin,
-          is_pinned: !isPinned,
+      if (!score) {
+        console.error('Score not found:', scoreId);
+        return;
+      }
+
+      // 2. 创建更新后的成绩对象
+      const updatedScore = {
+        ...score,
+        current_user_attributes: {
+          ...score.current_user_attributes,
+          pin: {
+            ...score.current_user_attributes?.pin,
+            is_pinned: !isPinned,
+          },
+        },
+      };
+
+      // 3. 更新本地状态
+      setScores((prevScores) => prevScores.map((s) => (s.id === scoreId ? updatedScore : s)));
+
+      // 4. 同步更新置顶列表（在状态更新之外）
+      if (pinActionRef?.current) {
+        if (isPinned) {
+          // 取消置顶
+          pinActionRef.current.handleUnpin(scoreId);
+        } else {
+          // 置顶成绩 - 使用已更新的成绩对象
+          pinActionRef.current.handlePin(updatedScore);
         }
       }
-    };
-
-    // 3. 更新本地状态
-    setScores(prevScores => 
-      prevScores.map(s => s.id === scoreId ? updatedScore : s)
-    );
-
-    // 4. 同步更新置顶列表（在状态更新之外）
-    if (pinActionRef?.current) {
-      if (isPinned) {
-        // 取消置顶
-        pinActionRef.current.handleUnpin(scoreId);
-      } else {
-        // 置顶成绩 - 使用已更新的成绩对象
-        pinActionRef.current.handlePin(updatedScore);
-      }
-    }
-  }, [scores, pinActionRef]);
+    },
+    [scores, pinActionRef]
+  );
 
   if (loading) {
     return (
@@ -480,9 +481,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
             </h3>
           </div>
         </div>
-        <div className="text-center text-red-500 dark:text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="text-center text-red-500 dark:text-red-400 text-sm">{error}</div>
       </div>
     );
   }
@@ -502,7 +501,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({ userId, selectedMode, u
           )}
         </div>
       </div>
-      
+
       {scores.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
           {t('profile.bestScores.noScores')}

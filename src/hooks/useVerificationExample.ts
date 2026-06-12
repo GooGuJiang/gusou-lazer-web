@@ -20,7 +20,7 @@ export const useVerificationExample = () => {
 
 // 使用示例：
 // const { triggerVerification } = useVerificationExample();
-// 
+//
 // const handleSomeAction = async () => {
 //   try {
 //     // 执行需要验证的操作
@@ -30,8 +30,3 @@ export const useVerificationExample = () => {
 //     // 验证失败，处理错误
 //   }
 // };
-
-
-
-
-

@@ -109,7 +109,8 @@ export const teamsPage = {
       memberManagement: '队员管理',
       leaderTransfer: '队长转让 (可选)',
       keepCurrentLeader: '保持当前队长',
-      leaderTransferDescription: '选择一个新的队长，如果不选择则保持当前队长不变。转让队长权限后，您将失去管理权限。',
+      leaderTransferDescription:
+        '选择一个新的队长，如果不选择则保持当前队长不变。转让队长权限后，您将失去管理权限。',
       currentMembers: '当前队员 ({{count}} 人)',
       currentLeader: '当前队长',
       willBecomeLeader: '将成为新队长',

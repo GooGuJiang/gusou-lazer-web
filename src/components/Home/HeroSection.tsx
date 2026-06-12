@@ -49,8 +49,6 @@ const jellyKeyframes = `
 const HeroSection: React.FC = () => {
   const { t, i18n } = useTranslation();
 
-
-
   const isEN = i18n?.language?.toLowerCase().startsWith('en') ?? false;
 
   return (
@@ -140,10 +138,14 @@ const HeroSection: React.FC = () => {
                   >
                     <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
                       <FaQq className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.qq')}</span>
+                      <span className="font-medium text-xs sm:text-sm">
+                        {t('hero.community.qq')}
+                      </span>
                     </div>
                     <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-sky-600 group-hover:bg-sky-500 dark:bg-sky-700 dark:group-hover:bg-sky-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm text-center">1059561526</span>
+                      <span className="font-semibold text-xs sm:text-sm text-center">
+                        1059561526
+                      </span>
                     </div>
                   </a>
 
@@ -155,10 +157,14 @@ const HeroSection: React.FC = () => {
                   >
                     <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
                       <FaDiscord className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.discord')}</span>
+                      <span className="font-medium text-xs sm:text-sm">
+                        {t('hero.community.discord')}
+                      </span>
                     </div>
                     <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 group-hover:bg-indigo-500 dark:bg-indigo-700 dark:group-hover:bg-indigo-600 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm text-center">{t('hero.community.discordTag')}</span>
+                      <span className="font-semibold text-xs sm:text-sm text-center">
+                        {t('hero.community.discordTag')}
+                      </span>
                     </div>
                   </a>
 
@@ -170,10 +176,14 @@ const HeroSection: React.FC = () => {
                   >
                     <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex flex-col sm:flex-row items-center justify-center whitespace-nowrap w-full sm:w-auto">
                       <FaGithub className="mb-1 sm:mb-0 sm:mr-2 text-base sm:text-lg w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="font-medium text-xs sm:text-sm">{t('hero.community.github')}</span>
+                      <span className="font-medium text-xs sm:text-sm">
+                        {t('hero.community.github')}
+                      </span>
                     </div>
                     <div className="hidden sm:flex sm:items-center sm:justify-center px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-800 group-hover:bg-gray-700 dark:bg-gray-600 dark:group-hover:bg-gray-500 text-white rounded-r-lg transition-colors duration-200 whitespace-nowrap w-full">
-                      <span className="font-semibold text-xs sm:text-sm text-center">GooGuTeam</span>
+                      <span className="font-semibold text-xs sm:text-sm text-center">
+                        GooGuTeam
+                      </span>
                     </div>
                   </a>
                 </div>
@@ -247,7 +257,7 @@ const HeroSection: React.FC = () => {
                 <FaBug key="bug" className="h-6 w-6" />,
                 <FaCodeBranch key="code" className="h-6 w-6" />,
                 <FaPaperPlane key="plane" className="h-6 w-6" />,
-                <FaChartBar key="chart" className="h-6 w-6" />
+                <FaChartBar key="chart" className="h-6 w-6" />,
               ];
 
               return (

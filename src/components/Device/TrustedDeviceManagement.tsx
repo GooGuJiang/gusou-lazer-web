@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiMonitor, FiSmartphone, FiTablet, FiTrash2, FiClock, FiMapPin, FiGlobe } from 'react-icons/fi';
+import {
+  FiMonitor,
+  FiSmartphone,
+  FiTablet,
+  FiTrash2,
+  FiClock,
+  FiMapPin,
+  FiGlobe,
+} from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { deviceAPI } from '../../utils/api';
@@ -54,11 +62,11 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
       setRemovingDeviceId(deviceToRemove.id);
       await deviceAPI.removeTrustedDevice(deviceToRemove.id);
       toast.success(t('settings.device.trustedDevices.removeSuccess'));
-      
+
       // 关闭弹窗
       setShowRemoveModal(false);
       setDeviceToRemove(null);
-      
+
       // 重新获取设备列表
       await fetchDevices();
     } catch (error) {
@@ -72,7 +80,7 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
   // 获取设备类型图标
   const getDeviceIcon = (device: TrustedDevice) => {
     const { user_agent_info, client_type } = device;
-    
+
     if (client_type === 'mobile' || user_agent_info.is_mobile) {
       return <FiSmartphone className="w-5 h-5" />;
     } else if (user_agent_info.is_tablet) {
@@ -85,22 +93,22 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
   // 获取设备显示名称
   const getDeviceDisplayName = (device: TrustedDevice) => {
     const { user_agent_info, client_type } = device;
-    
+
     if (client_type === 'desktop' || user_agent_info.is_client) {
       return 'osu!lazer';
     }
-    
+
     if (user_agent_info.browser && user_agent_info.browser !== 'Unknown') {
       return `${user_agent_info.browser}${user_agent_info.version ? ` ${user_agent_info.version}` : ''}`;
     }
-    
+
     return t('settings.device.browsers.unknown');
   };
 
   // 获取客户端类型名称
   const getClientTypeName = (device: TrustedDevice) => {
     const { client_type } = device;
-    
+
     switch (client_type) {
       case 'web':
         return t('settings.device.trustedDevices.clientTypes.web');
@@ -116,15 +124,15 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
   // 格式化位置信息
   const formatLocation = (device: TrustedDevice) => {
     const { location } = device;
-    
+
     if (!location.country && !location.city) {
       return t('settings.device.sessions.localhost');
     }
-    
+
     const parts = [];
     if (location.city) parts.push(location.city);
     if (location.country) parts.push(location.country);
-    
+
     return parts.join(', ') || t('settings.device.sessions.localhost');
   };
 
@@ -135,7 +143,7 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -187,7 +195,7 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
             })
             .map((device, index) => {
               const isCurrent = isCurrentDevice(device);
-              
+
               return (
                 <motion.div
                   key={device.id}
@@ -201,14 +209,16 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
                   }`}
                 >
                   <div className="flex items-center gap-3 flex-1">
-                    <div className={`p-2 rounded-lg ${
-                      isCurrent
-                        ? 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-400'
-                        : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
-                    }`}>
+                    <div
+                      className={`p-2 rounded-lg ${
+                        isCurrent
+                          ? 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-400'
+                          : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
+                      }`}
+                    >
                       {getDeviceIcon(device)}
                     </div>
-                    
+
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h4 className="font-medium text-gray-900 dark:text-white">
@@ -220,7 +230,7 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
                           </span>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-1 flex-wrap">
                         <div className="flex items-center gap-1">
                           <FiGlobe className="w-3 h-3" />
@@ -245,7 +255,7 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
                       </div>
                     </div>
                   </div>
-                  
+
                   {!isCurrent && (
                     <button
                       onClick={() => handleShowRemoveModal(device)}
@@ -257,7 +267,9 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
                       ) : (
                         <FiTrash2 className="w-4 h-4" />
                       )}
-                      <span className="hidden sm:inline">{t('settings.device.trustedDevices.remove')}</span>
+                      <span className="hidden sm:inline">
+                        {t('settings.device.trustedDevices.remove')}
+                      </span>
                     </button>
                   )}
                 </motion.div>
@@ -284,4 +296,3 @@ const TrustedDeviceManagement: React.FC<TrustedDeviceManagementProps> = ({ class
 };
 
 export default TrustedDeviceManagement;
-

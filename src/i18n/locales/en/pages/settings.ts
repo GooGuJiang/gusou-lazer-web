@@ -4,7 +4,7 @@ export const settingsPage = {
     description: 'Manage your account information and preferences',
     errors: {
       loadFailed: 'Unable to load settings',
-      tryRefresh: 'Please try refreshing the page'
+      tryRefresh: 'Please try refreshing the page',
     },
     username: {
       title: 'Username Settings',
@@ -21,20 +21,20 @@ export const settingsPage = {
         sameAsOld: 'New username is the same as current username',
         taken: 'Username is taken, please choose another one',
         userNotFound: 'User not found',
-        failed: 'Failed to change username, please try again later'
-      }
+        failed: 'Failed to change username, please try again later',
+      },
     },
     avatar: {
       title: 'Avatar Settings',
       current: 'Current Avatar',
       change: 'Change Avatar',
       hint: 'Supports PNG, JPEG, GIF formats, recommended size 256x256 pixels, max 5MB',
-      success: 'Avatar changed successfully!'
+      success: 'Avatar changed successfully!',
     },
     cover: {
       title: 'Cover Settings',
       label: 'Profile Cover Image',
-      hint: 'Recommended size: 2000x500 pixels (4:1 ratio recommended), supports PNG, JPEG, GIF formats, max 10MB'
+      hint: 'Recommended size: 2000x500 pixels (4:1 ratio recommended), supports PNG, JPEG, GIF formats, max 10MB',
     },
     password: {
       title: 'Password Settings',
@@ -50,16 +50,20 @@ export const settingsPage = {
       cancel: 'Cancel',
       success: 'Password changed successfully!',
       logoutNotice: 'All sessions will be logged out. You will be redirected to the login page.',
-      warningMessage: 'Changing your password will log you out of all devices and trusted devices will be cleared.',
+      warningMessage:
+        'Changing your password will log you out of all devices and trusted devices will be cleared.',
       checkingTotpStatus: 'Checking authentication method...',
       totpRequired: 'Two-factor authentication is enabled. Please enter your verification code.',
-      passwordRequired: 'Two-factor authentication is not enabled. Please enter your current password.',
+      passwordRequired:
+        'Two-factor authentication is not enabled. Please enter your current password.',
       totpCode: 'TOTP Verification Code',
       totpCodePlaceholder: '6-digit code or 10-character backup code',
-      totpCodeHint: 'Enter the 6-digit code from your authenticator app, or use one of your backup codes.',
+      totpCodeHint:
+        'Enter the 6-digit code from your authenticator app, or use one of your backup codes.',
       useResetCode: 'Use reset code instead',
       resetCodeOption: 'Reset Password via Email',
-      resetCodeDescription: 'If you forgot your current password, you can reset it using a code sent to your email.',
+      resetCodeDescription:
+        'If you forgot your current password, you can reset it using a code sent to your email.',
       email: 'Email Address',
       emailPlaceholder: 'Enter your email address',
       resetCode: 'Reset Code',
@@ -89,17 +93,18 @@ export const settingsPage = {
         resetFailed: 'Failed to reset password. Please check your code and try again.',
         invalidCode: 'Invalid or expired reset code',
         totpCodeRequired: 'TOTP verification code is required',
-        totpCodeInvalid: 'Invalid code format. Please enter a 6-digit code or 10-character backup code.',
+        totpCodeInvalid:
+          'Invalid code format. Please enter a 6-digit code or 10-character backup code.',
         invalidTotpCode: 'Invalid or incorrect TOTP code. Please try again.',
         incorrectPassword: 'Incorrect current password. Please try again.',
-      }
+      },
     },
     account: {
       title: 'Account Information',
       userId: 'User ID',
       joinDate: 'Join Date',
       country: 'Country/Region',
-      lastVisit: 'Last Visit'
+      lastVisit: 'Last Visit',
     },
     totp: {
       title: 'Two-Factor Authentication',
@@ -110,40 +115,46 @@ export const settingsPage = {
       disable: 'Disable',
       checking: 'Checking status...',
       enabledSince: 'Enabled since: {{date}}',
-      description: 'Two-factor authentication provides an extra layer of security for your account. When enabled, you\'ll need to enter a verification code from your authenticator app when logging in.',
+      description:
+        "Two-factor authentication provides an extra layer of security for your account. When enabled, you'll need to enter a verification code from your authenticator app when logging in.",
       loadError: 'Unable to load TOTP status',
-      
+
       // Setup process
       setupTitle: 'Set up Two-Factor Authentication',
-      setupDescription: 'Two-factor authentication will add an extra layer of security to your account.',
-      setupStep1: 'Install an authenticator app on your phone (such as Google Authenticator, Authy, etc.)',
+      setupDescription:
+        'Two-factor authentication will add an extra layer of security to your account.',
+      setupStep1:
+        'Install an authenticator app on your phone (such as Google Authenticator, Authy, etc.)',
       setupStep2: 'Scan the QR code below or manually enter the secret key',
       setupStep3: 'Enter the 6-digit code displayed in the app',
       startSetup: 'Start Setup',
       starting: 'Preparing...',
-      
+
       // QR code and verification
       manualEntry: 'Manual Entry Secret Key',
       enterCode: 'Enter Verification Code',
       codeHint: 'Enter the 6-digit code from your authenticator app',
       codeExpireHint: 'TOTP codes expire every 30 seconds. Make sure to use a fresh code.',
-      
+
       // Backup codes
       setupComplete: 'TOTP Setup Complete!',
-      backupCodesDescription: 'Please save these backup codes. They can be used to log in when you can\'t access your authenticator app.',
+      backupCodesDescription:
+        "Please save these backup codes. They can be used to log in when you can't access your authenticator app.",
       downloadBackupCodes: 'Download Backup Codes',
       backupCodesDownloaded: 'Backup codes downloaded',
-      backupCodesWarning: 'Please store these backup codes in a safe place. Each code can only be used once.',
+      backupCodesWarning:
+        'Please store these backup codes in a safe place. Each code can only be used once.',
       finishSetup: 'Finish Setup',
-      
+
       // Disable process
       disableTitle: 'Disable Two-Factor Authentication',
-      disableWarning: 'Disabling two-factor authentication will reduce the security of your account. If you\'re sure you want to continue, please enter your current verification code.',
+      disableWarning:
+        "Disabling two-factor authentication will reduce the security of your account. If you're sure you want to continue, please enter your current verification code.",
       enterCodeToDisable: 'Enter verification code to disable',
       disableCodeHint: 'Enter the current 6-digit code from your authenticator app',
       disableConfirm: 'Confirm Disable',
       disabling: 'Disabling...',
-      
+
       // Success and error messages
       setupSuccess: 'TOTP two-factor authentication set up successfully!',
       disableSuccess: 'TOTP two-factor authentication disabled',
@@ -152,8 +163,8 @@ export const settingsPage = {
         invalidCode: 'Invalid verification code',
         invalidCodeLength: 'Verification code must be {{length}} digits',
         verificationFailed: 'Verification failed, please try again',
-        disableFailed: 'Failed to disable TOTP, please try again'
-      }
+        disableFailed: 'Failed to disable TOTP, please try again',
+      },
     },
     device: {
       title: 'Device Management',
@@ -180,7 +191,7 @@ export const settingsPage = {
         revokeError: 'Failed to revoke session, please try again',
         revoking: 'Revoking...',
         localhost: 'Local Connection',
-        totalSessions: '{{count}} session(s) total'
+        totalSessions: '{{count}} session(s) total',
       },
       trustedDevices: {
         title: 'Trusted Devices',
@@ -195,7 +206,8 @@ export const settingsPage = {
         remove: 'Remove Device',
         removeTitle: 'Remove Trusted Device',
         removeConfirm: 'Are you sure you want to remove this trusted device?',
-        removeWarning: 'After removing this device, you will need to verify the device again on next login.',
+        removeWarning:
+          'After removing this device, you will need to verify the device again on next login.',
         removeSuccess: 'Device removed successfully',
         removeError: 'Failed to remove device, please try again',
         removing: 'Removing...',
@@ -203,20 +215,20 @@ export const settingsPage = {
         clientTypes: {
           web: 'Web Browser',
           mobile: 'Mobile App',
-          desktop: 'Desktop App'
-        }
+          desktop: 'Desktop App',
+        },
       },
       summary: {
         title: 'Device Statistics',
         loading: 'Loading statistics...',
-        loadError: 'Failed to load statistics'
+        loadError: 'Failed to load statistics',
       },
       deviceTypes: {
         desktop: 'Desktop',
         mobile: 'Mobile',
         tablet: 'Tablet',
         unknown: 'Unknown Device',
-        app: 'Desktop App'
+        app: 'Desktop App',
       },
       browsers: {
         chrome: 'Chrome',
@@ -224,8 +236,8 @@ export const settingsPage = {
         safari: 'Safari',
         edge: 'Edge',
         opera: 'Opera',
-        unknown: 'Unknown Browser'
-      }
+        unknown: 'Unknown Browser',
+      },
     },
     oauth: {
       title: 'OAuth Applications',
@@ -234,8 +246,8 @@ export const settingsPage = {
       createFirst: 'Create Your First Application',
       createApp: 'Create OAuth Application',
       editApp: 'Edit OAuth Application',
-      noApps: 'You haven\'t created any OAuth applications yet',
-      
+      noApps: "You haven't created any OAuth applications yet",
+
       // Application info
       appName: 'Application Name',
       appNamePlaceholder: 'Enter application name',
@@ -245,7 +257,7 @@ export const settingsPage = {
       clientSecret: 'Client Secret',
       redirectUris: 'Redirect URIs',
       addRedirectUri: 'Add Redirect URI',
-      
+
       // Actions
       edit: 'Edit',
       delete: 'Delete',
@@ -256,30 +268,33 @@ export const settingsPage = {
       save: 'Save',
       update: 'Update',
       saving: 'Saving...',
-      confirm: 'I\'ve Saved It',
-      
+      confirm: "I've Saved It",
+
       // Status
       created: 'Created',
-      
+
       // Confirmation dialogs
       deleteTitle: 'Delete Application',
-      confirmDelete: 'Are you sure you want to delete application "{{name}}"? This action cannot be undone and all associated tokens will be invalidated.',
+      confirmDelete:
+        'Are you sure you want to delete application "{{name}}"? This action cannot be undone and all associated tokens will be invalidated.',
       confirmDeleteButton: 'Confirm Delete',
       refreshTitle: 'Refresh Secret',
-      confirmRefresh: 'Are you sure you want to refresh the secret for application "{{name}}"? This will invalidate all existing tokens.',
+      confirmRefresh:
+        'Are you sure you want to refresh the secret for application "{{name}}"? This will invalidate all existing tokens.',
       confirmRefreshButton: 'Confirm Refresh',
-      
+
       // Secret display
       secretTitle: 'Important: Save Your Client Secret',
-      secretWarning: 'This is the only time you can see the client secret. Please copy it now and save it in a secure location.',
-      
+      secretWarning:
+        'This is the only time you can see the client secret. Please copy it now and save it in a secure location.',
+
       // Success messages
       createSuccess: 'OAuth application created successfully',
       updateSuccess: 'OAuth application updated successfully',
       deleteSuccess: 'OAuth application deleted successfully',
       refreshSuccess: 'Client secret has been refreshed',
       copied: 'Copied to clipboard',
-      
+
       // Error messages
       errors: {
         loadFailed: 'Failed to load OAuth applications',
@@ -288,8 +303,8 @@ export const settingsPage = {
         deleteFailed: 'Failed to delete application',
         refreshFailed: 'Failed to refresh secret',
         copyFailed: 'Failed to copy',
-        noRedirectUri: 'At least one redirect URI is required'
-      }
+        noRedirectUri: 'At least one redirect URI is required',
+      },
     },
     preferences: {
       title: 'User Preferences',
@@ -299,23 +314,23 @@ export const settingsPage = {
       saving: 'Saving...',
       saveSuccess: 'Preferences saved successfully',
       saveError: 'Failed to save preferences',
-      
+
       // Theme and language
       theme: {
         title: 'Theme',
         description: 'Choose interface theme',
         light: 'Light',
         dark: 'Dark',
-        auto: 'Auto (System)'
+        auto: 'Auto (System)',
       },
       language: {
         title: 'Language',
         description: 'Choose interface language',
         zh: '中文',
         en: 'English',
-        ja: '日本語'
+        ja: '日本語',
       },
-      
+
       // Audio settings
       audio: {
         title: 'Audio Settings',
@@ -324,9 +339,9 @@ export const settingsPage = {
         muted: 'Muted',
         mutedDescription: 'Mute audio by default',
         volume: 'Volume',
-        volumeDescription: 'Default volume level'
+        volumeDescription: 'Default volume level',
       },
-      
+
       // Beatmapset settings
       beatmapset: {
         title: 'Beatmap Settings',
@@ -340,9 +355,9 @@ export const settingsPage = {
         downloadNoVideo: 'No Video',
         downloadDirect: 'Direct',
         showNsfw: 'Show NSFW Content',
-        showNsfwDescription: 'Display beatmaps with sensitive content'
+        showNsfwDescription: 'Display beatmaps with sensitive content',
       },
-      
+
       // Profile settings
       profile: {
         title: 'Profile Settings',
@@ -353,9 +368,9 @@ export const settingsPage = {
         coverExpanded: 'Cover Expanded',
         coverExpandedDescription: 'Expand profile cover by default',
         colour: 'Profile Color',
-        colourDescription: 'Customize profile theme color'
+        colourDescription: 'Customize profile theme color',
       },
-      
+
       // Scoring and sorting
       scoring: {
         title: 'Scoring and Display',
@@ -377,14 +392,14 @@ export const settingsPage = {
         userListViewDescription: 'Default user list view mode',
         viewCard: 'Card',
         viewList: 'List',
-        viewBrick: 'Brick'
+        viewBrick: 'Brick',
       },
-      
+
       // Game mode and personal info
       gameMode: {
         title: 'Game Mode',
         playmode: 'Default Game Mode',
-        playmodeDescription: 'Choose your preferred default game mode'
+        playmodeDescription: 'Choose your preferred default game mode',
       },
       personalInfo: {
         title: 'Personal Information',
@@ -399,9 +414,9 @@ export const settingsPage = {
         website: 'Website',
         websitePlaceholder: 'Enter your website URL',
         discord: 'Discord',
-        discordPlaceholder: 'Enter your Discord username'
+        discordPlaceholder: 'Enter your Discord username',
       },
-      
+
       defaultMode: {
         title: 'Default Game Mode',
         description: 'Choose your preferred default game mode',
@@ -420,9 +435,9 @@ export const settingsPage = {
           taikorx: 'osu!taiko (Relax)',
           fruits: 'osu!catch',
           fruitsrx: 'osu!catch (Relax)',
-          mania: 'osu!mania'
-        }
-      }
-    }
+          mania: 'osu!mania',
+        },
+      },
+    },
   },
 } as const;

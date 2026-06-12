@@ -1,6 +1,1 @@
 export { VerificationModal } from './VerificationModal';
-
-
-
-
-

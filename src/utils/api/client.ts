@@ -41,14 +41,14 @@ let failedQueue: Array<{
 
 // 处理等待队列
 const processQueue = (error: Error | null = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
       prom.resolve();
     }
   });
-  
+
   failedQueue = [];
 };
 
@@ -61,7 +61,7 @@ const refreshToken = async (): Promise<string> => {
 
   // 导入 CLIENT_CONFIG（延迟导入避免循环依赖）
   const { CLIENT_CONFIG } = await import('./config');
-  
+
   const formData = new FormData();
   formData.append('grant_type', 'refresh_token');
   formData.append('client_id', CLIENT_CONFIG.web_client_id.toString());
@@ -79,11 +79,11 @@ const refreshToken = async (): Promise<string> => {
   });
 
   const { access_token, refresh_token: new_refresh_token } = response.data;
-  
+
   // 更新 localStorage
   localStorage.setItem('access_token', access_token);
   localStorage.setItem('refresh_token', new_refresh_token);
-  
+
   return access_token;
 };
 
@@ -93,11 +93,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     // 添加设备UUID到所有请求（使用异步获取）
     const deviceUUID = await getDeviceUUID();
     config.headers['X-UUID'] = deviceUUID;
-    
+
     return config;
   },
   (error) => {
@@ -105,18 +105,17 @@ api.interceptors.request.use(
   }
 );
 
-
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-    
+
     // 首先检查是否是用户验证错误
     if (globalVerificationHandler && globalVerificationHandler(error)) {
       // 如果是验证错误且已处理，不需要进一步处理
       return Promise.reject(error);
     }
-    
+
     // 处理 401 错误（token 过期）
     if (error.response?.status === 401 && !originalRequest._retry) {
       // 如果请求是刷新 token 的请求本身失败了，直接登出
@@ -132,16 +131,18 @@ api.interceptors.response.use(
         // 如果正在刷新 token，将请求加入队列
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(() => {
-          // Token 刷新成功，重新发送请求
-          const token = localStorage.getItem('access_token');
-          if (token && originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-          }
-          return api(originalRequest);
-        }).catch(err => {
-          return Promise.reject(err);
-        });
+        })
+          .then(() => {
+            // Token 刷新成功，重新发送请求
+            const token = localStorage.getItem('access_token');
+            if (token && originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
@@ -149,15 +150,15 @@ api.interceptors.response.use(
 
       try {
         const newToken = await refreshToken();
-        
+
         // 更新原始请求的 token
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
-        
+
         // 处理队列中的请求
         processQueue();
-        
+
         // 重新发送原始请求
         return api(originalRequest);
       } catch (refreshError) {
@@ -172,7 +173,7 @@ api.interceptors.response.use(
         isRefreshing = false;
       }
     }
-    
+
     return Promise.reject(error);
   }
 );

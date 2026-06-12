@@ -1,5 +1,5 @@
-import toast from "react-hot-toast";
-import { t } from "../i18n.ts";
+import toast from 'react-hot-toast';
+import { t } from '../i18n.ts';
 
 export const handleApiError = <T extends Record<string, unknown>>(error: unknown) => {
   const err = error as {
@@ -16,8 +16,11 @@ export const handleApiError = <T extends Record<string, unknown>>(error: unknown
   };
 
   // 从错误描述等获取 Fallback
-  let message: string = err.response?.data?.error_description ?? err.response?.data?.message ?? err.message
-    ?? t("errors.unknown");
+  let message: string =
+    err.response?.data?.error_description ??
+    err.response?.data?.message ??
+    err.message ??
+    t('errors.unknown');
 
   if (err.response?.data?.msg_key) {
     // 尝试本地化消息

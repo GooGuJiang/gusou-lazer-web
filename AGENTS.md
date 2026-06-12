@@ -10,20 +10,20 @@
 
 ## 技术栈
 
-| 类别 | 技术 |
-|------|------|
-| 框架 | React 19 (`^19.1.1`) |
-| 语言 | TypeScript (`~5.8.3`)，严格模式 |
-| 构建工具 | Vite 7 (`^7.1.5`) |
-| 包管理器 | pnpm |
-| 路由 | React Router v6 (`^6.25.0`)，使用 `BrowserRouter` |
-| 样式 | Tailwind CSS v3 (`^3.4.0`) + CSS 自定义属性（OKLCH 色彩空间） |
-| 状态管理 | React Context + useState / jotai (`^2.9.0`) |
-| HTTP 客户端 | Axios (`^1.12.0`)，含拦截器的 API 客户端封装 |
-| 国际化 | react-i18next (`^15.7.3`) |
-| 动画 | framer-motion (`^11.3.6`) / motion (`^12.23.12`) / gsap (`^3.13.0`) |
-| 图标 | lucide-react (`^0.542.0`) + react-icons (`^5.2.1`) |
-| 部署 | Vercel |
+| 类别        | 技术                                                                |
+| ----------- | ------------------------------------------------------------------- |
+| 框架        | React 19 (`^19.1.1`)                                                |
+| 语言        | TypeScript (`~5.8.3`)，严格模式                                     |
+| 构建工具    | Vite 7 (`^7.1.5`)                                                   |
+| 包管理器    | pnpm                                                                |
+| 路由        | React Router v6 (`^6.25.0`)，使用 `BrowserRouter`                   |
+| 样式        | Tailwind CSS v3 (`^3.4.0`) + CSS 自定义属性（OKLCH 色彩空间）       |
+| 状态管理    | React Context + useState / jotai (`^2.9.0`)                         |
+| HTTP 客户端 | Axios (`^1.12.0`)，含拦截器的 API 客户端封装                        |
+| 国际化      | react-i18next (`^15.7.3`)                                           |
+| 动画        | framer-motion (`^11.3.6`) / motion (`^12.23.12`) / gsap (`^3.13.0`) |
+| 图标        | lucide-react (`^0.542.0`) + react-icons (`^5.2.1`)                  |
+| 部署        | Vercel                                                              |
 
 ---
 
@@ -119,12 +119,8 @@ import { useTranslation } from 'react-i18next';
 
 export default function SomePage() {
   const { t } = useTranslation();
-  
-  return (
-    <div className="...">
-      {/* ... */}
-    </div>
-  );
+
+  return <div className="...">{/* ... */}</div>;
 }
 ```
 
@@ -195,10 +191,10 @@ export default function SomePage() {
 
 ## 环境变量
 
-| 变量名 | 说明 |
-|--------|------|
-| `VITE_API_BASE_URL` | API 服务器地址（默认 `http://127.0.0.1:8000`） |
-| `VITE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile 验证站点密钥 |
+| 变量名                    | 说明                                           |
+| ------------------------- | ---------------------------------------------- |
+| `VITE_API_BASE_URL`       | API 服务器地址（默认 `http://127.0.0.1:8000`） |
+| `VITE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile 验证站点密钥              |
 
 环境变量文件：
 

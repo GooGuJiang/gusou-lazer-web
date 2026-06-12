@@ -34,4 +34,3 @@ export function useDebounce<T extends (...args: unknown[]) => unknown>(
     [delay]
   );
 }
-

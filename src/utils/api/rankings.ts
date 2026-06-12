@@ -5,7 +5,7 @@ export const rankingsAPI = {
     ruleset: string,
     type: 'performance' | 'score',
     country?: string,
-    page: number = 1,
+    page: number = 1
   ) => {
     const params = new URLSearchParams();
     if (country) params.append('country', country);
@@ -23,11 +23,7 @@ export const rankingsAPI = {
     return response.data;
   },
 
-  getTeamRankings: async (
-    ruleset: string,
-    sort: 'performance' | 'score',
-    page: number = 1,
-  ) => {
+  getTeamRankings: async (ruleset: string, sort: 'performance' | 'score', page: number = 1) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
 

@@ -2,15 +2,14 @@
  * BBCode Parser for osu! style BBCode
  * 基于官方osu-web BBCodeFromDB.php实现，确保输出与官方网站一致
  */
-import { t, type TranslationOptions } from "./i18n.ts";
-
+import { t, type TranslationOptions } from './i18n.ts';
 
 // 用于翻译错误消息的便捷方法
 function et(key: string, options?: TranslationOptions): string {
   return t(`${errorMessageNamespace}.${key}`, options);
 }
 
-const errorMessageNamespace = "profile.bbcodeEditor.validation";
+const errorMessageNamespace = 'profile.bbcodeEditor.validation';
 
 export interface BBCodeParseResult {
   html: string;
@@ -35,7 +34,7 @@ export interface BBCodeTag {
   hasParam?: boolean;
   paramRequired?: boolean;
   allowNested?: boolean;
-  isBlock?: boolean;  // 标记是否为块级元素
+  isBlock?: boolean; // 标记是否为块级元素
   validator?: (param?: string, content?: string) => TagValidationResult;
   renderer: (content: string, param?: string) => string;
 }
@@ -57,7 +56,7 @@ export class BBCodeParser {
       openTag: '[b]',
       closeTag: '[/b]',
       allowNested: true,
-      renderer: (content: string) => `<strong>${content}</strong>`
+      renderer: (content: string) => `<strong>${content}</strong>`,
     });
 
     // 斜体
@@ -66,7 +65,7 @@ export class BBCodeParser {
       openTag: '[i]',
       closeTag: '[/i]',
       allowNested: true,
-      renderer: (content: string) => `<em>${content}</em>`
+      renderer: (content: string) => `<em>${content}</em>`,
     });
 
     // 下划线
@@ -75,7 +74,7 @@ export class BBCodeParser {
       openTag: '[u]',
       closeTag: '[/u]',
       allowNested: true,
-      renderer: (content: string) => `<u>${content}</u>`
+      renderer: (content: string) => `<u>${content}</u>`,
     });
 
     // 删除线 - 支持 [s] 和 [strike]
@@ -84,7 +83,7 @@ export class BBCodeParser {
       openTag: '[s]',
       closeTag: '[/s]',
       allowNested: true,
-      renderer: (content: string) => `<del>${content}</del>`
+      renderer: (content: string) => `<del>${content}</del>`,
     });
 
     this.addTag({
@@ -92,7 +91,7 @@ export class BBCodeParser {
       openTag: '[strike]',
       closeTag: '[/strike]',
       allowNested: true,
-      renderer: (content: string) => `<del>${content}</del>`
+      renderer: (content: string) => `<del>${content}</del>`,
     });
 
     // 颜色 - 按官方实现
@@ -104,13 +103,30 @@ export class BBCodeParser {
       paramRequired: true,
       allowNested: true,
       validator: (param?: string) => {
-        if (!param) return new TagValidationResult(false, et("missingColor"));
+        if (!param) return new TagValidationResult(false, et('missingColor'));
         // 支持十六进制颜色和HTML颜色名
         const hexPattern = /^#[0-9A-Fa-f]{3,6}$/;
-        const htmlColors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
-        return new TagValidationResult(hexPattern.test(param) || htmlColors.includes(param.toLowerCase()), et("invalidColor"));
+        const htmlColors = [
+          'red',
+          'blue',
+          'green',
+          'yellow',
+          'orange',
+          'purple',
+          'pink',
+          'brown',
+          'black',
+          'white',
+          'gray',
+          'grey',
+        ];
+        return new TagValidationResult(
+          hexPattern.test(param) || htmlColors.includes(param.toLowerCase()),
+          et('invalidColor')
+        );
       },
-      renderer: (content: string, param?: string) => `<span style="color: ${param};">${content}</span>`
+      renderer: (content: string, param?: string) =>
+        `<span style="color: ${param};">${content}</span>`,
     });
 
     // 字体大小 - 按官方限制在30-200%
@@ -122,14 +138,17 @@ export class BBCodeParser {
       paramRequired: true,
       allowNested: true,
       validator: (param?: string) => {
-        if (!param) return new TagValidationResult(false, et("missingSize"));
+        if (!param) return new TagValidationResult(false, et('missingSize'));
         const size = parseInt(param);
-        return new TagValidationResult(!isNaN(size) && size >= 30 && size <= 200, et("invalidSize"));
+        return new TagValidationResult(
+          !isNaN(size) && size >= 30 && size <= 200,
+          et('invalidSize')
+        );
       },
       renderer: (content: string, param?: string) => {
         const size = Math.min(Math.max(parseInt(param || '100'), 30), 200);
         return `<span style="font-size: ${size}%;">${content}</span>`;
-      }
+      },
     });
 
     // === 块级元素 ===
@@ -141,7 +160,7 @@ export class BBCodeParser {
       closeTag: '[/centre]',
       allowNested: true,
       isBlock: true,
-      renderer: (content: string) => `<div style="text-align: center;">${content}</div>`
+      renderer: (content: string) => `<div style="text-align: center;">${content}</div>`,
     });
 
     // 标题
@@ -151,7 +170,7 @@ export class BBCodeParser {
       closeTag: '[/heading]',
       allowNested: false,
       isBlock: true,
-      renderer: (content: string) => `<h2>${content}</h2>`
+      renderer: (content: string) => `<h2>${content}</h2>`,
     });
 
     // 通知框
@@ -161,7 +180,7 @@ export class BBCodeParser {
       closeTag: '[/notice]',
       allowNested: true,
       isBlock: true,
-      renderer: (content: string) => `<div class="well">${content}</div>`
+      renderer: (content: string) => `<div class="well">${content}</div>`,
     });
 
     // 引用 - 按官方实现
@@ -178,8 +197,10 @@ export class BBCodeParser {
 
         // 必须包围双引号
         const trimmed = param.trim();
-        return new TagValidationResult(trimmed.startsWith('"') && trimmed.endsWith('"'),
-            et("missingQuotes"));
+        return new TagValidationResult(
+          trimmed.startsWith('"') && trimmed.endsWith('"'),
+          et('missingQuotes')
+        );
       },
       renderer: (content: string, param?: string) => {
         if (param) {
@@ -188,7 +209,7 @@ export class BBCodeParser {
           return `<blockquote><h4>${this.escapeHtml(author)} wrote:</h4>${content}</blockquote>`;
         }
         return `<blockquote>${content}</blockquote>`;
-      }
+      },
     });
 
     // 代码块
@@ -198,7 +219,7 @@ export class BBCodeParser {
       closeTag: '[/code]',
       allowNested: false,
       isBlock: true,
-      renderer: (content: string) => `<pre>${this.escapeHtml(content)}</pre>`
+      renderer: (content: string) => `<pre>${this.escapeHtml(content)}</pre>`,
     });
 
     // 行内代码
@@ -207,7 +228,7 @@ export class BBCodeParser {
       openTag: '[c]',
       closeTag: '[/c]',
       allowNested: false,
-      renderer: (content: string) => `<code>${this.escapeHtml(content)}</code>`
+      renderer: (content: string) => `<code>${this.escapeHtml(content)}</code>`,
     });
 
     // 折叠框/剧透框 - 按官方实现
@@ -222,7 +243,7 @@ export class BBCodeParser {
       renderer: (content: string, param?: string) => {
         const title = param ? param.replace(/^=/, '') : 'SPOILER';
         return `<div class="js-spoilerbox bbcode-spoilerbox"><button type="button" class="js-spoilerbox__link bbcode-spoilerbox__link" style="background: none; border: none; cursor: pointer; padding: 0; text-align: left; width: 100%;"><span class="bbcode-spoilerbox__link-icon"></span>${this.escapeHtml(title)}</button><div class="js-spoilerbox__body bbcode-spoilerbox__body">${content}</div></div>`;
-      }
+      },
     });
 
     this.addTag({
@@ -231,7 +252,8 @@ export class BBCodeParser {
       closeTag: '[/spoilerbox]',
       allowNested: true,
       isBlock: true,
-      renderer: (content: string) => `<div class="js-spoilerbox bbcode-spoilerbox"><button type="button" class="js-spoilerbox__link bbcode-spoilerbox__link" style="background: none; border: none; cursor: pointer; padding: 0; text-align: left; width: 100%;"><span class="bbcode-spoilerbox__link-icon"></span>SPOILER</button><div class="js-spoilerbox__body bbcode-spoilerbox__body">${content}</div></div>`
+      renderer: (content: string) =>
+        `<div class="js-spoilerbox bbcode-spoilerbox"><button type="button" class="js-spoilerbox__link bbcode-spoilerbox__link" style="background: none; border: none; cursor: pointer; padding: 0; text-align: left; width: 100%;"><span class="bbcode-spoilerbox__link-icon"></span>SPOILER</button><div class="js-spoilerbox__body bbcode-spoilerbox__body">${content}</div></div>`,
     });
 
     // 剧透条（涂黑）
@@ -240,7 +262,7 @@ export class BBCodeParser {
       openTag: '[spoiler]',
       closeTag: '[/spoiler]',
       allowNested: true,
-      renderer: (content: string) => `<span class="spoiler">${content}</span>`
+      renderer: (content: string) => `<span class="spoiler">${content}</span>`,
     });
 
     // 列表 - 按官方实现
@@ -255,9 +277,11 @@ export class BBCodeParser {
       isBlock: true,
       renderer: (content: string, param?: string): string => {
         const items = this.splitTopLevelListItems(content);
-        const liHtml = items.map((item: string) => `<li>${this.parseRecursive(item)}</li>`).join('');
-        return (param && param !== '=') ? `<ol>${liHtml}</ol>` : `<ul>${liHtml}</ul>`;
-      }
+        const liHtml = items
+          .map((item: string) => `<li>${this.parseRecursive(item)}</li>`)
+          .join('');
+        return param && param !== '=' ? `<ol>${liHtml}</ol>` : `<ul>${liHtml}</ul>`;
+      },
     });
 
     // === 链接和媒体 ===
@@ -273,13 +297,13 @@ export class BBCodeParser {
       validator: (param?: string) => {
         if (!param) return new TagValidationResult(true);
         const url = param.replace(/^=/, '');
-        return new TagValidationResult(/^https?:\/\/.+/.test(url), et("invalidUrl"));
+        return new TagValidationResult(/^https?:\/\/.+/.test(url), et('invalidUrl'));
       },
       renderer: (content: string, param?: string) => {
         const url = param ? param.replace(/^=/, '') : content;
         const displayText = param ? content : url;
         return `<a rel="nofollow" href="${this.escapeHtml(url)}">${this.escapeHtml(displayText)}</a>`;
-      }
+      },
     });
 
     // 邮箱
@@ -292,14 +316,17 @@ export class BBCodeParser {
       allowNested: false,
       validator: (param?: string, content?: string) => {
         const email = param ? param.replace(/^=/, '') : content;
-        if (!email) return new TagValidationResult(false, et("missingEmail"));
-        return new TagValidationResult(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), et("invalidEmail"));
+        if (!email) return new TagValidationResult(false, et('missingEmail'));
+        return new TagValidationResult(
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+          et('invalidEmail')
+        );
       },
       renderer: (content: string, param?: string) => {
         const email = param ? param.replace(/^=/, '') : content;
         const displayText = param ? content : email;
         return `<a rel="nofollow" href="mailto:${this.escapeHtml(email)}">${this.escapeHtml(displayText)}</a>`;
-      }
+      },
     });
 
     // 用户资料链接
@@ -313,7 +340,7 @@ export class BBCodeParser {
       validator: (param?: string) => {
         if (!param) return new TagValidationResult(true);
         const userId = param.replace(/^=/, '');
-        return new TagValidationResult(/^\d+$/.test(userId), et("invalidUserId"));
+        return new TagValidationResult(/^\d+$/.test(userId), et('invalidUserId'));
       },
       renderer: (content: string, param?: string) => {
         if (param) {
@@ -323,7 +350,7 @@ export class BBCodeParser {
           // 如果没有参数，假设content是用户名，需要解析为用户ID
           return `<a href="/users/${this.escapeHtml(content)}" class="profile-link">${this.escapeHtml(content)}</a>`;
         }
-      }
+      },
     });
 
     // 图片
@@ -334,12 +361,15 @@ export class BBCodeParser {
       allowNested: false,
       isBlock: true,
       validator: (_param?: string, content?: string) => {
-        if (!content) return new TagValidationResult(false, et("missingUrl"));
-        return new TagValidationResult(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(content), et("invalidImageUrl"));
+        if (!content) return new TagValidationResult(false, et('missingUrl'));
+        return new TagValidationResult(
+          /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(content),
+          et('invalidImageUrl')
+        );
       },
       renderer: (content: string) => {
         return `<img alt="" src="${this.escapeHtml(content)}" loading="lazy" />`;
-      }
+      },
     });
 
     // YouTube视频
@@ -351,12 +381,15 @@ export class BBCodeParser {
       isBlock: true,
       validator: (_param?: string, content?: string) => {
         const videoId = content?.trim();
-        return new TagValidationResult(!!videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId), et("invalidYouTubeVideoId"));
+        return new TagValidationResult(
+          !!videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId),
+          et('invalidYouTubeVideoId')
+        );
       },
       renderer: (content: string) => {
         const videoId = content.trim();
         return `<iframe class="u-embed-wide u-embed-wide--bbcode" src="https://www.youtube.com/embed/${this.escapeHtml(videoId)}?rel=0" allowfullscreen></iframe>`;
-      }
+      },
     });
 
     // 音频
@@ -367,12 +400,15 @@ export class BBCodeParser {
       allowNested: false,
       isBlock: true,
       validator: (_param?: string, content?: string) => {
-        if (!content) return new TagValidationResult(false, et("missingUrl"));
-        return new TagValidationResult(/^https?:\/\/.+\.(mp3|wav|ogg|m4a)$/i.test(content), et("invalidAudioUrl"));
+        if (!content) return new TagValidationResult(false, et('missingUrl'));
+        return new TagValidationResult(
+          /^https?:\/\/.+\.(mp3|wav|ogg|m4a)$/i.test(content),
+          et('invalidAudioUrl')
+        );
       },
       renderer: (content: string) => {
         return `<audio controls preload="none" src="${this.escapeHtml(content)}"></audio>`;
-      }
+      },
     });
 
     // 图片映射
@@ -384,7 +420,7 @@ export class BBCodeParser {
       isBlock: true,
       renderer: (content: string) => {
         return this.parseImagemap(content);
-      }
+      },
     });
   }
 
@@ -553,7 +589,7 @@ export class BBCodeParser {
       return {
         html: `<div class="bbcode"></div>`,
         errors: [],
-        valid: true
+        valid: true,
       };
     }
 
@@ -563,14 +599,14 @@ export class BBCodeParser {
       return {
         html: wrappedHtml,
         errors: [...this.errors],
-        valid: this.errors.length === 0
+        valid: this.errors.length === 0,
       };
     } catch (error) {
-      this.errors.push(et("parsingError", { error: error }));
+      this.errors.push(et('parsingError', { error: error }));
       return {
         html: `<div class="bbcode">${this.escapeHtml(String(input))}</div>`,
         errors: [...this.errors],
-        valid: false
+        valid: false,
       };
     }
   }
@@ -598,7 +634,24 @@ export class BBCodeParser {
     }
 
     // === 内联元素 ===
-    const inlineTags = ['audio', 'b', 'centre', 'c', 'color', 'email', 'img', 'i', 'size', 'spoiler', 's', 'strike', 'u', 'url', 'youtube', 'profile'];
+    const inlineTags = [
+      'audio',
+      'b',
+      'centre',
+      'c',
+      'color',
+      'email',
+      'img',
+      'i',
+      'size',
+      'spoiler',
+      's',
+      'strike',
+      'u',
+      'url',
+      'youtube',
+      'profile',
+    ];
     for (const tagName of inlineTags) {
       const tag = this.tags.get(tagName);
       if (tag) {
@@ -656,7 +709,10 @@ export class BBCodeParser {
         if (nextOpen === -1) break;
         const nextClose = text.indexOf(']', nextOpen + 1);
         if (nextClose === -1) break;
-        const tagContent = text.slice(nextOpen + 1, nextClose).trim().toLowerCase();
+        const tagContent = text
+          .slice(nextOpen + 1, nextClose)
+          .trim()
+          .toLowerCase();
         if (tagContent.startsWith('list')) {
           depth += 1;
         } else if (tagContent === '/list') {
@@ -716,7 +772,12 @@ export class BBCodeParser {
         const anchorOpenEnd = text.indexOf('>', anchorStart);
 
         // <a> 内
-        if (anchorOpenEnd !== -1 && anchorOpenEnd < offset && anchorEndTag !== -1 && anchorEndTag > offset) {
+        if (
+          anchorOpenEnd !== -1 &&
+          anchorOpenEnd < offset &&
+          anchorEndTag !== -1 &&
+          anchorEndTag > offset
+        ) {
           return match;
         }
 
@@ -757,17 +818,20 @@ export class BBCodeParser {
       if (tag.validator) {
         const result = tag.validator(undefined, content);
 
-        if (!result.success)
-        {
-          this.errors.push(et("contentValidationFailed", {
-            tag: tag.name,
-            message: result.message,
-          }));
+        if (!result.success) {
+          this.errors.push(
+            et('contentValidationFailed', {
+              tag: tag.name,
+              message: result.message,
+            })
+          );
           return match;
         }
       }
 
-      const processedContent = tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content);
+      const processedContent = tag.allowNested
+        ? this.parseRecursive(content)
+        : this.escapeHtml(content);
       return tag.renderer(processedContent);
     });
   }
@@ -808,21 +872,25 @@ export class BBCodeParser {
 
           if (tag.validator) {
             const result = tag.validator(param, content);
-            if (!result.success)
-            {
-              this.errors.push(et("paramValidationFailed", {
-                tag: tag.name,
-                param: param,
-                message: result.message,
-              }));
+            if (!result.success) {
+              this.errors.push(
+                et('paramValidationFailed', {
+                  tag: tag.name,
+                  param: param,
+                  message: result.message,
+                })
+              );
               return match;
             }
           }
 
           // 不要处理 list
-          const processedContent = tag.name === 'list'
-            ? content
-            : (tag.allowNested ? this.parseRecursive(content) : this.escapeHtml(content));
+          const processedContent =
+            tag.name === 'list'
+              ? content
+              : tag.allowNested
+                ? this.parseRecursive(content)
+                : this.escapeHtml(content);
           return tag.renderer(processedContent, param);
         }
       );

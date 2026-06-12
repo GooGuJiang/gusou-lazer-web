@@ -14,28 +14,28 @@ interface BeatmapLinkProps {
  * BeatmapLink component that converts external osu! beatmap URLs to internal routes
  * or falls back to external links when needed
  */
-const BeatmapLink: React.FC<BeatmapLinkProps> = ({ 
-  beatmapUrl, 
-  children, 
+const BeatmapLink: React.FC<BeatmapLinkProps> = ({
+  beatmapUrl,
+  children,
   className,
   title,
-  external = false
+  external = false,
 }) => {
   if (!beatmapUrl || beatmapUrl === '#') {
-    return <span className={className} title={title}>{children}</span>;
+    return (
+      <span className={className} title={title}>
+        {children}
+      </span>
+    );
   }
 
   // Convert to internal route if possible
   const internalUrl = beatmapAPI.convertToInternalBeatmapUrl(beatmapUrl);
-  
+
   // If we can convert to internal URL and external is not forced, use internal routing
   if (internalUrl && !external) {
     return (
-      <Link
-        to={internalUrl}
-        className={className}
-        title={title}
-      >
+      <Link to={internalUrl} className={className} title={title}>
         {children}
       </Link>
     );

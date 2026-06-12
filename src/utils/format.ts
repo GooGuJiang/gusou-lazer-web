@@ -32,7 +32,7 @@ export const formatDurationDetailed = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
-  
+
   if (hours > 0) {
     return `${hours}h ${minutes}m ${remainingSeconds}s`;
   } else if (minutes > 0) {
@@ -47,7 +47,7 @@ export const formatRelativeTime = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
+
   if (diffInSeconds < 60) {
     return 'just now';
   } else if (diffInSeconds < 3600) {
@@ -93,7 +93,7 @@ export const formatMods = (mods: Array<{ acronym: string }>): string => {
   if (!mods || mods.length === 0) {
     return 'No Mod';
   }
-  return mods.map(mod => mod.acronym).join('');
+  return mods.map((mod) => mod.acronym).join('');
 };
 
 // Weight formatting for scores

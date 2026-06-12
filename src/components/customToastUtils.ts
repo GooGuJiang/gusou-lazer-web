@@ -14,10 +14,11 @@ interface CustomToastProps {
 
 export const showCustomToast = (props: CustomToastProps) => {
   return toast.custom(
-    toastInstance => React.createElement(CustomToast, {
-      ...props,
-      onDismiss: () => toast.dismiss(toastInstance.id),
-    }),
+    (toastInstance) =>
+      React.createElement(CustomToast, {
+        ...props,
+        onDismiss: () => toast.dismiss(toastInstance.id),
+      }),
     {
       duration: 5000,
       position: 'top-right',

@@ -12,9 +12,12 @@ interface HueSliderProps {
  * 使用 memo 优化，避免不必要的重渲染
  */
 const HueSlider: React.FC<HueSliderProps> = memo(({ hue, onChange, className = '' }) => {
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(Number(e.target.value));
-  }, [onChange]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(Number(e.target.value));
+    },
+    [onChange]
+  );
 
   return (
     <div className={`hue-slider-wrapper ${className}`}>
@@ -35,4 +38,3 @@ const HueSlider: React.FC<HueSliderProps> = memo(({ hue, onChange, className = '
 HueSlider.displayName = 'HueSlider';
 
 export default HueSlider;
-

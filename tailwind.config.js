@@ -1,17 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     screens: {
-      'xs': '475px',
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
+      xs: '475px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
       '2xl': '1536px',
     },
     extend: {
@@ -20,8 +17,8 @@ export default {
         'profile-color': 'var(--profile-color, #ED8EA6)',
         'osu-blue': '#7DD5D4',
         'osu-purple': '#7DD5D4',
-        'primary': 'var(--osu-pink, #ED8EA6)',
-        'secondary': '#7DD5D4',
+        primary: 'var(--osu-pink, #ED8EA6)',
+        secondary: '#7DD5D4',
         'bg-primary': 'var(--bg-primary)',
         'bg-secondary': 'var(--bg-secondary)',
         'text-primary': 'var(--text-primary)',
@@ -36,14 +33,14 @@ export default {
         'float-panel-bg': 'var(--float-panel-bg)',
       },
       backgroundColor: {
-        'card': 'var(--card-bg)',
+        card: 'var(--card-bg)',
         'card-hover': 'var(--card-bg-hover)',
         'float-panel': 'var(--float-panel-bg)',
-        'navbar': 'var(--navbar-bg)',
+        navbar: 'var(--navbar-bg)',
       },
       borderColor: {
-        'default': 'var(--border-color)',
-        'hover': 'var(--border-hover)',
+        default: 'var(--border-color)',
+        hover: 'var(--border-hover)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -66,9 +63,9 @@ export default {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}
+};

@@ -25,18 +25,20 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const chatConnected = isConnected;
 
   return (
-    <NotificationContext.Provider value={{
-      unreadCount,
-      notifications,
-      isLoading,
-      isConnected,
-      chatConnected,
-      connectionError,
-      markAsRead,
-      removeNotification,
-      removeNotificationByObject,
-      refresh,
-    }}>
+    <NotificationContext.Provider
+      value={{
+        unreadCount,
+        notifications,
+        isLoading,
+        isConnected,
+        chatConnected,
+        connectionError,
+        markAsRead,
+        removeNotification,
+        removeNotificationByObject,
+        refresh,
+      }}
+    >
       {children}
     </NotificationContext.Provider>
   );

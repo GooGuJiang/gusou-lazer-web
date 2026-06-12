@@ -63,7 +63,10 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
 
           {/* 分数显示 */}
           <div className="text-right flex-shrink-0">
-            <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
+            <div
+              className="text-base sm:text-lg font-bold"
+              style={{ color: GAME_MODE_COLORS[selectedMode] }}
+            >
               {rankingType === 'performance'
                 ? `${Math.round(ranking.pp || 0).toLocaleString()}pp`
                 : `${(ranking.ranked_score || 0).toLocaleString()}`}
@@ -76,13 +79,13 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
 
   // 有背景图片时，使用 LazyBackgroundImage
   return (
-    <LazyBackgroundImage 
-      src={coverUrl} 
+    <LazyBackgroundImage
+      src={coverUrl}
       className="overflow-hidden transition-colors duration-200 sm:hover:bg-gray-50 sm:dark:hover:bg-gray-800/50"
     >
       {/* 背景遮罩层 */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80 dark:from-gray-900/90 dark:via-gray-900/85 dark:to-gray-900/80 sm:hover:from-white/85 sm:hover:via-white/80 sm:hover:to-white/75 sm:dark:hover:from-gray-900/85 sm:dark:hover:via-gray-900/80 sm:dark:hover:to-gray-900/75 transition-all duration-300" />
-      
+
       <div className="relative flex items-center gap-3 sm:gap-4 px-4 py-3">
         {/* 用户头像 */}
         <Link to={`/users/${ranking.user.id}?mode=${selectedMode}`} className="flex-shrink-0">
@@ -119,7 +122,10 @@ const TeamDetailUserCard: React.FC<Props> = ({ ranking, selectedMode, rankingTyp
 
         {/* 分数显示 */}
         <div className="text-right flex-shrink-0">
-          <div className="text-base sm:text-lg font-bold" style={{ color: GAME_MODE_COLORS[selectedMode] }}>
+          <div
+            className="text-base sm:text-lg font-bold"
+            style={{ color: GAME_MODE_COLORS[selectedMode] }}
+          >
             {rankingType === 'performance'
               ? `${Math.round(ranking.pp || 0).toLocaleString()}pp`
               : `${(ranking.ranked_score || 0).toLocaleString()}`}

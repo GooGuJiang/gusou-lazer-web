@@ -9,7 +9,7 @@ const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { user, isAuthenticated, isLoading, updateUserMode, updateUser } = useAuth();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
-  
+
   // 使用 ref 跟踪是否正在更新模式，防止重复请求
   const isUpdatingModeRef = useRef(false);
   const latestModeRef = useRef<GameMode>(selectedMode);
@@ -25,15 +25,15 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     // 如果正在更新或未认证，跳过
     if (!isAuthenticated || isUpdatingModeRef.current) return;
-    
+
     // 如果模式没有变化，跳过
     if (latestModeRef.current === selectedMode && user?.g0v0_playmode === selectedMode) {
       return;
     }
-    
+
     latestModeRef.current = selectedMode;
     isUpdatingModeRef.current = true;
-    
+
     updateUserMode(selectedMode)
       .catch(() => {})
       .finally(() => {
@@ -74,4 +74,3 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-

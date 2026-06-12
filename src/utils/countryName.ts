@@ -6,18 +6,17 @@
  * @returns 翻译后的国家名称
  */
 export const getCountryName = (
-  t: (key: string) => string, 
-  countryCode: string, 
+  t: (key: string) => string,
+  countryCode: string,
   fallbackName?: string
 ): string => {
   const translationKey = `countries.${countryCode}`;
   const translated = t(translationKey);
-  
+
   // 如果翻译不存在（返回的是 key），使用备用名称或国家代码
   if (translated === translationKey) {
     return fallbackName || countryCode;
   }
-  
+
   return translated;
 };
-

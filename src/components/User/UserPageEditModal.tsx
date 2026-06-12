@@ -13,12 +13,7 @@ interface UserPageEditModalProps {
   onSave: (updatedUser: User) => void;
 }
 
-const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
-  isOpen,
-  onClose,
-  user,
-  onSave,
-}) => {
+const UserPageEditModal: React.FC<UserPageEditModalProps> = ({ isOpen, onClose, user, onSave }) => {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
   const [content, setContent] = useState('');
@@ -29,16 +24,16 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
       setContent(user.page?.raw || '');
       // 防止背景滚动
       document.body.style.overflow = 'hidden';
-      
+
       // 添加全局键盘事件监听，仅处理Escape键
       const handleGlobalKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && !e.defaultPrevented) {
           onClose();
         }
       };
-      
+
       document.addEventListener('keydown', handleGlobalKeyDown);
-      
+
       return () => {
         document.removeEventListener('keydown', handleGlobalKeyDown);
         document.body.style.overflow = 'unset';
@@ -55,7 +50,7 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
     setIsSaving(true);
     try {
       const response = await userAPI.updateUserPage(currentUser.id, content);
-      
+
       // 尝试获取渲染后的HTML
       let html = '';
       if (response.html) {
@@ -77,16 +72,16 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
           html = content.replace(/\n/g, '<br>');
         }
       }
-      
+
       // 更新用户数据
       const updatedUser = {
         ...user,
         page: {
           raw: content,
           html: html,
-        }
+        },
       };
-      
+
       // 通知父组件更新
       onSave(updatedUser);
       onClose();
@@ -120,8 +115,8 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
   // 处理鼠标按下事件，记录按下位置和时间
   const [mouseDownTarget, setMouseDownTarget] = useState<EventTarget | null>(null);
   const [mouseDownTime, setMouseDownTime] = useState<number>(0);
-  const [mouseDownPosition, setMouseDownPosition] = useState<{x: number, y: number} | null>(null);
-  
+  const [mouseDownPosition, setMouseDownPosition] = useState<{ x: number; y: number } | null>(null);
+
   const handleBackdropMouseDown = (e: React.MouseEvent) => {
     setMouseDownTarget(e.target);
     setMouseDownTime(Date.now());
@@ -131,23 +126,26 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
   const handleBackdropMouseUp = (e: React.MouseEvent) => {
     const timeDiff = Date.now() - mouseDownTime;
     const isQuickClick = timeDiff < 200; // 少于200ms认为是点击而非拖拽
-    
+
     // 计算鼠标移动距离
-    const distance = mouseDownPosition ? 
-      Math.sqrt(
-        Math.pow(e.clientX - mouseDownPosition.x, 2) + 
-        Math.pow(e.clientY - mouseDownPosition.y, 2)
-      ) : 0;
-    
+    const distance = mouseDownPosition
+      ? Math.sqrt(
+          Math.pow(e.clientX - mouseDownPosition.x, 2) +
+            Math.pow(e.clientY - mouseDownPosition.y, 2)
+        )
+      : 0;
+
     const isStationary = distance < 5; // 移动距离小于5px认为是点击
-    
+
     // 只有在同一个元素上按下和松开，且是快速点击或静止点击，且是背景层时，才关闭模态框
-    if (e.target === e.currentTarget && 
-        mouseDownTarget === e.target && 
-        (isQuickClick || isStationary)) {
+    if (
+      e.target === e.currentTarget &&
+      mouseDownTarget === e.target &&
+      (isQuickClick || isStationary)
+    ) {
       onClose();
     }
-    
+
     // 重置状态
     setMouseDownTarget(null);
     setMouseDownTime(0);
@@ -157,12 +155,12 @@ const UserPageEditModal: React.FC<UserPageEditModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 md:p-4"
       onMouseDown={handleBackdropMouseDown}
       onMouseUp={handleBackdropMouseUp}
     >
-      <div 
+      <div
         className="bg-card rounded-lg shadow-xl w-full max-w-7xl h-[95vh] overflow-hidden flex flex-col"
         onClick={handleModalContentClick}
         onMouseDown={handleModalContentMouseDown}

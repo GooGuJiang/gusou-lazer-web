@@ -11,7 +11,7 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({
   coverUrl,
   fallbackUrl,
   children,
-  className = ''
+  className = '',
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -28,12 +28,12 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({
       {/* 响应式固定宽高比容器 */}
       <div className="relative w-full max-w-full aspect-[4/3] sm:aspect-[16/6]">
         {/* 背景图片 */}
-        <div 
+        <div
           className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
-            backgroundImage: backgroundImage()
+            backgroundImage: backgroundImage(),
           }}
         >
           {/* 渐变遮罩 - 手机端更强的遮罩 */}
@@ -59,9 +59,7 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({
         )}
 
         {/* 内容 */}
-        <div className="absolute inset-0 z-10 w-full max-w-full overflow-hidden">
-          {children}
-        </div>
+        <div className="absolute inset-0 z-10 w-full max-w-full overflow-hidden">{children}</div>
       </div>
     </div>
   );

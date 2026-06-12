@@ -1,9 +1,9 @@
 import { api } from './client';
-import type { 
-  GameMode, 
-  SetDefaultModeResponse, 
+import type {
+  GameMode,
+  SetDefaultModeResponse,
   GetUserPreferencesResponse,
-  UpdateUserPreferencesRequest 
+  UpdateUserPreferencesRequest,
 } from '../../types';
 
 export const preferencesAPI = {
@@ -11,7 +11,7 @@ export const preferencesAPI = {
   setDefaultMode: async (mode: GameMode): Promise<SetDefaultModeResponse> => {
     console.log('设置默认游戏模式:', { mode });
     const response = await api.post('/api/private/user-preferences/default-mode', {
-      mode
+      mode,
     });
     return response.data;
   },

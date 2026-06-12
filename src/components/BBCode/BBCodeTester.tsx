@@ -49,7 +49,7 @@ function hello() {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">BBCode解析器测试</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 输入区域 */}
         <div className="space-y-4">
@@ -60,18 +60,20 @@ function hello() {
             className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm bg-card text-gray-900 dark:text-gray-100 resize-none"
             placeholder="在这里输入BBCode..."
           />
-          
+
           {/* 解析状态 */}
           <div className="flex items-center gap-2">
-            <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-              parseResult.valid 
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-            }`}>
+            <div
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                parseResult.valid
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                  : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+              }`}
+            >
               {parseResult.valid ? '✓ 解析成功' : `✗ ${parseResult.errors.length}个错误`}
             </div>
           </div>
-          
+
           {/* 错误列表 */}
           {parseResult.errors.length > 0 && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -84,14 +86,14 @@ function hello() {
             </div>
           )}
         </div>
-        
+
         {/* 预览区域 */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">HTML预览</h2>
           <div className="border border-gray-300 dark:border-gray-600 rounded-lg bg-card p-4 h-96 overflow-auto">
             <BBCodeRenderer html={parseResult.html} />
           </div>
-          
+
           {/* HTML源码 */}
           <details className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
             <summary className="p-3 cursor-pointer font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -103,10 +105,12 @@ function hello() {
           </details>
         </div>
       </div>
-      
+
       {/* 支持的标签说明 */}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4">支持的BBCode标签</h3>
+        <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4">
+          支持的BBCode标签
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
           <div>
             <h4 className="font-medium text-blue-700 dark:text-blue-300 mb-2">文本格式</h4>
@@ -119,7 +123,7 @@ function hello() {
               <li>[size=150]大小[/size]</li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-medium text-blue-700 dark:text-blue-300 mb-2">块级元素</h4>
             <ul className="space-y-1 text-blue-600 dark:text-blue-400">
@@ -131,7 +135,7 @@ function hello() {
               <li>[centre]居中[/centre]</li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-medium text-blue-700 dark:text-blue-300 mb-2">链接和媒体</h4>
             <ul className="space-y-1 text-blue-600 dark:text-blue-400">

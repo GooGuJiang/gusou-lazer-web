@@ -40,7 +40,9 @@ const GameStatsCard: React.FC<GameStatsCardProps> = ({ statistics, isUpdatingMod
       <div className="text-center">
         <p className="text-lg font-bold text-gray-900 dark:text白">
           {isUpdatingMode || !statistics ? (
-            <TextSkeleton>{statistics?.ranked_score?.toLocaleString() || '99,999,999'}</TextSkeleton>
+            <TextSkeleton>
+              {statistics?.ranked_score?.toLocaleString() || '99,999,999'}
+            </TextSkeleton>
           ) : (
             statistics.ranked_score?.toLocaleString() || '0'
           )}
@@ -66,4 +68,3 @@ const GameStatsCard: React.FC<GameStatsCardProps> = ({ statistics, isUpdatingMod
 );
 
 export default GameStatsCard;
-

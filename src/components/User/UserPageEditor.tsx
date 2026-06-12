@@ -22,7 +22,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
 }) => {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
-  
+
   const [content, setContent] = useState('');
   const [originalContent, setOriginalContent] = useState('');
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
     if (canEdit) {
       setLoading(true);
       setError(null);
-      
+
       // 直接从用户对象获取页面内容
       const initialContent = user.page?.raw || '';
       setContent(initialContent);
@@ -66,7 +66,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
       setError(null);
 
       const result = await userAPI.updateUserPage(user.id, content);
-      
+
       setOriginalContent(content);
       setHasChanges(false);
       setError(null);
@@ -121,7 +121,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
           handleSave();
         }
       }
-      
+
       if (e.key === 'Escape') {
         handleCancel();
       }
@@ -138,7 +138,9 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
       <div className={`bg-card rounded-lg shadow-lg p-6 ${className}`}>
         <div className="flex items-center justify-center py-12">
           <LoadingSpinner size="lg" />
-          <span className="ml-3 text-gray-600 dark:text-gray-400">{t('profile.userPage.loadingEditor')}</span>
+          <span className="ml-3 text-gray-600 dark:text-gray-400">
+            {t('profile.userPage.loadingEditor')}
+          </span>
         </div>
       </div>
     );
@@ -152,9 +154,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
             {t('profile.userPage.cannotEditPage')}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {error}
-          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
           {onClose && (
             <button
               onClick={onClose}
@@ -190,7 +190,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
               {t('profile.userPage.unsavedChanges')}
             </span>
           )}
-          
+
           <button
             onClick={handleCancel}
             disabled={saving}
@@ -215,17 +215,13 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
 
         {error && (
           <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-sm text-red-600 dark:text-red-400">
-              {error}
-            </p>
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           </div>
         )}
 
         {successMessage && (
           <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800 rounded-lg">
-            <p className="text-sm text-green-600 dark:text-green-400">
-              {successMessage}
-            </p>
+            <p className="text-sm text-green-600 dark:text-green-400">{successMessage}</p>
           </div>
         )}
       </div>
@@ -248,7 +244,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
           >
             {t('profile.userPage.cancel')}
           </button>
-          
+
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving || content.length > 60000}

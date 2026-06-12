@@ -2,12 +2,7 @@ import React from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import TeamRankingCard from './TeamRankingCard';
-import type { 
-  TeamRankingsResponse, 
-  GameMode, 
-  RankingType, 
-  TeamRanking
-} from '../../types';
+import type { TeamRankingsResponse, GameMode, RankingType, TeamRanking } from '../../types';
 
 interface Props {
   rankings: TeamRankingsResponse | null;
@@ -16,11 +11,11 @@ interface Props {
   rankingType: RankingType;
 }
 
-const TeamRankingsList: React.FC<Props> = ({ 
-  rankings, 
-  currentPage, 
-  selectedMode, 
-  rankingType 
+const TeamRankingsList: React.FC<Props> = ({
+  rankings,
+  currentPage,
+  selectedMode,
+  rankingType,
 }) => {
   const { t } = useTranslation();
 
@@ -30,7 +25,9 @@ const TeamRankingsList: React.FC<Props> = ({
         <div className="bg-gray-100 dark:bg-gray-700 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
           <FiUsers className="text-4xl text-gray-400 dark:text-gray-500" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('rankings.errors.noData')}</h3>
+        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          {t('rankings.errors.noData')}
+        </h3>
         <p className="text-gray-500 dark:text-gray-400">{t('common.noDataFound')}</p>
       </div>
     );

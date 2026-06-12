@@ -6,13 +6,13 @@ import { statsAPI } from '../../utils/api';
 import type { ServerStats, OnlineHistoryResponse } from '../../types';
 
 // 简单的双线图表组件
-const SimpleLineChart: React.FC<{ 
+const SimpleLineChart: React.FC<{
   onlineData: { time: string; value: number }[];
   playingData: { time: string; value: number }[];
 }> = ({ onlineData, playingData }) => {
   if (onlineData.length === 0) return null;
 
-  const allValues = [...onlineData.map(d => d.value), ...playingData.map(d => d.value)];
+  const allValues = [...onlineData.map((d) => d.value), ...playingData.map((d) => d.value)];
   const maxValue = Math.max(...allValues);
   const minValue = Math.min(...allValues);
   const range = maxValue - minValue || 1;
@@ -22,22 +22,31 @@ const SimpleLineChart: React.FC<{
   const padding = 10;
 
   // 创建在线用户路径点
-  const onlinePoints = onlineData.map((item, index) => {
-    const x = padding + (index / (onlineData.length - 1)) * (width - 2 * padding);
-    const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
-    return `${x},${y}`;
-  }).join(' ');
+  const onlinePoints = onlineData
+    .map((item, index) => {
+      const x = padding + (index / (onlineData.length - 1)) * (width - 2 * padding);
+      const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
+      return `${x},${y}`;
+    })
+    .join(' ');
 
   // 创建游玩用户路径点
-  const playingPoints = playingData.map((item, index) => {
-    const x = padding + (index / (playingData.length - 1)) * (width - 2 * padding);
-    const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
-    return `${x},${y}`;
-  }).join(' ');
+  const playingPoints = playingData
+    .map((item, index) => {
+      const x = padding + (index / (playingData.length - 1)) * (width - 2 * padding);
+      const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
+      return `${x},${y}`;
+    })
+    .join(' ');
 
   return (
     <div className="w-full">
-      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+      <svg
+        width="100%"
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="overflow-visible"
+      >
         <defs>
           <linearGradient id="onlineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#10B981" stopOpacity="0.3" />
@@ -48,19 +57,19 @@ const SimpleLineChart: React.FC<{
             <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
           </linearGradient>
         </defs>
-        
+
         {/* 在线用户填充区域 */}
         <polygon
           points={`${padding},${height - padding} ${onlinePoints} ${width - padding},${height - padding}`}
           fill="url(#onlineGradient)"
         />
-        
+
         {/* 游玩用户填充区域 */}
         <polygon
           points={`${padding},${height - padding} ${playingPoints} ${width - padding},${height - padding}`}
           fill="url(#playingGradient)"
         />
-        
+
         {/* 在线用户线条 */}
         <polyline
           points={onlinePoints}
@@ -80,40 +89,26 @@ const SimpleLineChart: React.FC<{
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        
+
         {/* 在线用户数据点 - 只显示最后一个点 */}
-        {onlineData.length > 0 && (() => {
-          const lastIndex = onlineData.length - 1;
-          const item = onlineData[lastIndex];
-          const x = padding + (lastIndex / (onlineData.length - 1)) * (width - 2 * padding);
-          const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
-          return (
-            <circle
-              cx={x}
-              cy={y}
-              r="4"
-              fill="#10B981"
-              className="drop-shadow-sm"
-            />
-          );
-        })()}
+        {onlineData.length > 0 &&
+          (() => {
+            const lastIndex = onlineData.length - 1;
+            const item = onlineData[lastIndex];
+            const x = padding + (lastIndex / (onlineData.length - 1)) * (width - 2 * padding);
+            const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
+            return <circle cx={x} cy={y} r="4" fill="#10B981" className="drop-shadow-sm" />;
+          })()}
 
         {/* 游玩用户数据点 - 只显示最后一个点 */}
-        {playingData.length > 0 && (() => {
-          const lastIndex = playingData.length - 1;
-          const item = playingData[lastIndex];
-          const x = padding + (lastIndex / (playingData.length - 1)) * (width - 2 * padding);
-          const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
-          return (
-            <circle
-              cx={x}
-              cy={y}
-              r="4"
-              fill="#8B5CF6"
-              className="drop-shadow-sm"
-            />
-          );
-        })()}
+        {playingData.length > 0 &&
+          (() => {
+            const lastIndex = playingData.length - 1;
+            const item = playingData[lastIndex];
+            const x = padding + (lastIndex / (playingData.length - 1)) * (width - 2 * padding);
+            const y = height - padding - ((item.value - minValue) / range) * (height - 2 * padding);
+            return <circle cx={x} cy={y} r="4" fill="#8B5CF6" className="drop-shadow-sm" />;
+          })()}
       </svg>
     </div>
   );
@@ -153,10 +148,10 @@ const ServerStatsCard: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const [currentStats, onlineHistory] = await Promise.all([
         statsAPI.getCurrentStats(),
-        statsAPI.getOnlineHistory()
+        statsAPI.getOnlineHistory(),
       ]);
 
       setStats(currentStats);
@@ -171,7 +166,7 @@ const ServerStatsCard: React.FC = () => {
 
   useEffect(() => {
     fetchStats();
-    
+
     // 移除自动刷新，只在组件挂载时获取一次数据
     // const interval = setInterval(fetchStats, 30000);
     // return () => clearInterval(interval);
@@ -224,17 +219,20 @@ const ServerStatsCard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* 图表区域占位符 */}
           <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-          
+
           {/* 时间标签占位符 */}
           <div className="flex justify-between mb-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-3 w-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div
+                key={i}
+                className="h-3 w-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
+              ></div>
             ))}
           </div>
-          
+
           {/* 时区标识占位符 */}
           <div className="text-center">
             <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
@@ -267,15 +265,23 @@ const ServerStatsCard: React.FC = () => {
   }
 
   // 准备图表数据
-  const onlineChartData = history ? history.history.map(entry => ({
-    time: formatLocalTime(entry.timestamp),
-    value: entry.online_count
-  })).reverse() : []; // 反转使时间从早到晚
+  const onlineChartData = history
+    ? history.history
+        .map((entry) => ({
+          time: formatLocalTime(entry.timestamp),
+          value: entry.online_count,
+        }))
+        .reverse()
+    : []; // 反转使时间从早到晚
 
-  const playingChartData = history ? history.history.map(entry => ({
-    time: formatLocalTime(entry.timestamp),
-    value: entry.playing_count
-  })).reverse() : []; // 反转使时间从早到晚
+  const playingChartData = history
+    ? history.history
+        .map((entry) => ({
+          time: formatLocalTime(entry.timestamp),
+          value: entry.playing_count,
+        }))
+        .reverse()
+    : []; // 反转使时间从早到晚
 
   return (
     <motion.div
@@ -313,23 +319,29 @@ const ServerStatsCard: React.FC = () => {
               <FiUsers className="w-6 h-6" />
               {stats.registered_users.toLocaleString()}
             </div>
-            <div className="text-sm text-blue-600/70 dark:text-blue-400/70 font-medium">{t('common.registeredUsers')}</div>
+            <div className="text-sm text-blue-600/70 dark:text-blue-400/70 font-medium">
+              {t('common.registeredUsers')}
+            </div>
           </div>
-          
+
           <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl">
             <div className="text-3xl font-bold text-green-600 dark:text-green-400 flex items-center justify-center gap-2 mb-2">
               <FiActivity className="w-6 h-6" />
               {stats.online_users.toLocaleString()}
             </div>
-            <div className="text-sm text-green-600/70 dark:text-green-400/70 font-medium">{t('common.onlineUsers')}</div>
+            <div className="text-sm text-green-600/70 dark:text-green-400/70 font-medium">
+              {t('common.onlineUsers')}
+            </div>
           </div>
-          
+
           <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
             <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 flex items-center justify-center gap-2 mb-2">
               <FiPlay className="w-6 h-6" />
               {stats.playing_users.toLocaleString()}
             </div>
-            <div className="text-sm text-purple-600/70 dark:text-purple-400/70 font-medium">{t('common.playingUsers')}</div>
+            <div className="text-sm text-purple-600/70 dark:text-purple-400/70 font-medium">
+              {t('common.playingUsers')}
+            </div>
           </div>
         </div>
       )}
@@ -341,7 +353,7 @@ const ServerStatsCard: React.FC = () => {
               <FiTrendingUp className="w-4 h-4" />
               {t('common.onlineTrend24h')}
             </h4>
-            
+
             {/* 图例 */}
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1">
@@ -354,16 +366,16 @@ const ServerStatsCard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <SimpleLineChart onlineData={onlineChartData} playingData={playingChartData} />
-          
+
           {/* 时间标签 */}
           <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
             <span>{onlineChartData[0]?.time}</span>
             <span>{onlineChartData[Math.floor(onlineChartData.length / 2)]?.time}</span>
             <span>{onlineChartData[onlineChartData.length - 1]?.time}</span>
           </div>
-          
+
           {/* 时区指示 */}
           <div className="text-center mt-1">
             <span className="text-xs text-gray-400 dark:text-gray-500">

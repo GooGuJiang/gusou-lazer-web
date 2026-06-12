@@ -85,9 +85,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ onStartPrivateChat, onClose }
     }
   };
 
-
-
-  const filteredFriends = friends.filter(friend => 
+  const filteredFriends = friends.filter((friend) =>
     friend.target?.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -169,7 +167,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ onStartPrivateChat, onClose }
                     avatarUrl={friend.target?.avatar_url}
                     size="md"
                   />
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
                       <h3 className="font-medium text-gray-900 dark:text-white truncate">
@@ -182,7 +180,9 @@ const FriendsList: React.FC<FriendsListProps> = ({ onStartPrivateChat, onClose }
                       )}
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {friend.target?.country_code ? `来自 ${friend.target.country_code}` : '未知地区'}
+                      {friend.target?.country_code
+                        ? `来自 ${friend.target.country_code}`
+                        : '未知地区'}
                     </p>
                   </div>
 

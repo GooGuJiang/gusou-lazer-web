@@ -9,11 +9,7 @@ import TeamRankingsList from '../components/Rankings/TeamRankingsList';
 import RankingTypeSelector from '../components/UI/RankingTypeSelector';
 import PaginationControls from '../components/Rankings/PaginationControls';
 import GameModeSelector from '../components/UI/GameModeSelector';
-import type {
-  GameMode,
-  TeamRankingsResponse,
-  RankingType
-} from '../types';
+import type { GameMode, TeamRankingsResponse, RankingType } from '../types';
 
 const TeamsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -21,19 +17,15 @@ const TeamsPage: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   const [rankingType, setRankingType] = useState<RankingType>('performance');
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const [teamRankings, setTeamRankings] = useState<TeamRankingsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // 加载战队排行榜
   const loadTeamRankings = async () => {
     setIsLoading(true);
     try {
-      const response = await rankingsAPI.getTeamRankings(
-        selectedMode, 
-        rankingType, 
-        currentPage
-      );
+      const response = await rankingsAPI.getTeamRankings(selectedMode, rankingType, currentPage);
       setTeamRankings(response);
     } catch (error) {
       handleApiError(error);
@@ -81,9 +73,9 @@ const TeamsPage: React.FC = () => {
                 {t('teams.description')}
               </p>
             </div>
-            
-            {isAuthenticated && (
-              user?.team ? (
+
+            {isAuthenticated &&
+              (user?.team ? (
                 // 检查用户是否是队长
                 user.id === user.team.leader_id ? (
                   <Link
@@ -95,9 +87,9 @@ const TeamsPage: React.FC = () => {
                   </Link>
                 ) : (
                   <Link
-                      to={`/teams/${user.team.id}`}
-                      className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/80 transition-colors self-start sm:self-auto"
-                    >
+                    to={`/teams/${user.team.id}`}
+                    className="inline-flex items-center px-4 py-2 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/80 transition-colors self-start sm:self-auto"
+                  >
                     <FiEye className="mr-2" />
                     {t('teams.viewTeam')}
                   </Link>
@@ -110,14 +102,12 @@ const TeamsPage: React.FC = () => {
                   <FiPlus className="mr-2" />
                   {t('teams.createTeam')}
                 </Link>
-              )
-            )}
+              ))}
           </div>
         </div>
 
         {/* 控制面板：模式选择 + 筛选选项 */}
         <div className="flex flex-col xl:flex-row xl:items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-          
           {/* 游戏模式选择 */}
           <div className="bg-card rounded-lg shadow-sm border-card p-2">
             <GameModeSelector
@@ -131,10 +121,7 @@ const TeamsPage: React.FC = () => {
           {/* 筛选选项 */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 xl:flex-1">
             <div className="w-full sm:w-48">
-              <RankingTypeSelector
-                value={rankingType}
-                onChange={setRankingType}
-              />
+              <RankingTypeSelector value={rankingType} onChange={setRankingType} />
             </div>
           </div>
         </div>
@@ -144,7 +131,9 @@ const TeamsPage: React.FC = () => {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 px-4 sm:px-0">
               <LoadingSpinner size="lg" className="mb-4" />
-              <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.loadingTeams')}</p>
+              <p className="text-gray-500 dark:text-gray-400 font-medium">
+                {t('teams.loadingTeams')}
+              </p>
             </div>
           ) : (
             <TeamRankingsList

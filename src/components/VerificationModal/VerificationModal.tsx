@@ -31,7 +31,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
       setCode('');
       setError(null);
       setResendMessage(null);
-      
+
       // 防止背景滚动
       const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
@@ -65,19 +65,27 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
       setCode('');
     } catch (err: unknown) {
       console.error('验证失败:', err);
-      
+
       // 处理特定的 TOTP 错误
-      const responseData = isRecord(err) && isRecord(err.response) && isRecord(err.response.data) ? err.response.data : undefined;
+      const responseData =
+        isRecord(err) && isRecord(err.response) && isRecord(err.response.data)
+          ? err.response.data
+          : undefined;
       const errorMessage = responseData?.error;
       const errorDetail = responseData?.detail;
       const errorString = getErrorMessage(err);
-      
+
       // 检查多种可能的错误格式
-      if (errorMessage === 'No TOTP setup in progress or invalid data' || 
-          errorString.includes('No TOTP setup in progress or invalid data')) {
+      if (
+        errorMessage === 'No TOTP setup in progress or invalid data' ||
+        errorString.includes('No TOTP setup in progress or invalid data')
+      ) {
         setError(t('verification.errors.totpInvalidOrExpired'));
-      } else if (errorDetail && typeof errorDetail === 'string' && 
-                 errorDetail.includes('No TOTP setup in progress or invalid data')) {
+      } else if (
+        errorDetail &&
+        typeof errorDetail === 'string' &&
+        errorDetail.includes('No TOTP setup in progress or invalid data')
+      ) {
         setError(t('verification.errors.totpInvalidOrExpired'));
       } else {
         setError(t('verification.errors.totpGenericError'));
@@ -91,7 +99,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
     setIsLoading(true);
     setError(null);
     setResendMessage(null);
-    
+
     try {
       await onSwitchMethod();
     } catch {
@@ -103,7 +111,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
 
   const handleResendCode = async () => {
     if (!onResendCode) return;
-    
+
     setResendLoading(true);
     setError(null);
     setResendMessage(null);
@@ -123,15 +131,17 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
   };
 
   const getDescription = () => {
-    return method === 'totp' 
+    return method === 'totp'
       ? t('verification.totpDescription')
       : t('verification.mailDescription');
   };
 
   const getIcon = () => {
-    return method === 'totp' ? 
-      <Smartphone className="w-5 h-5 text-osu-pink" /> : 
-      <Mail className="w-5 h-5 text-osu-pink" />;
+    return method === 'totp' ? (
+      <Smartphone className="w-5 h-5 text-osu-pink" />
+    ) : (
+      <Mail className="w-5 h-5 text-osu-pink" />
+    );
   };
 
   const getCodeLength = () => {
@@ -141,7 +151,10 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ overflow: 'hidden' }}>
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          style={{ overflow: 'hidden' }}
+        >
           {/* 背景遮罩 */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -150,7 +163,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           />
-          
+
           {/* 模态框内容 */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -180,8 +193,13 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
               {/* 验证表单 */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="verification-code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {method === 'totp' ? t('verification.enterTotpCode') : t('verification.enterMailCode')}
+                  <label
+                    htmlFor="verification-code"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    {method === 'totp'
+                      ? t('verification.enterTotpCode')
+                      : t('verification.enterMailCode')}
                   </label>
                   <input
                     id="verification-code"
@@ -201,17 +219,13 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
 
                 {error && (
                   <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p className="text-sm text-red-600 dark:text-red-400">
-                      {error}
-                    </p>
+                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                   </div>
                 )}
 
                 {resendMessage && (
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                    <p className="text-sm text-green-600 dark:text-green-400">
-                      {resendMessage}
-                    </p>
+                    <p className="text-sm text-green-600 dark:text-green-400">{resendMessage}</p>
                   </div>
                 )}
 

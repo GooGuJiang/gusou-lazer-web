@@ -34,8 +34,17 @@ const DefaultModeSelector: React.FC = () => {
       const response = await preferencesAPI.getPreferences();
       const defaultMode = (response.playmode as GameMode) || 'osu';
       // 假设所有模式都可用，或者可以从其他 API 获取
-      const availableModesFromAPI: GameMode[] = ['osu', 'osurx', 'osuap', 'taiko', 'taikorx', 'fruits', 'fruitsrx', 'mania'];
-      
+      const availableModesFromAPI: GameMode[] = [
+        'osu',
+        'osurx',
+        'osuap',
+        'taiko',
+        'taikorx',
+        'fruits',
+        'fruitsrx',
+        'mania',
+      ];
+
       setCurrentMode(defaultMode);
       setSelectedMode(defaultMode);
       setAvailableModes(availableModesFromAPI);
@@ -116,28 +125,29 @@ const DefaultModeSelector: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-profile-color/10 text-profile-color rounded-lg flex items-center justify-center">
-                <i className={`${GAME_MODES.find(m => m.value === currentMode)?.iconClass || 'fa-extra-mode-osu'} text-lg`}></i>
+                <i
+                  className={`${GAME_MODES.find((m) => m.value === currentMode)?.iconClass || 'fa-extra-mode-osu'} text-lg`}
+                ></i>
               </div>
               <span className="text-lg font-medium text-gray-900 dark:text-white">
                 {currentMode ? getModeName(currentMode) : 'osu!'}
               </span>
             </div>
-            <button
-              onClick={handleStartEdit}
-              className="btn-secondary !px-4 !py-2 text-sm"
-            >
+            <button onClick={handleStartEdit} className="btn-secondary !px-4 !py-2 text-sm">
               {t('settings.preferences.defaultMode.change')}
             </button>
           </div>
         ) : (
           <div className="space-y-4">
             {/* 游戏模式选择网格 */}
-            <div className={`grid gap-3 ${
-              availableModes.length <= 4 
-                ? 'grid-cols-2 sm:grid-cols-4' 
-                : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'
-            }`}>
-              {GAME_MODES.filter(mode => availableModes.includes(mode.value)).map((mode) => (
+            <div
+              className={`grid gap-3 ${
+                availableModes.length <= 4
+                  ? 'grid-cols-2 sm:grid-cols-4'
+                  : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'
+              }`}
+            >
+              {GAME_MODES.filter((mode) => availableModes.includes(mode.value)).map((mode) => (
                 <motion.button
                   key={mode.value}
                   whileHover={{ scale: 1.02 }}
@@ -150,11 +160,13 @@ const DefaultModeSelector: React.FC = () => {
                   }`}
                 >
                   <div className="flex flex-col items-center gap-2">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedMode === mode.value
-                        ? 'bg-profile-color text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                    }`}>
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        selectedMode === mode.value
+                          ? 'bg-profile-color text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                      }`}
+                    >
                       <i className={`${mode.iconClass} text-base`}></i>
                     </div>
                     <span className="text-sm font-medium text-center">
@@ -178,7 +190,9 @@ const DefaultModeSelector: React.FC = () => {
                 className="flex items-center gap-2 btn-primary !px-4 !py-2 !text-sm !inline-flex disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiCheck className="w-4 h-4" />
-                {isSaving ? t('settings.preferences.defaultMode.saving') : t('settings.preferences.defaultMode.save')}
+                {isSaving
+                  ? t('settings.preferences.defaultMode.saving')
+                  : t('settings.preferences.defaultMode.save')}
               </button>
               <button
                 onClick={handleCancelEdit}

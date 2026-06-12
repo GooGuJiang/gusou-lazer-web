@@ -23,9 +23,7 @@ const RestrictedBanner: React.FC<RestrictedBannerProps> = ({ className = '' }) =
           <div className="flex items-start gap-3">
             <FaExclamationTriangle className="h-6 w-6 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-base mb-1">
-                {t('profile.restrictedBanner.title')}
-              </h3>
+              <h3 className="font-bold text-base mb-1">{t('profile.restrictedBanner.title')}</h3>
               <p className="text-sm opacity-95 leading-relaxed">
                 {t('profile.restrictedBanner.message')}
               </p>
@@ -50,9 +48,7 @@ const RestrictedBanner: React.FC<RestrictedBannerProps> = ({ className = '' }) =
                 <FaExclamationTriangle className="h-6 w-6" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-lg mb-2">
-                  {t('profile.restrictedBanner.title')}
-                </h3>
+                <h3 className="font-bold text-lg mb-2">{t('profile.restrictedBanner.title')}</h3>
                 <p className="text-sm opacity-95 leading-relaxed mb-4">
                   {t('profile.restrictedBanner.message')}
                 </p>

@@ -41,11 +41,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    middleware: [
-      offset(12),
-      flip({ padding: 8 }),
-      shift({ padding: 8 }),
-    ],
+    middleware: [offset(12), flip({ padding: 8 }), shift({ padding: 8 })],
     whileElementsMounted: autoUpdate,
     placement: 'bottom-end',
   });
@@ -54,26 +50,22 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: 'menu' });
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    click,
-    dismiss,
-    role,
-  ]);
+  const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role]);
 
   const handleTogglePin = async () => {
     setIsLoading(true);
-    
+
     // 1. 立即触发本地更新（乐观更新）
     onPinChange?.(scoreId, isPinned);
     onPinnedListChange?.();
-    
+
     // 2. 显示成功提示
     if (isPinned) {
       toast.success(t('profile.bestScores.actions.unpinSuccess'));
     } else {
       toast.success(t('profile.bestScores.actions.pinSuccess'));
     }
-    
+
     // 3. 后台发送到服务器
     try {
       if (isPinned) {
@@ -98,7 +90,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
     setIsLoading(true);
     try {
       const blob = await scoreAPI.downloadReplay(scoreId);
-      
+
       // 创建下载链接
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -108,7 +100,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       toast.success(t('profile.bestScores.actions.downloadSuccess'));
     } catch (error) {
       handleApiError(error);

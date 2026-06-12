@@ -14,7 +14,7 @@ import UserBestScores from './UserBestScores';
 import UserRecentScores from './UserRecentScores';
 import UserPageDisplay from './UserPageDisplay';
 import RestrictedBanner from './RestrictedBanner';
-import { FaTools, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaTools, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
 import { useAuth } from '../../hooks/useAuth';
 import { useUserPreferences } from '../../hooks/useUserPreferences';
@@ -40,7 +40,11 @@ const formatPlayTime = (seconds: number | undefined): string => {
 };
 
 /** 头图懒加载 + blur 过渡 */
-const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> = ({ src, alt = 'cover', isExpanded }) => {
+const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> = ({
+  src,
+  alt = 'cover',
+  isExpanded,
+}) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -50,7 +54,7 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
   // 默认背景图
   const defaultCover = '/image/backgrounds/layered-waves-haikei.svg';
   // 如果没有提供 src 或加载失败，使用默认背景
-  const displaySrc = (!src || error) ? defaultCover : src;
+  const displaySrc = !src || error ? defaultCover : src;
 
   useEffect(() => {
     if (!ref.current) return;
@@ -59,8 +63,8 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
       return;
     }
     const io = new IntersectionObserver(
-      entries => {
-        entries.forEach(e => {
+      (entries) => {
+        entries.forEach((e) => {
           if (e.isIntersecting) {
             setInView(true);
             io.disconnect();
@@ -74,12 +78,13 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
   }, []);
 
   // 动态高度：展开时显示，收起时不显示
-  const heightClass = isExpanded 
-    ? 'h-[180px] md:h-[288px]' 
-    : 'h-0';
+  const heightClass = isExpanded ? 'h-[180px] md:h-[288px]' : 'h-0';
 
   return (
-    <div ref={ref} className={`relative w-full overflow-hidden transition-all duration-300 ${heightClass}`}>
+    <div
+      ref={ref}
+      className={`relative w-full overflow-hidden transition-all duration-300 ${heightClass}`}
+    >
       {/* 骨架 or 渐变背景兜底 */}
       <div className="absolute inset-0 cover-bg">
         <div className="h-full w-full" style={{ background: 'transparent' }} />
@@ -108,12 +113,17 @@ const CoverImage: React.FC<{ src?: string; alt?: string; isExpanded: boolean }> 
   );
 };
 
-const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMode, onModeChange, onUserUpdate }) => {
+const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
+  user,
+  selectedMode,
+  onModeChange,
+  onUserUpdate,
+}) => {
   const { t } = useTranslation();
   const { refreshUser, user: currentUser } = useAuth();
   const { preferences, updatePreference } = useUserPreferences();
   const { profileColor, setProfileColorLocal, resetProfileColor } = useProfileColor();
-  
+
   // 用于跨组件刷新的 ref
   const pinnedScoresRefreshRef = useRef<(() => void) | null>(null);
   const bestScoresRefreshRef = useRef<(() => void) | null>(null);
@@ -124,29 +134,27 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const bestScoresActionRef = useRef<{
     updatePinStatus: (scoreId: number, isPinned: boolean) => void;
   } | null>(null);
-  
-  const stats =
-    user.statistics_rulesets?.[selectedMode] ??
-    user.statistics;
+
+  const stats = user.statistics_rulesets?.[selectedMode] ?? user.statistics;
   const gradeCounts = stats?.grade_counts ?? { ssh: 0, ss: 0, sh: 0, s: 0, a: 0 };
   const levelProgress = stats?.level?.progress ?? 0;
   const levelCurrent = stats?.level?.current ?? 0;
   const playTime = formatPlayTime(stats?.play_time);
   const user_achievements = Array.isArray(user.user_achievements)
-    ? user.user_achievements.filter(
-        (a): a is { achievement_id: number; achieved_at: string } => {
-          if (typeof a !== 'object' || a === null) return false;
-          const achievement = a as { achievement_id?: unknown; achieved_at?: unknown };
-          return typeof achievement.achievement_id === 'number' &&
-            typeof achievement.achieved_at === 'string';
-        }
-      )
+    ? user.user_achievements.filter((a): a is { achievement_id: number; achieved_at: string } => {
+        if (typeof a !== 'object' || a === null) return false;
+        const achievement = a as { achievement_id?: unknown; achieved_at?: unknown };
+        return (
+          typeof achievement.achievement_id === 'number' &&
+          typeof achievement.achieved_at === 'string'
+        );
+      })
     : undefined;
 
   const coverUrlRaw = user.cover_url || user.cover?.url || undefined;
   const coverUrl =
-    coverUrlRaw === "https://assets.ppy.sh/user-profile-covers/default.jpeg"
-      ? "/image/backgrounds/bgcover.jpg"
+    coverUrlRaw === 'https://assets.ppy.sh/user-profile-covers/default.jpeg'
+      ? '/image/backgrounds/bgcover.jpg'
       : coverUrlRaw;
   const [isUpdatingMode] = useState(false);
 
@@ -174,7 +182,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
     const viewedColor = getViewedUserColor();
     setProfileColorLocal(viewedColor);
-    
+
     return () => {
       resetProfileColor();
     };
@@ -207,7 +215,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
   const handleToggleCover = async () => {
     const newExpandedState = !isCoverExpanded;
     setIsCoverExpanded(newExpandedState);
-    
+
     // 仅在当前用户查看自己的页面时保存偏好设置
     if (canEdit) {
       await updatePreference('profile_cover_expanded', newExpandedState);
@@ -218,7 +226,6 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
     <main className="max-w-7xl mx-auto px-0 md:px-4 lg:px-6 py-4 md:py-6">
       {/* 主卡片 */}
       <div className="bg-card md:main-card-shadow md:rounded-t-2xl md:rounded-b-2xl overflow-hidden md:border md:border-card">
-        
         {/* 受限用户提示 - 仅管理员可见 */}
         {user.is_restricted && currentUser?.is_admin && (
           <div className="px-3 md:px-6 pt-4">
@@ -228,7 +235,10 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 头部栏 + 模式选择 */}
         <div className="relative">
-          <div className="relative z-10 bg-transparent md:bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card" style={{ color: 'var(--text-primary)' }}>
+          <div
+            className="relative z-10 bg-transparent md:bg-card px-4 md:px-6 py-3 md:py-4 flex items-center justify-between md:rounded-t-2xl border-b border-card"
+            style={{ color: 'var(--text-primary)' }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 bg-osu-pink rounded-full"></div>
               <div className="text-base md:text-lg font-bold">{t('profile.info.title')}</div>
@@ -246,14 +256,18 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
           {/* 头图懒加载 */}
           <div className="overflow-hidden">
-            <CoverImage src={coverUrl} alt={`${user.username} cover`} isExpanded={isCoverExpanded} />
+            <CoverImage
+              src={coverUrl}
+              alt={`${user.username} cover`}
+              isExpanded={isCoverExpanded}
+            />
           </div>
         </div>
 
         {/* 头像与基本信息条 */}
         <div className="bg-transparent md:bg-card px-3 md:px-8 py-4 md:py-6 flex items-center gap-4 md:gap-6 border-b border-card relative">
           {/* 头像：渐变边 + 阴影，左下沉覆盖 - 展开时有负边距下沉效果，收起时无负边距 */}
-          <div className={isCoverExpanded ? "-mt-12" : "mt-0"}>
+          <div className={isCoverExpanded ? '-mt-12' : 'mt-0'}>
             <Avatar
               userId={user.id}
               username={user.username}
@@ -262,9 +276,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
               shape="rounded"
               editable={false}
               className={
-                isCoverExpanded 
-                  ? "mt-[10px] md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32 transition-all duration-300" 
-                  : "mt-[10px] md:mt-[1px] md:!w-24 md:!h-24 md:!min-w-24 md:!min-h-24 transition-all duration-300"
+                isCoverExpanded
+                  ? 'mt-[10px] md:mt-[1px] md:!w-32 md:!h-32 md:!min-w-32 md:!min-h-32 transition-all duration-300'
+                  : 'mt-[10px] md:mt-[1px] md:!w-24 md:!h-24 md:!min-w-24 md:!min-h-24 transition-all duration-300'
               }
               onAvatarUpdate={handleAvatarUpdate}
             />
@@ -314,23 +328,29 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
           </div>
 
           {/* 展开/收起按钮 - 移到右侧 */}
-          <button 
+          <button
             onClick={handleToggleCover}
-            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 grid place-items-center text-sm md:text-base hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex-shrink-0" 
-            aria-label={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 grid place-items-center text-sm md:text-base hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex-shrink-0"
+            aria-label={
+              isCoverExpanded
+                ? t('profile.userPage.collapseCover')
+                : t('profile.userPage.expandCover')
+            }
             data-tooltip-id="cover-toggle-tooltip"
-            data-tooltip-content={isCoverExpanded ? t('profile.userPage.collapseCover') : t('profile.userPage.expandCover')}
+            data-tooltip-content={
+              isCoverExpanded
+                ? t('profile.userPage.collapseCover')
+                : t('profile.userPage.expandCover')
+            }
           >
             {isCoverExpanded ? <FaChevronUp /> : <FaChevronDown />}
           </button>
-          </div>
+        </div>
 
         {/* Tooltips */}
         <Tooltip id="country-tooltip" />
         <Tooltip id="team-tooltip" />
         <Tooltip id="cover-toggle-tooltip" />
-
-
 
         {/* 中部：左 3/4（排名+折线+信息），右 1/4（统计） */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 py-4 border-b border-card">
@@ -340,12 +360,20 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
               {/* 排名 */}
               <div className="flex gap-8 p-3 md:rounded-lg md:rank-card-shadow mb-[20px] ml-0 md:ml-[-10px]">
                 <div className="text-center">
-                  <div className="text-gray-500 dark:text-gray-400 mb-[-5px] mb-1 text-[12px]">{t('profile.info.globalRank')}</div>
-                  <div className="font-bold text-primary text-[20px]">#{stats?.global_rank ?? '—'}</div>
+                  <div className="text-gray-500 dark:text-gray-400 mb-[-5px] mb-1 text-[12px]">
+                    {t('profile.info.globalRank')}
+                  </div>
+                  <div className="font-bold text-primary text-[20px]">
+                    #{stats?.global_rank ?? '—'}
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-gray-500 dark:text-gray-400 mb-[-5px] text-[12px]">{t('profile.info.countryRank')}</div>
-                  <div className="font-bold text-primary text-[20px]">#{stats?.country_rank ?? '—'}</div>
+                  <div className="text-gray-500 dark:text-gray-400 mb-[-5px] text-[12px]">
+                    {t('profile.info.countryRank')}
+                  </div>
+                  <div className="font-bold text-primary text-[20px]">
+                    #{stats?.country_rank ?? '—'}
+                  </div>
                 </div>
               </div>
 
@@ -373,7 +401,10 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
             {/* 右侧 1/4：统计信息 */}
             <div className="flex-1">
-              <div className="p-3 md:rounded-lg h-full flex flex-col justify-center md:stats-card-shadow" style={{ background: 'var(--bg-secondary)' }}>
+              <div
+                className="p-3 md:rounded-lg h-full flex flex-col justify-center md:stats-card-shadow"
+                style={{ background: 'var(--bg-secondary)' }}
+              >
                 <StatsCard stats={stats} />
               </div>
             </div>
@@ -383,7 +414,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         {/* 好友/消息 + 等级进度 */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-4 md:py-6 relative border-b border-card">
           <div className="flex items-center justify-between relative">
-              <FriendStats user={user} />
+            <FriendStats user={user} />
             <div className="flex items-center gap-4">
               {/* 进度条 */}
               <LevelProgress
@@ -398,10 +429,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 个人页面 */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserPageDisplay
-            user={user}
-            onUserUpdate={onUserUpdate}
-          />
+          <UserPageDisplay user={user} onUserUpdate={onUserUpdate} />
         </div>
 
         {/* 用户最近活动 */}
@@ -411,9 +439,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 用户置顶成绩 */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserPinnedScores 
-            userId={user.id} 
-            selectedMode={selectedMode} 
+          <UserPinnedScores
+            userId={user.id}
+            selectedMode={selectedMode}
             user={user}
             refreshRef={pinnedScoresRefreshRef}
             onPinActionRef={pinActionRef}
@@ -423,9 +451,9 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
 
         {/* 用户最佳成绩 */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserBestScores 
-            userId={user.id} 
-            selectedMode={selectedMode} 
+          <UserBestScores
+            userId={user.id}
+            selectedMode={selectedMode}
             user={user}
             refreshRef={bestScoresRefreshRef}
             onPinnedListRefresh={() => pinnedScoresRefreshRef.current?.()}
@@ -440,7 +468,10 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
         </div>
 
         {/* 施工中 */}
-        <div className="p-3 md:rounded-b-lg h-[500px] flex flex-col justify-center" style={{ background: 'var(--bg-secondary)' }}>
+        <div
+          className="p-3 md:rounded-b-lg h-[500px] flex flex-col justify-center"
+          style={{ background: 'var(--bg-secondary)' }}
+        >
           <div className="flex justify-center items-center h-full">
             <p className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
               <FaTools className="text-lg" />
@@ -448,7 +479,6 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ user, selectedMod
             </p>
           </div>
         </div>
-
       </div>
     </main>
   );

@@ -21,7 +21,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isLeader = user?.id === (team.leader?.id ?? team.leader_id);
-  const isMember = members.some(member => member.id === user?.id);
+  const isMember = members.some((member) => member.id === user?.id);
 
   // 请求加入战队
   const handleJoinRequest = async () => {
@@ -146,10 +146,7 @@ const TeamActions: React.FC<Props> = ({ team, members, onTeamUpdate }) => {
 
       {/* 点击外部关闭菜单 */}
       {showActions && (
-        <div
-          className="fixed inset-0 z-[9998]"
-          onClick={() => setShowActions(false)}
-        />
+        <div className="fixed inset-0 z-[9998]" onClick={() => setShowActions(false)} />
       )}
     </div>
   );

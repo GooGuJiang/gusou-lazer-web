@@ -7,7 +7,12 @@ export const chatAPI = {
     return response.data;
   },
 
-  getChannelMessages: async (channelId: string | number, limit: number = 50, since: number = 0, until?: number) => {
+  getChannelMessages: async (
+    channelId: string | number,
+    limit: number = 50,
+    since: number = 0,
+    until?: number
+  ) => {
     const params = new URLSearchParams();
     params.append('limit', limit.toString());
     params.append('since', since.toString());
@@ -19,7 +24,12 @@ export const chatAPI = {
     return response.data;
   },
 
-  sendMessage: async (channelId: string | number, message: string, isAction: boolean = false, uuid?: string) => {
+  sendMessage: async (
+    channelId: string | number,
+    message: string,
+    isAction: boolean = false,
+    uuid?: string
+  ) => {
     const formData = new URLSearchParams();
     formData.append('message', message);
     formData.append('is_action', isAction.toString());
@@ -36,15 +46,24 @@ export const chatAPI = {
   },
 
   markAsRead: async (channelId: string | number, messageId: number) => {
-    const response = await api.put(`/api/v2/chat/channels/${channelId}/mark-as-read/${messageId}`, {}, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await api.put(
+      `/api/v2/chat/channels/${channelId}/mark-as-read/${messageId}`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     return response.data;
   },
 
-  createPrivateMessage: async (targetId: number, message: string, isAction: boolean = false, uuid?: string) => {
+  createPrivateMessage: async (
+    targetId: number,
+    message: string,
+    isAction: boolean = false,
+    uuid?: string
+  ) => {
     const formData = new URLSearchParams();
     formData.append('target_id', targetId.toString());
     formData.append('message', message);

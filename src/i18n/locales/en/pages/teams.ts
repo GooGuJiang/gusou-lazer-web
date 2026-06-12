@@ -98,7 +98,8 @@ export const teamsPage = {
       teamNamePlaceholder: 'Enter team name',
       teamShortName: 'Team Short Name',
       teamShortNamePlaceholder: 'Enter team short name',
-      shortNameDescription: 'Short name will be displayed in rankings, recommend using 2-5 characters',
+      shortNameDescription:
+        'Short name will be displayed in rankings, recommend using 2-5 characters',
       teamFlag: 'Team Flag',
       selectFlag: 'Select flag',
       flagDescription: 'Standard size: 240×120px, max 2MB, supports cropping',
@@ -109,7 +110,8 @@ export const teamsPage = {
       memberManagement: 'Member Management',
       leaderTransfer: 'Transfer Leadership (Optional)',
       keepCurrentLeader: 'Keep current leader',
-      leaderTransferDescription: 'Select a new leader. If not selected, current leader will remain. After transferring leadership, you will lose management permissions.',
+      leaderTransferDescription:
+        'Select a new leader. If not selected, current leader will remain. After transferring leadership, you will lose management permissions.',
       currentMembers: 'Current members ({{count}} people)',
       currentLeader: 'Current leader',
       willBecomeLeader: 'Will become new leader',

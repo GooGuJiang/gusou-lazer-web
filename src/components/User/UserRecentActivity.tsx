@@ -40,7 +40,11 @@ const formatTimeAgo = (dateString: string, t: TFunction): string => {
 };
 
 // 成就图标组件
-const AchievementIcon: React.FC<{ slug: string; alt: string; className?: string }> = ({ slug, alt, className = "w-6 h-6" }) => {
+const AchievementIcon: React.FC<{ slug: string; alt: string; className?: string }> = ({
+  slug,
+  alt,
+  className = 'w-6 h-6',
+}) => {
   const [imgSrc, setImgSrc] = useState(`/image/achievement_images/${slug}@2x.png`);
   const [hasError, setHasError] = useState(false);
 
@@ -52,35 +56,28 @@ const AchievementIcon: React.FC<{ slug: string; alt: string; className?: string 
     }
   };
 
-  return (
-    <img 
-      src={imgSrc}
-      alt={alt}
-      className={className}
-      onError={handleError}
-    />
-  );
+  return <img src={imgSrc} alt={alt} className={className} onError={handleError} />;
 };
 
 // 评级图标映射
 const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
-    'SSH': '/image/grades/SS-Silver.svg',  // SS-Silver
-    'SS': '/image/grades/SS.svg',
-    'SH': '/image/grades/S-Silver.svg',   // S-Silver
-    'S': '/image/grades/S.svg',
-    'A': '/image/grades/A.svg',
-    'B': '/image/grades/B.svg',
-    'C': '/image/grades/C.svg',
-    'D': '/image/grades/D.svg',
-    'F': '/image/grades/F.svg',
+    SSH: '/image/grades/SS-Silver.svg', // SS-Silver
+    SS: '/image/grades/SS.svg',
+    SH: '/image/grades/S-Silver.svg', // S-Silver
+    S: '/image/grades/S.svg',
+    A: '/image/grades/A.svg',
+    B: '/image/grades/B.svg',
+    C: '/image/grades/C.svg',
+    D: '/image/grades/D.svg',
+    F: '/image/grades/F.svg',
   };
   return rankImageMap[rank] || rankImageMap['F'];
 };
 
 // 活动类型图标映射
 const getActivityIcon = (type: string) => {
-  const iconClass = "w-3 h-3";
+  const iconClass = 'w-3 h-3';
   switch (type) {
     case 'rank':
       return <FaTrophy className={`text-yellow-500 ${iconClass}`} />;
@@ -122,8 +119,8 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
           </BeatmapLink>
           <span className="text-xs sm:text-sm">{t('profile.activities.types.rank.middle')}</span>
           {activity.scorerank && (
-            <img 
-              src={getRankIcon(activity.scorerank || 'C')} 
+            <img
+              src={getRankIcon(activity.scorerank || 'C')}
               alt={activity.scorerank}
               className="w-5 h-5"
             />
@@ -131,8 +128,12 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
           <span className="text-xs sm:text-sm">{t('profile.activities.types.rank.grade')}</span>
           {activity.rank && (
             <>
-              <span className="text-xs sm:text-sm">{t('profile.activities.types.rank.rankPrefix')}</span>
-              <span className="font-bold text-yellow-600 dark:text-yellow-400 text-xs sm:text-sm">#{activity.rank}</span>
+              <span className="text-xs sm:text-sm">
+                {t('profile.activities.types.rank.rankPrefix')}
+              </span>
+              <span className="font-bold text-yellow-600 dark:text-yellow-400 text-xs sm:text-sm">
+                #{activity.rank}
+              </span>
             </>
           )}
         </div>
@@ -140,7 +141,9 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
     case 'rank_lost':
       return (
         <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-          <span className="text-xs sm:text-sm">{t('profile.activities.types.rankLost.prefix')}</span>
+          <span className="text-xs sm:text-sm">
+            {t('profile.activities.types.rankLost.prefix')}
+          </span>
           <BeatmapLink
             beatmapUrl={activity.beatmap?.url}
             className="text-blue-600 dark:text-blue-400 hover:underline font-medium text-xs sm:text-sm truncate max-w-[120px] sm:max-w-none"
@@ -148,7 +151,9 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
           >
             {activity.beatmap?.title}
           </BeatmapLink>
-          <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('profile.activities.types.rankLost.suffix')}</span>
+          <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+            {t('profile.activities.types.rankLost.suffix')}
+          </span>
         </div>
       );
     case 'achievement':
@@ -157,7 +162,7 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
           <span className="text-xs sm:text-sm">{t('profile.activities.types.achievement')}</span>
           {activity.achievement && (
             <>
-              <AchievementIcon 
+              <AchievementIcon
                 slug={activity.achievement.slug}
                 alt={activity.achievement.name || activity.achievement.slug}
                 className="w-4 h-4 sm:w-5 sm:h-5"
@@ -206,13 +211,21 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
         </div>
       );
     case 'username_change':
-      return <span className="text-xs sm:text-sm">{t('profile.activities.types.usernameChange')}</span>;
+      return (
+        <span className="text-xs sm:text-sm">{t('profile.activities.types.usernameChange')}</span>
+      );
     case 'user_support_again':
-      return <span className="text-xs sm:text-sm">{t('profile.activities.types.supportAgain')}</span>;
+      return (
+        <span className="text-xs sm:text-sm">{t('profile.activities.types.supportAgain')}</span>
+      );
     case 'user_support_first':
-      return <span className="text-xs sm:text-sm">{t('profile.activities.types.supportFirst')}</span>;
+      return (
+        <span className="text-xs sm:text-sm">{t('profile.activities.types.supportFirst')}</span>
+      );
     case 'user_support_gift':
-      return <span className="text-xs sm:text-sm">{t('profile.activities.types.supportGift')}</span>;
+      return (
+        <span className="text-xs sm:text-sm">{t('profile.activities.types.supportGift')}</span>
+      );
     default:
       return <span className="text-xs sm:text-sm">{t('profile.activities.types.activity')}</span>;
   }
@@ -231,7 +244,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
   const loadActivities = async (reset = false) => {
     try {
       const currentOffset = reset ? 0 : offset;
-      
+
       if (reset) {
         setLoading(true);
         setError(null);
@@ -240,7 +253,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
       }
 
       const response = await userAPI.getRecentActivity(userId, 6, currentOffset);
-      
+
       // 假设 API 返回一个数组，没有 has_more 字段时，判断返回的数据是否小于请求的数量
       const newActivities = Array.isArray(response) ? response : [];
       const hasMoreData = newActivities.length === 6; // 如果返回的数量等于请求的数量，可能还有更多
@@ -249,8 +262,8 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
         setActivities(newActivities);
         setOffset(newActivities.length);
       } else {
-        setActivities(prev => [...prev, ...newActivities]);
-        setOffset(prev => prev + newActivities.length);
+        setActivities((prev) => [...prev, ...newActivities]);
+        setOffset((prev) => prev + newActivities.length);
       }
 
       setHasMore(hasMoreData);
@@ -303,9 +316,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
             </h3>
           </div>
         </div>
-        <div className="text-center text-red-500 dark:text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="text-center text-red-500 dark:text-red-400 text-sm">{error}</div>
       </div>
     );
   }
@@ -320,7 +331,7 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
           </h3>
         </div>
       </div>
-      
+
       {activities.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
           {t('profile.activities.noActivities')}
@@ -328,14 +339,12 @@ const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, classNa
       ) : (
         <div className="space-y-2">
           {activities.map((activity) => (
-            <div 
-              key={activity.id} 
+            <div
+              key={activity.id}
               className="flex items-start gap-2 p-2 rounded border border-gray-200/50 dark:border-gray-600/30"
             >
-              <div className="flex-shrink-0 mt-0.5">
-                {getActivityIcon(activity.type)}
-              </div>
-              
+              <div className="flex-shrink-0 mt-0.5">{getActivityIcon(activity.type)}</div>
+
               <div className="flex-grow min-w-0">
                 <div className="text-gray-900 dark:text-gray-100">
                   {getActivityDescription(activity, t)}

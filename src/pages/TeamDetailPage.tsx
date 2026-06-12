@@ -14,7 +14,7 @@ const TeamDetailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [teamDetail, setTeamDetail] = useState<TeamDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // 从 URL 参数获取模式,如果没有则默认为 'osu'
   const modeFromUrl = searchParams.get('mode') as GameMode | null;
   const selectedMode: GameMode = modeFromUrl || 'osu';
@@ -42,18 +42,18 @@ const TeamDetailPage: React.FC = () => {
     return new Date(dateString).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const getLeader = () => {
     if (!teamDetail) return null;
-    return teamDetail.members.find(member => member.id === teamDetail.leader?.id);
+    return teamDetail.members.find((member) => member.id === teamDetail.leader?.id);
   };
 
   const getNonLeaderMembers = () => {
     if (!teamDetail) return [];
-    return teamDetail.members.filter(member => member.id !== teamDetail.leader?.id);
+    return teamDetail.members.filter((member) => member.id !== teamDetail.leader?.id);
   };
 
   const handleTeamUpdate = () => {
@@ -75,10 +75,15 @@ const TeamDetailPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--bg-primary)' }}
+      >
         <div className="text-center">
           <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.detail.loading')}</p>
+          <p className="text-gray-500 dark:text-gray-400 font-medium">
+            {t('teams.detail.loading')}
+          </p>
         </div>
       </div>
     );
@@ -86,7 +91,10 @@ const TeamDetailPage: React.FC = () => {
 
   if (!teamDetail) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--bg-primary)' }}
+      >
         <div className="text-center">
           <FiUsers className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -164,9 +172,7 @@ const TeamDetailPage: React.FC = () => {
                       {team.name}
                     </h1>
                     {team.short_name !== team.name && (
-                      <p className="text-lg text-gray-600 dark:text-gray-400">
-                        {team.short_name}
-                      </p>
+                      <p className="text-lg text-gray-600 dark:text-gray-400">{team.short_name}</p>
                     )}
                   </div>
 
@@ -174,21 +180,19 @@ const TeamDetailPage: React.FC = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600 dark:text-gray-400">
                       <div className="flex items-center gap-1">
                         <FiCalendar className="w-4 h-4" />
-                        <span>{t('teams.detail.createdAt', { date: formatDate(team.created_at) })}</span>
+                        <span>
+                          {t('teams.detail.createdAt', { date: formatDate(team.created_at) })}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <FiUsers className="w-4 h-4" />
                         <span>{t('teams.detail.members', { count: members.length })}</span>
                       </div>
                     </div>
-                    
+
                     {/* 战队操作按钮 */}
                     <div className="relative overflow-visible">
-                      <TeamActions
-                        team={team}
-                        members={members}
-                        onTeamUpdate={handleTeamUpdate}
-                      />
+                      <TeamActions team={team} members={members} onTeamUpdate={handleTeamUpdate} />
                     </div>
                   </div>
                 </div>
@@ -202,14 +206,16 @@ const TeamDetailPage: React.FC = () => {
           <div className="sm:bg-card sm:rounded-xl sm:shadow-sm sm:border sm:border-card sm:p-6 mb-8">
             <div className="flex items-center gap-3 mb-4 px-4 sm:px-0">
               <FiAward className="w-5 h-5 text-yellow-500" />
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('teams.detail.captain')}</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t('teams.detail.captain')}
+              </h2>
             </div>
             <div className="-mx-4 sm:-mx-6 sm:border sm:border-card overflow-hidden">
               <TeamDetailUserCard
                 ranking={{
                   user: leader,
                   ranked_score: leader.statistics?.ranked_score,
-                  pp: leader.statistics?.pp
+                  pp: leader.statistics?.pp,
                 }}
                 selectedMode={selectedMode}
                 rankingType="performance"
@@ -223,7 +229,9 @@ const TeamDetailPage: React.FC = () => {
           <div className="sm:bg-card sm:rounded-xl sm:shadow-sm sm:border sm:border-card sm:p-6">
             <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
               <FiUsers className="w-5 h-5 text-blue-500" />
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('teams.detail.teamMembers')}</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t('teams.detail.teamMembers')}
+              </h2>
               <span className="text-sm text-gray-500 dark:text-gray-400">
                 {t('teams.detail.memberCount', { count: nonLeaderMembers.length })}
               </span>
@@ -236,19 +244,15 @@ const TeamDetailPage: React.FC = () => {
                     ranking={{
                       user: member,
                       ranked_score: member.statistics?.ranked_score,
-                      pp: member.statistics?.pp
+                      pp: member.statistics?.pp,
                     }}
                     selectedMode={selectedMode}
                     rankingType="performance"
                   />
-                  
+
                   {/* 成员操作按钮 */}
                   <div className="absolute top-4 right-4 sm:right-6">
-                    <MemberActions
-                      member={member}
-                      team={team}
-                      onMemberRemoved={handleTeamUpdate}
-                    />
+                    <MemberActions member={member} team={team} onMemberRemoved={handleTeamUpdate} />
                   </div>
                 </div>
               ))}

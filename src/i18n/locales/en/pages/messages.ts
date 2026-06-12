@@ -106,7 +106,8 @@ export const messagesPage = {
       sendMessageFailed: 'Failed to send message',
       noPrivateNotifications: 'No private notifications to process',
       processResult: 'Processed: {{success}} success, {{fail}} failure',
-      refreshChannelsSuccess: 'Channel list refreshed: {{total}} channels, {{privateCount}} private',
+      refreshChannelsSuccess:
+        'Channel list refreshed: {{total}} channels, {{privateCount}} private',
       refreshFailed: 'Refresh failed',
       teamRequestMissingUser: 'Unable to fetch user information',
       teamRequestAcceptSuccess: 'Join request accepted',

@@ -1,15 +1,15 @@
 import { api } from './client';
-import type { 
-  DeviceSession, 
-  RevokeSessionResponse, 
+import type {
+  DeviceSession,
+  RevokeSessionResponse,
   DeviceSummary,
   SessionsResponse,
-  TrustedDevicesResponse
+  TrustedDevicesResponse,
 } from '../../types/device';
 
 export const deviceAPI = {
   // ========== 新的 API 端点 ==========
-  
+
   // 获取当前用户的登录会话列表
   getUserSessions: async (): Promise<SessionsResponse> => {
     console.log('获取用户登录会话列表');
@@ -37,7 +37,7 @@ export const deviceAPI = {
   },
 
   // ========== 旧的 API 端点（保留以兼容现有代码）==========
-  
+
   // 获取活跃会话
   getSessions: async (): Promise<DeviceSession[]> => {
     console.log('获取设备会话列表');
@@ -49,7 +49,7 @@ export const deviceAPI = {
   revokeSession: async (sessionId: number): Promise<RevokeSessionResponse> => {
     console.log('撤销设备会话:', { sessionId });
     const response = await api.post('/api/private/device/sessions/revoke', {
-      session_id: sessionId
+      session_id: sessionId,
     });
     return response.data;
   },

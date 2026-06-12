@@ -58,14 +58,11 @@ const CreateTeamPage: React.FC = () => {
     loadTeamData();
   }, [isEditing, teamId, navigate]);
 
-
-
   // 处理表单输入
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
 
   // 处理旗帜文件选择
   const handleFlagSelect = (file: File) => {
@@ -86,7 +83,7 @@ const CreateTeamPage: React.FC = () => {
   // 提交表单
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim()) {
       toast.error(t('teams.create.nameRequired'));
       return;
@@ -106,7 +103,7 @@ const CreateTeamPage: React.FC = () => {
 
     try {
       const data = new FormData();
-      
+
       if (isEditing) {
         // 编辑模式：只有当名称或简称发生变化时才添加到FormData
         if (formData.name.trim() !== teamDetail?.name) {
@@ -125,11 +122,11 @@ const CreateTeamPage: React.FC = () => {
         data.append('name', formData.name.trim());
         data.append('short_name', formData.short_name.trim());
       }
-      
+
       if (flagFile) {
         data.append('flag', flagFile);
       }
-      
+
       if (coverFile) {
         data.append('cover', coverFile);
       }
@@ -143,7 +140,7 @@ const CreateTeamPage: React.FC = () => {
         navigate(`/teams/${result.id}`);
         return;
       }
-      
+
       navigate(`/teams/${teamId}`);
     } catch (error) {
       handleApiError(error);
@@ -155,14 +152,15 @@ const CreateTeamPage: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--bg-primary)' }}
+      >
         <div className="text-center">
           <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {t('teams.create.loginRequired')}
           </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            {t('teams.create.loginRequired')}
-          </p>
+          <p className="text-gray-500 dark:text-gray-400">{t('teams.create.loginRequired')}</p>
         </div>
       </div>
     );
@@ -170,10 +168,15 @@ const CreateTeamPage: React.FC = () => {
 
   if (isEditing && isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--bg-primary)' }}
+      >
         <div className="text-center">
           <FiLoader className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-500 dark:text-gray-400 font-medium">{t('teams.create.loading')}</p>
+          <p className="text-gray-500 dark:text-gray-400 font-medium">
+            {t('teams.create.loading')}
+          </p>
         </div>
       </div>
     );
@@ -208,11 +211,16 @@ const CreateTeamPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 基本信息 */}
             <div className="bg-card rounded-xl shadow-sm border border-card p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.basicInfo')}</h2>
-              
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                {t('teams.create.basicInfo')}
+              </h2>
+
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
                     {t('teams.create.teamName')} {t('teams.create.required')}
                   </label>
                   <input
@@ -230,7 +238,10 @@ const CreateTeamPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="short_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label
+                    htmlFor="short_name"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
                     {t('teams.create.teamShortName')} {t('teams.create.required')}
                   </label>
                   <input
@@ -254,8 +265,10 @@ const CreateTeamPage: React.FC = () => {
 
             {/* 旗帜上传 */}
             <div className="bg-card rounded-xl shadow-sm border border-card p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.teamFlag')}</h2>
-              
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                {t('teams.create.teamFlag')}
+              </h2>
+
               <ImageUploadWithCrop
                 onImageSelect={handleFlagSelect}
                 preview={flagPreview}
@@ -274,8 +287,10 @@ const CreateTeamPage: React.FC = () => {
 
             {/* 封面上传 */}
             <div className="bg-card rounded-xl shadow-sm border border-card p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('teams.create.teamCover')}</h2>
-              
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                {t('teams.create.teamCover')}
+              </h2>
+
               <ImageUploadWithCrop
                 onImageSelect={handleCoverSelect}
                 preview={coverPreview}
@@ -299,7 +314,7 @@ const CreateTeamPage: React.FC = () => {
                   <FiUsers className="mr-3" />
                   {t('teams.create.memberManagement')}
                 </h2>
-                
+
                 {/* 队长转让选择 */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -307,7 +322,7 @@ const CreateTeamPage: React.FC = () => {
                   </label>
                   <MemberSelector
                     value={formData.leader_id}
-                    onChange={(value) => setFormData(prev => ({ ...prev, leader_id: value }))}
+                    onChange={(value) => setFormData((prev) => ({ ...prev, leader_id: value }))}
                     members={members}
                     currentLeaderId={teamDetail?.leader?.id}
                     placeholder={t('teams.create.keepCurrentLeader')}
@@ -323,7 +338,7 @@ const CreateTeamPage: React.FC = () => {
                     {t('teams.create.currentMembers', { count: members.length })}
                   </h3>
                   <div className="space-y-3">
-                    {members.map(member => (
+                    {members.map((member) => (
                       <div
                         key={member.id}
                         className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
@@ -343,11 +358,12 @@ const CreateTeamPage: React.FC = () => {
                                 {t('teams.create.currentLeader')}
                               </p>
                             )}
-                            {member.id === formData.leader_id && formData.leader_id !== teamDetail?.leader?.id && (
-                              <p className="text-xs text-green-600 dark:text-green-400">
-                                {t('teams.create.willBecomeLeader')}
-                              </p>
-                            )}
+                            {member.id === formData.leader_id &&
+                              formData.leader_id !== teamDetail?.leader?.id && (
+                                <p className="text-xs text-green-600 dark:text-green-400">
+                                  {t('teams.create.willBecomeLeader')}
+                                </p>
+                              )}
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -384,7 +400,11 @@ const CreateTeamPage: React.FC = () => {
                 className="inline-flex items-center px-6 py-3 bg-osu-pink text-white rounded-lg hover:bg-osu-pink/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <FiSave className="mr-2" />
-                {isSubmitting ? t('teams.create.saving') : (isEditing ? t('teams.create.saveChanges') : t('teams.create.createTeam'))}
+                {isSubmitting
+                  ? t('teams.create.saving')
+                  : isEditing
+                    ? t('teams.create.saveChanges')
+                    : t('teams.create.createTeam')}
               </button>
             </div>
           </form>

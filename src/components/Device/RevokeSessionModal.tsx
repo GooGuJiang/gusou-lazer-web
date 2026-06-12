@@ -103,7 +103,7 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {t('settings.device.sessions.revokeConfirm')}
               </p>
-              
+
               {/* 会话信息 */}
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
                 <div className="flex items-center gap-3">
@@ -115,10 +115,9 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
                       {getClientDisplayName(session)}
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {session.location && !session.location.startsWith('IP:') 
-                        ? session.location 
-                        : '未知位置'
-                      }
+                      {session.location && !session.location.startsWith('IP:')
+                        ? session.location
+                        : '未知位置'}
                     </p>
                   </div>
                 </div>
@@ -126,7 +125,10 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
 
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
                 <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  {t('settings.device.sessions.revokeWarning', '撤销此会话后，该设备将需要重新登录。')}
+                  {t(
+                    'settings.device.sessions.revokeWarning',
+                    '撤销此会话后，该设备将需要重新登录。'
+                  )}
                 </p>
               </div>
             </div>

@@ -42,7 +42,9 @@ const ImageBlock = React.memo(function ImageBlock({
   return (
     <div className="relative w-full h-full" style={{ transform: 'translateZ(0)' }}>
       {isLoading && (
-        <div className={`absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse ${radiusClass}`} />
+        <div
+          className={`absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse ${radiusClass}`}
+        />
       )}
       <img
         /** 关键点二：不给 <img> 设置任何会触发重算的 key；hover 时 props 不变、就不会重建节点 */
@@ -81,7 +83,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-  const { user: currentUser } = useAuth()
+  const { user: currentUser } = useAuth();
 
   const isSelf = currentUser && userId && currentUser.id === userId;
 
@@ -141,19 +143,22 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const handleImageError = () => {
     debugLog('图片加载失败:', currentImageUrl);
-    
+
     // 如果是API生成的头像URL且重试次数少于3次，则重试
     if (userId && currentImageUrl.includes(`/users/${userId}/avatar`) && retryCount < 3) {
       debugLog(`头像加载失败，${1000 * (retryCount + 1)}ms后重试第${retryCount + 1}次`);
-      setTimeout(() => {
-        setRetryCount(prev => prev + 1);
-        const retryUrl = userAPI.getAvatarUrl(userId, true); // 破坏缓存重试
-        setCurrentImageUrl(retryUrl);
-        setIsLoading(true);
-      }, 1000 * (retryCount + 1)); // 递增延迟：1s, 2s, 3s
+      setTimeout(
+        () => {
+          setRetryCount((prev) => prev + 1);
+          const retryUrl = userAPI.getAvatarUrl(userId, true); // 破坏缓存重试
+          setCurrentImageUrl(retryUrl);
+          setIsLoading(true);
+        },
+        1000 * (retryCount + 1)
+      ); // 递增延迟：1s, 2s, 3s
       return;
     }
-    
+
     // 如果不是API头像URL或已达到重试上限，尝试加载默认图片
     if (currentImageUrl !== '/default.jpg') {
       debugLog('尝试加载默认图片');
@@ -171,16 +176,16 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const handleUploadSuccess = (newAvatarUrl: string) => {
     debugLog('Avatar upload success:', newAvatarUrl);
-    
+
     // 重置重试计数和错误状态
     setRetryCount(0);
     setImageError(false);
     setIsLoading(false);
-    
+
     // 立即更新本地显示的头像URL（带时间戳破坏缓存）
     const urlWithTimestamp = `${newAvatarUrl}${newAvatarUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
     setCurrentImageUrl(urlWithTimestamp);
-    
+
     // 延迟执行用户信息刷新，给服务器一些时间处理头像
     setTimeout(() => {
       debugLog('延迟刷新用户信息和头像缓存');
@@ -225,7 +230,9 @@ const Avatar: React.FC<AvatarProps> = ({
               className={`${size === 'sm' || size === 'md' ? 'w-4 h-4' : 'w-6 h-6'} text-white mb-1`}
             />
             {showUploadHint && (size === 'lg' || size === 'xl' || size === '2xl') && (
-              <span className={`text-white text-xs ${hoverOverlaySizes[size]} text-center px-1 leading-tight`}>
+              <span
+                className={`text-white text-xs ${hoverOverlaySizes[size]} text-center px-1 leading-tight`}
+              >
                 点击上传
               </span>
             )}
@@ -243,17 +250,23 @@ const Avatar: React.FC<AvatarProps> = ({
           sizeClasses[size],
           radius,
           'overflow-hidden flex-shrink-0 shadow-md relative',
-          shouldShowUpload ? 'cursor-pointer hover:shadow-lg transition-all duration-200 select-none' : '',
+          shouldShowUpload
+            ? 'cursor-pointer hover:shadow-lg transition-all duration-200 select-none'
+            : '',
           className,
         ]
           .filter(Boolean)
           .join(' ')}
         style={{ display: 'inline-block', transform: 'translateZ(0)' }} // 关键点四：强制合成层，减少抖动
-        onClick={shouldShowUpload ? (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openUploadModal();
-        } : undefined}
+        onClick={
+          shouldShowUpload
+            ? (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openUploadModal();
+              }
+            : undefined
+        }
         onMouseEnter={
           shouldShowUpload
             ? () => {
@@ -295,7 +308,9 @@ const Avatar: React.FC<AvatarProps> = ({
             onError={handleImageError}
           />
         ) : (
-          <div className={`w-full h-full flex items-center justify-center bg-gray-400 text-white font-bold ${radius}`}>
+          <div
+            className={`w-full h-full flex items-center justify-center bg-gray-400 text-white font-bold ${radius}`}
+          >
             {fallbackLetter}
           </div>
         )}

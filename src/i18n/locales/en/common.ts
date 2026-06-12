@@ -20,7 +20,8 @@ export const common = {
   },
   authAgreement: 'By signing in you agree to our Terms of Service and Privacy Policy',
   registerAgreement: 'By creating an account you agree to our Terms of Service and Privacy Policy',
-  privacyDisclosure: 'We improve our products and advertising by using Microsoft Clarity to see how you use our website. By using our site, you agree that we and Microsoft can collect and use this data. Our privacy statement has more details.',
+  privacyDisclosure:
+    'We improve our products and advertising by using Microsoft Clarity to see how you use our website. By using our site, you agree that we and Microsoft can collect and use this data. Our privacy statement has more details.',
   termsOfService: 'Terms of Service',
   privacyPolicy: 'Privacy Policy',
   loading: 'Loading...',

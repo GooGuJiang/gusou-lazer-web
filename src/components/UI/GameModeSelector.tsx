@@ -1,24 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
-import { 
-  useFloating, 
-  autoUpdate, 
-  offset, 
-  flip, 
-  shift, 
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
   size,
   useDismiss,
   useInteractions,
   FloatingFocusManager,
 } from '@floating-ui/react';
 import type { GameMode, MainGameMode } from '../../types';
-import { 
-  GAME_MODE_NAMES, 
-  GAME_MODE_COLORS, 
-  GAME_MODE_GROUPS,
-  MAIN_MODE_ICONS
-} from '../../types';
+import { GAME_MODE_NAMES, GAME_MODE_COLORS, GAME_MODE_GROUPS, MAIN_MODE_ICONS } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 
 interface ModeDropdownProps {
@@ -106,7 +101,7 @@ const ModeDropdown: React.FC<ModeDropdownProps> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`w-full text-left px-3 py-2.5 rounded-md font-medium transition-all duration-200 text-sm hover:bg-card-hover`}
-            style={{ 
+            style={{
               backgroundColor: selectedMode === mode ? getBrandColor(mode) : 'transparent',
               color: selectedMode === mode ? 'white' : 'var(--text-primary)',
             }}
@@ -132,16 +127,18 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   onModeChange,
   className = '',
   variant = 'full',
-  mainModesOnly = false
+  mainModesOnly = false,
 }) => {
   const [showSubModes, setShowSubModes] = useState<MainGameMode | null>(null);
   const [hoveredMode, setHoveredMode] = useState<MainGameMode | null>(null);
   const modeSelectRef = useRef<HTMLDivElement>(null);
   const { profileColor } = useProfileColor();
 
-  const selectedMainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
-    .find(mainMode => GAME_MODE_GROUPS[mainMode].includes(selectedMode)) || 'osu';
-  
+  const selectedMainMode =
+    (Object.keys(GAME_MODE_GROUPS) as MainGameMode[]).find((mainMode) =>
+      GAME_MODE_GROUPS[mainMode].includes(selectedMode)
+    ) || 'osu';
+
   // 获取实际的颜色值 - 如果是主题色模式，使用 profileColor
   const getBrandColor = (mode: GameMode): string => {
     const colorValue = GAME_MODE_COLORS[mode];
@@ -162,7 +159,6 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-
   // 为每个按钮创建 refs，必须保持 Hook 调用顺序稳定
   const osuRef = useRef<HTMLButtonElement>(null);
   const taikoRef = useRef<HTMLButtonElement>(null);
@@ -171,10 +167,14 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
 
   const getButtonRef = (mainMode: MainGameMode) => {
     switch (mainMode) {
-      case 'osu': return osuRef;
-      case 'taiko': return taikoRef;
-      case 'fruits': return fruitsRef;
-      case 'mania': return maniaRef;
+      case 'osu':
+        return osuRef;
+      case 'taiko':
+        return taikoRef;
+      case 'fruits':
+        return fruitsRef;
+      case 'mania':
+        return maniaRef;
     }
   };
 
@@ -184,7 +184,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
       onModeChange(GAME_MODE_GROUPS[mainMode][0]);
       return;
     }
-    
+
     const hasSubModes = GAME_MODE_GROUPS[mainMode].length > 1;
     if (!hasSubModes) {
       onModeChange(GAME_MODE_GROUPS[mainMode][0]);
@@ -203,13 +203,16 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             const hasSubModes = !mainModesOnly && GAME_MODE_GROUPS[mainMode].length > 1;
             const isExpanded = showSubModes === mainMode;
             // 修复：当主模式被选中且有子模式时，保持展开状态；或者在悬停/下拉打开时展开
-            const shouldExpand = isExpanded || (isHovered && hasSubModes && !showSubModes) || (isActive && hasSubModes);
+            const shouldExpand =
+              isExpanded ||
+              (isHovered && hasSubModes && !showSubModes) ||
+              (isActive && hasSubModes);
 
             const brand = getBrandColor(GAME_MODE_GROUPS[mainMode][0]);
 
             return (
-              <div 
-                key={mainMode} 
+              <div
+                key={mainMode}
                 className="relative"
                 onMouseEnter={() => setHoveredMode(mainMode)}
                 onMouseLeave={() => setHoveredMode(null)}
@@ -220,9 +223,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={`relative flex items-center justify-center rounded-lg font-medium text-sm transition-colors duration-200 overflow-hidden border ${
-                    isActive
-                      ? 'shadow-lg'
-                      : 'shadow-sm'
+                    isActive ? 'shadow-lg' : 'shadow-sm'
                   }`}
                   style={{
                     height: '40px',
@@ -240,7 +241,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                     animate={{ x: shouldExpand ? -6 : 0 }}
                     transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
-                    <i 
+                    <i
                       className={`${MAIN_MODE_ICONS[mainMode]} text-xl transition-colors duration-200`}
                       style={{ color: isActive ? 'white' : 'currentColor' }}
                     />
@@ -258,9 +259,13 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
                         animate={{ rotate: isExpanded ? -180 : 0 }}
                         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
-                        <FiChevronDown 
+                        <FiChevronDown
                           size={13}
-                          style={isActive ? { color: 'white', opacity: 0.8 } : { color: 'var(--text-secondary)', opacity: 0.6 }}
+                          style={
+                            isActive
+                              ? { color: 'white', opacity: 0.8 }
+                              : { color: 'var(--text-secondary)', opacity: 0.6 }
+                          }
                         />
                       </motion.div>
                     </motion.div>
@@ -298,15 +303,18 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   }
 
   // 完整版本
-  const allModes: GameMode[] = mainModesOnly 
+  const allModes: GameMode[] = mainModesOnly
     ? ['osu', 'taiko', 'fruits', 'mania']
     : ['osu', 'taiko', 'fruits', 'mania', 'osurx', 'osuap', 'taikorx', 'fruitsrx'];
 
   return (
-    <div className={`grid grid-cols-2 md:grid-cols-4 ${mainModesOnly ? 'lg:grid-cols-4' : 'lg:grid-cols-8'} gap-3 ${className}`}>
+    <div
+      className={`grid grid-cols-2 md:grid-cols-4 ${mainModesOnly ? 'lg:grid-cols-4' : 'lg:grid-cols-8'} gap-3 ${className}`}
+    >
       {allModes.map((mode) => {
-        const mainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[])
-          .find(m => GAME_MODE_GROUPS[m].includes(mode));
+        const mainMode = (Object.keys(GAME_MODE_GROUPS) as MainGameMode[]).find((m) =>
+          GAME_MODE_GROUPS[m].includes(mode)
+        );
         const brand = getBrandColor(mode);
 
         return (
@@ -328,39 +336,37 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             {/* 图标 */}
             <motion.div
               animate={{ scale: selectedMode === mode ? 1.05 : 1 }}
-              whileHover={{ 
+              whileHover={{
                 scale: selectedMode !== mode ? 1.1 : 1.05,
-                rotate: selectedMode !== mode ? 5 : 0
+                rotate: selectedMode !== mode ? 5 : 0,
               }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
-              <i 
+              <i
                 className={`${mainMode ? MAIN_MODE_ICONS[mainMode] : 'icon-osu'} text-xl transition-colors duration-200`}
                 style={{ color: selectedMode === mode ? 'white' : 'currentColor' }}
               />
             </motion.div>
-            
-            <motion.span 
-              className="text-xs font-semibold transition-colors duration-200 text-center leading-tight px-1"
-            >
+
+            <motion.span className="text-xs font-semibold transition-colors duration-200 text-center leading-tight px-1">
               {GAME_MODE_NAMES[mode]}
             </motion.span>
 
             {/* 悬停效果背景（品牌色薄罩） */}
             {selectedMode !== mode && (
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-200"
-                style={{ backgroundColor: brand }} 
+                style={{ backgroundColor: brand }}
               />
             )}
 
             {/* 选中状态动画背景（品牌色更深薄罩） */}
             {selectedMode === mode && (
-              <motion.div 
+              <motion.div
                 layoutId="selected-bg-full"
                 className="absolute inset-0 rounded-xl"
                 style={{ backgroundColor: brand, opacity: 0.18 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             )}
           </motion.button>

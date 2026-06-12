@@ -73,14 +73,14 @@ const formatTimeAgo = (dateString: string, t: TFunction): string => {
 const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
     XH: '/image/grades/SS-Silver.svg',
-    X:  '/image/grades/SS.svg',
+    X: '/image/grades/SS.svg',
     SH: '/image/grades/S-Silver.svg',
-    S:  '/image/grades/S.svg',
-    A:  '/image/grades/A.svg',
-    B:  '/image/grades/B.svg',
-    C:  '/image/grades/C.svg',
-    D:  '/image/grades/D.svg',
-    F:  '/image/grades/F.svg', 
+    S: '/image/grades/S.svg',
+    A: '/image/grades/A.svg',
+    B: '/image/grades/B.svg',
+    C: '/image/grades/C.svg',
+    D: '/image/grades/D.svg',
+    F: '/image/grades/F.svg',
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
@@ -116,14 +116,9 @@ const SortableScoreCard: React.FC<{
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
 }> = ({ score, t, profileColor, canEdit, onPinChange }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: score.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: score.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -146,15 +141,23 @@ const SortableScoreCard: React.FC<{
 };
 
 // 单个成绩卡片组件
-const ScoreCard: React.FC<{ 
-  score: BestScore; 
-  t: TFunction; 
+const ScoreCard: React.FC<{
+  score: BestScore;
+  t: TFunction;
   profileColor: string;
   canEdit?: boolean;
   onPinChange?: (scoreId: number, isPinned: boolean) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
   className?: string;
-}> = ({ score, t, profileColor, canEdit = false, onPinChange, dragHandleProps, className = '' }) => {
+}> = ({
+  score,
+  t,
+  profileColor,
+  canEdit = false,
+  onPinChange,
+  dragHandleProps,
+  className = '',
+}) => {
   const rank = score.rank;
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
   const artist = score.beatmapset?.artist_unicode || score.beatmapset?.artist || 'Unknown Artist';
@@ -180,19 +183,19 @@ const ScoreCard: React.FC<{
   const themeRgb = hexToRgb(profileColor);
 
   return (
-    <LazyBackgroundImage 
+    <LazyBackgroundImage
       src={coverImage}
       className={`relative overflow-hidden rounded-lg border border-gray-200/70 dark:border-gray-600/40 bg-card ${className}`}
     >
       {/* 渐变遮罩层 - 使用主题颜色 */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-r" 
+      <div
+        className="absolute inset-0 bg-gradient-to-r"
         style={{
-          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`
+          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
-      
+
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
@@ -206,11 +209,7 @@ const ScoreCard: React.FC<{
                   </svg>
                 </div>
               )}
-              <img 
-                src={getRankIcon(rank)} 
-                alt={rank}
-                className="w-14 h-10 object-contain"
-              />
+              <img src={getRankIcon(rank)} alt={rank} className="w-14 h-10 object-contain" />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -230,14 +229,12 @@ const ScoreCard: React.FC<{
                     {artist}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-xs">
                   <span className="text-yellow-600 dark:text-yellow-400 font-medium">
                     {version}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400">
-                    {endedAt}
-                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
                 </div>
               </div>
             </div>
@@ -277,11 +274,7 @@ const ScoreCard: React.FC<{
                   </svg>
                 </div>
               )}
-              <img 
-                src={getRankIcon(rank)} 
-                alt={rank}
-                className="w-12 h-8 object-contain"
-              />
+              <img src={getRankIcon(rank)} alt={rank} className="w-12 h-8 object-contain" />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -296,18 +289,12 @@ const ScoreCard: React.FC<{
                 <span className="text-gray-600 dark:text-gray-400 text-xs flex-shrink-0">
                   {t('profile.bestScores.by')}
                 </span>
-                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">
-                  {artist}
-                </span>
+                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">{artist}</span>
               </div>
-              
+
               <div className="flex items-center gap-3 text-xs mb-2">
-                <span className="text-yellow-600 dark:text-yellow-400 font-medium">
-                  {version}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  {endedAt}
-                </span>
+                <span className="text-yellow-600 dark:text-yellow-400 font-medium">{version}</span>
+                <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -339,14 +326,21 @@ const ScoreCard: React.FC<{
   );
 };
 
-const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMode, className = '', refreshRef, onPinActionRef, bestScoresActionRef }) => {
+const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({
+  userId,
+  selectedMode,
+  className = '',
+  refreshRef,
+  onPinActionRef,
+  bestScoresActionRef,
+}) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
   const [scores, setScores] = useState<BestScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const canEdit = currentUser?.id === userId;
 
   const sensors = useSensors(
@@ -357,7 +351,10 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
   );
 
   // 本地缓存 key
-  const getCacheKey = useCallback(() => `pinned_scores_${userId}_${selectedMode}`, [userId, selectedMode]);
+  const getCacheKey = useCallback(
+    () => `pinned_scores_${userId}_${selectedMode}`,
+    [userId, selectedMode]
+  );
 
   // 从本地缓存加载
   const loadFromCache = useCallback((): BestScore[] | null => {
@@ -377,16 +374,22 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
   }, [getCacheKey]);
 
   // 保存到本地缓存
-  const saveToCache = useCallback((scores: BestScore[]) => {
-    try {
-      localStorage.setItem(getCacheKey(), JSON.stringify({
-        scores,
-        timestamp: Date.now()
-      }));
-    } catch (e) {
-      console.error('Failed to save to cache:', e);
-    }
-  }, [getCacheKey]);
+  const saveToCache = useCallback(
+    (scores: BestScore[]) => {
+      try {
+        localStorage.setItem(
+          getCacheKey(),
+          JSON.stringify({
+            scores,
+            timestamp: Date.now(),
+          })
+        );
+      } catch (e) {
+        console.error('Failed to save to cache:', e);
+      }
+    },
+    [getCacheKey]
+  );
 
   const loadScores = async (useCache = true) => {
     try {
@@ -435,39 +438,48 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
   };
 
   // Pin 成绩时添加到列表
-  const handlePinScore = useCallback((score: BestScore) => {
-    // 乐观更新：立即添加到置顶列表末尾
-    setScores(prevScores => {
-      // 检查是否已存在，避免重复
-      if (prevScores.some(s => s.id === score.id)) {
-        return prevScores;
-      }
-      const newScores = [...prevScores, score];  // 添加到末尾
-      saveToCache(newScores);
-      return newScores;
-    });
-  }, [saveToCache]);
+  const handlePinScore = useCallback(
+    (score: BestScore) => {
+      // 乐观更新：立即添加到置顶列表末尾
+      setScores((prevScores) => {
+        // 检查是否已存在，避免重复
+        if (prevScores.some((s) => s.id === score.id)) {
+          return prevScores;
+        }
+        const newScores = [...prevScores, score]; // 添加到末尾
+        saveToCache(newScores);
+        return newScores;
+      });
+    },
+    [saveToCache]
+  );
 
   // Unpin 成绩时从列表移除
-  const handleUnpinScore = useCallback((scoreId: number) => {
-    // 乐观更新：立即从置顶列表移除
-    setScores(prevScores => {
-      const newScores = prevScores.filter(s => s.id !== scoreId);
-      saveToCache(newScores);
-      return newScores;
-    });
-  }, [saveToCache]);
+  const handleUnpinScore = useCallback(
+    (scoreId: number) => {
+      // 乐观更新：立即从置顶列表移除
+      setScores((prevScores) => {
+        const newScores = prevScores.filter((s) => s.id !== scoreId);
+        saveToCache(newScores);
+        return newScores;
+      });
+    },
+    [saveToCache]
+  );
 
   // 处理 ScoreActionsMenu 的 pin 状态变化
-  const handlePinChangeFromMenu = useCallback((scoreId: number, isPinned: boolean) => {
-    if (isPinned) {
-      // 当前是置顶状态，点击后要取消置顶
-      handleUnpinScore(scoreId);
-      // 通知最佳成绩列表更新该成绩的置顶状态为 false
-      bestScoresActionRef?.current?.updatePinStatus(scoreId, false);
-    }
-    // 注意：置顶列表不会显示非置顶的成绩，所以不需要处理 pin 的情况
-  }, [handleUnpinScore, bestScoresActionRef]);
+  const handlePinChangeFromMenu = useCallback(
+    (scoreId: number, isPinned: boolean) => {
+      if (isPinned) {
+        // 当前是置顶状态，点击后要取消置顶
+        handleUnpinScore(scoreId);
+        // 通知最佳成绩列表更新该成绩的置顶状态为 false
+        bestScoresActionRef?.current?.updatePinStatus(scoreId, false);
+      }
+      // 注意：置顶列表不会显示非置顶的成绩，所以不需要处理 pin 的情况
+    },
+    [handleUnpinScore, bestScoresActionRef]
+  );
 
   // 将刷新函数暴露给父组件
   useEffect(() => {
@@ -503,7 +515,7 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
     // 1. 立即更新 UI（乐观更新）
     const newScores = arrayMove(scores, oldIndex, newIndex);
     setScores(newScores);
-    
+
     // 2. 立即保存到本地缓存
     saveToCache(newScores);
 
@@ -513,23 +525,27 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
     // 4. 后台发送到服务器（不等待响应，不回滚）
     try {
       const movedScoreId = active.id as number;
-      
+
       if (newIndex === 0) {
         // 移动到第一位，使用 before_score_id
-        scoreAPI.reorderPinnedScore(movedScoreId, {
-          before_score_id: newScores[1]?.id,
-        }).catch(err => {
-          console.error('Reorder API failed:', err);
-          // 服务器失败不回滚，因为可能是缓存问题
-        });
+        scoreAPI
+          .reorderPinnedScore(movedScoreId, {
+            before_score_id: newScores[1]?.id,
+          })
+          .catch((err) => {
+            console.error('Reorder API failed:', err);
+            // 服务器失败不回滚，因为可能是缓存问题
+          });
       } else {
         // 移动到其他位置，使用 after_score_id
-        scoreAPI.reorderPinnedScore(movedScoreId, {
-          after_score_id: newScores[newIndex - 1]?.id,
-        }).catch(err => {
-          console.error('Reorder API failed:', err);
-          // 服务器失败不回滚，因为可能是缓存问题
-        });
+        scoreAPI
+          .reorderPinnedScore(movedScoreId, {
+            after_score_id: newScores[newIndex - 1]?.id,
+          })
+          .catch((err) => {
+            console.error('Reorder API failed:', err);
+            // 服务器失败不回滚，因为可能是缓存问题
+          });
       }
     } catch (error) {
       // 捕获同步错误
@@ -564,9 +580,7 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
             </h3>
           </div>
         </div>
-        <div className="text-center text-red-500 dark:text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="text-center text-red-500 dark:text-red-400 text-sm">{error}</div>
       </div>
     );
   }
@@ -579,32 +593,26 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({ userId, selectedMod
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {t('profile.pinnedScores.title')}
           </h3>
-          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-            ({scores.length})
-          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">({scores.length})</span>
         </div>
       </div>
-      
+
       {scores.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
           {t('profile.pinnedScores.empty')}
         </div>
       ) : (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <div className="flex flex-col gap-1">
             <SortableContext
-              items={scores.map(score => score.id)}
+              items={scores.map((score) => score.id)}
               strategy={verticalListSortingStrategy}
             >
               {scores.map((score) => (
                 <SortableScoreCard
-                  key={score.id} 
-                  score={score} 
-                  t={t} 
+                  key={score.id}
+                  score={score}
+                  t={t}
                   profileColor={profileColor}
                   canEdit={canEdit}
                   onPinChange={handlePinChangeFromMenu}

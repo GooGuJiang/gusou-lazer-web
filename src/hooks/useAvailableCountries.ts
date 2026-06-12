@@ -32,16 +32,18 @@ export const useAvailableCountries = (mode: GameMode) => {
       abortControllerRef.current = abortController;
 
       setIsLoading(true);
-      
+
       try {
         // 获取第一页国家排行榜，通常包含所有有数据的国家
         const response = await rankingsAPI.getCountryRankings(mode, 1);
-        
+
         if (!abortController.signal.aborted && response.ranking) {
-          const availableCountries: Country[] = response.ranking.map((ranking: { code: string; name: string }) => ({
-            code: ranking.code,
-            name: ranking.name,
-          }));
+          const availableCountries: Country[] = response.ranking.map(
+            (ranking: { code: string; name: string }) => ({
+              code: ranking.code,
+              name: ranking.name,
+            })
+          );
 
           // 存入缓存
           countryCache[mode] = availableCountries;
@@ -72,4 +74,3 @@ export const useAvailableCountries = (mode: GameMode) => {
 
   return { countries, isLoading };
 };
-

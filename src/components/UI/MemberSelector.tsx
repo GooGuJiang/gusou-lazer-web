@@ -19,7 +19,7 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
   members,
   currentLeaderId,
   placeholder,
-  className = ''
+  className = '',
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -45,26 +45,25 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
   }, []);
 
   const handleToggle = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
-  const handleSelect = useCallback((selectedValue: number | null) => {
-    onChange(selectedValue);
-    setIsOpen(false);
-  }, [onChange]);
+  const handleSelect = useCallback(
+    (selectedValue: number | null) => {
+      onChange(selectedValue);
+      setIsOpen(false);
+    },
+    [onChange]
+  );
 
   // 过滤掉当前队长
-  const availableMembers = members.filter(member => member.id !== currentLeaderId);
-  
+  const availableMembers = members.filter((member) => member.id !== currentLeaderId);
+
   // 获取当前选中的成员
-  const selectedMember = value ? members.find(member => member.id === value) : null;
+  const selectedMember = value ? members.find((member) => member.id === value) : null;
 
   return (
-    <div 
-      className={`relative ${className}`}
-      ref={dropdownRef}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={`relative ${className}`} ref={dropdownRef} onKeyDown={handleKeyDown}>
       {/* 触发按钮 */}
       <button
         type="button"
@@ -88,9 +87,7 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
                 />
               </div>
               <div className="flex flex-col items-start min-w-0">
-                <span className="font-medium truncate">
-                  {selectedMember.username}
-                </span>
+                <span className="font-medium truncate">{selectedMember.username}</span>
                 {selectedMember.country?.name && (
                   <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                     <span>{selectedMember.country.name}</span>
@@ -114,8 +111,8 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
             </>
           )}
         </div>
-        
-        <FiChevronDown 
+
+        <FiChevronDown
           className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
@@ -132,8 +129,8 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
               onClick={() => handleSelect(null)}
               className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
                          flex items-center gap-3 ${
-                           value === null 
-                             ? 'bg-osu-pink/10 text-osu-pink border-r-2 border-osu-pink' 
+                           value === null
+                             ? 'bg-osu-pink/10 text-osu-pink border-r-2 border-osu-pink'
                              : 'text-gray-900 dark:text-white'
                          }`}
             >
@@ -156,8 +153,8 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
                 onClick={() => handleSelect(member.id)}
                 className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
                            flex items-center gap-3 ${
-                             value === member.id 
-                               ? 'bg-osu-pink/10 text-osu-pink border-r-2 border-osu-pink' 
+                             value === member.id
+                               ? 'bg-osu-pink/10 text-osu-pink border-r-2 border-osu-pink'
                                : 'text-gray-900 dark:text-white'
                            }`}
               >
@@ -169,9 +166,7 @@ const MemberSelector: React.FC<MemberSelectorProps> = ({
                   />
                 </div>
                 <div className="flex flex-col items-start min-w-0">
-                  <span className="font-medium truncate">
-                    {member.username}
-                  </span>
+                  <span className="font-medium truncate">{member.username}</span>
                   {member.country?.name && (
                     <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                       <span>{member.country.name}</span>

@@ -35,4 +35,3 @@ const UserStatsSection: React.FC<UserStatsSectionProps> = ({
 );
 
 export default UserStatsSection;
-

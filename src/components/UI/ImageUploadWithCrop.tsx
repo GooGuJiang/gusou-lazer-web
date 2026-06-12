@@ -32,7 +32,7 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
   icon,
   className = '',
   isUploading = false,
-  uploadingText = '上传中...'
+  uploadingText = '上传中...',
 }) => {
   const [showCropper, setShowCropper] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string>('');
@@ -51,7 +51,9 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
   const processFile = (file: File) => {
     // 验证文件类型
     if (!acceptedTypes.includes(file.type)) {
-      toast.error(`不支持的文件格式。支持的格式: ${acceptedTypes.map(type => type.split('/')[1]).join(', ')}`);
+      toast.error(
+        `不支持的文件格式。支持的格式: ${acceptedTypes.map((type) => type.split('/')[1]).join(', ')}`
+      );
       return;
     }
 
@@ -85,7 +87,7 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       processFile(files[0]);
@@ -97,7 +99,7 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
     onImageSelect(croppedFile);
     setShowCropper(false);
     setOriginalImageSrc('');
-    
+
     // 重置文件输入
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -108,7 +110,7 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
   const handleCropCancel = () => {
     setShowCropper(false);
     setOriginalImageSrc('');
-    
+
     // 重置文件输入
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -132,33 +134,29 @@ const ImageUploadWithCrop: React.FC<ImageUploadWithCropProps> = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={`inline-flex items-center px-4 py-2 text-white rounded-lg transition-colors ${
-              isDragOver 
-                ? 'bg-osu-pink/80' 
-                : 'bg-osu-pink hover:bg-osu-pink/90'
+              isDragOver ? 'bg-osu-pink/80' : 'bg-osu-pink hover:bg-osu-pink/90'
             }`}
           >
             {icon || <FiUpload className="mr-2" />}
             {isDragOver ? '释放文件开始上传' : placeholder}
           </button>
           {description && (
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              {description}
-            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{description}</div>
           )}
         </div>
 
         {/* 预览图片 */}
         {preview && (
-          <div className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden ${
-            aspectRatio === 2 ? 'w-60 h-30' : // 旗帜比例 2:1 (240x120)
-            aspectRatio === 1.5 ? 'w-full max-w-md h-48' : // 封面比例 3:2
-            'w-48 h-48' // 默认方形
-          }`}>
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-full h-full object-cover"
-            />
+          <div
+            className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden ${
+              aspectRatio === 2
+                ? 'w-60 h-30' // 旗帜比例 2:1 (240x120)
+                : aspectRatio === 1.5
+                  ? 'w-full max-w-md h-48' // 封面比例 3:2
+                  : 'w-48 h-48' // 默认方形
+            }`}
+          >
+            <img src={preview} alt="Preview" className="w-full h-full object-cover" />
           </div>
         )}
 

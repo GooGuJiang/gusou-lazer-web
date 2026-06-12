@@ -59,11 +59,12 @@ const EditableCover: React.FC<EditableCoverProps> = ({
   return (
     <>
       <div className={`relative group ${className}`}>
-        <div className="w-full osu-gradient rounded-lg overflow-hidden" style={{ aspectRatio: '4/1' }}>
+        <div
+          className="w-full osu-gradient rounded-lg overflow-hidden"
+          style={{ aspectRatio: '4/1' }}
+        >
           <div className="relative w-full h-full">
-            {isLoading && (
-              <div className="absolute inset-0 osu-gradient animate-pulse" />
-            )}
+            {isLoading && <div className="absolute inset-0 osu-gradient animate-pulse" />}
             <img
               src={displayCoverUrl}
               alt={`${username}的头图`}
@@ -75,7 +76,7 @@ const EditableCover: React.FC<EditableCoverProps> = ({
             />
           </div>
         </div>
-        
+
         {editable && (
           <button
             className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"

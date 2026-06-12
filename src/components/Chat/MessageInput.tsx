@@ -14,7 +14,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   onSendMessage,
   disabled = false,
   placeholder,
-  maxLength = 1000
+  maxLength = 1000,
 }) => {
   const { t } = useTranslation();
   const [message, setMessage] = useState('');
@@ -36,10 +36,10 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   const handleSend = () => {
     if (!message.trim() || disabled) return;
-    
+
     onSendMessage(message.trim());
     setMessage('');
-    
+
     // 重置输入框高度
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -60,11 +60,11 @@ const MessageInput: React.FC<MessageInputProps> = ({
     const pastedText = e.clipboardData.getData('text');
     const currentLength = message.length;
     const remainingLength = maxLength - currentLength;
-    
+
     if (pastedText.length > remainingLength) {
       e.preventDefault();
       const truncatedText = pastedText.substring(0, remainingLength);
-      setMessage(prev => prev + truncatedText);
+      setMessage((prev) => prev + truncatedText);
     }
   };
 
@@ -93,20 +93,22 @@ const MessageInput: React.FC<MessageInputProps> = ({
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             rows={1}
-            style={{ 
-              minHeight: '48px', 
+            style={{
+              minHeight: '48px',
               maxHeight: '120px',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
           />
-          
+
           {/* 字符计数 */}
           {message.length > maxLength * 0.8 && (
-            <div className={`
+            <div
+              className={`
               absolute right-3 top-1 text-xs
               ${message.length >= maxLength ? 'text-red-500' : 'text-gray-400'}
-            `}>
+            `}
+            >
               {message.length}/{maxLength}
             </div>
           )}
@@ -120,22 +122,19 @@ const MessageInput: React.FC<MessageInputProps> = ({
           disabled={!message.trim() || disabled}
           className={`mb-[5px]
             w-12 h-12 rounded-lg transition-all duration-200 flex items-center justify-center flex-shrink-0
-            ${!message.trim() || disabled
-              ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-              : 'bg-osu-pink text-white hover:bg-osu-pink/90 shadow-lg shadow-osu-pink/25'
+            ${
+              !message.trim() || disabled
+                ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                : 'bg-osu-pink text-white hover:bg-osu-pink/90 shadow-lg shadow-osu-pink/25'
             }
           `}
         >
           <FiSend size={16} />
         </motion.button>
       </div>
-      
+
       {/* 简化的提示文字 */}
-      {disabled && (
-        <div className="mt-2 text-xs text-red-400">
-          {t('messages.chat.cannotSend')}
-        </div>
-      )}
+      {disabled && <div className="mt-2 text-xs text-red-400">{t('messages.chat.cannotSend')}</div>}
     </div>
   );
 };

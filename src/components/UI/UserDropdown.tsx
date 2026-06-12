@@ -1,7 +1,14 @@
 import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUser, FiLogOut, FiSettings, FiChevronDown, FiChevronRight, FiCheck } from 'react-icons/fi';
+import {
+  FiUser,
+  FiLogOut,
+  FiSettings,
+  FiChevronDown,
+  FiChevronRight,
+  FiCheck,
+} from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import Avatar from './Avatar';
 import type { User } from '../../types';
@@ -21,13 +28,13 @@ const SUPPORTED_LANGUAGES: LanguageConfig[] = [
     code: 'zh',
     name: 'Chinese',
     nativeName: '中文',
-    flag: 'cn'
+    flag: 'cn',
   },
   {
     code: 'en',
     name: 'English',
     nativeName: 'English',
-    flag: 'us'
+    flag: 'us',
   },
 ];
 
@@ -43,9 +50,9 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // 获取当前语言配置
-  const currentLanguage = SUPPORTED_LANGUAGES.find(
-    lang => lang.code === (i18n.resolvedLanguage ?? i18n.language)
-  ) || SUPPORTED_LANGUAGES[0];
+  const currentLanguage =
+    SUPPORTED_LANGUAGES.find((lang) => lang.code === (i18n.resolvedLanguage ?? i18n.language)) ||
+    SUPPORTED_LANGUAGES[0];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -79,7 +86,7 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
   }, [isOpen]);
 
   const handleToggle = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -92,14 +99,17 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
   }, []);
 
   const handleLanguageToggle = useCallback(() => {
-    setLanguageOpen(prev => !prev);
+    setLanguageOpen((prev) => !prev);
   }, []);
 
-  const handleLanguageSelect = useCallback((languageCode: AppLanguages) => {
-    void i18n.changeLanguage(languageCode);
-    setLanguageOpen(false);
-    setIsOpen(false);
-  }, [i18n]);
+  const handleLanguageSelect = useCallback(
+    (languageCode: AppLanguages) => {
+      void i18n.changeLanguage(languageCode);
+      setLanguageOpen(false);
+      setIsOpen(false);
+    },
+    [i18n]
+  );
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -122,16 +132,14 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
           size="sm"
           editable={false}
         />
-        
+
         {/* Username */}
-        <span className="hidden sm:inline font-medium max-w-24 truncate">
-          {user.username}
-        </span>
-        
+        <span className="hidden sm:inline font-medium max-w-24 truncate">{user.username}</span>
+
         {/* Dropdown Icon */}
         <motion.div
-          animate={{ 
-            rotate: isOpen ? 180 : 0
+          animate={{
+            rotate: isOpen ? 180 : 0,
           }}
           transition={{ duration: 0.2 }}
           className="hidden sm:block"
@@ -144,28 +152,29 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               scale: 1,
-              y: 0
+              y: 0,
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
-            transition={{ 
+            transition={{
               duration: 0.15,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="absolute right-0 mt-3 w-52 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 py-2 z-50 overflow-visible"
             style={{
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+              boxShadow:
+                '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             }}
           >
             {/* Menu Items */}
@@ -176,7 +185,7 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
                 label={t('nav.profile')}
                 onClick={handleMenuItemClick}
               />
-              
+
               <DropdownItem
                 to="/settings"
                 icon={FiSettings}
@@ -216,12 +225,13 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
                       transition={{ duration: 0.15 }}
                       className="absolute top-full left-0 right-0 mt-2 bg-card rounded-xl border border-gray-200 dark:border-gray-700 py-2 shadow-xl z-[60] overflow-hidden min-w-[200px]"
                       style={{
-                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                        boxShadow:
+                          '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
                       }}
                     >
                       {SUPPORTED_LANGUAGES.map((language) => {
                         const isSelected = language.code === currentLanguage.code;
-                        
+
                         return (
                           <button
                             key={language.code}
@@ -244,7 +254,7 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
                               />
                               <span className="font-medium">{language.nativeName}</span>
                             </div>
-                            
+
                             {/* 选中指示器 */}
                             {isSelected && (
                               <div className="text-osu-pink">
@@ -288,18 +298,9 @@ interface DropdownItemProps {
   onClick: () => void;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = memo(({ 
-  to, 
-  icon: Icon, 
-  label, 
-  onClick
-}) => {
+const DropdownItem: React.FC<DropdownItemProps> = memo(({ to, icon: Icon, label, onClick }) => {
   return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="block"
-    >
+    <Link to={to} onClick={onClick} className="block">
       <div className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink dark:hover:text-osu-pink transition-all duration-200">
         <Icon size={16} className="mr-3" />
         {label}

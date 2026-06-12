@@ -13,7 +13,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
   alt,
   fallback = '/default.jpg',
   className = '',
-  size = 'md'
+  size = 'md',
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -25,7 +25,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
   const sizeClasses = {
     sm: 'w-8 h-8',
     md: 'w-10 h-10',
-    lg: 'w-12 h-12'
+    lg: 'w-12 h-12',
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
       },
       {
         threshold: 0.1,
-        rootMargin: '50px'
+        rootMargin: '50px',
       }
     );
 
@@ -75,7 +75,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
   }, [isInView, src, fallback]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-lg border-2 transition-colors duration-200`}
       style={{
@@ -86,7 +86,7 @@ const LazyAvatar: React.FC<LazyAvatarProps> = ({
       {!isLoaded && (
         <div className="absolute inset-0 animate-pulse" style={{ background: 'var(--card-bg)' }} />
       )}
-      
+
       {/* 实际图片 */}
       {imageSrc && (
         <img

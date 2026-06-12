@@ -14,7 +14,7 @@ const BeatmapPage: React.FC = () => {
   const { beatmapId, beatmapsetId } = useParams<{ beatmapId?: string; beatmapsetId?: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
+
   const [beatmapset, setBeatmapset] = useState<Beatmapset | null>(null);
   const [selectedBeatmap, setSelectedBeatmap] = useState<Beatmap | null>(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,7 @@ const BeatmapPage: React.FC = () => {
       // 从 URL hash 获取 beatmap ID （用于 beatmapsets 路由）
       const hashMatch = window.location.hash.match(/#[^/]+\/(\d+)/);
       const hashBeatmapId = hashMatch ? parseInt(hashMatch[1], 10) : null;
-      
+
       const targetBeatmapId = beatmapId ? parseInt(beatmapId, 10) : hashBeatmapId;
       const targetBeatmapsetId = beatmapsetId ? parseInt(beatmapsetId, 10) : null;
 
@@ -49,7 +49,7 @@ const BeatmapPage: React.FC = () => {
           if (isNaN(targetBeatmapId)) {
             throw new Error(t('beatmap.notFound'));
           }
-          
+
           try {
             beatmapsetData = await beatmapAPI.getBeatmapByBeatmapId(targetBeatmapId);
           } catch (error: unknown) {
@@ -63,16 +63,14 @@ const BeatmapPage: React.FC = () => {
         }
 
         setBeatmapset(beatmapsetData);
-        
+
         // 找到对应的beatmap
         let targetBeatmap: Beatmap | undefined;
-        
+
         if (targetBeatmapId) {
-          targetBeatmap = beatmapsetData.beatmaps.find(
-            (beatmap) => beatmap.id === targetBeatmapId
-          );
+          targetBeatmap = beatmapsetData.beatmaps.find((beatmap) => beatmap.id === targetBeatmapId);
         }
-        
+
         if (targetBeatmap) {
           setSelectedBeatmap(targetBeatmap);
           // 更新 URL 为标准格式
@@ -91,7 +89,6 @@ const BeatmapPage: React.FC = () => {
             navigate(newUrl, { replace: true });
           }
         }
-
       } catch (error: unknown) {
         console.error('Failed to fetch beatmap data:', error);
         setError(getErrorMessage(error) || t('beatmap.error'));
@@ -164,9 +161,7 @@ const BeatmapPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
-            {error || t('beatmap.notFound')}
-          </h1>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">{error || t('beatmap.notFound')}</h1>
           <button
             onClick={() => navigate(-1)}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
@@ -183,7 +178,7 @@ const BeatmapPage: React.FC = () => {
       {/* Hero Section Container */}
       <div className="px-4 lg:px-6 pt-0 pb-6">
         <div className="max-w-7xl mx-auto">
-          <div 
+          <div
             className="relative h-72 overflow-hidden rounded-2xl shadow-lg"
             style={{
               backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url(${beatmapset.covers.cover})`,
@@ -210,7 +205,7 @@ const BeatmapPage: React.FC = () => {
                     </span>
                   )}
                 </div>
-                
+
                 {/* Title and Artist */}
                 <div className="flex items-end justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -218,13 +213,19 @@ const BeatmapPage: React.FC = () => {
                       {beatmapset.title_unicode || beatmapset.title}
                     </h1>
                     <p className="text-lg sm:text-xl opacity-95 mb-1">
-                      by <span className="font-semibold">{beatmapset.artist_unicode || beatmapset.artist}</span>
+                      by{' '}
+                      <span className="font-semibold">
+                        {beatmapset.artist_unicode || beatmapset.artist}
+                      </span>
                     </p>
                     <p className="text-base opacity-80">
-                      mapped by <span className="font-medium hover:text-osu-pink transition-colors cursor-pointer">{beatmapset.creator}</span>
+                      mapped by{' '}
+                      <span className="font-medium hover:text-osu-pink transition-colors cursor-pointer">
+                        {beatmapset.creator}
+                      </span>
                     </p>
                   </div>
-                  
+
                   {/* Audio Preview Button */}
                   {beatmapset.preview_url && (
                     <div className="flex-shrink-0">
@@ -263,7 +264,7 @@ const BeatmapPage: React.FC = () => {
                       const isSelected = selectedBeatmap?.id === beatmap.id;
                       const bgColor = getDifficultyPinkShade(beatmap.difficulty_rating);
                       const textColor = getDifficultyTextColor(beatmap.difficulty_rating);
-                      
+
                       return (
                         <button
                           key={beatmap.id}
@@ -288,22 +289,22 @@ const BeatmapPage: React.FC = () => {
                               </span>
                               <span className="text-sm">★</span>
                             </div>
-                            
                           </div>
-                          
+
                           {/* 选中指示器 */}
                           {isSelected && (
-                            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 rotate-45 border-r-2 border-b-2 border-osu-pink"
-                                 style={{ backgroundColor: bgColor }}
+                            <div
+                              className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 rotate-45 border-r-2 border-b-2 border-osu-pink"
+                              style={{ backgroundColor: bgColor }}
                             />
                           )}
                         </button>
                       );
                     })}
                 </div>
-                
+
                 {/* Tooltip 组件 */}
-                <Tooltip 
+                <Tooltip
                   id="difficulty-tooltip"
                   place="top"
                   style={{
@@ -313,7 +314,8 @@ const BeatmapPage: React.FC = () => {
                     padding: '0.5rem 0.75rem',
                     fontSize: '0.875rem',
                     fontWeight: '500',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    boxShadow:
+                      '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
                   }}
                 />
               </div>
@@ -327,7 +329,9 @@ const BeatmapPage: React.FC = () => {
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                       {selectedBeatmap.version}
                     </h2>
-                    <span className={`text-xl font-bold ${getDifficultyColor(selectedBeatmap.difficulty_rating)}`}>
+                    <span
+                      className={`text-xl font-bold ${getDifficultyColor(selectedBeatmap.difficulty_rating)}`}
+                    >
                       {selectedBeatmap.difficulty_rating.toFixed(2)}★
                     </span>
                   </div>
@@ -362,7 +366,8 @@ const BeatmapPage: React.FC = () => {
                     </div>
                     <div className="text-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
                       <div className="text-2xl font-bold text-osu-pink mb-1">
-                        {GAME_MODE_NAMES[selectedBeatmap.mode as keyof typeof GAME_MODE_NAMES] || selectedBeatmap.mode}
+                        {GAME_MODE_NAMES[selectedBeatmap.mode as keyof typeof GAME_MODE_NAMES] ||
+                          selectedBeatmap.mode}
                       </div>
                       <div className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                         {t('beatmap.mode')}
@@ -415,29 +420,33 @@ const BeatmapPage: React.FC = () => {
             {/* Beatmapset Info */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
               <div className="px-6 py-4 bg-gradient-to-r from-osu-pink to-osu-pink/80">
-                <h3 className="text-lg font-bold text-white">
-                  {t('beatmap.information')}
-                </h3>
+                <h3 className="text-lg font-bold text-white">{t('beatmap.information')}</h3>
               </div>
               <div className="p-6 space-y-4 text-sm">
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.creator')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.creator')}
+                  </span>
                   <span className="font-semibold text-slate-900 dark:text-white hover:text-osu-pink transition-colors cursor-pointer">
                     {beatmapset.creator}
                   </span>
                 </div>
                 <div className="h-px bg-slate-200 dark:bg-slate-700" />
-                
+
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.source')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.source')}
+                  </span>
                   <span className="font-semibold text-slate-900 dark:text-white text-right">
                     {beatmapset.source || 'N/A'}
                   </span>
                 </div>
                 <div className="h-px bg-slate-200 dark:bg-slate-700" />
-                
+
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.submitted')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.submitted')}
+                  </span>
                   <span className="font-semibold text-slate-900 dark:text-white">
                     {new Date(beatmapset.submitted_date).toLocaleDateString()}
                   </span>
@@ -446,7 +455,9 @@ const BeatmapPage: React.FC = () => {
                   <>
                     <div className="h-px bg-slate-200 dark:bg-slate-700" />
                     <div className="flex justify-between items-start">
-                      <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.ranked')}</span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium">
+                        {t('beatmap.ranked')}
+                      </span>
                       <span className="font-semibold text-slate-900 dark:text-white">
                         {new Date(beatmapset.ranked_date).toLocaleDateString()}
                       </span>
@@ -454,25 +465,31 @@ const BeatmapPage: React.FC = () => {
                   </>
                 )}
                 <div className="h-px bg-slate-200 dark:bg-slate-700" />
-                
+
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.lastUpdated')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.lastUpdated')}
+                  </span>
                   <span className="font-semibold text-slate-900 dark:text-white">
                     {new Date(beatmapset.last_updated).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="h-px bg-slate-200 dark:bg-slate-700" />
-                
+
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.playCount')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.playCount')}
+                  </span>
                   <span className="font-semibold text-osu-pink">
                     {formatNumber(beatmapset.play_count)}
                   </span>
                 </div>
                 <div className="h-px bg-slate-200 dark:bg-slate-700" />
-                
+
                 <div className="flex justify-between items-start">
-                  <span className="text-slate-600 dark:text-slate-400 font-medium">{t('beatmap.favouriteCount')}</span>
+                  <span className="text-slate-600 dark:text-slate-400 font-medium">
+                    {t('beatmap.favouriteCount')}
+                  </span>
                   <span className="font-semibold text-osu-pink flex items-center gap-1">
                     <span>❤</span>
                     {formatNumber(beatmapset.favourite_count)}
@@ -491,14 +508,17 @@ const BeatmapPage: React.FC = () => {
                 </div>
                 <div className="p-6">
                   <div className="flex flex-wrap gap-2">
-                    {beatmapset.tags.split(' ').filter(tag => tag.trim()).map((tag, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-osu-pink/10 hover:text-osu-pink transition-colors cursor-pointer"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {beatmapset.tags
+                      .split(' ')
+                      .filter((tag) => tag.trim())
+                      .map((tag, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-osu-pink/10 hover:text-osu-pink transition-colors cursor-pointer"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                   </div>
                 </div>
               </div>
@@ -520,7 +540,12 @@ const BeatmapPage: React.FC = () => {
                 >
                   <span className="flex items-center justify-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
                     </svg>
                     {t('beatmap.download')}
                   </span>
@@ -534,7 +559,7 @@ const BeatmapPage: React.FC = () => {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
+                        <path d="M8 5v14l11-7z" />
                       </svg>
                       {t('beatmap.preview')}
                     </span>
@@ -548,7 +573,12 @@ const BeatmapPage: React.FC = () => {
                 >
                   <span className="flex items-center justify-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                     {t('beatmap.viewOnOsu')}
                   </span>
@@ -558,7 +588,7 @@ const BeatmapPage: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Audio Player Controls */}
       <AudioPlayerControls />
     </div>

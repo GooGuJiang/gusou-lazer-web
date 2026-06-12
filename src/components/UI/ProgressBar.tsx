@@ -27,8 +27,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   springConfig = {
     stiffness: 100,
     damping: 30,
-    mass: 0.8
-  }
+    mass: 0.8,
+  },
 }) => {
   // 确保进度值在0-100之间
   const clampedProgress = Math.min(100, Math.max(0, progress));
@@ -38,7 +38,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div className={`w-full ${className}`}>
-      <motion.div 
+      <motion.div
         className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full ${height} overflow-hidden shadow-inner`}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -46,15 +46,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       >
         <motion.div
           className={`${height} rounded-full relative ${showGlow ? 'shadow-lg' : ''}`}
-          style={{ 
+          style={{
             backgroundColor: color,
             width: useTransform(animatedProgress, (value) => `${value}%`),
             boxShadow: showGlow ? `0 0 10px ${color}40` : 'none',
-            transformOrigin: "left"
+            transformOrigin: 'left',
           }}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
           {/* 光泽效果 */}
           {animated && (
@@ -64,16 +64,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 1.5
+                ease: 'easeInOut',
+                repeatDelay: 1.5,
               }}
             />
           )}
         </motion.div>
       </motion.div>
-      
+
       {showLabel && (
-        <motion.div 
+        <motion.div
           className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

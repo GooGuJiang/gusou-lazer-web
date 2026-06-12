@@ -9,79 +9,79 @@
     @apply rounded-2xl overflow-hidden transition-all duration-300;
     background: var(--card-bg);
   }
-  
+
   .card-shadow {
     @apply shadow-lg;
   }
-  
+
   .card-bordered {
     border: 1px solid var(--border-color);
   }
-  
+
   .card-hover {
     @apply hover:shadow-xl;
   }
-  
+
   .card-hover:hover {
     background: var(--card-bg-hover);
     border-color: var(--border-hover);
   }
-  
+
   /* 浮动面板 */
   .float-panel {
     @apply rounded-2xl overflow-hidden transition-shadow shadow-xl;
     background: var(--float-panel-bg);
   }
-  
+
   /* 常用卡片组合 */
   .card-standard {
     @apply rounded-2xl shadow-lg transition-all duration-300;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
   }
-  
+
   .card-standard:hover {
     @apply shadow-xl;
     background: var(--card-bg-hover);
     border-color: var(--border-hover);
   }
-  
+
   /* Modal 样式 */
   .modal-card {
     @apply rounded-2xl shadow-2xl;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
   }
-  
+
   /* 紧凑卡片 */
   .card-compact {
     @apply rounded-xl shadow transition-all duration-300;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
   }
-  
+
   /* 背景样式 - 用于替换 bg-white dark:bg-gray-xxx */
   .bg-card {
     background: var(--card-bg);
   }
-  
+
   .bg-card-hover {
     background: var(--card-bg-hover);
   }
-  
+
   .bg-panel {
     background: var(--float-panel-bg);
   }
-  
+
   .bg-page {
     background: var(--page-bg);
   }
-  
+
   /* 边框样式 */
   .border-card {
     border-color: var(--border-color);
   }
-  
+
   .border-card-hover {
     border-color: var(--border-hover);
   }
@@ -99,32 +99,32 @@
 /* 游戏模式图标字体样式 */
 .fa-extra-mode-osu::before {
   font-family: 'Extra';
-  content: "\e800";
+  content: '\e800';
 }
 
 .fa-extra-mode-fruits::before {
   font-family: 'Extra';
-  content: "\e801";
+  content: '\e801';
 }
 
 .fa-extra-mode-mania::before {
   font-family: 'Extra';
-  content: "\e802";
+  content: '\e802';
 }
 
 .fa-extra-mode-taiko::before {
   font-family: 'Extra';
-  content: "\e803";
+  content: '\e803';
 }
 
 .fa-extra-osu::before {
   font-family: 'Extra';
-  content: "\e805";
+  content: '\e805';
 }
 
 .fa-extra-team-leader::before {
   font-family: 'Extra';
-  content: "\e806";
+  content: '\e806';
 }
 
 /* 通用图标字体基础样式 */
@@ -143,40 +143,40 @@
 
 :root {
   --hue: 340; /* 默认色相值，对应 osu-pink */
-  --profile-color: #ED8EA6;
-  --osu-pink: var(--profile-color, #ED8EA6);
-  
+  --profile-color: #ed8ea6;
+  --osu-pink: var(--profile-color, #ed8ea6);
+
   /* 使用 OKLCH 颜色空间，参考 fuwari 实现 */
   /* 页面背景 */
   --page-bg: oklch(0.97 0.01 var(--hue));
   --bg-primary: var(--page-bg);
   --bg-secondary: oklch(0.95 0.02 var(--hue));
-  
+
   /* 卡片背景 - 亮色模式用白色 */
   --card-bg: white;
   --card-bg-hover: oklch(0.98 0.005 var(--hue));
-  
+
   /* 文本颜色 */
   --text-primary: #1a202c;
   --text-secondary: #718096;
   --text-muted: #a0aec0;
-  
+
   /* 边框颜色 */
   --border-color: #e2e8f0;
   --border-hover: rgba(237, 142, 166, 0.2);
-  
+
   /* 按钮背景 */
   --btn-bg: oklch(0.95 0.025 var(--hue));
   --btn-bg-hover: oklch(0.9 0.05 var(--hue));
   --btn-bg-active: oklch(0.85 0.08 var(--hue));
-  
+
   /* 重点色 */
   --bg-accent-light: rgba(237, 142, 166, 0.05);
   --bg-accent-medium: rgba(237, 142, 166, 0.1);
-  
+
   /* 浮动面板 */
   --float-panel-bg: rgba(255, 255, 255, 0.9);
-  
+
   /* 导航栏 */
   --navbar-bg: rgba(255, 255, 255, 0.9);
 }
@@ -185,43 +185,43 @@
   /* 深色模式 - 参考 Fuwari 实现 */
   --page-bg: oklch(0.16 0.014 var(--hue));
   --bg-primary: var(--page-bg);
-  --bg-secondary: oklch(0.20 0.015 var(--hue));
-  
+  --bg-secondary: oklch(0.2 0.015 var(--hue));
+
   /* 卡片背景 - 与 Fuwari 一致 */
   --card-bg: oklch(0.23 0.015 var(--hue));
-  --card-bg-hover: oklch(0.30 0.03 var(--hue));
-  
+  --card-bg-hover: oklch(0.3 0.03 var(--hue));
+
   /* 文本颜色 */
   --text-primary: rgba(255, 255, 255, 0.9);
   --text-secondary: rgba(255, 255, 255, 0.75);
   --text-muted: rgba(255, 255, 255, 0.5);
-  
+
   /* 边框颜色 - 更柔和 */
   --border-color: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(237, 142, 166, 0.3);
-  
+
   /* 按钮背景 - 与 Fuwari 一致 */
   --btn-bg: oklch(0.33 0.035 var(--hue));
   --btn-bg-hover: oklch(0.38 0.04 var(--hue));
   --btn-bg-active: oklch(0.43 0.045 var(--hue));
-  
+
   /* Hover 状态背景 */
-  --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
+  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
   --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
-  
+
   /* 重点色 */
   --bg-accent-light: rgba(237, 142, 166, 0.08);
   --bg-accent-medium: rgba(237, 142, 166, 0.15);
-  
+
   /* 浮动面板 - 与 Fuwari 一致，使用 oklch */
   --float-panel-bg: oklch(0.19 0.015 var(--hue) / 0.95);
-  
+
   /* 导航栏 - 使用 oklch 带透明度 */
   --navbar-bg: oklch(0.19 0.015 var(--hue) / 0.9);
-  
+
   /* 深色模式专用颜色 */
-  --osu-pink: var(--profile-color, #ED8EA6);
-  --profile-color: #ED8EA6;
+  --osu-pink: var(--profile-color, #ed8ea6);
+  --profile-color: #ed8ea6;
 }
 
 * {
@@ -246,13 +246,22 @@
   display: inline-block;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Scrollbar styling */
@@ -275,14 +284,14 @@ html, body {
 
 /* Gradient utilities */
 .gradient-text {
-  background: linear-gradient(135deg, var(--profile-color, #ED8EA6), #7DD5D4);
+  background: linear-gradient(135deg, var(--profile-color, #ed8ea6), #7dd5d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .osu-gradient {
-  background: linear-gradient(135deg, var(--profile-color, #ED8EA6) 0%, #7DD5D4 50%, #7DD5D4 100%);
+  background: linear-gradient(135deg, var(--profile-color, #ed8ea6) 0%, #7dd5d4 50%, #7dd5d4 100%);
 }
 
 .glass-morphism {
@@ -311,14 +320,26 @@ html, body {
 
 /* Cover image loading states */
 .cover-loading {
-  background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%);
+  background: linear-gradient(
+    45deg,
+    #f0f0f0 25%,
+    #e0e0e0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 50%,
+    #f0f0f0 75%,
+    #e0e0e0 75%
+  );
   background-size: 20px 20px;
   animation: loading-stripes 1s linear infinite;
 }
 
 @keyframes loading-stripes {
-  0% { background-position: 0 0; }
-  100% { background-position: 20px 20px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
 }
 
 /* Text shadows for better readability on images */
@@ -332,21 +353,21 @@ html, body {
 
 /* Grid pattern background */
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .dark .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
 }
 
 /* Enhanced gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #ED8EA6, #7DD5D4);
+  background: linear-gradient(135deg, #ed8ea6, #7dd5d4);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -357,7 +378,8 @@ html, body {
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -397,7 +419,9 @@ html, body {
 
 /* Hover effects */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
@@ -410,7 +434,7 @@ html, body {
 /* Loading spinner */
 .spinner {
   border: 2px solid var(--border-color);
-  border-top: 2px solid var(--osu-pink, #ED8EA6);
+  border-top: 2px solid var(--osu-pink, #ed8ea6);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -435,13 +459,17 @@ html, body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Button styles */
 .btn-primary {
-  background: var(--osu-pink, #ED8EA6);
+  background: var(--osu-pink, #ed8ea6);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
@@ -469,8 +497,8 @@ html, body {
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid var(--osu-pink, #ED8EA6);
-  color: var(--osu-pink, #ED8EA6);
+  border: 2px solid var(--osu-pink, #ed8ea6);
+  color: var(--osu-pink, #ed8ea6);
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -491,14 +519,14 @@ html, body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--osu-pink, #ED8EA6);
+  background: var(--osu-pink, #ed8ea6);
   transition: left 0.3s ease;
   z-index: -1;
 }
 
 .btn-secondary:hover {
   color: white;
-  border-color: var(--osu-pink, #ED8EA6);
+  border-color: var(--osu-pink, #ed8ea6);
   box-shadow: 0 4px 14px rgba(237, 142, 166, 0.3);
   transform: translateY(-1px);
 }
@@ -576,7 +604,7 @@ html, body {
 
 .form-input:focus {
   outline: none;
-  border-color: #ED8EA6;
+  border-color: #ed8ea6;
   box-shadow: 0 0 0 3px rgba(237, 142, 166, 0.1);
 }
 
@@ -639,12 +667,12 @@ html, body {
 }
 
 .nav-link:hover {
-  color: var(--osu-pink, #ED8EA6);
+  color: var(--osu-pink, #ed8ea6);
   background: rgba(237, 142, 166, 0.1);
 }
 
 .nav-link.active {
-  color: var(--osu-pink, #ED8EA6);
+  color: var(--osu-pink, #ed8ea6);
   background: rgba(237, 142, 166, 0.1);
 }
 
@@ -772,34 +800,53 @@ html, body {
 .chart-line {
   background: linear-gradient(
     90deg,
-    rgba(237,138,166,0.6) 0%,
-    rgba(237,138,166,0.9) 20%,
-    rgba(237,138,166,1) 40%,
-    rgba(237,138,166,1) 60%,
-    rgba(237,138,166,0.9) 80%,
-    rgba(237,138,166,0.6) 100%
+    rgba(237, 138, 166, 0.6) 0%,
+    rgba(237, 138, 166, 0.9) 20%,
+    rgba(237, 138, 166, 1) 40%,
+    rgba(237, 138, 166, 1) 60%,
+    rgba(237, 138, 166, 0.9) 80%,
+    rgba(237, 138, 166, 0.6) 100%
   );
-  clip-path: polygon(0 90%, 5% 85%, 15% 70%, 25% 60%, 35% 45%, 50% 35%, 65% 25%, 80% 20%, 90% 15%, 100% 10%, 100% 100%, 0 100%);
+  clip-path: polygon(
+    0 90%,
+    5% 85%,
+    15% 70%,
+    25% 60%,
+    35% 45%,
+    50% 35%,
+    65% 25%,
+    80% 20%,
+    90% 15%,
+    100% 10%,
+    100% 100%,
+    0 100%
+  );
 }
 
 /* 全局禁用选择（文本 & 元素） */
-html, body, * {
+html,
+body,
+* {
   -webkit-user-select: none; /* Chrome / Safari / 新 Edge / Opera */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* 旧 IE/Edge */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* 旧 IE/Edge */
   user-select: none;
 }
 
 /* 图片/媒体额外处理：禁拖拽、禁长按弹出（iOS Safari） */
-img, svg, picture, video {
-  -webkit-user-drag: none;   /* 禁止拖拽保存 */
-  user-drag: none;           /* 非标准，部分浏览器支持 */
+img,
+svg,
+picture,
+video {
+  -webkit-user-drag: none; /* 禁止拖拽保存 */
+  user-drag: none; /* 非标准，部分浏览器支持 */
   -webkit-touch-callout: none; /* iOS 长按菜单 */
   -webkit-user-select: none;
   user-select: none;
 }
 
-input, textarea {
+input,
+textarea {
   -webkit-user-select: text;
   -moz-user-select: text;
   user-select: text;
@@ -893,7 +940,7 @@ span.imagemap__link:hover {
   .bbcode-spoilerbox {
     border-color: #666;
   }
-  
+
   .bbcode-box summary,
   .bbcode-spoilerbox summary {
     background: #333;
@@ -933,20 +980,21 @@ span.imagemap__link:hover {
   appearance: none;
   width: 100%;
   height: 1.5rem;
-  background: linear-gradient(to right,
-    oklch(0.70 0.14 0),
-    oklch(0.70 0.14 30),
-    oklch(0.70 0.14 60),
-    oklch(0.70 0.14 90),
-    oklch(0.70 0.14 120),
-    oklch(0.70 0.14 150),
-    oklch(0.70 0.14 180),
-    oklch(0.70 0.14 210),
-    oklch(0.70 0.14 240),
-    oklch(0.70 0.14 270),
-    oklch(0.70 0.14 300),
-    oklch(0.70 0.14 330),
-    oklch(0.70 0.14 360)
+  background: linear-gradient(
+    to right,
+    oklch(0.7 0.14 0),
+    oklch(0.7 0.14 30),
+    oklch(0.7 0.14 60),
+    oklch(0.7 0.14 90),
+    oklch(0.7 0.14 120),
+    oklch(0.7 0.14 150),
+    oklch(0.7 0.14 180),
+    oklch(0.7 0.14 210),
+    oklch(0.7 0.14 240),
+    oklch(0.7 0.14 270),
+    oklch(0.7 0.14 300),
+    oklch(0.7 0.14 330),
+    oklch(0.7 0.14 360)
   );
   border-radius: 0.375rem;
   outline: none;

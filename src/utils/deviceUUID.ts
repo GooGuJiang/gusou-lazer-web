@@ -43,11 +43,11 @@ function generateFallbackUUID(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
   }
-  
+
   // 降级方案：使用Math.random()
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -60,14 +60,14 @@ export async function getDeviceUUID(): Promise<string> {
   try {
     // 尝试从localStorage获取现有的UUID
     let uuid = localStorage.getItem(DEVICE_UUID_KEY);
-    
+
     if (!uuid) {
       // 如果不存在，使用 FingerprintJS 生成新的设备指纹ID
       uuid = await generateFingerprintUUID();
       localStorage.setItem(DEVICE_UUID_KEY, uuid);
       console.log('Generated new device fingerprint UUID:', uuid);
     }
-    
+
     return uuid;
   } catch (error) {
     console.error('Error getting device UUID:', error);
@@ -120,4 +120,3 @@ export async function forceRegenerateFingerprint(): Promise<string> {
     return generateFallbackUUID();
   }
 }
-

@@ -89,17 +89,17 @@ const PasswordResetPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name as keyof FormData]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const emailError = validateEmail(formData.email);
     if (emailError) {
       setErrors({ email: emailError });
@@ -116,17 +116,21 @@ const PasswordResetPage: React.FC = () => {
       setTurnstileToken('');
     } catch (error: unknown) {
       console.error('Failed to request password reset:', error);
-      
+
       // Refresh turnstile on error
       if (turnstileRef.current) {
         turnstileRef.current.reset();
       }
-      
+
       // 如果是请求过于频繁的错误，说明验证码已发送，直接跳转到重置步骤
-      const axiosErr = error as { response?: { status?: number; data?: { error?: string; detail?: string } } };
-      if (axiosErr.response?.data?.error === '请求过于频繁，请稍后再试' ||
-          axiosErr.response?.data?.detail?.includes('频繁') ||
-          axiosErr.response?.status === 429) {
+      const axiosErr = error as {
+        response?: { status?: number; data?: { error?: string; detail?: string } };
+      };
+      if (
+        axiosErr.response?.data?.error === '请求过于频繁，请稍后再试' ||
+        axiosErr.response?.data?.detail?.includes('频繁') ||
+        axiosErr.response?.status === 429
+      ) {
         toast.success(t('auth.passwordReset.codeSent'));
         setStep('reset');
         setResendCountdown(60);
@@ -163,7 +167,7 @@ const PasswordResetPage: React.FC = () => {
     e.preventDefault();
 
     const newErrors: Partial<FormData> = {};
-    
+
     const codeError = validateResetCode(formData.resetCode);
     if (codeError) newErrors.resetCode = codeError;
 
@@ -183,7 +187,12 @@ const PasswordResetPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await authAPI.resetPassword(formData.email, formData.resetCode, formData.newPassword, turnstileToken);
+      await authAPI.resetPassword(
+        formData.email,
+        formData.resetCode,
+        formData.newPassword,
+        turnstileToken
+      );
       toast.success(t('auth.passwordReset.success'));
       setTimeout(() => {
         navigate('/login');
@@ -231,7 +240,7 @@ const PasswordResetPage: React.FC = () => {
             {t('auth.passwordReset.title')}
           </h2>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {step === 'request' 
+            {step === 'request'
               ? t('auth.passwordReset.subtitle')
               : t('auth.passwordReset.codeExpiry')}
           </p>
@@ -241,7 +250,10 @@ const PasswordResetPage: React.FC = () => {
           {step === 'request' ? (
             <form className="space-y-3" onSubmit={handleRequestCode}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   {t('auth.passwordReset.email')}
                 </label>
                 <div className="relative">
@@ -304,7 +316,10 @@ const PasswordResetPage: React.FC = () => {
           ) : (
             <form className="space-y-3" onSubmit={handleResetPassword}>
               <div>
-                <label htmlFor="resetCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="resetCode"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   {t('auth.passwordReset.resetCode')}
                 </label>
                 <div className="relative">
@@ -330,16 +345,14 @@ const PasswordResetPage: React.FC = () => {
                   <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.resetCode}</p>
                 )}
                 <div className="mt-1 flex items-center justify-between">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {formData.email}
-                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{formData.email}</p>
                   <button
                     type="button"
                     onClick={handleResendCode}
                     disabled={resendCountdown > 0 || isLoading}
                     className="text-xs text-osu-pink hover:text-osu-pink/80 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {resendCountdown > 0 
+                    {resendCountdown > 0
                       ? t('auth.passwordReset.resendAvailableIn', { seconds: resendCountdown })
                       : t('auth.passwordReset.resendCode')}
                   </button>
@@ -347,7 +360,10 @@ const PasswordResetPage: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   {t('auth.passwordReset.newPassword')}
                 </label>
                 <div className="relative">
@@ -380,12 +396,17 @@ const PasswordResetPage: React.FC = () => {
                   </button>
                 </div>
                 {errors.newPassword && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.newPassword}</p>
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    {errors.newPassword}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   {t('auth.passwordReset.confirmPassword')}
                 </label>
                 <div className="relative">
@@ -398,7 +419,9 @@ const PasswordResetPage: React.FC = () => {
                     type={showConfirmPassword ? 'text' : 'password'}
                     required
                     className={`w-full px-3 py-2 pl-10 pr-10 border rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-osu-pink focus:border-transparent ${
-                      errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                      errors.confirmPassword
+                        ? 'border-red-500'
+                        : 'border-gray-300 dark:border-gray-600'
                     }`}
                     placeholder={t('auth.passwordReset.confirmPasswordPlaceholder')}
                     value={formData.confirmPassword}
@@ -418,14 +441,22 @@ const PasswordResetPage: React.FC = () => {
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
 
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading || !formData.resetCode || !formData.newPassword || !formData.confirmPassword || !turnstileToken}
+                  disabled={
+                    isLoading ||
+                    !formData.resetCode ||
+                    !formData.newPassword ||
+                    !formData.confirmPassword ||
+                    !turnstileToken
+                  }
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-osu-pink disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {isLoading ? <LoadingSpinner size="sm" /> : t('auth.passwordReset.resetPassword')}
@@ -461,9 +492,7 @@ const PasswordResetPage: React.FC = () => {
         </div>
 
         <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t('common.authAgreement')}
-          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{t('common.authAgreement')}</p>
         </div>
       </div>
     </div>
@@ -471,4 +500,3 @@ const PasswordResetPage: React.FC = () => {
 };
 
 export default PasswordResetPage;
-

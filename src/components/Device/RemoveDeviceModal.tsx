@@ -98,9 +98,7 @@ const RemoveDeviceModal: React.FC<RemoveDeviceModalProps> = ({
 
               {/* 警告信息 */}
               <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  {warningText}
-                </p>
+                <p className="text-sm text-red-700 dark:text-red-300">{warningText}</p>
               </div>
 
               {/* 按钮组 */}
@@ -136,4 +134,3 @@ const RemoveDeviceModal: React.FC<RemoveDeviceModalProps> = ({
 };
 
 export default RemoveDeviceModal;
-

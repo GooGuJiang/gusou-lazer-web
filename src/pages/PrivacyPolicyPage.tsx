@@ -11,7 +11,7 @@ const PrivacyPolicyPage: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 text-center">
             {t('common.privacyPolicy')}
           </h1>
-          
+
           <div className="prose prose-gray dark:prose-invert max-w-none">
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
@@ -45,13 +45,14 @@ const PrivacyPolicyPage: React.FC = () => {
                 {t('privacy.microsoftClarity.purpose')}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                <strong>{t('privacy.microsoftClarity.optOut.title')}</strong> {t('privacy.microsoftClarity.optOut.description')}
+                <strong>{t('privacy.microsoftClarity.optOut.title')}</strong>{' '}
+                {t('privacy.microsoftClarity.optOut.description')}
               </p>
               <p className="text-gray-600 dark:text-gray-300">
                 {t('privacy.microsoftClarity.learnMore')}{' '}
-                <a 
-                  href="https://privacy.microsoft.com/privacystatement" 
-                  target="_blank" 
+                <a
+                  href="https://privacy.microsoft.com/privacystatement"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
@@ -94,18 +95,14 @@ const PrivacyPolicyPage: React.FC = () => {
               <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 {t('privacy.contact.title')}
               </h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('privacy.contact.description')}
-              </p>
+              <p className="text-gray-600 dark:text-gray-300">{t('privacy.contact.description')}</p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 {t('privacy.updates.title')}
               </h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('privacy.updates.description')}
-              </p>
+              <p className="text-gray-600 dark:text-gray-300">{t('privacy.updates.description')}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                 {t('privacy.lastUpdated')}: {new Date().toLocaleDateString()}
               </p>

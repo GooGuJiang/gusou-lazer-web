@@ -50,11 +50,7 @@ const compressImage = (
     compressCtx.drawImage(canvas, 0, 0, newWidth, newHeight);
 
     // 输出为blob
-    compressCanvas.toBlob(
-      (blob) => resolve(blob!),
-      'image/jpeg',
-      quality
-    );
+    compressCanvas.toBlob((blob) => resolve(blob!), 'image/jpeg', quality);
   });
 };
 
@@ -75,7 +71,7 @@ const getCroppedImg = async (
 
   // 根据旋转角度调整画布尺寸
   const rotRad = (rotation * Math.PI) / 180;
-  
+
   // 90度或270度旋转时，宽高互换
   if (rotation % 180 === 90) {
     canvas.width = crop.height;
@@ -99,7 +95,7 @@ const getCroppedImg = async (
   // 计算绘制时的偏移
   const drawWidth = crop.width;
   const drawHeight = crop.height;
-  
+
   ctx.drawImage(
     image,
     crop.x * scaleX,
@@ -129,7 +125,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   onCancel,
   fileName = 'cropped-image.jpg',
   isUploading = false,
-  uploadingText = '上传中...'
+  uploadingText = '上传中...',
 }) => {
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
@@ -149,39 +145,42 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   }, []);
 
   // 图片加载完成后设置初始crop
-  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const { width, height } = e.currentTarget;
-    
-    let initialCrop: Crop;
-    
-    if (aspectRatio) {
-      // 如果指定了宽高比，创建居中的crop
-      initialCrop = centerCrop(
-        makeAspectCrop(
-          {
-            unit: '%',
-            width: 80,
-          },
-          aspectRatio,
+  const onImageLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const { width, height } = e.currentTarget;
+
+      let initialCrop: Crop;
+
+      if (aspectRatio) {
+        // 如果指定了宽高比，创建居中的crop
+        initialCrop = centerCrop(
+          makeAspectCrop(
+            {
+              unit: '%',
+              width: 80,
+            },
+            aspectRatio,
+            width,
+            height
+          ),
           width,
           height
-        ),
-        width,
-        height
-      );
-    } else {
-      // 如果没有指定宽高比，默认选择80%的区域
-      initialCrop = {
-        unit: '%',
-        x: 10,
-        y: 10,
-        width: 80,
-        height: 80,
-      };
-    }
-    
-    setCrop(initialCrop);
-  }, [aspectRatio]);
+        );
+      } else {
+        // 如果没有指定宽高比，默认选择80%的区域
+        initialCrop = {
+          unit: '%',
+          x: 10,
+          y: 10,
+          width: 80,
+          height: 80,
+        };
+      }
+
+      setCrop(initialCrop);
+    },
+    [aspectRatio]
+  );
 
   // 处理裁剪确认
   const handleCropConfirm = useCallback(async () => {
@@ -223,9 +222,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
       <div className="bg-card rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* 头部 */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            裁剪图片
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">裁剪图片</h3>
           <button
             type="button"
             onClick={onCancel}
@@ -248,10 +245,9 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
               旋转
             </button>
           </div>
-          
+
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {aspectRatio ? `比例 ${aspectRatio}:1` : '自由裁剪'} | 
-            最大尺寸 {maxWidth}x{maxHeight}px
+            {aspectRatio ? `比例 ${aspectRatio}:1` : '自由裁剪'} | 最大尺寸 {maxWidth}x{maxHeight}px
           </div>
         </div>
 

@@ -1,5 +1,5 @@
-import React, { useId, useMemo } from "react";
-import { Tooltip } from "react-tooltip";
+import React, { useId, useMemo } from 'react';
+import { Tooltip } from 'react-tooltip';
 
 /**
  * LevelProgress
@@ -37,21 +37,21 @@ export type LevelProgressProps = {
   /** Optional custom label renderer */
   renderLabel?: (levelCurrent: number, clampedProgress: number) => React.ReactNode;
   /** Tooltip placement, per `react-tooltip` */
-  tooltipPlace?: "top" | "bottom" | "left" | "right";
+  tooltipPlace?: 'top' | 'bottom' | 'left' | 'right';
 };
 
 export default function LevelProgress({
   levelCurrent,
   levelProgress,
-  tint = "var(--profile-color, #ED8EA6)", // default to dynamic profile color
-  className = "",
+  tint = 'var(--profile-color, #ED8EA6)', // default to dynamic profile color
+  className = '',
   barHeight,
   barWidth,
-  circleSize = "64px",
+  circleSize = '64px',
   circleStrokeWidth = 4,
   showLabel = true,
   renderLabel,
-  tooltipPlace = "top",
+  tooltipPlace = 'top',
 }: LevelProgressProps) {
   // Ensure progress stays between 0 and 100
   const clamped = useMemo(
@@ -82,9 +82,7 @@ export default function LevelProgress({
   const ariaLabel = `Level ${levelCurrent}, ${clamped}% complete`;
 
   // Default label content
-  const labelContent = renderLabel ? renderLabel(levelCurrent, clamped) : (
-    <>Lv.{levelCurrent}</>
-  );
+  const labelContent = renderLabel ? renderLabel(levelCurrent, clamped) : <>Lv.{levelCurrent}</>;
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
@@ -118,11 +116,7 @@ export default function LevelProgress({
         data-tooltip-id={tooltipId}
         data-tooltip-content={`${clamped}%`}
       >
-        <svg
-          width={circleSize}
-          height={circleSize}
-          className="transform -rotate-90"
-        >
+        <svg width={circleSize} height={circleSize} className="transform -rotate-90">
           {/* Background circle */}
           <circle
             cx={numericSize / 2}
@@ -152,9 +146,7 @@ export default function LevelProgress({
           <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
             Lv.{levelCurrent}
           </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            {clamped}%
-          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{clamped}%</span>
         </div>
       </div>
 

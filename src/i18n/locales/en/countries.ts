@@ -20,7 +20,7 @@ export const countries = {
   PH: 'Philippines',
   VN: 'Vietnam',
   IN: 'India',
-  
+
   // European countries
   IT: 'Italy',
   ES: 'Spain',
@@ -40,27 +40,26 @@ export const countries = {
   UA: 'Ukraine',
   RO: 'Romania',
   HU: 'Hungary',
-  
+
   // American countries
   MX: 'Mexico',
   AR: 'Argentina',
   CL: 'Chile',
   CO: 'Colombia',
   PE: 'Peru',
-  
+
   // Asian countries
   AE: 'United Arab Emirates',
   SA: 'Saudi Arabia',
   IL: 'Israel',
-  
+
   // Oceania
   NZ: 'New Zealand',
-  
+
   // Africa
   ZA: 'South Africa',
   EG: 'Egypt',
-  
+
   // Others
   MO: 'Macau',
 } as const;
-

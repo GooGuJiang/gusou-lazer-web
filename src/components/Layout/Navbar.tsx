@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiHome, FiTrendingUp, FiMusic, FiBell, FiUsers, FiMenu, FiX, FiSettings, FiServer, FiGlobe, FiCheck, FiLogOut } from 'react-icons/fi';
+import {
+  FiHome,
+  FiTrendingUp,
+  FiMusic,
+  FiBell,
+  FiUsers,
+  FiMenu,
+  FiX,
+  FiSettings,
+  FiServer,
+  FiGlobe,
+  FiCheck,
+  FiLogOut,
+} from 'react-icons/fi';
 import ThemeSelector from '../UI/ThemeSelector';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
@@ -19,14 +32,14 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
   const location = useLocation();
   const IconComponent = item.icon;
   const isActive = location.pathname === item.path;
-  
+
   // 文字显示逻辑：活跃时强制显示，或者悬停时显示
   const shouldShowText = isActive || forceShowText || isHovered;
-  
+
   // 检测是否是路由切换导致的状态变化
-  const isRouteChange = prevIsActiveRef.current !== undefined && 
-                       prevIsActiveRef.current !== isActive;
-  
+  const isRouteChange =
+    prevIsActiveRef.current !== undefined && prevIsActiveRef.current !== isActive;
+
   // 更新前一个活跃状态的引用
   useEffect(() => {
     prevIsActiveRef.current = isActive;
@@ -49,18 +62,18 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
 
   return (
     <motion.div
-      animate={{ 
+      animate={{
         scale: isActive ? 1 : 0.98,
-        opacity: isActive ? 1 : 0.75 
+        opacity: isActive ? 1 : 0.75,
       }}
-      whileHover={{ 
+      whileHover={{
         scale: 1,
         opacity: 1,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
       }}
-      transition={{ 
+      transition={{
         duration: 0.3,
-        ease: "easeOut"
+        ease: 'easeOut',
       }}
       onHoverStart={handleMouseEnter}
       onHoverEnd={handleMouseLeave}
@@ -73,49 +86,49 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
             ? 'text-white bg-osu-pink shadow-lg shadow-osu-pink/25'
             : 'text-gray-600 dark:text-gray-300 hover:text-osu-pink dark:hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50'
         }`}
-        style={{ 
+        style={{
           paddingLeft: '12px',
           paddingRight: shouldShowText ? '16px' : '12px',
           paddingTop: '8px',
-          paddingBottom: '8px'
+          paddingBottom: '8px',
         }}
       >
         {/* 图标 */}
         {IconComponent && (
           <motion.div
-            animate={{ 
-              rotate: isHovered && !isActive ? 10 : 0 
+            animate={{
+              rotate: isHovered && !isActive ? 10 : 0,
             }}
-            transition={{ type: "spring", stiffness: 300 }}
+            transition={{ type: 'spring', stiffness: 300 }}
             className="flex-shrink-0"
           >
             <IconComponent size={16} />
           </motion.div>
         )}
-        
+
         {/* 文字伸缩效果 */}
         <motion.div
           className="overflow-hidden flex items-center"
-          animate={{ 
+          animate={{
             width: shouldShowText ? 'auto' : 0,
             marginLeft: shouldShowText ? 8 : 0,
           }}
-          transition={{ 
+          transition={{
             // 路由切换时不播放动画，只有悬停时才播放动画
             duration: isRouteChange ? 0 : 0.3,
-            ease: [0.4, 0, 0.2, 1]
+            ease: [0.4, 0, 0.2, 1],
           }}
         >
           <motion.span
             className="whitespace-nowrap"
-            animate={{ 
+            animate={{
               opacity: shouldShowText ? 1 : 0,
-              x: shouldShowText ? 0 : -10
+              x: shouldShowText ? 0 : -10,
             }}
-            transition={{ 
+            transition={{
               // 路由切换时不播放动画，只有悬停时才播放动画
               duration: isRouteChange ? 0 : 0.25,
-              delay: shouldShowText && !isActive && isHovered ? 0.1 : 0
+              delay: shouldShowText && !isActive && isHovered ? 0.1 : 0,
             }}
           >
             {item.title}
@@ -124,10 +137,10 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
 
         {/* 活跃状态指示器 */}
         {isActive && (
-          <motion.div 
+          <motion.div
             className="absolute bottom-0 left-2 right-2 h-0.5 bg-white/50 rounded-full"
             layoutId="activeTabIndicator"
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           />
         )}
 
@@ -160,23 +173,26 @@ const SUPPORTED_LANGUAGES: LanguageConfig[] = [
     code: 'zh',
     name: 'Chinese',
     nativeName: '中文',
-    flag: 'cn'
+    flag: 'cn',
   },
   {
     code: 'en',
     name: 'English',
     nativeName: 'English',
-    flag: 'us'
+    flag: 'us',
   },
 ];
 
 // 语言选择菜单部分
-const LanguageMenuSection = memo<{ i18n: typeof import('i18next').default; t: ReturnType<typeof import('react-i18next').useTranslation>['t'] }>(({ i18n, t }) => {
+const LanguageMenuSection = memo<{
+  i18n: typeof import('i18next').default;
+  t: ReturnType<typeof import('react-i18next').useTranslation>['t'];
+}>(({ i18n, t }) => {
   const [showLanguages, setShowLanguages] = useState(false);
-  
-  const currentLanguage = SUPPORTED_LANGUAGES.find(
-    lang => lang.code === (i18n.resolvedLanguage ?? i18n.language)
-  ) || SUPPORTED_LANGUAGES[0];
+
+  const currentLanguage =
+    SUPPORTED_LANGUAGES.find((lang) => lang.code === (i18n.resolvedLanguage ?? i18n.language)) ||
+    SUPPORTED_LANGUAGES[0];
 
   const handleLanguageSelect = (languageCode: string) => {
     void i18n.changeLanguage(languageCode);
@@ -190,7 +206,9 @@ const LanguageMenuSection = memo<{ i18n: typeof import('i18next').default; t: Re
         className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink transition-all duration-200"
       >
         <FiGlobe size={16} className="mr-3" />
-        <span>{t('common.language.label')}: {currentLanguage.nativeName}</span>
+        <span>
+          {t('common.language.label')}: {currentLanguage.nativeName}
+        </span>
       </button>
     );
   }
@@ -239,7 +257,12 @@ LanguageMenuSection.displayName = 'LanguageMenuSection';
 const MobileMenuDropdown = memo<{
   items: NavItem[];
   isAuthenticated: boolean;
-  unreadCount: { total: number; team_requests: number; private_messages: number; friend_requests: number };
+  unreadCount: {
+    total: number;
+    team_requests: number;
+    private_messages: number;
+    friend_requests: number;
+  };
   onLogout: () => void;
 }>(({ items, isAuthenticated, unreadCount, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -254,7 +277,7 @@ const MobileMenuDropdown = memo<{
 
   // 切换下拉菜单
   const handleToggle = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   // 点击外部关闭
@@ -290,10 +313,7 @@ const MobileMenuDropdown = memo<{
         }`}
         aria-label="Toggle menu"
       >
-        <motion.div
-          animate={{ rotate: isOpen ? 90 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
           {isOpen ? <FiX size={18} /> : <FiMenu size={18} />}
         </motion.div>
       </motion.button>
@@ -302,30 +322,31 @@ const MobileMenuDropdown = memo<{
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               scale: 1,
-              y: 0
+              y: 0,
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               scale: 0.95,
-              y: -10
+              y: -10,
             }}
-            transition={{ 
+            transition={{
               duration: 0.15,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="absolute right-0 mt-6 w-48 backdrop-blur-xl rounded-2xl shadow-xl py-2 z-50 overflow-hidden"
             style={{
               background: 'var(--float-panel-bg)',
               border: '1px solid var(--border-color)',
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+              boxShadow:
+                '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             }}
           >
             {/* 菜单项 */}
@@ -334,7 +355,7 @@ const MobileMenuDropdown = memo<{
               {items.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = location.pathname === item.path;
-                
+
                 return (
                   <Link
                     key={item.path}
@@ -351,7 +372,7 @@ const MobileMenuDropdown = memo<{
                   </Link>
                 );
               })}
-              
+
               {/* 设置按钮 - 仅在已登录时显示 */}
               {isAuthenticated && (
                 <>
@@ -373,7 +394,7 @@ const MobileMenuDropdown = memo<{
 
               {/* 功能选项 */}
               <div className="border-t border-gray-200/50 dark:border-gray-700/50 my-1" />
-              
+
               {/* 通知 - 仅已登录时显示 */}
               {isAuthenticated && (
                 <Link
@@ -395,7 +416,9 @@ const MobileMenuDropdown = memo<{
 
               {/* 主题切换 */}
               <div className="px-4 py-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('common.theme.light')}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('common.theme.light')}
+                </span>
                 <ThemeSelector />
               </div>
 
@@ -435,7 +458,12 @@ const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useTranslation();
   // 通过全局通知上下文获取统一的 unreadCount
-  let unreadCount: { total: number; team_requests: number; private_messages: number; friend_requests: number } = { total: 0, team_requests: 0, private_messages: 0, friend_requests: 0 };
+  let unreadCount: {
+    total: number;
+    team_requests: number;
+    private_messages: number;
+    friend_requests: number;
+  } = { total: 0, team_requests: 0, private_messages: 0, friend_requests: 0 };
   let isConnected = false;
   let chatConnected = false;
   try {
@@ -446,25 +474,26 @@ const Navbar: React.FC = () => {
   } catch {
     // 如果 Provider 尚未包裹，不影响其它功能
   }
-  
+
   // 综合连接状态：通知和聊天都需要连接
   const isFullyConnected = isConnected && chatConnected;
   //const location = useLocation();
 
+  const navItems: NavItem[] = React.useMemo(
+    () => [
+      // 核心功能
+      { path: '/', title: t('nav.home'), icon: FiHome },
+      { path: '/rankings', title: t('nav.rankings'), icon: FiTrendingUp, requireAuth: true },
+      { path: '/beatmaps', title: t('nav.beatmaps'), icon: FiMusic, requireAuth: true },
+      { path: '/teams', title: t('nav.teams'), icon: FiUsers, requireAuth: true },
+      { path: '/how-to-join', title: t('nav.join'), icon: FiServer },
+    ],
+    [t]
+  );
 
-  const navItems: NavItem[] = React.useMemo(() => [
-    // 核心功能
-    { path: '/', title: t('nav.home'), icon: FiHome },
-    { path: '/rankings', title: t('nav.rankings'), icon: FiTrendingUp, requireAuth: true },
-    { path: '/beatmaps', title: t('nav.beatmaps'), icon: FiMusic, requireAuth: true },
-    { path: '/teams', title: t('nav.teams'), icon: FiUsers, requireAuth: true },
-    { path: '/how-to-join', title: t('nav.join'), icon: FiServer },
-  ], [t]);
-
-  const filteredNavItems = React.useMemo(() => 
-    navItems.filter(item => 
-      !item.requireAuth || (item.requireAuth && isAuthenticated)
-    ), [navItems, isAuthenticated]
+  const filteredNavItems = React.useMemo(
+    () => navItems.filter((item) => !item.requireAuth || (item.requireAuth && isAuthenticated)),
+    [navItems, isAuthenticated]
   );
 
   const handleLogout = useCallback(() => {
@@ -475,140 +504,139 @@ const Navbar: React.FC = () => {
     <>
       {/* Desktop Navigation - Top */}
       <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 pt-0">
-        <div className="max-w-7xl mx-auto backdrop-blur-xl shadow-lg rounded-b-2xl" style={{
-          background: 'var(--navbar-bg)',
-          border: '1px solid var(--border-color)',
-        }}>
+        <div
+          className="max-w-7xl mx-auto backdrop-blur-xl shadow-lg rounded-b-2xl"
+          style={{
+            background: 'var(--navbar-bg)',
+            border: '1px solid var(--border-color)',
+          }}
+        >
           <div className="px-4 md:px-6 lg:px-8">
             {/* 使用 grid 布局来确保导航项真正居中 */}
             <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16 gap-2 md:gap-3 lg:gap-4">
-            {/* Logo - Left */}
-            <div className="flex items-center justify-start">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 lg:space-x-3 group"
-              >
-                <Link to="/" className="flex items-center space-x-2 lg:space-x-3 transition-transform duration-200">
-                  <div className="relative">
-                    <img
-                      src="/image/logos/logo.svg"
-                      alt={t('common.brandAlt')}
-                      className="w-8 h-8 lg:w-9 lg:h-9 object-contain"
-                    />
-                    <motion.div 
-                      className="absolute inset-0 bg-osu-pink rounded-lg"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 0.2 }}
-                      transition={{ duration: 0.2 }}
-                    />
-                  </div>
-                  <span className="text-lg lg:text-xl font-bold text-osu-pink">
-                    {t('common.brandName')}
-                  </span>
-                </Link>
-              </motion.div>
-            </div>
-
-            {/* Navigation Links - Center (使用 auto 宽度真正居中) */}
-            <div className="flex items-center justify-center">
-              <div className="flex items-center gap-x-0.5 lg:gap-x-1">
-                {filteredNavItems.map((item) => (
-                  <NavItem key={item.path} item={item} />
-                ))}
-              </div>
-            </div>
-
-            {/* Right side actions */}
-            <div className="flex items-center justify-end space-x-1.5 md:space-x-2 lg:space-x-3">
-              {/* Language Selector - only show when not authenticated */}
-              {!isAuthenticated && (
-                <LanguageSelector variant="desktop" />
-              )}
-
-              {/* Notification (if authenticated) */}
-              {isAuthenticated && (
-                <Link to="/messages">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`
-                      relative p-2 md:p-2.5 rounded-xl transition-all duration-200 group
-                      ${isFullyConnected 
-                        ? 'text-gray-600 dark:text-gray-300 hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50' 
-                        : 'text-gray-400 dark:text-gray-500'
-                      }
-                    `}
-                    /* title={isFullyConnected ? '实时通知已连接' : '实时通知未连接'} */
-                  >
-                    <FiBell size={18} />
-                    {unreadCount.total > 0 && (
-                      <motion.div 
-                        className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        {unreadCount.total > 99 ? '99+' : unreadCount.total}
-                      </motion.div>
-                    )}
-                    {/* WebSocket连接状态指示器 */}
-                    {/* <div className={`
-                      absolute bottom-0 right-0 w-2 h-2 rounded-full
-                      ${isFullyConnected ? 'bg-green-500' : 'bg-red-500'}
-                    `} /> */}
-                  </motion.button>
-                </Link>
-              )}
-
-              {/* Theme selector */}
-              <ThemeSelector />
-
-              {/* User actions */}
-              {isAuthenticated && user ? (
-                <UserDropdown user={user} onLogout={handleLogout} />
-              ) : (
-                <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                  <Link
-                    to="/login"
-                    className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
-                  >
-                    {t('nav.login')}
-                  </Link>
-                </motion.div>
+              {/* Logo - Left */}
+              <div className="flex items-center justify-start">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-2 lg:space-x-3 group"
                 >
                   <Link
-                    to="/register"
-                    className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
+                    to="/"
+                    className="flex items-center space-x-2 lg:space-x-3 transition-transform duration-200"
                   >
-                    {t('nav.register')}
+                    <div className="relative">
+                      <img
+                        src="/image/logos/logo.svg"
+                        alt={t('common.brandAlt')}
+                        className="w-8 h-8 lg:w-9 lg:h-9 object-contain"
+                      />
+                      <motion.div
+                        className="absolute inset-0 bg-osu-pink rounded-lg"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 0.2 }}
+                        transition={{ duration: 0.2 }}
+                      />
+                    </div>
+                    <span className="text-lg lg:text-xl font-bold text-osu-pink">
+                      {t('common.brandName')}
+                    </span>
                   </Link>
                 </motion.div>
+              </div>
+
+              {/* Navigation Links - Center (使用 auto 宽度真正居中) */}
+              <div className="flex items-center justify-center">
+                <div className="flex items-center gap-x-0.5 lg:gap-x-1">
+                  {filteredNavItems.map((item) => (
+                    <NavItem key={item.path} item={item} />
+                  ))}
                 </div>
-              )}
+              </div>
+
+              {/* Right side actions */}
+              <div className="flex items-center justify-end space-x-1.5 md:space-x-2 lg:space-x-3">
+                {/* Language Selector - only show when not authenticated */}
+                {!isAuthenticated && <LanguageSelector variant="desktop" />}
+
+                {/* Notification (if authenticated) */}
+                {isAuthenticated && (
+                  <Link to="/messages">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className={`
+                      relative p-2 md:p-2.5 rounded-xl transition-all duration-200 group
+                      ${
+                        isFullyConnected
+                          ? 'text-gray-600 dark:text-gray-300 hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                          : 'text-gray-400 dark:text-gray-500'
+                      }
+                    `}
+                      /* title={isFullyConnected ? '实时通知已连接' : '实时通知未连接'} */
+                    >
+                      <FiBell size={18} />
+                      {unreadCount.total > 0 && (
+                        <motion.div
+                          className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          {unreadCount.total > 99 ? '99+' : unreadCount.total}
+                        </motion.div>
+                      )}
+                      {/* WebSocket连接状态指示器 */}
+                      {/* <div className={`
+                      absolute bottom-0 right-0 w-2 h-2 rounded-full
+                      ${isFullyConnected ? 'bg-green-500' : 'bg-red-500'}
+                    `} /> */}
+                    </motion.button>
+                  </Link>
+                )}
+
+                {/* Theme selector */}
+                <ThemeSelector />
+
+                {/* User actions */}
+                {isAuthenticated && user ? (
+                  <UserDropdown user={user} onLogout={handleLogout} />
+                ) : (
+                  <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link
+                        to="/login"
+                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
+                      >
+                        {t('nav.login')}
+                      </Link>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link
+                        to="/register"
+                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
+                      >
+                        {t('nav.register')}
+                      </Link>
+                    </motion.div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </nav>
 
       {/* Mobile Header - Top */}
-      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-sm" style={{
-        background: 'var(--navbar-bg)',
-        borderColor: 'var(--border-color)',
-      }}>
+      <nav
+        className="md:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-sm"
+        style={{
+          background: 'var(--navbar-bg)',
+          borderColor: 'var(--border-color)',
+        }}
+      >
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link to="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <img
@@ -616,16 +644,14 @@ const Navbar: React.FC = () => {
                   alt={t('common.brandAlt')}
                   className="w-8 h-8 object-contain"
                 />
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 bg-osu-pink rounded-lg"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 0.2 }}
                   transition={{ duration: 0.2 }}
                 />
               </div>
-              <span className="text-lg font-bold text-osu-pink">
-                {t('common.brandName')}
-              </span>
+              <span className="text-lg font-bold text-osu-pink">{t('common.brandName')}</span>
             </Link>
           </motion.div>
 
@@ -635,11 +661,11 @@ const Navbar: React.FC = () => {
             {isAuthenticated && user ? (
               <div className="flex items-center space-x-2">
                 {/* User Avatar */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link to={`/users/${user.id}`} className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    to={`/users/${user.id}`}
+                    className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
+                  >
                     <Avatar
                       userId={user.id}
                       username={user.username}
@@ -650,10 +676,7 @@ const Navbar: React.FC = () => {
                 </motion.div>
               </div>
             ) : (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/login"
                   className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
@@ -664,7 +687,7 @@ const Navbar: React.FC = () => {
             )}
 
             {/* Mobile menu dropdown */}
-            <MobileMenuDropdown 
+            <MobileMenuDropdown
               items={filteredNavItems}
               isAuthenticated={isAuthenticated}
               unreadCount={unreadCount}
@@ -673,7 +696,6 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </nav>
-
     </>
   );
 };

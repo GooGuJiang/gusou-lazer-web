@@ -1,4 +1,12 @@
-export type GameMode = 'osu' | 'taiko' | 'fruits' | 'mania' | 'osurx' | 'osuap' | 'taikorx' | 'fruitsrx';
+export type GameMode =
+  | 'osu'
+  | 'taiko'
+  | 'fruits'
+  | 'mania'
+  | 'osurx'
+  | 'osuap'
+  | 'taikorx'
+  | 'fruitsrx';
 
 export type MainGameMode = 'osu' | 'taiko' | 'fruits' | 'mania';
 
@@ -23,7 +31,9 @@ export const GAME_MODE_NAMES: Record<GameMode, string> = {
 // 获取主题色的函数 - 直接从 CSS 变量读取
 export const getProfileColor = () => {
   if (typeof window !== 'undefined') {
-    const color = getComputedStyle(document.documentElement).getPropertyValue('--profile-color').trim();
+    const color = getComputedStyle(document.documentElement)
+      .getPropertyValue('--profile-color')
+      .trim();
     return color || '#ED8EA6';
   }
   return '#ED8EA6';

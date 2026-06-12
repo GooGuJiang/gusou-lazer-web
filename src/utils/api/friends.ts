@@ -43,9 +43,16 @@ export const friendsAPI = {
           friendsAPI.getBlocks(),
         ]);
 
-        const isFriend = friends.some((friend: { target_id: number; mutual?: boolean }) => friend.target_id === targetUserId);
-        const isBlocked = blocks.some((block: { target_id: number }) => block.target_id === targetUserId);
-        const isMutual = friends.some((friend: { target_id: number; mutual?: boolean }) => friend.target_id === targetUserId && friend.mutual === true);
+        const isFriend = friends.some(
+          (friend: { target_id: number; mutual?: boolean }) => friend.target_id === targetUserId
+        );
+        const isBlocked = blocks.some(
+          (block: { target_id: number }) => block.target_id === targetUserId
+        );
+        const isMutual = friends.some(
+          (friend: { target_id: number; mutual?: boolean }) =>
+            friend.target_id === targetUserId && friend.mutual === true
+        );
 
         let followsMe = false;
 

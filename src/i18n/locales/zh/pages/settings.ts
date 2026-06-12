@@ -4,7 +4,7 @@ export const settingsPage = {
     description: '管理您的账户信息和偏好设置',
     errors: {
       loadFailed: '无法加载设置',
-      tryRefresh: '请尝试刷新页面'
+      tryRefresh: '请尝试刷新页面',
     },
     username: {
       title: '用户名设置',
@@ -21,20 +21,20 @@ export const settingsPage = {
         sameAsOld: '新用户名与当前用户名相同',
         taken: '用户名已被占用，请选择其他用户名',
         userNotFound: '找不到指定用户',
-        failed: '修改用户名失败，请稍后重试'
-      }
+        failed: '修改用户名失败，请稍后重试',
+      },
     },
     avatar: {
       title: '头像设置',
       current: '当前头像',
       change: '修改头像',
       hint: '支持 PNG、JPEG、GIF 格式，建议尺寸 256x256 像素，最大 5MB',
-      success: '头像修改成功！'
+      success: '头像修改成功！',
     },
     cover: {
       title: '头图设置',
       label: '个人资料头图',
-      hint: '建议尺寸：2000x500 像素（官方推荐 4:1 比例），支持 PNG、JPEG、GIF 格式，最大 10MB'
+      hint: '建议尺寸：2000x500 像素（官方推荐 4:1 比例），支持 PNG、JPEG、GIF 格式，最大 10MB',
     },
     password: {
       title: '密码设置',
@@ -92,14 +92,14 @@ export const settingsPage = {
         totpCodeInvalid: '验证码格式无效。请输入6位数字验证码或10位备份码。',
         invalidTotpCode: 'TOTP 验证码无效或错误，请重试。',
         incorrectPassword: '当前密码错误，请重试。',
-      }
+      },
     },
     account: {
       title: '账户信息',
       userId: '用户 ID',
       joinDate: '注册时间',
       country: '国家/地区',
-      lastVisit: '最后访问'
+      lastVisit: '最后访问',
     },
     totp: {
       title: '双因素验证',
@@ -110,9 +110,10 @@ export const settingsPage = {
       disable: '禁用',
       checking: '检查状态中...',
       enabledSince: '启用时间：{{date}}',
-      description: '双因素验证为您的账户提供额外的安全保护。启用后，登录时需要输入身份验证器应用中的验证码。',
+      description:
+        '双因素验证为您的账户提供额外的安全保护。启用后，登录时需要输入身份验证器应用中的验证码。',
       loadError: '无法加载TOTP状态',
-      
+
       // 设置流程
       setupTitle: '设置双因素验证',
       setupDescription: '双因素验证将为您的账户增加一层额外的安全保护。',
@@ -121,13 +122,13 @@ export const settingsPage = {
       setupStep3: '输入应用中显示的6位验证码',
       startSetup: '开始设置',
       starting: '准备中...',
-      
+
       // 二维码和验证
       manualEntry: '手动输入密钥',
       enterCode: '输入验证码',
       codeHint: '输入身份验证器应用显示的6位数字',
       codeExpireHint: 'TOTP代码每30秒过期一次，请确保使用最新的代码。',
-      
+
       // 备份码
       setupComplete: 'TOTP 设置完成！',
       backupCodesDescription: '请保存这些备份码，它们可以在您无法访问身份验证器应用时用于登录。',
@@ -135,7 +136,7 @@ export const settingsPage = {
       backupCodesDownloaded: '备份码已下载',
       backupCodesWarning: '请将备份码保存在安全的地方，每个备份码只能使用一次。',
       finishSetup: '完成设置',
-      
+
       // 禁用流程
       disableTitle: '禁用双因素验证',
       disableWarning: '禁用双因素验证会降低您账户的安全性。如果您确定要继续，请输入当前验证码。',
@@ -143,7 +144,7 @@ export const settingsPage = {
       disableCodeHint: '输入身份验证器应用中的当前6位验证码',
       disableConfirm: '确认禁用',
       disabling: '禁用中...',
-      
+
       // 成功和错误消息
       setupSuccess: 'TOTP 双因素验证设置成功！',
       disableSuccess: 'TOTP 双因素验证已禁用',
@@ -152,8 +153,8 @@ export const settingsPage = {
         invalidCode: '验证码错误',
         invalidCodeLength: '验证码必须是{{length}}位数字',
         verificationFailed: '验证失败，请重试',
-        disableFailed: '禁用TOTP失败，请重试'
-      }
+        disableFailed: '禁用TOTP失败，请重试',
+      },
     },
     device: {
       title: '设备管理',
@@ -180,7 +181,7 @@ export const settingsPage = {
         revokeError: '注销会话失败，请重试',
         revoking: '注销中...',
         localhost: '本地连接',
-        totalSessions: '共 {{count}} 个会话'
+        totalSessions: '共 {{count}} 个会话',
       },
       trustedDevices: {
         title: '受信任设备',
@@ -203,20 +204,20 @@ export const settingsPage = {
         clientTypes: {
           web: '网页浏览器',
           mobile: '移动应用',
-          desktop: '桌面应用'
-        }
+          desktop: '桌面应用',
+        },
       },
       summary: {
         title: '设备统计',
         loading: '加载统计中...',
-        loadError: '加载统计失败'
+        loadError: '加载统计失败',
       },
       deviceTypes: {
         desktop: '桌面设备',
         mobile: '移动设备',
         tablet: '平板设备',
         unknown: '未知设备',
-        app: '桌面应用'
+        app: '桌面应用',
       },
       browsers: {
         chrome: 'Chrome',
@@ -224,8 +225,8 @@ export const settingsPage = {
         safari: 'Safari',
         edge: 'Edge',
         opera: 'Opera',
-        unknown: '未知浏览器'
-      }
+        unknown: '未知浏览器',
+      },
     },
     oauth: {
       title: 'OAuth 应用',
@@ -235,7 +236,7 @@ export const settingsPage = {
       createApp: '创建 OAuth 应用',
       editApp: '编辑 OAuth 应用',
       noApps: '您还没有创建任何 OAuth 应用',
-      
+
       // 应用信息
       appName: '应用名称',
       appNamePlaceholder: '输入应用名称',
@@ -245,7 +246,7 @@ export const settingsPage = {
       clientSecret: '客户端密钥',
       redirectUris: '重定向 URI',
       addRedirectUri: '添加重定向 URI',
-      
+
       // 操作
       edit: '编辑',
       delete: '删除',
@@ -257,10 +258,10 @@ export const settingsPage = {
       update: '更新',
       saving: '保存中...',
       confirm: '我已保存',
-      
+
       // 状态
       created: '创建于',
-      
+
       // 确认对话框
       deleteTitle: '删除应用',
       confirmDelete: '确定要删除应用"{{name}}"吗？此操作无法撤销，所有关联的令牌都将失效。',
@@ -268,18 +269,18 @@ export const settingsPage = {
       refreshTitle: '刷新密钥',
       confirmRefresh: '确定要刷新应用"{{name}}"的密钥吗？这将使所有现有令牌失效。',
       confirmRefreshButton: '确认刷新',
-      
+
       // 密钥显示
       secretTitle: '重要：保存您的客户端密钥',
       secretWarning: '这是您唯一一次可以看到客户端密钥。请立即将其复制并保存在安全的地方。',
-      
+
       // 成功消息
       createSuccess: 'OAuth 应用创建成功',
       updateSuccess: 'OAuth 应用更新成功',
       deleteSuccess: 'OAuth 应用删除成功',
       refreshSuccess: '客户端密钥已刷新',
       copied: '已复制到剪贴板',
-      
+
       // 错误消息
       errors: {
         loadFailed: '加载 OAuth 应用失败',
@@ -288,8 +289,8 @@ export const settingsPage = {
         deleteFailed: '删除应用失败',
         refreshFailed: '刷新密钥失败',
         copyFailed: '复制失败',
-        noRedirectUri: '至少需要一个重定向 URI'
-      }
+        noRedirectUri: '至少需要一个重定向 URI',
+      },
     },
     preferences: {
       title: '用户偏好',
@@ -299,23 +300,23 @@ export const settingsPage = {
       saving: '保存中...',
       saveSuccess: '偏好设置已保存',
       saveError: '保存偏好设置失败',
-      
+
       // 主题和语言
       theme: {
         title: '主题',
         description: '选择界面主题',
         light: '浅色',
         dark: '深色',
-        auto: '跟随系统'
+        auto: '跟随系统',
       },
       language: {
         title: '语言',
         description: '选择界面语言',
         zh: '中文',
         en: 'English',
-        ja: '日本語'
+        ja: '日本語',
       },
-      
+
       // 音频设置
       audio: {
         title: '音频设置',
@@ -324,9 +325,9 @@ export const settingsPage = {
         muted: '静音',
         mutedDescription: '默认静音音频',
         volume: '音量',
-        volumeDescription: '默认音量大小'
+        volumeDescription: '默认音量大小',
       },
-      
+
       // 谱面设置
       beatmapset: {
         title: '谱面设置',
@@ -340,9 +341,9 @@ export const settingsPage = {
         downloadNoVideo: '无视频',
         downloadDirect: '直接下载',
         showNsfw: '显示NSFW内容',
-        showNsfwDescription: '显示包含敏感内容的谱面'
+        showNsfwDescription: '显示包含敏感内容的谱面',
       },
-      
+
       // 个人资料设置
       profile: {
         title: '个人资料设置',
@@ -353,9 +354,9 @@ export const settingsPage = {
         coverExpanded: '展开头图',
         coverExpandedDescription: '默认展开个人资料头图',
         colour: '个人资料颜色',
-        colourDescription: '自定义个人资料主题色'
+        colourDescription: '自定义个人资料主题色',
       },
-      
+
       // 计分和排序
       scoring: {
         title: '计分和显示',
@@ -377,14 +378,14 @@ export const settingsPage = {
         userListViewDescription: '默认用户列表视图模式',
         viewCard: '卡片',
         viewList: '列表',
-        viewBrick: '砖块'
+        viewBrick: '砖块',
       },
-      
+
       // 游戏模式和个人信息
       gameMode: {
         title: '游戏模式',
         playmode: '默认游戏模式',
-        playmodeDescription: '选择您偏好的默认游戏模式'
+        playmodeDescription: '选择您偏好的默认游戏模式',
       },
       personalInfo: {
         title: '个人信息',
@@ -399,9 +400,9 @@ export const settingsPage = {
         website: '个人网站',
         websitePlaceholder: '输入您的个人网站链接',
         discord: 'Discord',
-        discordPlaceholder: '输入您的 Discord 用户名'
+        discordPlaceholder: '输入您的 Discord 用户名',
       },
-      
+
       defaultMode: {
         title: '默认游戏模式',
         description: '选择您偏好的默认游戏模式',
@@ -415,14 +416,14 @@ export const settingsPage = {
         modes: {
           osu: 'osu!',
           osurx: 'osu! (Relax)',
-          osuap: 'osu! (Auto Pilot)', 
+          osuap: 'osu! (Auto Pilot)',
           taiko: 'osu!taiko',
           taikorx: 'osu!taiko (Relax)',
           fruits: 'osu!catch',
           fruitsrx: 'osu!catch (Relax)',
-          mania: 'osu!mania'
-        }
-      }
-    }
+          mania: 'osu!mania',
+        },
+      },
+    },
   },
 } as const;

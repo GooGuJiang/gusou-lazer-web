@@ -11,7 +11,12 @@ interface CoreStatsCardProps {
   delay?: number;
 }
 
-const CoreStatsCard: React.FC<CoreStatsCardProps> = ({ statistics, isUpdatingMode, selectedMode, delay = 0 }) => (
+const CoreStatsCard: React.FC<CoreStatsCardProps> = ({
+  statistics,
+  isUpdatingMode,
+  selectedMode,
+  delay = 0,
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -25,8 +30,10 @@ const CoreStatsCard: React.FC<CoreStatsCardProps> = ({ statistics, isUpdatingMod
             <TextSkeleton>
               {statistics?.global_rank ? `#${statistics.global_rank.toLocaleString()}` : '#999,999'}
             </TextSkeleton>
+          ) : statistics.global_rank ? (
+            `#${statistics.global_rank.toLocaleString()}`
           ) : (
-            statistics.global_rank ? `#${statistics.global_rank.toLocaleString()}` : 'N/A'
+            'N/A'
           )}
         </div>
         <div className="text-sm text-gray-600 dark:text-gray-400">全球排名</div>
@@ -35,10 +42,14 @@ const CoreStatsCard: React.FC<CoreStatsCardProps> = ({ statistics, isUpdatingMod
         <div className="text-lg font-bold text-gray-900 dark:text白">
           {isUpdatingMode || !statistics ? (
             <TextSkeleton>
-              {statistics?.country_rank ? `#${statistics.country_rank.toLocaleString()}` : '#999,999'}
+              {statistics?.country_rank
+                ? `#${statistics.country_rank.toLocaleString()}`
+                : '#999,999'}
             </TextSkeleton>
+          ) : statistics.country_rank ? (
+            `#${statistics.country_rank.toLocaleString()}`
           ) : (
-            statistics.country_rank ? `#${statistics.country_rank.toLocaleString()}` : 'N/A'
+            'N/A'
           )}
         </div>
         <div className="text-sm text-gray-600 dark:text-gray-400">国家排名</div>
@@ -72,4 +83,3 @@ const CoreStatsCard: React.FC<CoreStatsCardProps> = ({ statistics, isUpdatingMod
 );
 
 export default CoreStatsCard;
-

@@ -38,7 +38,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
         originalIdx,
         rank: rank === 0 ? null : rank,
       }))
-      .filter(d => d.rank !== null) as Array<{ originalIdx: number; rank: number }>;
+      .filter((d) => d.rank !== null) as Array<{ originalIdx: number; rank: number }>;
 
     return validData.map((item, newIdx) => ({
       idx: newIdx,
@@ -51,7 +51,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
   // === 关键修复：为 Y 轴增加上下缓冲，避免极值处被裁半 ===
   const yDomain = React.useMemo<[number | 'auto', number | 'auto']>(() => {
     if (chartData.length === 0) return ['auto', 'auto'];
-    const values = chartData.map(d => d.rank as number);
+    const values = chartData.map((d) => d.rank as number);
     const dataMin = Math.min(...values);
     const dataMax = Math.max(...values);
     // 按范围的 5% 取整做缓冲，至少 1
@@ -104,8 +104,8 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
                 labelFormatter={(label) => {
                   const idx = Number(label);
                   const daysAgo = total - 1 - idx; // 最右是最新
-                  return daysAgo === 0 
-                    ? t('profile.rankHistory.justNow') 
+                  return daysAgo === 0
+                    ? t('profile.rankHistory.justNow')
                     : t('profile.rankHistory.daysAgo', { count: daysAgo });
                 }}
                 formatter={(value) => [`#${value}`, t('profile.rankHistory.globalRank')]}
@@ -126,7 +126,10 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
         ) : (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <FiBarChart2 className="mx-auto text-4xl mb-2" style={{ color: 'var(--text-muted)' }} />
+              <FiBarChart2
+                className="mx-auto text-4xl mb-2"
+                style={{ color: 'var(--text-muted)' }}
+              />
               <p style={{ color: 'var(--text-secondary)' }}>{t('profile.rankHistory.noData')}</p>
             </div>
           </div>

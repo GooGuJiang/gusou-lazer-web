@@ -13,11 +13,7 @@ interface RankStyle {
   shadow?: string;
 }
 
-const RankBadge: React.FC<RankBadgeProps> = ({ 
-  rank, 
-  size = 'md', 
-  className = '' 
-}) => {
+const RankBadge: React.FC<RankBadgeProps> = ({ rank, size = 'md', className = '' }) => {
   const sizeClasses = {
     sm: 'w-12 h-6 text-xs',
     md: 'w-14 h-7 text-sm',
@@ -47,7 +43,7 @@ const RankBadge: React.FC<RankBadgeProps> = ({
           };
       }
     }
-    
+
     return {
       bg: 'bg-gray-100 dark:bg-gray-700/80',
       text: 'text-gray-700 dark:text-gray-300',
@@ -67,7 +63,9 @@ const RankBadge: React.FC<RankBadgeProps> = ({
         ${style.shadow || ''}
         transition-all duration-200 hover:scale-105
         ${className}
-      `.replace(/\s+/g, ' ').trim()}
+      `
+        .replace(/\s+/g, ' ')
+        .trim()}
     >
       #{rank}
     </div>

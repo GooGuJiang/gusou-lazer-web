@@ -4,7 +4,13 @@ import { API_BASE_URL } from './client';
 import { getDeviceUUID } from '../deviceUUID';
 
 export const authAPI = {
-  login: async (username: string, password: string, clientId: number, clientSecret: string, turnstileToken?: string) => {
+  login: async (
+    username: string,
+    password: string,
+    clientId: number,
+    clientSecret: string,
+    turnstileToken?: string
+  ) => {
     console.log('Login attempt with:', { username, clientId });
 
     const formData = new FormData();
@@ -109,7 +115,12 @@ export const authAPI = {
   },
 
   // Password reset - Reset password with code
-  resetPassword: async (email: string, resetCode: string, newPassword: string, turnstileToken?: string) => {
+  resetPassword: async (
+    email: string,
+    resetCode: string,
+    newPassword: string,
+    turnstileToken?: string
+  ) => {
     console.log('Password reset with code for:', email);
 
     const formData = new URLSearchParams();

@@ -40,13 +40,8 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({
   return (
     <>
       <div className={`relative group ${className}`}>
-        <Avatar
-          userId={userId}
-          username={username}
-          avatarUrl={currentAvatarUrl}
-          size={size}
-        />
-        
+        <Avatar userId={userId} username={username} avatarUrl={currentAvatarUrl} size={size} />
+
         {editable && (
           <button
             className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"

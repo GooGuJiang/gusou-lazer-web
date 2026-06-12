@@ -46,23 +46,22 @@ const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
     // SS 系列
     XH: '/image/grades/SS-Silver.svg', // 银 SS（SSH）
-    X:  '/image/grades/SS.svg',        // 金 SS（SS）
+    X: '/image/grades/SS.svg', // 金 SS（SS）
 
     // S 系列
-    SH: '/image/grades/S-Silver.svg',  // 银 S
-    S:  '/image/grades/S.svg',         // 金 S
+    SH: '/image/grades/S-Silver.svg', // 银 S
+    S: '/image/grades/S.svg', // 金 S
 
     // 其他等级
-    A:  '/image/grades/A.svg',
-    B:  '/image/grades/B.svg',
-    C:  '/image/grades/C.svg',
-    D:  '/image/grades/D.svg',
-    F:  '/image/grades/F.svg', 
+    A: '/image/grades/A.svg',
+    B: '/image/grades/B.svg',
+    C: '/image/grades/C.svg',
+    D: '/image/grades/D.svg',
+    F: '/image/grades/F.svg',
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
 };
-
 
 // MOD 图标组件
 const ModIcon: React.FC<{ mod: { acronym: string } }> = ({ mod }) => {
@@ -87,7 +86,13 @@ const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) =
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
-const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string; showPP?: boolean; className?: string }> = ({ score, t, profileColor, showPP = true, className = '' }) => {
+const ScoreCard: React.FC<{
+  score: BestScore;
+  t: TFunction;
+  profileColor: string;
+  showPP?: boolean;
+  className?: string;
+}> = ({ score, t, profileColor, showPP = true, className = '' }) => {
   // 必取字段处理
   const rank = score.rank; // 等级徽章（S/A/B/C/D/F）
   const title = score.beatmapset?.title_unicode || score.beatmapset?.title || 'Unknown Title';
@@ -114,24 +119,22 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
   const themeRgb = hexToRgb(profileColor);
 
   return (
-    <LazyBackgroundImage 
+    <LazyBackgroundImage
       src={coverImage}
       className={`relative overflow-hidden rounded-lg border border-gray-200/70 dark:border-gray-600/40 bg-card ${className}`}
     >
       {/* 渐变遮罩层确保文字可读性 - 使用主题颜色 */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-r" 
+      <div
+        className="absolute inset-0 bg-gradient-to-r"
         style={{
-          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`
+          background: `linear-gradient(to right, rgba(${themeRgb}, 0.15) 0%, rgba(${themeRgb}, 0.08) 50%, rgba(${themeRgb}, 0.03) 100%)`,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
-      
+
       {/* 失败标记 */}
-      {!passed && (
-        <div className="absolute inset-0 bg-red-500/10 dark:bg-red-500/20" />
-      )}
-      
+      {!passed && <div className="absolute inset-0 bg-red-500/10 dark:bg-red-500/20" />}
+
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
@@ -139,8 +142,8 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
           <div className="flex items-center h-12 pl-5 pr-24">
             {/* 等级徽章 */}
             <div className="flex-shrink-0 mr-3">
-              <img 
-                src={getRankIcon(rank)} 
+              <img
+                src={getRankIcon(rank)}
                 alt={rank}
                 className={`w-14 h-10 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
@@ -170,15 +173,13 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
                     </span>
                   )}
                 </div>
-                
+
                 {/* 难度名和时间 */}
                 <div className="flex items-center gap-3 text-xs">
                   <span className="text-yellow-600 dark:text-yellow-400 font-medium">
                     {version}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400">
-                    {endedAt}
-                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
                 </div>
               </div>
             </div>
@@ -187,7 +188,9 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
             <div className="flex-shrink-0 flex items-center gap-2 mr-6">
               {/* MOD图标 + 准确率 */}
               <ModsDisplay mods={mods} />
-              <div className={`text-sm font-bold ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}>
+              <div
+                className={`text-sm font-bold ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}
+              >
                 {accuracy}%
               </div>
             </div>
@@ -197,7 +200,9 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
           {showPP && originalPp > 0 && (
             <div className="absolute right-0 top-0 h-full w-20 flex items-center justify-center">
               {/* PP 值 */}
-              <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}>
+              <div
+                className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}
+              >
                 {originalPp} PP
               </div>
             </div>
@@ -209,8 +214,8 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
           <div className="flex items-start gap-3">
             {/* 等级徽章 */}
             <div className="flex-shrink-0">
-              <img 
-                src={getRankIcon(rank)} 
+              <img
+                src={getRankIcon(rank)}
                 alt={rank}
                 className={`w-12 h-8 object-contain ${!passed ? 'opacity-50' : ''}`}
               />
@@ -230,36 +235,34 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
                 <span className="text-gray-600 dark:text-gray-400 text-xs flex-shrink-0">
                   {t('profile.bestScores.by')}
                 </span>
-                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">
-                  {artist}
-                </span>
+                <span className="text-gray-600 dark:text-gray-400 text-xs truncate">{artist}</span>
                 {!passed && (
                   <span className="text-red-500 dark:text-red-400 text-xs font-semibold ml-2">
                     {t('profile.recentScores.failed')}
                   </span>
                 )}
               </div>
-              
+
               {/* 第二行：难度名和时间 */}
               <div className="flex items-center gap-3 text-xs mb-2">
-                <span className="text-yellow-600 dark:text-yellow-400 font-medium">
-                  {version}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  {endedAt}
-                </span>
+                <span className="text-yellow-600 dark:text-yellow-400 font-medium">{version}</span>
+                <span className="text-gray-500 dark:text-gray-400">{endedAt}</span>
               </div>
 
               {/* 第三行：MOD、准确率和PP */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ModsDisplay mods={mods} />
-                  <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}>
+                  <div
+                    className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}
+                  >
                     {accuracy}%
                   </div>
                 </div>
                 {showPP && originalPp > 0 && (
-                  <div className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}>
+                  <div
+                    className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-400 dark:text-gray-500' : 'text-profile-color'}`}
+                  >
                     {originalPp} PP
                   </div>
                 )}
@@ -272,7 +275,11 @@ const ScoreCard: React.FC<{ score: BestScore; t: TFunction; profileColor: string
   );
 };
 
-const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMode, className = '' }) => {
+const UserRecentScores: React.FC<UserRecentScoresProps> = ({
+  userId,
+  selectedMode,
+  className = '',
+}) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
   const [scores, setScores] = useState<BestScore[]>([]);
@@ -285,7 +292,7 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
   const loadScores = async (reset = false) => {
     try {
       const currentOffset = reset ? 0 : offset;
-      
+
       if (reset) {
         setLoading(true);
         setError(null);
@@ -295,13 +302,13 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
       }
 
       const response = await userAPI.getRecentScores(userId, selectedMode, 6, currentOffset, false);
-      
+
       // 处理 API 响应
       const newScores = Array.isArray(response) ? response : [];
-      
+
       // 判断是否还有更多数据
       let hasMoreData: boolean;
-      
+
       if (reset) {
         hasMoreData = newScores.length === 6;
         setScores(newScores);
@@ -309,8 +316,8 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
       } else {
         const currentTotal = scores.length + newScores.length;
         hasMoreData = newScores.length === 6 && currentTotal < 100; // 最近成绩最多显示100条
-        setScores(prev => [...prev, ...newScores]);
-        setOffset(prev => prev + newScores.length);
+        setScores((prev) => [...prev, ...newScores]);
+        setOffset((prev) => prev + newScores.length);
       }
 
       setHasMore(hasMoreData);
@@ -367,9 +374,7 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
             </h3>
           </div>
         </div>
-        <div className="text-center text-red-500 dark:text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="text-center text-red-500 dark:text-red-400 text-sm">{error}</div>
       </div>
     );
   }
@@ -387,7 +392,7 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({ userId, selectedMod
           </span>
         </div>
       </div>
-      
+
       {scores.length === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
           {t('profile.recentScores.noScores')}

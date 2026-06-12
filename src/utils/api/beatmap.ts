@@ -71,7 +71,9 @@ export const beatmapAPI = {
     return null;
   },
 
-  parseUrlBeatmapInfo: (url: string): { beatmapsetId?: number; beatmapId?: number; mode?: string } => {
+  parseUrlBeatmapInfo: (
+    url: string
+  ): { beatmapsetId?: number; beatmapId?: number; mode?: string } => {
     const beatmapsetMatch = url.match(/\/beatmapsets\/(\d+)(?:#([^/]+)\/(\d+))?/);
     const beatmapMatch = url.match(/\/beatmaps\/(\d+)/);
 
@@ -92,7 +94,9 @@ export const beatmapAPI = {
     return {};
   },
 
-  getBeatmapFromUrl: async (url: string): Promise<{ beatmapset: Beatmapset; beatmap?: Beatmap }> => {
+  getBeatmapFromUrl: async (
+    url: string
+  ): Promise<{ beatmapset: Beatmapset; beatmap?: Beatmap }> => {
     const urlInfo = beatmapAPI.parseUrlBeatmapInfo(url);
 
     if (urlInfo.beatmapsetId) {

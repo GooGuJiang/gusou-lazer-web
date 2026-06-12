@@ -22,12 +22,12 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   options,
   disabled = false,
   placeholder = 'Select...',
-  className = ''
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  const selectedOption = options.find((opt) => opt.value === value);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,13 +57,14 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-osu-pink/50'}
                    ${isOpen ? 'border-osu-pink ring-2 ring-osu-pink/20' : 'border-card'}`}
       >
-        <span className={selectedOption ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
+        <span
+          className={
+            selectedOption ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
+          }
+        >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <FiChevronDown className="w-5 h-5 text-gray-400" />
         </motion.div>
       </button>
@@ -90,15 +91,14 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.03 }}
                     className={`w-full px-4 py-2.5 text-left flex items-center justify-between transition-colors duration-150
-                               ${isSelected 
-                                 ? 'bg-osu-pink text-white' 
-                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                               ${
+                                 isSelected
+                                   ? 'bg-osu-pink text-white'
+                                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                }`}
                   >
                     <span className="font-medium">{option.label}</span>
-                    {isSelected && (
-                      <FiCheck className="w-4 h-4" />
-                    )}
+                    {isSelected && <FiCheck className="w-4 h-4" />}
                   </motion.button>
                 );
               })}
@@ -111,4 +111,3 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
 };
 
 export default CustomSelect;
-

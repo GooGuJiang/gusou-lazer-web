@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -28,19 +28,25 @@ const PlayerRankCard: React.FC<Props> = ({ stats, playTime, user_achievements, g
       {/* 左侧：奖章 / PP / 游玩时间 */}
       <div className="flex gap-3 md:gap-4 items-center ml-0 md:ml-[-10px] justify-center md:justify-start">
         <div className="text-center min-w-0 flex-shrink-0">
-          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">{t('profile.stats.medals')}</div>
+          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">
+            {t('profile.stats.medals')}
+          </div>
           <div className="text-gray-800 dark:text-gray-100 font-bold text-base">
             {achievementCount}
           </div>
         </div>
         <div className="text-center min-w-0 flex-shrink-0">
-          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">{t('profile.stats.pp')}</div>
+          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">
+            {t('profile.stats.pp')}
+          </div>
           <div className="text-gray-800 dark:text-gray-100 font-bold text-base">
             {Math.round(stats?.pp ?? 0)}
           </div>
         </div>
         <div className="text-center min-w-0 flex-shrink-0">
-          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">{t('profile.stats.playTime')}</div>
+          <div className="text-gray-500 dark:text-gray-400 text-xs mb-1 whitespace-nowrap">
+            {t('profile.stats.playTime')}
+          </div>
           <div className="text-gray-800 dark:text-gray-100 font-bold text-base">{playTime}</div>
         </div>
       </div>

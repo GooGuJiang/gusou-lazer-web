@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiCheck, FiX, FiImage, FiCamera, FiShield, FiMonitor, FiLock, FiSettings, FiKey } from 'react-icons/fi';
+import {
+  FiUser,
+  FiCheck,
+  FiX,
+  FiImage,
+  FiCamera,
+  FiShield,
+  FiMonitor,
+  FiLock,
+  FiSettings,
+  FiKey,
+} from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -24,7 +35,7 @@ const SettingsPage: React.FC = () => {
   const [newUsername, setNewUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
-  
+
   // TOTP 相关状态
   const [totpStatus, setTotpStatus] = useState<TOTPStatus | null>(null);
   const [isLoadingTotpStatus, setIsLoadingTotpStatus] = useState(true);
@@ -83,9 +94,7 @@ const SettingsPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
           {t('settings.errors.loadFailed')}
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          {t('settings.errors.tryRefresh')}
-        </p>
+        <p className="text-gray-600 dark:text-gray-400">{t('settings.errors.tryRefresh')}</p>
       </div>
     );
   }
@@ -114,11 +123,11 @@ const SettingsPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       await userAPI.rename(newUsername.trim());
-      
+
       toast.success(t('settings.username.success'));
       setIsEditing(false);
       setNewUsername('');
-      
+
       // 延迟刷新用户信息，避免立即刷新导致头像缓存问题
       setTimeout(async () => {
         await refreshUser();
@@ -142,7 +151,7 @@ const SettingsPage: React.FC = () => {
     console.log('头像更新成功:', newAvatarUrl);
     toast.success(t('settings.avatar.success'));
     setShowAvatarUpload(false);
-    
+
     // 延迟刷新用户信息
     setTimeout(async () => {
       await refreshUser();
@@ -160,9 +169,7 @@ const SettingsPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('settings.title')}
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          {t('settings.description')}
-        </p>
+        <p className="text-gray-600 dark:text-gray-400">{t('settings.description')}</p>
       </motion.div>
 
       {/* 用户名设置 */}
@@ -189,10 +196,7 @@ const SettingsPage: React.FC = () => {
                 <span className="text-lg font-medium text-gray-900 dark:text-white">
                   {user.username}
                 </span>
-                <button
-                  onClick={handleStartEdit}
-                  className="btn-secondary !px-4 !py-2 text-sm"
-                >
+                <button onClick={handleStartEdit} className="btn-secondary !px-4 !py-2 text-sm">
                   {t('settings.username.change')}
                 </button>
               </div>
@@ -211,7 +215,7 @@ const SettingsPage: React.FC = () => {
                     {t('settings.username.hint')}
                   </p>
                 </div>
-                
+
                 <div className="flex gap-3">
                   <button
                     onClick={handleSubmitUsername}
@@ -367,19 +371,28 @@ const SettingsPage: React.FC = () => {
             ) : totpStatus ? (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${totpStatus.enabled ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                  <div
+                    className={`w-3 h-3 rounded-full ${totpStatus.enabled ? 'bg-green-500' : 'bg-gray-300'}`}
+                  ></div>
                   <div>
-                    <span className={`font-medium ${totpStatus.enabled ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
-                      {totpStatus.enabled ? t('settings.totp.enabled') : t('settings.totp.disabled')}
+                    <span
+                      className={`font-medium ${totpStatus.enabled ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}
+                    >
+                      {totpStatus.enabled
+                        ? t('settings.totp.enabled')
+                        : t('settings.totp.disabled')}
                     </span>
                     {totpStatus.enabled && totpStatus.created_at && (
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         {t('settings.totp.enabledSince', {
-                          date: new Date(totpStatus.created_at).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })
+                          date: new Date(totpStatus.created_at).toLocaleDateString(
+                            i18n.language === 'zh' ? 'zh-CN' : 'en-US',
+                            {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            }
+                          ),
                         })}
                       </p>
                     )}
@@ -404,12 +417,10 @@ const SettingsPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-red-500">
-                {t('settings.totp.loadError')}
-              </div>
+              <div className="text-sm text-red-500">{t('settings.totp.loadError')}</div>
             )}
           </div>
-          
+
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
             <p className="text-sm text-blue-700 dark:text-blue-300">
               {t('settings.totp.description')}
@@ -448,7 +459,7 @@ const SettingsPage: React.FC = () => {
             {t('settings.preferences.title')}
           </h2>
         </div>
-        
+
         <div className="mb-4">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {t('settings.preferences.description')}
@@ -471,7 +482,7 @@ const SettingsPage: React.FC = () => {
             {t('settings.device.title')}
           </h2>
         </div>
-        
+
         <div className="mb-6">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {t('settings.device.description')}
@@ -502,16 +513,14 @@ const SettingsPage: React.FC = () => {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
           {t('settings.account.title')}
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t('settings.account.userId')}
             </label>
             <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <span className="text-gray-900 dark:text-white font-mono">
-                {user.id}
-              </span>
+              <span className="text-gray-900 dark:text-white font-mono">{user.id}</span>
             </div>
           </div>
 
@@ -522,11 +531,14 @@ const SettingsPage: React.FC = () => {
               </label>
               <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <span className="text-gray-900 dark:text-white">
-                  {new Date(user.join_date).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                  {new Date(user.join_date).toLocaleDateString(
+                    i18n.language === 'zh' ? 'zh-CN' : 'en-US',
+                    {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }
+                  )}
                 </span>
               </div>
             </div>
@@ -544,9 +556,7 @@ const SettingsPage: React.FC = () => {
                     alt={user.country.code}
                     className="w-5 h-auto"
                   />
-                  <span className="text-gray-900 dark:text-white">
-                    {user.country.name}
-                  </span>
+                  <span className="text-gray-900 dark:text-white">{user.country.name}</span>
                 </div>
               </div>
             </div>
@@ -559,11 +569,14 @@ const SettingsPage: React.FC = () => {
               </label>
               <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <span className="text-gray-900 dark:text-white">
-                  {new Date(user.last_visit).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                  {new Date(user.last_visit).toLocaleDateString(
+                    i18n.language === 'zh' ? 'zh-CN' : 'en-US',
+                    {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }
+                  )}
                 </span>
               </div>
             </div>
@@ -583,12 +596,12 @@ const SettingsPage: React.FC = () => {
 
       {/* TOTP设置模态框 */}
       <div>
-      <TotpSetupModal
-        isOpen={showTotpSetup}
-        onClose={() => setShowTotpSetup(false)}
-        onSuccess={handleTotpSetupSuccess}
-      />
-       </div>
+        <TotpSetupModal
+          isOpen={showTotpSetup}
+          onClose={() => setShowTotpSetup(false)}
+          onSuccess={handleTotpSetupSuccess}
+        />
+      </div>
 
       {/* TOTP禁用模态框 */}
       <TotpDisableModal

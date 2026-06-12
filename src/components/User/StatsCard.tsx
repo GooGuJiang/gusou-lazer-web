@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface Stats {
@@ -85,7 +85,9 @@ const StatsCard: React.FC<StatsCardProps> = ({ stats }) => {
 
         {/* 回放被观看次数 */}
         <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-300">{t('profile.stats.replaysWatched')}</span>
+          <span className="text-gray-600 dark:text-gray-300">
+            {t('profile.stats.replaysWatched')}
+          </span>
           <span className="text-gray-800 dark:text-gray-100 font-bold">
             {stats?.replays_watched_by_others?.toLocaleString() ?? 0}
           </span>

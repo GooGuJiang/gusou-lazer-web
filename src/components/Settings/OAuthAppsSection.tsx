@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FiPlus, FiEdit2, FiTrash2, FiCopy, FiCheck, 
-  FiAlertCircle, FiRefreshCw, FiExternalLink 
+import {
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+  FiCopy,
+  FiCheck,
+  FiAlertCircle,
+  FiRefreshCw,
+  FiExternalLink,
 } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
@@ -17,10 +23,14 @@ const OAuthAppsSection: React.FC = () => {
   const [editingApp, setEditingApp] = useState<OAuthApp | null>(null);
   const [newAppResponse, setNewAppResponse] = useState<CreateOAuthAppResponse | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  
+
   // 确认对话框状态
-  const [deleteConfirm, setDeleteConfirm] = useState<{ clientId: number; name: string } | null>(null);
-  const [refreshConfirm, setRefreshConfirm] = useState<{ clientId: number; name: string } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ clientId: number; name: string } | null>(
+    null
+  );
+  const [refreshConfirm, setRefreshConfirm] = useState<{ clientId: number; name: string } | null>(
+    null
+  );
 
   // 加载应用列表
   const loadApps = async () => {
@@ -130,9 +140,7 @@ const OAuthAppsSection: React.FC = () => {
       {apps.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700">
           <FiExternalLink className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {t('settings.oauth.noApps')}
-          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('settings.oauth.noApps')}</p>
           <button
             onClick={() => setShowCreateModal(true)}
             className="btn-primary !px-6 !py-2 text-sm"
@@ -237,13 +245,9 @@ const OAuthAppCard: React.FC<OAuthAppCardProps> = ({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-            {app.name}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{app.name}</h3>
           {app.description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              {app.description}
-            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{app.description}</p>
           )}
           <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-1">
@@ -261,7 +265,10 @@ const OAuthAppCard: React.FC<OAuthAppCardProps> = ({
               </button>
             </div>
             <span>
-              {t('settings.oauth.created')}: {new Date(app.created_at).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US')}
+              {t('settings.oauth.created')}:{' '}
+              {new Date(app.created_at).toLocaleDateString(
+                i18n.language === 'zh' ? 'zh-CN' : 'en-US'
+              )}
             </span>
           </div>
         </div>
@@ -338,12 +345,7 @@ interface CreateEditModalProps {
   onSuccess: (response?: CreateOAuthAppResponse) => void;
 }
 
-const CreateEditModal: React.FC<CreateEditModalProps> = ({
-  isOpen,
-  onClose,
-  app,
-  onSuccess,
-}) => {
+const CreateEditModal: React.FC<CreateEditModalProps> = ({ isOpen, onClose, app, onSuccess }) => {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -395,9 +397,7 @@ const CreateEditModal: React.FC<CreateEditModalProps> = ({
     } catch (error) {
       console.error('操作失败:', error);
       toast.error(
-        app
-          ? t('settings.oauth.errors.updateFailed')
-          : t('settings.oauth.errors.createFailed')
+        app ? t('settings.oauth.errors.updateFailed') : t('settings.oauth.errors.createFailed')
       );
     } finally {
       setIsSubmitting(false);
@@ -468,9 +468,7 @@ const CreateEditModal: React.FC<CreateEditModalProps> = ({
                     {redirectUris.length > 1 && (
                       <button
                         type="button"
-                        onClick={() =>
-                          setRedirectUris(redirectUris.filter((_, i) => i !== index))
-                        }
+                        onClick={() => setRedirectUris(redirectUris.filter((_, i) => i !== index))}
                         className="px-3 py-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                       >
                         <FiTrash2 className="w-4 h-4" />
@@ -506,8 +504,8 @@ const CreateEditModal: React.FC<CreateEditModalProps> = ({
                 {isSubmitting
                   ? t('settings.oauth.saving')
                   : app
-                  ? t('settings.oauth.update')
-                  : t('settings.oauth.create')}
+                    ? t('settings.oauth.update')
+                    : t('settings.oauth.create')}
               </button>
             </div>
           </form>
@@ -633,7 +631,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   type = 'danger',
 }) => {
   const { t } = useTranslation();
-  
+
   if (!isOpen) return null;
 
   const handleConfirm = () => {
@@ -651,32 +649,29 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       >
         <div className="p-6">
           <div className="flex items-start gap-4 mb-6">
-            <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-              type === 'danger' 
-                ? 'bg-red-100 dark:bg-red-900/20' 
-                : 'bg-yellow-100 dark:bg-yellow-900/20'
-            }`}>
-              <FiAlertCircle className={`w-6 h-6 ${
-                type === 'danger' 
-                  ? 'text-red-600 dark:text-red-400' 
-                  : 'text-yellow-600 dark:text-yellow-400'
-              }`} />
+            <div
+              className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
+                type === 'danger'
+                  ? 'bg-red-100 dark:bg-red-900/20'
+                  : 'bg-yellow-100 dark:bg-yellow-900/20'
+              }`}
+            >
+              <FiAlertCircle
+                className={`w-6 h-6 ${
+                  type === 'danger'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-yellow-600 dark:text-yellow-400'
+                }`}
+              />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {title}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {message}
-              </p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
             </div>
           </div>
 
           <div className="flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="btn-secondary !px-6 !py-2"
-            >
+            <button onClick={onClose} className="btn-secondary !px-6 !py-2">
               {t('settings.oauth.cancel')}
             </button>
             <button

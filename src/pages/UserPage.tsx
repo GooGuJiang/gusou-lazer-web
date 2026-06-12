@@ -12,11 +12,11 @@ const UserPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // 从 URL 参数获取模式
   const modeFromUrl = searchParams.get('mode') as GameMode | null;
   const [selectedMode, setSelectedMode] = useState<GameMode>(modeFromUrl || 'osu');
-  
+
   // 使用 ref 来跟踪最新的请求，防止竞态条件
   const abortControllerRef = useRef<AbortController | null>(null);
   const latestModeRef = useRef<GameMode>(selectedMode);
@@ -32,23 +32,23 @@ const UserPage: React.FC = () => {
 
   useEffect(() => {
     if (!userId) return;
-    
+
     // 取消之前的请求
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    
+
     // 创建新的 AbortController
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
     latestModeRef.current = selectedMode;
-    
+
     // 首次加载才显示 loading，模式切换时保持当前数据可见
     if (!user) {
       setLoading(true);
     }
     setError(null);
-    
+
     userAPI
       .getUser(userId, selectedMode)
       .then((userData) => {
@@ -61,8 +61,9 @@ const UserPage: React.FC = () => {
       .catch((err: unknown) => {
         // 忽略被取消的请求
         if (abortController.signal.aborted) return;
-        
-        const message = (err as { response?: { data?: { detail?: string } } }).response?.data?.detail;
+
+        const message = (err as { response?: { data?: { detail?: string } } }).response?.data
+          ?.detail;
         setError(message || t('profile.errors.loadFailed'));
         setUser(null);
       })
@@ -71,7 +72,7 @@ const UserPage: React.FC = () => {
           setLoading(false);
         }
       });
-    
+
     // 清理函数：取消请求
     return () => {
       abortController.abort();
@@ -90,7 +91,9 @@ const UserPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('profile.errors.userNotFound')}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          {t('profile.errors.userNotFound')}
+        </h2>
         <p className="text-gray-600">{error || t('profile.errors.checkId')}</p>
       </div>
     );
@@ -107,4 +110,3 @@ const UserPage: React.FC = () => {
 };
 
 export default UserPage;
-

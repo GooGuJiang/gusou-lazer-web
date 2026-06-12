@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiMonitor, FiSmartphone, FiTablet, FiTrash2, FiClock, FiMapPin, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import {
+  FiMonitor,
+  FiSmartphone,
+  FiTablet,
+  FiTrash2,
+  FiClock,
+  FiMapPin,
+  FiCheckCircle,
+  FiXCircle,
+} from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { deviceAPI } from '../../utils/api';
@@ -54,11 +63,11 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
       setRevokingSessionId(sessionToRevoke.id);
       await deviceAPI.deleteSession(sessionToRevoke.id);
       toast.success(t('settings.device.sessions.revokeSuccess'));
-      
+
       // 关闭弹窗
       setShowRevokeModal(false);
       setSessionToRevoke(null);
-      
+
       // 重新获取会话列表
       await fetchSessions();
     } catch (error) {
@@ -72,7 +81,7 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
   // 获取设备类型图标
   const getDeviceIcon = (session: Session) => {
     const { user_agent_info } = session;
-    
+
     if (user_agent_info.is_mobile) {
       return <FiSmartphone className="w-5 h-5" />;
     } else if (user_agent_info.is_tablet) {
@@ -85,22 +94,22 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
   // 获取设备显示名称
   const getDeviceDisplayName = (session: Session) => {
     const { user_agent_info } = session;
-    
+
     if (user_agent_info.is_client) {
       return 'osu!lazer';
     }
-    
+
     if (user_agent_info.browser && user_agent_info.browser !== 'Unknown') {
       return `${user_agent_info.browser}${user_agent_info.version ? ` ${user_agent_info.version}` : ''}`;
     }
-    
+
     return t('settings.device.browsers.unknown');
   };
 
   // 获取设备类型名称
   const getDeviceTypeName = (session: Session) => {
     const { user_agent_info } = session;
-    
+
     if (user_agent_info.is_client) {
       return t('settings.device.deviceTypes.app');
     } else if (user_agent_info.is_mobile) {
@@ -117,15 +126,15 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
   // 格式化位置信息
   const formatLocation = (session: Session) => {
     const { location } = session;
-    
+
     if (!location.country && !location.city) {
       return t('settings.device.sessions.localhost');
     }
-    
+
     const parts = [];
     if (location.city) parts.push(location.city);
     if (location.country) parts.push(location.country);
-    
+
     return parts.join(', ') || t('settings.device.sessions.localhost');
   };
 
@@ -136,7 +145,7 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -180,7 +189,7 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
         <div className="space-y-3">
           {sessionsData.sessions.map((session, index) => {
             const isCurrent = isCurrentSession(session);
-            
+
             return (
               <motion.div
                 key={session.id}
@@ -194,14 +203,16 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
                 }`}
               >
                 <div className="flex items-center gap-3 flex-1">
-                  <div className={`p-2 rounded-lg ${
-                    isCurrent
-                      ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-400'
-                      : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
-                  }`}>
+                  <div
+                    className={`p-2 rounded-lg ${
+                      isCurrent
+                        ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-400'
+                        : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
+                    }`}
+                  >
                     {getDeviceIcon(session)}
                   </div>
-                  
+
                   <div className="flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4 className="font-medium text-gray-900 dark:text-white">
@@ -213,12 +224,18 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
                         </span>
                       )}
                       {session.is_verified ? (
-                        <FiCheckCircle className="w-4 h-4 text-green-500" title={t('settings.device.sessions.verified')} />
+                        <FiCheckCircle
+                          className="w-4 h-4 text-green-500"
+                          title={t('settings.device.sessions.verified')}
+                        />
                       ) : (
-                        <FiXCircle className="w-4 h-4 text-yellow-500" title={t('settings.device.sessions.unverified')} />
+                        <FiXCircle
+                          className="w-4 h-4 text-yellow-500"
+                          title={t('settings.device.sessions.unverified')}
+                        />
                       )}
                     </div>
-                    
+
                     <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-1 flex-wrap">
                       <span>{getDeviceTypeName(session)}</span>
                       {session.user_agent_info.os && (
@@ -240,7 +257,7 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
                     </div>
                   </div>
                 </div>
-                
+
                 {!isCurrent && (
                   <button
                     onClick={() => handleShowRevokeModal(session)}
@@ -279,4 +296,3 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
 };
 
 export default SessionManagement;
-

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { VerificationModal } from '../components/VerificationModal/VerificationModal';
-import { verificationAPI, isVerificationError, getVerificationMethod } from '../utils/api/verification';
+import {
+  verificationAPI,
+  isVerificationError,
+  getVerificationMethod,
+} from '../utils/api/verification';
 import { setGlobalVerificationHandler } from '../utils/api/client';
 import { VerificationContext } from './verificationContextCore';
 import type { VerificationContextType, VerificationProviderProps } from './verificationContextCore';
@@ -49,23 +53,26 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({ chil
     }
   };
 
-  const handleVerificationError = useCallback((error: unknown): boolean => {
-    if (isVerificationError(error)) {
-      const method = getVerificationMethod(error);
-      if (method) {
-        showVerificationModal(method).catch(() => {
-          // 如果用户取消验证，这里可以处理
-        });
-        return true;
+  const handleVerificationError = useCallback(
+    (error: unknown): boolean => {
+      if (isVerificationError(error)) {
+        const method = getVerificationMethod(error);
+        if (method) {
+          showVerificationModal(method).catch(() => {
+            // 如果用户取消验证，这里可以处理
+          });
+          return true;
+        }
       }
-    }
-    return false;
-  }, [showVerificationModal]);
+      return false;
+    },
+    [showVerificationModal]
+  );
 
   // 在组件挂载时设置全局验证处理器
   useEffect(() => {
     setGlobalVerificationHandler(handleVerificationError);
-    
+
     // 清理函数
     return () => {
       setGlobalVerificationHandler(() => false);

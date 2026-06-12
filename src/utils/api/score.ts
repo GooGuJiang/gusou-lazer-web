@@ -37,4 +37,3 @@ export const scoreAPI = {
     return response.data;
   },
 };
-
