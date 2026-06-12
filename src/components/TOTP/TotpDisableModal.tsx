@@ -4,6 +4,7 @@ import { FiX, FiAlertTriangle } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { userAPI } from '../../utils/api';
+import { isRecord } from '../../utils/typeGuards';
 
 interface TotpDisableModalProps {
   isOpen: boolean;
@@ -34,7 +35,8 @@ const TotpDisableModal: React.FC<TotpDisableModalProps> = ({ isOpen, onClose, on
       onClose();
     } catch (error: unknown) {
       console.error('TOTP禁用失败:', error);
-      if (error.response?.data?.error === 'Invalid TOTP code') {
+      const responseData = isRecord(error) && isRecord(error.response) && isRecord(error.response.data) ? error.response.data : undefined;
+      if (responseData?.error === 'Invalid TOTP code') {
         setError(t('settings.totp.errors.invalidCode'));
       } else {
         setError(t('settings.totp.errors.disableFailed'));

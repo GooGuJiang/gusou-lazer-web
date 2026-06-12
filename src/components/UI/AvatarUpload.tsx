@@ -4,6 +4,7 @@ import { FiUpload, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { userAPI } from '../../utils/api';
 import ImageCropper from './ImageCropper';
+import { getApiErrorMessage } from '../../utils/typeGuards';
 
 interface AvatarUploadProps {
   userId?: number;
@@ -101,8 +102,9 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       onClose();
     } catch (error: unknown) {
       console.error('头像上传失败:', error);
-      if (getApiErrorMessage(error)) {
-        toast.error(error.response.data.message);
+      const apiMessage = getApiErrorMessage(error);
+      if (apiMessage) {
+        toast.error(apiMessage);
       } else {
         toast.error('头像上传失败，请重试');
       }

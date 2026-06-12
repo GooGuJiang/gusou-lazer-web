@@ -36,6 +36,9 @@ const convertUTCToLocal = (utcTimeString: string): string => {
   }
 };
 
+type TokenizedCallback = ((...args: never[]) => unknown) & { currentToken?: symbol };
+type WindowWithMessageFallbackTimers = Window & { messageFallbackTimers?: Set<NodeJS.Timeout> };
+
 type ActiveTab = 'channels' | 'notifications';
 type ChannelFilter = 'all' | 'private' | 'team' | 'public';
 

@@ -4,11 +4,12 @@
  */
 
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import type { Agent } from '@fingerprintjs/fingerprintjs';
 
 const DEVICE_UUID_KEY = 'device_uuid';
 
 // FingerprintJS 实例缓存
-let fpPromise: Promise<unknown> | null = null;
+let fpPromise: Promise<Agent> | null = null;
 
 /**
  * 初始化 FingerprintJS

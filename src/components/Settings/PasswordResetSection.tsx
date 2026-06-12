@@ -3,6 +3,7 @@ import { FiLock, FiEye, FiEyeOff, FiCheck, FiX, FiShield } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { userAPI, type TOTPStatus } from '../../utils/api';
+import { getErrorMessage } from '../../utils/typeGuards';
 
 interface FormData {
   currentPassword: string;

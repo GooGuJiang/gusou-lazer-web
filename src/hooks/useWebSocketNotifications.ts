@@ -3,7 +3,6 @@ import { notificationsAPI } from '../utils/api';
 import { isRecord } from '../utils/typeGuards';
 import type {
   SocketMessage,
-  ChatEvent,
   NotificationEvent,
   APINotification,
   ChatMessage,
@@ -29,6 +28,48 @@ const getTitleFromDetails = (details: unknown): string | undefined => {
   if (!isRecord(details)) return undefined;
   return typeof details.title === 'string' ? details.title : undefined;
 };
+
+interface NotificationDetails extends Record<string, unknown> {
+  type?: string;
+  title?: string;
+  cover_url?: string;
+}
+
+interface NotificationPayload {
+  category?: unknown;
+  name?: unknown;
+  created_at?: unknown;
+  object_type?: unknown;
+  object_id?: unknown;
+  id?: unknown;
+  source_user_id?: unknown;
+  is_read?: unknown;
+  details?: NotificationDetails;
+}
+
+const toNotificationDetails = (value: unknown): NotificationDetails => {
+  if (!isRecord(value)) return {};
+  return {
+    type: typeof value.type === 'string' ? value.type : undefined,
+    title: typeof value.title === 'string' ? value.title : undefined,
+    cover_url: typeof value.cover_url === 'string' ? value.cover_url : undefined,
+  };
+};
+
+const toNotificationPayload = (value: unknown): NotificationPayload | null => {
+  if (!isRecord(value)) return null;
+  return {
+    category: value.category,
+    name: value.name,
+    created_at: value.created_at,
+    object_type: value.object_type,
+    object_id: value.object_id,
+    id: value.id,
+    source_user_id: value.source_user_id,
+    is_read: value.is_read,
+    details: toNotificationDetails(value.details),
+  };
+};
 const toChatMessage = (value: unknown): ChatMessage | null => {
   if (!isRecord(value)) return null;
   if (
@@ -46,7 +87,7 @@ const toChatMessage = (value: unknown): ChatMessage | null => {
     timestamp: toStringValue(value.timestamp),
     sender_id: toNumberValue(value.sender_id),
     is_action: toBooleanValue(value.is_action),
-    sender: isRecord(value.sender) ? (value.sender as User) : undefined,
+    sender: isRecord(value.sender) ? (value.sender as unknown as User) : undefined,
     uuid: toOptionalString(value.uuid),
   };
 };
@@ -171,12 +212,12 @@ export const useWebSocketNotifications = ({
           message.event === 'new_message' ||
           message.event === 'message'
         ) {
-          const chatEvent = message as ChatEvent;
-          console.log('聊天事件数据:', chatEvent.data);
+          const chatData = message.data as { messages?: ChatMessage[]; message?: unknown; users?: User[] } | undefined;
+          console.log('聊天事件数据:', chatData);
 
-          if (chatEvent.data?.messages) {
-            console.log('处理消息数组:', chatEvent.data.messages);
-            chatEvent.data.messages.forEach((msg) => {
+          if (chatData?.messages) {
+            console.log('处理消息数组:', chatData.messages);
+            chatData.messages.forEach((msg) => {
               // 过滤自己的消息
               if (msg.sender_id && currentUser && msg.sender_id === currentUser.id) {
                 console.log(`✓ 过滤自己的聊天消息: ${msg.message_id}, 发送者ID: ${msg.sender_id}`);
@@ -185,9 +226,9 @@ export const useWebSocketNotifications = ({
               console.log('发送他人消息到回调:', msg);
               dispatchChatMessage(msg);
             });
-          } else if (isRecord(chatEvent.data) && chatEvent.data.message) {
+          } else if (chatData?.message) {
             // 可能是单个消息而不是数组
-            const msg = toChatMessage(chatEvent.data.message);
+            const msg = toChatMessage(chatData.message);
             if (!msg) return;
             // 过滤自己的消息
             if (msg.sender_id && currentUser && msg.sender_id === currentUser.id) {
@@ -198,9 +239,9 @@ export const useWebSocketNotifications = ({
             }
             console.log('处理他人单个消息:', msg);
             dispatchChatMessage(msg);
-          } else if (chatEvent.data && typeof chatEvent.data === 'object') {
+          } else if (chatData && typeof chatData === 'object') {
             // 可能消息数据直接在data中
-            const msg = chatEvent.data as ChatMessage;
+            const msg = chatData as ChatMessage;
             // 过滤自己的消息
             if (msg.sender_id && currentUser && msg.sender_id === currentUser.id) {
               console.log(
@@ -231,7 +272,7 @@ export const useWebSocketNotifications = ({
             timestamp: message.data.timestamp as string,
             sender_id: message.data.sender_id as number,
             is_action: (message.data.is_action as boolean) || false,
-            sender: isRecord(message.data.sender) ? (message.data.sender as User) : undefined,
+            sender: isRecord(message.data.sender) ? (message.data.sender as unknown as User) : undefined,
             uuid: message.data.uuid as string | undefined,
           };
 
@@ -315,8 +356,8 @@ export const useWebSocketNotifications = ({
         else if (message.event === 'new') {
           console.log('处理新通知事件:', message);
 
-          if (message.data && typeof message.data === 'object') {
-            const data = message.data;
+          const data = toNotificationPayload(message.data);
+          if (data) {
 
             // 根据频道类型创建相应的通知
             if (data.category === 'channel' && data.name === 'channel_message') {
@@ -377,11 +418,11 @@ export const useWebSocketNotifications = ({
               const notification: APINotification = {
                 id: generateUniqueNotificationId(),
                 name: notificationName,
-                created_at: data.created_at || new Date().toISOString(),
-                object_type: data.object_type || 'channel',
-                object_id: data.object_id?.toString() || data.id?.toString(),
-                source_user_id: data.source_user_id,
-                is_read: data.is_read || false,
+                created_at: toStringValue(data.created_at || new Date().toISOString()),
+                object_type: toStringValue(data.object_type || 'channel'),
+                object_id: toStringValue(data.object_id || data.id),
+                source_user_id: typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
+                is_read: toBooleanValue(data.is_read),
                 details: {
                   type: data.details?.type || channelType || 'unknown',
                   title: data.details?.title || defaultTitle,
@@ -475,12 +516,12 @@ export const useWebSocketNotifications = ({
 
               const notification: APINotification = {
                 id: generateUniqueNotificationId(),
-                name: data.name || 'unknown',
-                created_at: data.created_at || new Date().toISOString(),
-                object_type: data.object_type || 'unknown',
-                object_id: data.object_id?.toString() || data.id?.toString(),
-                source_user_id: data.source_user_id,
-                is_read: data.is_read || false,
+                name: toStringValue(data.name || 'unknown'),
+                created_at: toStringValue(data.created_at || new Date().toISOString()),
+                object_type: toStringValue(data.object_type || 'unknown'),
+                object_id: toStringValue(data.object_id || data.id),
+                source_user_id: typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
+                is_read: toBooleanValue(data.is_read),
                 details: data.details || {},
               };
 

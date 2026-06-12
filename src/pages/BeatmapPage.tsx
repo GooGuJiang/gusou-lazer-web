@@ -9,6 +9,7 @@ import { formatDuration, formatNumber } from '../utils/format';
 import { GAME_MODE_NAMES } from '../types';
 import { AudioPlayButton, AudioPlayerControls } from '../components/UI/AudioPlayer';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../utils/typeGuards';
 
 const BeatmapPage: React.FC = () => {
   const { beatmapId, beatmapsetId } = useParams<{ beatmapId?: string; beatmapsetId?: string }>();

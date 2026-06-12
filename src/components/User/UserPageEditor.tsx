@@ -6,6 +6,7 @@ import BBCodeEditor from './BBCodeEditor';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
 import { FaSave, FaTimes, FaEdit } from 'react-icons/fa';
+import { getApiErrorMessage } from '../../utils/typeGuards';
 
 interface UserPageEditorProps {
   user: User;
@@ -87,7 +88,7 @@ const UserPageEditor: React.FC<UserPageEditorProps> = ({
       }, 1500);
     } catch (err: unknown) {
       console.error('Failed to save user page:', err);
-      const errorMessage = err.response?.data?.error || t('profile.userPage.saveError');
+      const errorMessage = getApiErrorMessage(err) || t('profile.userPage.saveError');
       setError(errorMessage);
       setSuccessMessage(null);
     } finally {

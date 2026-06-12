@@ -107,8 +107,8 @@ export const beatmapAPI = {
 
       return { beatmapset, beatmap };
     } else if (urlInfo.beatmapId) {
-      const beatmap = await beatmapAPI.getBeatmapByBeatmapId(urlInfo.beatmapId);
-      const beatmapset = await beatmapAPI.getBeatmapset(beatmap.beatmapset_id);
+      const beatmapset = await beatmapAPI.getBeatmapByBeatmapId(urlInfo.beatmapId);
+      const beatmap = beatmapset.beatmaps.find((b: Beatmap) => b.id === urlInfo.beatmapId);
 
       return { beatmapset, beatmap };
     }

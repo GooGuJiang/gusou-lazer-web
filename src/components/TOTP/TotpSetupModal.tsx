@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from 'react-qr-code';
 import toast from 'react-hot-toast';
 import { userAPI, type TOTPCreateStart, type TOTPBackupCodes } from '../../utils/api';
+import { isRecord } from '../../utils/typeGuards';
 
 interface TotpSetupModalProps {
   isOpen: boolean;
@@ -57,15 +58,17 @@ const TotpSetupModal: React.FC<TotpSetupModalProps> = ({ isOpen, onClose, onSucc
       toast.success(t('settings.totp.setupSuccess'));
     } catch (error: unknown) {
       console.error('TOTP验证失败:', error);
-      console.error('错误详情:', error.response?.data);
+      const response = isRecord(error) && isRecord(error.response) ? error.response : undefined;
+      const responseData = response && isRecord(response.data) ? response.data : undefined;
+      console.error('错误详情:', responseData);
 
       // 处理不同类型的错误
-      if (error.response?.status === 400) {
-        const errorDetail = error.response?.data?.detail;
+      if (response?.status === 400) {
+        const errorDetail = responseData?.detail;
         if (Array.isArray(errorDetail) && errorDetail.length > 0) {
           // 处理验证错误
           setVerificationError(t('settings.totp.errors.invalidCode'));
-        } else if (error.response?.data?.error === 'Invalid TOTP code') {
+        } else if (responseData?.error === 'Invalid TOTP code') {
           setVerificationError(t('settings.totp.errors.invalidCode'));
         } else {
           setVerificationError(t('settings.totp.errors.invalidCode'));
