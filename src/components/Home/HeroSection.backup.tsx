@@ -51,7 +51,7 @@ const HeroSection: React.FC = () => {
               <div className="flex items-center justify-center mb-6 sm:mb-8 md:mb-10">
                 <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center mr-3 sm:mr-4 md:mr-5 p-1 sm:p-2">
                   <img
-                    src="/image/logos/logo.svg"
+                    src="/g0v0.webp"
                     alt={t('common.brandAlt')}
                     className="w-full h-full object-contain drop-shadow-lg"
                   />

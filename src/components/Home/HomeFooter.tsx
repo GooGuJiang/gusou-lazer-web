@@ -11,7 +11,7 @@ const HomeFooter: React.FC = () => {
         <div className="flex flex-col items-center space-y-4">
           <div className="flex items-center space-x-2">
             <img
-              src="/image/logos/logo.svg"
+              src="/g0v0.webp"
               alt={t('common.brandAlt')}
               className="w-6 h-6 opacity-60"
             />

@@ -231,7 +231,7 @@ const PasswordResetPage: React.FC = () => {
         <div className="text-center">
           <div className="w-12 h-12 mx-auto flex items-center justify-center mb-2">
             <img
-              src="/image/logos/logo.svg"
+              src="/g0v0.webp"
               alt={t('common.brandAlt')}
               className="w-12 h-12 object-contain"
             />

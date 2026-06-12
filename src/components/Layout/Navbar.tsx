@@ -527,7 +527,7 @@ const Navbar: React.FC = () => {
                   >
                     <div className="relative">
                       <img
-                        src="/image/logos/logo.svg"
+                        src="/g0v0.webp"
                         alt={t('common.brandAlt')}
                         className="w-8 h-8 lg:w-9 lg:h-9 object-contain"
                       />
@@ -640,7 +640,7 @@ const Navbar: React.FC = () => {
             <Link to="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <img
-                  src="/image/logos/logo.svg"
+                  src="/g0v0.webp"
                   alt={t('common.brandAlt')}
                   className="w-8 h-8 object-contain"
                 />
