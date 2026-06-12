@@ -4,7 +4,7 @@ interface InfoCardProps {
   image: string;
   imageAlt: string;
   title: string;
-  content: string;
+  content: React.ReactNode;
   icon: React.ReactNode;
   className?: string;
 }

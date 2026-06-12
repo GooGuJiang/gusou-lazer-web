@@ -33,7 +33,7 @@ export const homePage = {
       {
         title: 'Faster beatmap downloads',
         content:
-          'We use Sayobot mirror services to deliver speedy downloads for players in China, so grabbing maps is no longer a waiting game.',
+          'We use multiple beatmap mirror services with automatic availability detection and smart switching, so grabbing maps is no longer a waiting game.',
         imageAlt: 'Faster beatmap downloads',
       },
       {
@@ -57,20 +57,20 @@ export const homePage = {
       {
         title: 'Open and transparent',
         content:
-          'Both the server and client are open source. The server also provides hook support so you can extend it with plugins (in development).',
+          'Both the server and client are open source. The server also provides plugin support so you can extend it with plugins.',
         imageAlt: 'Open and transparent',
+      },
+      {
+        title: 'Ruleset leaderboards',
+        content:
+          'We support <customRulesetLink>custom ruleset</customRulesetLink> score calculations and submissions, plus robust leaderboard support.',
+        imageAlt: 'Ruleset leaderboards',
       },
       {
         title: 'User-submitted beatmaps',
         content:
           'Submit your own beatmaps or ranked-ineligible maps from the official server and get them approved here (in development).',
         imageAlt: 'User-submitted beatmaps',
-      },
-      {
-        title: 'Ruleset leaderboards',
-        content:
-          'We support custom ruleset score calculations and submissions, plus robust leaderboard support (in development).',
-        imageAlt: 'Ruleset leaderboards',
       },
     ],
   },

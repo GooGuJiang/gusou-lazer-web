@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import InfoCard from '../InfoCard';
@@ -256,7 +256,25 @@ const HeroSection: React.FC = () => {
                     image={feature.image}
                     imageAlt={t(feature.imageAltKey)}
                     title={t(feature.titleKey)}
-                    content={t(feature.contentKey)}
+                    content={
+                      index === 6 ? (
+                        <Trans
+                          i18nKey={feature.contentKey}
+                          components={{
+                            customRulesetLink: (
+                              <a
+                                href="https://github.com/GooGuTeam/custom-rulesets"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-profile-color underline hover:opacity-80"
+                              />
+                            ),
+                          }}
+                        />
+                      ) : (
+                        t(feature.contentKey)
+                      )
+                    }
                     icon={icons[index]}
                   />
                 </div>

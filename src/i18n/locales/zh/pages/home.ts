@@ -33,7 +33,7 @@ export const homePage = {
       {
         title: '谱面加速下载',
         content:
-          '我们使用了 Sayobot 的谱面镜像加速服务来处理国内玩家的高速下载需求，让谱面下载不再漫长等待',
+          '我们使用了多种谱面镜像源加速服务，并支持自动检测可用性与智能切换，让谱面下载不再漫长等待',
         imageAlt: '谱面加速下载',
       },
       {
@@ -57,20 +57,20 @@ export const homePage = {
       {
         title: '开源开放',
         content:
-          '服务端/客户端全部开源免费，服务端还提供了 Hooks 支持，可通过插件来扩充服务端能力（开发中）',
+          '服务端/客户端全部开源免费，服务端还提供了插件支持，可通过插件来扩充服务端能力',
         imageAlt: '开源开放',
+      },
+      {
+        title: 'rulesets排行',
+        content:
+          '我们支持<customRulesetLink>自定义 ruleset</customRulesetLink> 模式的分数计算和成绩上传，并提供完善的排行榜支持',
+        imageAlt: 'rulesets排行',
       },
       {
         title: '允许用户谱面提交',
         content:
           '我们允许您提交自制的谱面或在官方服务器中无法计算 pp 的未上榜谱面并通过审核（开发中）',
         imageAlt: '允许用户谱面提交',
-      },
-      {
-        title: 'rulesets排行',
-        content:
-          '我们支持自定义 ruleset 模式的分数计算和成绩上传，并提供完善的排行榜支持（开发中）',
-        imageAlt: 'rulesets排行',
       },
     ],
   },
