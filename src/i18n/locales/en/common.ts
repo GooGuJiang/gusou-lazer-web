@@ -16,6 +16,7 @@ export const common = {
   theme: {
     light: 'Light Mode',
     dark: 'Dark Mode',
+    system: 'System',
   },
   authAgreement: 'By signing in you agree to our Terms of Service and Privacy Policy',
   registerAgreement: 'By creating an account you agree to our Terms of Service and Privacy Policy',

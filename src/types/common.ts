@@ -40,7 +40,7 @@ export const GAME_MODE_COLORS: Record<GameMode, string> = {
   mania: 'var(--profile-color, #ED8EA6)',
 };
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'system';
 
 export const MAIN_MODE_ICONS: Record<MainGameMode, string> = {
   osu: 'fa-extra-mode-osu',

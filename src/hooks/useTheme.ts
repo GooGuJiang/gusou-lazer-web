@@ -1,63 +1,77 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Theme } from '../types';
 
+/**
+ * 获取系统主题偏好
+ */
+const getSystemTheme = (): 'light' | 'dark' => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+/**
+ * 根据 Theme 设置值解析实际应用的主题（light 或 dark）
+ */
+const resolveTheme = (theme: Theme): 'light' | 'dark' => {
+  if (theme === 'system') {
+    return getSystemTheme();
+  }
+  return theme;
+};
+
 export const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  useEffect(() => {
-    // Check localStorage first
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const applyTheme = (themeToApply: Theme) => {
-      setTheme(themeToApply);
-      document.documentElement.classList.toggle('dark', themeToApply === 'dark');
-    };
-
-    if (savedTheme) {
-      applyTheme(savedTheme);
-    } else {
-      // Check system preference
-      const systemTheme = mediaQuery.matches ? 'dark' : 'light';
-      applyTheme(systemTheme);
+  // 从 localStorage 读取保存的主题偏好，默认为 'system'
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('theme') as Theme | null;
+    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      return saved;
     }
+    return 'system';
+  });
 
-    // Listen for system theme changes (only if user hasn't manually set a preference)
-    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      const savedTheme = localStorage.getItem('theme');
-      if (!savedTheme) {
-        // Only update if user hasn't set a manual preference
-        const systemTheme = e.matches ? 'dark' : 'light';
-        applyTheme(systemTheme);
-      }
-    };
+  // 实际应用到 DOM 的主题
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => resolveTheme(theme));
 
-    // Add listener for system theme changes
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
-
-    // Cleanup listener on unmount
-    return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    };
+  // 应用主题到 DOM
+  const applyTheme = useCallback((resolved: 'light' | 'dark') => {
+    setResolvedTheme(resolved);
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
+  useEffect(() => {
+    const resolved = resolveTheme(theme);
+    applyTheme(resolved);
 
-  const setSpecificTheme = (newTheme: Theme) => {
+    // 只有在 system 模式下才监听系统主题变化
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+        applyTheme(e.matches ? 'dark' : 'light');
+      };
+      mediaQuery.addEventListener('change', handleSystemThemeChange);
+      return () => {
+        mediaQuery.removeEventListener('change', handleSystemThemeChange);
+      };
+    }
+  }, [theme, applyTheme]);
+
+  // 设置主题并持久化到 localStorage
+  const setSpecificTheme = useCallback((newTheme: Theme) => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
+  }, []);
+
+  // 循环切换主题：light → dark → system → light
+  const cycleTheme = useCallback(() => {
+    const order: Theme[] = ['light', 'dark', 'system'];
+    const currentIndex = order.indexOf(theme);
+    const nextTheme = order[(currentIndex + 1) % order.length];
+    setSpecificTheme(nextTheme);
+  }, [theme, setSpecificTheme]);
 
   return {
     theme,
-    isDark: theme === 'dark',
-    toggleTheme,
+    isDark: resolvedTheme === 'dark',
+    cycleTheme,
     setTheme: setSpecificTheme,
   };
 };

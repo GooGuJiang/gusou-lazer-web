@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSun, FiMoon, FiHome, FiTrendingUp, FiMusic, FiBell, FiUsers, FiMenu, FiX, FiSettings, FiServer, FiGlobe, FiCheck, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiTrendingUp, FiMusic, FiBell, FiUsers, FiMenu, FiX, FiSettings, FiServer, FiGlobe, FiCheck, FiLogOut } from 'react-icons/fi';
+import ThemeSelector from '../UI/ThemeSelector';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../hooks/useTheme';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import UserDropdown from '../UI/UserDropdown';
@@ -240,10 +240,8 @@ const MobileMenuDropdown = memo<{
   items: NavItem[];
   isAuthenticated: boolean;
   unreadCount: any;
-  isDark: boolean;
-  onThemeToggle: () => void;
   onLogout: () => void;
-}>(({ items, isAuthenticated, unreadCount, isDark, onThemeToggle, onLogout }) => {
+}>(({ items, isAuthenticated, unreadCount, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -396,16 +394,10 @@ const MobileMenuDropdown = memo<{
               )}
 
               {/* 主题切换 */}
-              <button
-                onClick={() => {
-                  onThemeToggle();
-                  handleClose();
-                }}
-                className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-osu-pink transition-all duration-200"
-              >
-                {isDark ? <FiSun size={16} className="mr-3" /> : <FiMoon size={16} className="mr-3" />}
-                <span>{isDark ? t('common.theme.light') : t('common.theme.dark')}</span>
-              </button>
+              <div className="px-4 py-2 flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('common.theme.light')}</span>
+                <ThemeSelector />
+              </div>
 
               {/* 语言选择 */}
               <LanguageMenuSection i18n={i18n} t={t} />
@@ -440,7 +432,6 @@ const MobileMenuDropdown = memo<{
 MobileMenuDropdown.displayName = 'MobileMenuDropdown';
 
 const Navbar: React.FC = () => {
-  const { isDark, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useTranslation();
   // 通过全局通知上下文获取统一的 unreadCount
@@ -475,11 +466,6 @@ const Navbar: React.FC = () => {
       !item.requireAuth || (item.requireAuth && isAuthenticated)
     ), [navItems, isAuthenticated]
   );
-
-  // 使用 useCallback 优化回调函数
-  const handleThemeToggle = useCallback(() => {
-    toggleTheme();
-  }, [toggleTheme]);
 
   const handleLogout = useCallback(() => {
     logout();
@@ -574,21 +560,8 @@ const Navbar: React.FC = () => {
                 </Link>
               )}
 
-              {/* Theme toggle */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleThemeToggle}
-                className="p-2 md:p-2.5 rounded-xl text-gray-600 dark:text-gray-300 hover:text-osu-pink hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
-                aria-label="Toggle theme"
-              >
-                <motion.div
-                  animate={{ rotate: isDark ? 180 : 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
-                </motion.div>
-              </motion.button>
+              {/* Theme selector */}
+              <ThemeSelector />
 
               {/* User actions */}
               {isAuthenticated && user ? (
@@ -695,8 +668,6 @@ const Navbar: React.FC = () => {
               items={filteredNavItems}
               isAuthenticated={isAuthenticated}
               unreadCount={unreadCount}
-              isDark={isDark}
-              onThemeToggle={handleThemeToggle}
               onLogout={handleLogout}
             />
           </div>

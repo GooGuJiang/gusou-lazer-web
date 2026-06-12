@@ -16,6 +16,7 @@ export const common = {
   theme: {
     light: '浅色模式',
     dark: '深色模式',
+    system: '跟随系统',
   },
   authAgreement: '登录即表示你同意我们的服务条款和隐私政策',
   registerAgreement: '注册即表示你同意我们的服务条款和隐私政策',
