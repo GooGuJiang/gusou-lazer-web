@@ -171,7 +171,7 @@ const UserDropdown: React.FC<UserDropdownProps> = memo(({ user, onLogout }) => {
             {/* Menu Items */}
             <div className="py-2">
               <DropdownItem
-                to="/profile"
+                to={`/users/${user.id}`}
                 icon={FiUser}
                 label={t('nav.profile')}
                 onClick={handleMenuItemClick}

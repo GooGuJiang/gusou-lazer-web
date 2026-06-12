@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
+import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import type { RegisterForm } from '../types';
@@ -10,7 +11,7 @@ import type { RegisterForm } from '../types';
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const RegisterPage: React.FC = () => {
-  const { register, isLoading, isAuthenticated } = useAuth();
+  const { register, isLoading, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [formData, setFormData] = useState<RegisterForm>({
@@ -23,14 +24,14 @@ const RegisterPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<RegisterForm>>({});
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-  const turnstileRef = useRef<any>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/profile');
+    if (isAuthenticated && user) {
+      navigate(`/users/${user.id}`);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<RegisterForm> = {};
@@ -77,15 +78,15 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    const success = await register(
+    const registeredUser = await register(
       formData.username,
       formData.email,
       formData.password,
       turnstileToken
     );
 
-    if (success) {
-      navigate('/profile');
+    if (registeredUser) {
+      navigate(`/users/${registeredUser.id}`);
     } else {
       // Refresh turnstile on error
       if (turnstileRef.current) {

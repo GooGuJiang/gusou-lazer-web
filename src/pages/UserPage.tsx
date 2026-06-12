@@ -43,7 +43,10 @@ const UserPage: React.FC = () => {
     abortControllerRef.current = abortController;
     latestModeRef.current = selectedMode;
     
-    setLoading(true);
+    // 首次加载才显示 loading，模式切换时保持当前数据可见
+    if (!user) {
+      setLoading(true);
+    }
     setError(null);
     
     userAPI

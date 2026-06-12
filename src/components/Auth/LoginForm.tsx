@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
+import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import type { LoginForm as LoginFormType } from '../../types';
@@ -16,7 +17,7 @@ const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormType>({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-  const turnstileRef = useRef<any>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,9 +28,9 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     if (!formData.username || !formData.password) return;
 
-    const success = await login(formData.username, formData.password, turnstileToken);
-    if (success) {
-      navigate('/profile');
+    const loggedInUser = await login(formData.username, formData.password, turnstileToken);
+    if (loggedInUser) {
+      navigate(`/users/${loggedInUser.id}`);
     } else {
       // Refresh turnstile on error
       if (turnstileRef.current) {

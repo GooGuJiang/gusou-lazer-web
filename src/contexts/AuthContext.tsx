@@ -9,8 +9,8 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string, turnstileToken?: string) => Promise<boolean>;
-  register: (username: string, email: string, password: string, turnstileToken?: string) => Promise<boolean>;
+  login: (username: string, password: string, turnstileToken?: string) => Promise<User | null>;
+  register: (username: string, email: string, password: string, turnstileToken?: string) => Promise<User | null>;
   logout: () => void;
   updateUserMode: (mode?: string) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -152,7 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (username: string, password: string, turnstileToken?: string): Promise<boolean> => {
+  const login = async (username: string, password: string, turnstileToken?: string): Promise<User | null> => {
     try {
       setIsLoading(true);
       const tokenResponse: TokenResponse = await authAPI.login(
@@ -176,26 +176,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       CacheUtil.saveUserCache(userData);
 
       toast.success(t('auth.context.messages.welcomeBack', { username: userData.username }));
-      return true;
+      return userData;
     } catch (error) {
       handleApiError(error);
-      return false;
+      return null;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (username: string, email: string, password: string, turnstileToken?: string): Promise<boolean> => {
+  const register = async (username: string, email: string, password: string, turnstileToken?: string): Promise<User | null> => {
     try {
       setIsLoading(true);
       await authAPI.register(username, email, password, turnstileToken);
       
       // After successful registration, automatically log in
-      const loginSuccess = await login(username, password, turnstileToken);
-      if (loginSuccess) {
+      const loginUser = await login(username, password, turnstileToken);
+      if (loginUser) {
         toast.success(t('auth.context.messages.registerSuccess'));
       }
-      return loginSuccess;
+      return loginUser;
     } catch (error) {
       const err = error as {
         response?: { status?: number; data?: { form_error?: { user?: { username?: string[]; user_email?: string[]; password?: string[] }; message?: string } } };
@@ -222,7 +222,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } else {
         handleApiError(error);
       }
-      return false;
+      return null;
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiKey } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
+import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { authAPI } from '../utils/api';
@@ -20,7 +21,7 @@ interface FormData {
 }
 
 const PasswordResetPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [step, setStep] = useState<ResetStep>('request');
@@ -36,14 +37,14 @@ const PasswordResetPage: React.FC = () => {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [resendCountdown, setResendCountdown] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-  const turnstileRef = useRef<any>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/profile');
+    if (isAuthenticated && user) {
+      navigate(`/users/${user.id}`);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   // Countdown timer for resend
   useEffect(() => {
@@ -113,7 +114,7 @@ const PasswordResetPage: React.FC = () => {
       setResendCountdown(60); // 60 seconds countdown
       // Reset turnstile token for the next step
       setTurnstileToken('');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to request password reset:', error);
       
       // Refresh turnstile on error
@@ -122,9 +123,10 @@ const PasswordResetPage: React.FC = () => {
       }
       
       // 如果是请求过于频繁的错误，说明验证码已发送，直接跳转到重置步骤
-      if (error.response?.data?.error === '请求过于频繁，请稍后再试' || 
-          error.response?.data?.detail?.includes('频繁') ||
-          error.response?.status === 429) {
+      const axiosErr = error as { response?: { status?: number; data?: { error?: string; detail?: string } } };
+      if (axiosErr.response?.data?.error === '请求过于频繁，请稍后再试' ||
+          axiosErr.response?.data?.detail?.includes('频繁') ||
+          axiosErr.response?.status === 429) {
         toast.success(t('auth.passwordReset.codeSent'));
         setStep('reset');
         setResendCountdown(60);
@@ -186,13 +188,14 @@ const PasswordResetPage: React.FC = () => {
       setTimeout(() => {
         navigate('/login');
       }, 2000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to reset password:', error);
       // Refresh turnstile on error
       if (turnstileRef.current) {
         turnstileRef.current.reset();
       }
-      if (error.response?.status === 400 || error.response?.status === 404) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 400 || axiosError.response?.status === 404) {
         toast.error(t('auth.passwordReset.errors.invalidCode'));
       } else {
         toast.error(t('auth.passwordReset.errors.resetFailed'));

@@ -171,7 +171,7 @@ const SUPPORTED_LANGUAGES: LanguageConfig[] = [
 ];
 
 // 语言选择菜单部分
-const LanguageMenuSection = memo<{ i18n: any; t: any }>(({ i18n, t }) => {
+const LanguageMenuSection = memo<{ i18n: typeof import('i18next').default; t: ReturnType<typeof import('react-i18next').useTranslation>['t'] }>(({ i18n, t }) => {
   const [showLanguages, setShowLanguages] = useState(false);
   
   const currentLanguage = SUPPORTED_LANGUAGES.find(
@@ -239,7 +239,7 @@ LanguageMenuSection.displayName = 'LanguageMenuSection';
 const MobileMenuDropdown = memo<{
   items: NavItem[];
   isAuthenticated: boolean;
-  unreadCount: any;
+  unreadCount: { total: number; team_requests: number; private_messages: number; friend_requests: number };
   onLogout: () => void;
 }>(({ items, isAuthenticated, unreadCount, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -435,7 +435,7 @@ const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useTranslation();
   // 通过全局通知上下文获取统一的 unreadCount
-  let unreadCount = { total: 0, team_requests: 0, private_messages: 0, friend_requests: 0 } as any;
+  let unreadCount: { total: number; team_requests: number; private_messages: number; friend_requests: number } = { total: 0, team_requests: 0, private_messages: 0, friend_requests: 0 };
   let isConnected = false;
   let chatConnected = false;
   try {
@@ -443,7 +443,7 @@ const Navbar: React.FC = () => {
     unreadCount = ctx.unreadCount;
     isConnected = ctx.isConnected;
     chatConnected = ctx.chatConnected;
-  } catch (e) {
+  } catch {
     // 如果 Provider 尚未包裹，不影响其它功能
   }
   
@@ -639,7 +639,7 @@ const Navbar: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Link to="/profile" className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                  <Link to={`/users/${user.id}`} className="flex items-center p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
                     <Avatar
                       userId={user.id}
                       username={user.username}
