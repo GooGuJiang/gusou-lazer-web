@@ -31,23 +31,23 @@ export const howToJoinPage = {
       }
     },
     "method2": {
-      "title": "Using LazerAuthlibInjection (x86_64 Platforms Only)",
-      "suitableFor": "This method is suitable for the following users:",
+      "title": "Using EnhancedAuth Ruleset",
+      "suitableFor": "This method is available on the following platforms:",
       "platforms": {
-        "windows": "Windows users. (WOA Temporarily Not Supported)",
-        "linux": "Any Linux Distributions. (arm64 and any other arm devices not supported)",
-        "mac": "macOS. (Apple Silicon are not supported)"
+        "windows": "Windows (amd64, arm64)",
+        "linux": "Linux (amd64, arm64)",
+        "mac": "macOS (Intel, Apple Silicon)"
       },
       "steps": {
         "title": "Steps:",
         "step1": {
-          "title": "Download LazerAuthlibInjection",
+          "title": "Download EnhancedAuth Ruleset",
           "download": "Download from GitHub Releases",
-          "button": "Download LazerAuthlibInjection"
+          "button": "Download EnhancedAuth"
         },
         "step2": {
-          "title": "Install it as a ruleset into osu!lazer",
-          "description": "Install the downloaded LazerAuthlibInjection as a ruleset into osu!lazer"
+          "title": "Install the ruleset DLL into osu!lazer",
+          "description": "Open the osu! data directory (click 'Open osu! folder' in settings), then copy the downloaded osu.Game.Rulesets.EnhancedAuth.dll into the rulesets directory"
         },
         "step3": {
           "title": "Launch the game, go to Settings → Game Mode, and enter the following information:",
@@ -62,7 +62,7 @@ export const howToJoinPage = {
       },
       "warning": {
         "title": "Important Notice",
-        "description": "Although peppy(ppy) explicitly states that rulesets are not subject to anti-cheat detection, we strongly recommend that you avoid connecting the osu!lazer client with AuthLibInject installed to the official servers, as doing so may result in your account being banned!"
+        "description": "Using this ruleset to connect to the official osu! servers will result in your account being banned! Only use it on private servers, and make sure you have disconnected from the official servers before using it."
       }
     }
   },

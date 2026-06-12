@@ -31,23 +31,23 @@ export const howToJoinPage = {
       }
     },
     "method2": {
-      "title": "使用 Authlib Injector（适用于 x86_64 平台）",
-      "suitableFor": "此方法适用于以下用户：",
+      "title": "使用 EnhancedAuth 规则集",
+      "suitableFor": "此方法适用于以下平台：",
       "platforms": {
-        "windows": "Windows 用户（WOA 暂不支持）",
-        "linux": "任意 Linux 发行版（arm64 及其他 arm 设备不支持）",
-        "mac": "macOS（Apple Silicon 不支持）"
+        "windows": "Windows（amd64、arm64）",
+        "linux": "Linux（amd64、arm64）",
+        "mac": "macOS（Intel、Apple Silicon）"
       },
       "steps": {
         "title": "操作步骤：",
         "step1": {
-          "title": "下载 LazerAuthlibInjection",
+          "title": "下载 EnhancedAuth 规则集",
           "download": "从 GitHub Releases 下载",
-          "button": "下载 LazerAuthlibInjection"
+          "button": "下载 EnhancedAuth"
         },
         "step2": {
-          "title": "将其作为规则集安装到 osu!lazer 中",
-          "description": "将下载的 LazerAuthlibInjection 作为规则集安装到 osu!lazer 中"
+          "title": "将规则集 DLL 安装到 osu!lazer 中",
+          "description": "打开 osu! 的数据目录（设置中点击「Open osu! folder」），将下载的 osu.Game.Rulesets.EnhancedAuth.dll 复制到 rulesets 目录中"
         },
         "step3": {
           "title": "启动游戏，进入 设置 → 游戏模式，然后填入以下信息：",
@@ -62,7 +62,7 @@ export const howToJoinPage = {
       },
       "warning": {
         "title": "重要提示",
-        "description": "虽然 ppy 明确声明不对 ruleset 进行反作弊检测，但我们建议您尽量不要将安装 AuthLibInject 后的 osu!lazer 客户端连接到官方服务器，可能会导致账号被封禁！"
+        "description": "使用此规则集连接官方服务器将导致您的 osu! 账号被封禁！请仅在私服上使用，并确保在使用前已退出官方服务器。"
       }
     }
   },
