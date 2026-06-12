@@ -23,13 +23,20 @@ interface ThemeSelectorProps {
 
 const ThemeSelector: React.FC<ThemeSelectorProps> = memo(({ className = '' }) => {
   const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 获取当前主题对应的图标
-  const currentOption = THEME_OPTIONS.find(opt => opt.value === theme) || THEME_OPTIONS[2];
-  const CurrentIcon = currentOption.icon;
+  // 获取当前显示的图标：
+  // - 如果主题是 'system'，根据系统实际模式显示 sun（亮色）或 moon（深色）图标
+  // - 否则显示用户选择的主题对应的图标
+  const getCurrentIcon = (): React.ComponentType<{ size?: number; className?: string }> => {
+    if (theme === 'system') {
+      return isDark ? FiMoon : FiSun;
+    }
+    return theme === 'light' ? FiSun : FiMoon;
+  };
+  const CurrentIcon = getCurrentIcon();
 
   // 切换下拉菜单
   const handleToggle = useCallback(() => {
