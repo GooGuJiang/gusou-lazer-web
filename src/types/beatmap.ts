@@ -170,6 +170,8 @@ export type BeatmapsetSearchExtra = 'video' | 'storyboard';
 
 export type BeatmapsetSearchRank = 'XH' | 'X' | 'SH' | 'S' | 'A' | 'B' | 'C' | 'D';
 
+export type BeatmapsetSearchCursor = Record<string, number | string | boolean | null>;
+
 export interface BeatmapsetSearchQuery {
   q?: string;
   c?: BeatmapsetSearchGeneral[];
@@ -182,7 +184,7 @@ export interface BeatmapsetSearchQuery {
   r?: BeatmapsetSearchRank[];
   played?: boolean | null;
   nsfw?: boolean;
-  cursor_string?: string | null;
+  cursor?: BeatmapsetSearchCursor | null;
 }
 
 export interface BeatmapsetSearchBeatmap {
@@ -246,6 +248,6 @@ export interface BeatmapsetSearchResult {
 export interface BeatmapsetSearchResponse {
   beatmapsets: BeatmapsetSearchResult[];
   total: number;
-  cursor: Record<string, number | string | null> | null;
+  cursor: BeatmapsetSearchCursor | null;
   cursor_string: string | null;
 }

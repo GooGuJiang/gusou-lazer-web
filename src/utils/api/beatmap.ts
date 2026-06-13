@@ -3,6 +3,7 @@ import { getApiErrorStatus } from '../typeGuards';
 import type {
   Beatmap,
   Beatmapset,
+  BeatmapsetSearchCursor,
   BeatmapsetSearchQuery,
   BeatmapsetSearchResponse,
 } from '../../types';
@@ -13,6 +14,14 @@ const appendArrayParams = <T extends string>(
   values?: T[]
 ) => {
   values?.forEach((value) => params.append(key, value));
+};
+
+const appendCursorParams = (params: URLSearchParams, cursor?: BeatmapsetSearchCursor | null) => {
+  if (!cursor) return;
+
+  Object.entries(cursor).forEach(([key, value]) => {
+    params.set(`cursor[${key}]`, value === null ? '' : String(value));
+  });
 };
 
 const buildBeatmapsetSearchParams = (query: BeatmapsetSearchQuery): URLSearchParams => {
@@ -30,7 +39,7 @@ const buildBeatmapsetSearchParams = (query: BeatmapsetSearchQuery): URLSearchPar
   if (query.played !== undefined && query.played !== null)
     params.set('played', String(query.played));
   params.set('nsfw', String(query.nsfw ?? false));
-  if (query.cursor_string) params.set('cursor_string', query.cursor_string);
+  appendCursorParams(params, query.cursor);
 
   return params;
 };

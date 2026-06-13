@@ -32,6 +32,7 @@ import type {
   BeatmapsetSearchExtra,
   BeatmapsetSearchGeneral,
   BeatmapsetSearchLanguage,
+  BeatmapsetSearchCursor,
   BeatmapsetSearchQuery,
   BeatmapsetSearchRank,
   BeatmapsetSearchResult,
@@ -289,7 +290,10 @@ const getInitialState = (params: URLSearchParams): SearchState => {
   };
 };
 
-const buildQuery = (state: SearchState, cursorString?: string | null): BeatmapsetSearchQuery => ({
+const buildQuery = (
+  state: SearchState,
+  cursor?: BeatmapsetSearchCursor | null
+): BeatmapsetSearchQuery => ({
   q: state.query,
   c: state.general,
   m: state.mode,
@@ -300,7 +304,7 @@ const buildQuery = (state: SearchState, cursorString?: string | null): Beatmapse
   r: state.ranks,
   played: state.played,
   nsfw: state.nsfw,
-  cursor_string: cursorString,
+  cursor,
 });
 
 const buildSearchParams = (state: SearchState): URLSearchParams => {
@@ -450,8 +454,8 @@ const BeatmapsetsPage = () => {
     () => ssrPayload?.response.beatmapsets ?? []
   );
   const [total, setTotal] = useState(() => ssrPayload?.response.total ?? 0);
-  const [cursorString, setCursorString] = useState<string | null>(
-    () => ssrPayload?.response.cursor_string ?? null
+  const [cursor, setCursor] = useState<BeatmapsetSearchCursor | null>(
+    () => ssrPayload?.response.cursor ?? null
   );
   const [loading, setLoading] = useState(!ssrPayload);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -519,14 +523,14 @@ const BeatmapsetsPage = () => {
         if (ignore) return;
         setBeatmapsets(response.beatmapsets);
         setTotal(response.total);
-        setCursorString(response.cursor_string);
+        setCursor(response.cursor);
       } catch (fetchError: unknown) {
         if (ignore) return;
         const message = getErrorMessage(fetchError) || t('beatmapsets.search.error');
         setError(message);
         setBeatmapsets([]);
         setTotal(0);
-        setCursorString(null);
+        setCursor(null);
         toast.error(message);
       } finally {
         if (!ignore) setLoading(false);
@@ -541,23 +545,23 @@ const BeatmapsetsPage = () => {
   }, [queryForSearch, ssrPayload, t]);
 
   const loadMore = useCallback(async () => {
-    if (!cursorString || loadingMore || loading || error) return;
+    if (!cursor || loadingMore || loading || error) return;
 
     try {
       setLoadingMore(true);
-      const response = await beatmapAPI.searchBeatmapsets(buildQuery(searchState, cursorString));
+      const response = await beatmapAPI.searchBeatmapsets(buildQuery(searchState, cursor));
       setBeatmapsets((previous) => [...previous, ...response.beatmapsets]);
-      setCursorString(response.cursor_string);
+      setCursor(response.cursor);
     } catch (loadMoreError: unknown) {
       toast.error(getErrorMessage(loadMoreError) || t('beatmapsets.search.error'));
     } finally {
       setLoadingMore(false);
     }
-  }, [cursorString, error, loading, loadingMore, searchState, t]);
+  }, [cursor, error, loading, loadingMore, searchState, t]);
 
   useEffect(() => {
     const target = loadMoreRef.current;
-    if (!target || !cursorString || loading || error) return;
+    if (!target || !cursor || loading || error) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -572,7 +576,7 @@ const BeatmapsetsPage = () => {
     observer.observe(target);
 
     return () => observer.disconnect();
-  }, [cursorString, error, loadMore, loading]);
+  }, [cursor, error, loadMore, loading]);
 
   useEffect(() => {
     const handleScroll = () => setShowBackToTop(window.scrollY > 480);
@@ -848,7 +852,7 @@ const BeatmapsetsPage = () => {
             </div>
           )}
 
-          {cursorString && !loading && !error && (
+          {cursor && !loading && !error && (
             <div ref={loadMoreRef} className="mt-6 flex min-h-12 items-center justify-center">
               {loadingMore && (
                 <span className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
