@@ -35,7 +35,10 @@ const TotpDisableModal: React.FC<TotpDisableModalProps> = ({ isOpen, onClose, on
       onClose();
     } catch (error: unknown) {
       console.error('TOTP禁用失败:', error);
-      const responseData = isRecord(error) && isRecord(error.response) && isRecord(error.response.data) ? error.response.data : undefined;
+      const responseData =
+        isRecord(error) && isRecord(error.response) && isRecord(error.response.data)
+          ? error.response.data
+          : undefined;
       if (responseData?.error === 'Invalid TOTP code') {
         setError(t('settings.totp.errors.invalidCode'));
       } else {

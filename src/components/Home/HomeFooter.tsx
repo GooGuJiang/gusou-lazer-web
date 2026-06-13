@@ -10,11 +10,7 @@ const HomeFooter: React.FC = () => {
       <div className="max-w-7xl mx-auto container-padding">
         <div className="flex flex-col items-center space-y-4">
           <div className="flex items-center space-x-2">
-            <img
-              src="/g0v0.webp"
-              alt={t('common.brandAlt')}
-              className="w-6 h-6 opacity-60"
-            />
+            <img src="/g0v0.webp" alt={t('common.brandAlt')} className="w-6 h-6 opacity-60" />
             <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
               {t('common.brandName')}
             </span>

@@ -21,7 +21,9 @@ export interface BeatmapsetsSsrSuccessPayload {
   fetchedAt: string;
 }
 
-export type BeatmapsetsSsrDocumentPayload = BeatmapsetsSsrSuccessPayload | BeatmapsetsSsrErrorPayload;
+export type BeatmapsetsSsrDocumentPayload =
+  | BeatmapsetsSsrSuccessPayload
+  | BeatmapsetsSsrErrorPayload;
 
 let serverBeatmapsetsSsrPayload: BeatmapsetsSsrSuccessPayload | null = null;
 

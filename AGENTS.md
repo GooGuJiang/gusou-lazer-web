@@ -218,6 +218,9 @@ pnpm build
 # ESLint 代码检查
 pnpm lint
 
+# Prettier 代码格式化
+pnpm format
+
 # 预览构建结果
 pnpm preview
 ```

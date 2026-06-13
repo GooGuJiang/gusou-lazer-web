@@ -31,7 +31,9 @@ const createSelfStatus = (): FriendStatus => ({
   isSelf: true,
 });
 
-const mapRelationshipResponse = (response: RelationshipResponse | null | undefined): FriendStatus => ({
+const mapRelationshipResponse = (
+  response: RelationshipResponse | null | undefined
+): FriendStatus => ({
   isFriend: !!response?.is_following,
   isBlocked: !!response?.isBlocked,
   isMutual: !!response?.mutual,

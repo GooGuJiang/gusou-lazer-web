@@ -223,7 +223,11 @@ const STAR_DIFFICULTY_TEXT_SPECTRUM: DifficultySpectrumStop[] = [
   [12.4, '#6563de'],
 ];
 
-const getArrayParam = <T extends string>(params: URLSearchParams, key: string, allowed: T[]): T[] => {
+const getArrayParam = <T extends string>(
+  params: URLSearchParams,
+  key: string,
+  allowed: T[]
+): T[] => {
   const allowedSet = new Set<string>(allowed);
   return params.getAll(key).filter((value): value is T => allowedSet.has(value));
 };
@@ -242,9 +246,8 @@ const getInitialState = (params: URLSearchParams): SearchState => {
   const modeValue = params.get('m');
   const parsedMode = modeValue === null ? Number.NaN : Number(modeValue);
   const sort = params.get('sort') ?? 'ranked_desc';
-  const [sortField = DEFAULT_STATE.sortField, sortDirection = DEFAULT_STATE.sortDirection] = sort.split(
-    '_'
-  ) as [SortField, SortDirection];
+  const [sortField = DEFAULT_STATE.sortField, sortDirection = DEFAULT_STATE.sortDirection] =
+    sort.split('_') as [SortField, SortDirection];
   const played = params.get('played');
 
   return {
@@ -612,14 +615,19 @@ const BeatmapsetsPage = () => {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-text-primary sm:text-2xl">{t('beatmapsets.title')}</h1>
+              <h1 className="text-xl font-bold text-text-primary sm:text-2xl">
+                {t('beatmapsets.title')}
+              </h1>
               <p className="text-xs text-text-secondary sm:text-sm">{t('beatmapsets.subtitle')}</p>
             </div>
           </div>
 
           <div className="relative bg-card-hover p-5 text-text-primary sm:p-7">
             <div className="relative space-y-5">
-              <form onSubmit={handleSubmit} className="flex overflow-hidden rounded-xl border border-border-color bg-btn-bg shadow-inner backdrop-blur">
+              <form
+                onSubmit={handleSubmit}
+                className="flex overflow-hidden rounded-xl border border-border-color bg-btn-bg shadow-inner backdrop-blur"
+              >
                 <input
                   value={inputValue}
                   onChange={(event) => setInputValue(event.target.value)}
@@ -1008,7 +1016,12 @@ const BeatmapsetCard = ({
       </div>
 
       <div className="relative z-10 flex h-full min-h-28 rounded-2xl">
-        <img src={cover} alt="" className="h-28 w-28 flex-none rounded-l-2xl object-cover" loading="lazy" />
+        <img
+          src={cover}
+          alt=""
+          className="h-28 w-28 flex-none rounded-l-2xl object-cover"
+          loading="lazy"
+        />
         <div className="flex min-w-0 flex-1 flex-col justify-between p-3 text-text-primary">
           <div className="min-w-0">
             <div className="flex items-start justify-between gap-2">
@@ -1032,10 +1045,15 @@ const BeatmapsetCard = ({
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
-            <span className={`rounded-md px-2 py-0.5 uppercase ${getStatusColor(beatmapset.status)}`}>
+            <span
+              className={`rounded-md px-2 py-0.5 uppercase ${getStatusColor(beatmapset.status)}`}
+            >
               {t(`beatmapsets.category.${beatmapset.status}`, { defaultValue: beatmapset.status })}
             </span>
-            <div className="group/difficulties relative flex min-w-0 items-center gap-1 text-text-primary" aria-label={difficultyRange}>
+            <div
+              className="group/difficulties relative flex min-w-0 items-center gap-1 text-text-primary"
+              aria-label={difficultyRange}
+            >
               {modeGroups.map((group) => (
                 <span key={group.mode} className="flex items-center gap-1">
                   <span
@@ -1043,14 +1061,18 @@ const BeatmapsetCard = ({
                     aria-label={getModeDisplayName(group.mode)}
                   />
                   {group.beatmaps.length > 8 ? (
-                    <span className="text-xs font-black text-text-primary">{group.beatmaps.length}</span>
+                    <span className="text-xs font-black text-text-primary">
+                      {group.beatmaps.length}
+                    </span>
                   ) : (
                     <span className="flex items-center gap-0.5">
                       {group.beatmaps.map((beatmap) => (
                         <span
                           key={beatmap.id}
                           className="h-3 w-1.5 rounded-full"
-                          style={{ backgroundColor: getStarDifficultyColor(beatmap.difficulty_rating) }}
+                          style={{
+                            backgroundColor: getStarDifficultyColor(beatmap.difficulty_rating),
+                          }}
                           aria-label={`${getModeDisplayName(beatmap.mode)} · ${beatmap.difficulty_rating.toFixed(2)}★ · ${beatmap.version}`}
                         />
                       ))}
@@ -1065,10 +1087,16 @@ const BeatmapsetCard = ({
                   onClick={(event) => event.stopPropagation()}
                 >
                   {modeGroups.map((group, groupIndex) => (
-                    <div key={group.mode} className={groupIndex > 0 ? 'mt-2 border-t border-border-color/70 pt-2' : ''}>
+                    <div
+                      key={group.mode}
+                      className={groupIndex > 0 ? 'mt-2 border-t border-border-color/70 pt-2' : ''}
+                    >
                       <div className="mb-1 flex items-center gap-2 px-1 text-xs font-black text-text-primary">
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/70">
-                          <span className={`${getModeClass(group.mode)} text-sm`} aria-label={getModeDisplayName(group.mode)} />
+                          <span
+                            className={`${getModeClass(group.mode)} text-sm`}
+                            aria-label={getModeDisplayName(group.mode)}
+                          />
                         </span>
                         <span>{getModeDisplayName(group.mode)}</span>
                       </div>
@@ -1128,7 +1156,9 @@ const BeatmapsetCard = ({
             isFavourited ? 'text-osu-pink' : 'text-text-secondary hover:text-osu-pink'
           }`}
           title={isFavourited ? t('beatmapsets.card.unfavourite') : t('beatmapsets.card.favourite')}
-          aria-label={isFavourited ? t('beatmapsets.card.unfavourite') : t('beatmapsets.card.favourite')}
+          aria-label={
+            isFavourited ? t('beatmapsets.card.unfavourite') : t('beatmapsets.card.favourite')
+          }
         >
           <Heart className={`h-4 w-4 ${isFavourited ? 'fill-current' : ''}`} />
         </button>
@@ -1140,10 +1170,13 @@ const BeatmapsetCard = ({
           title={t('beatmapsets.card.download')}
           aria-label={t('beatmapsets.card.download')}
         >
-          {downloadLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloadLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
         </button>
       </div>
-
     </div>
   );
 };

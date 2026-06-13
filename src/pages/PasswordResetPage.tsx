@@ -230,11 +230,7 @@ const PasswordResetPage: React.FC = () => {
       <div className="max-w-md w-full space-y-3 pb-4 lg:pb-0">
         <div className="text-center">
           <div className="w-12 h-12 mx-auto flex items-center justify-center mb-2">
-            <img
-              src="/g0v0.webp"
-              alt={t('common.brandAlt')}
-              className="w-12 h-12 object-contain"
-            />
+            <img src="/g0v0.webp" alt={t('common.brandAlt')} className="w-12 h-12 object-contain" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             {t('auth.passwordReset.title')}

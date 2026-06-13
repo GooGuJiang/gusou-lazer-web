@@ -90,7 +90,9 @@ export const getUserPageSsrMaxAge = (): number => USER_PAGE_SSR_MAX_AGE;
 
 export const getUserPageSsrActivityLimit = (): number => USER_PAGE_ACTIVITY_LIMIT;
 
-export const fetchUserPageSsrPayload = async (url: string): Promise<UserPageSsrDocumentPayload | null> => {
+export const fetchUserPageSsrPayload = async (
+  url: string
+): Promise<UserPageSsrDocumentPayload | null> => {
   const requestUrl = new URL(url, 'http://localhost');
   const userId = normalizeUserPagePath(requestUrl.pathname);
 
@@ -106,7 +108,9 @@ export const fetchUserPageSsrPayload = async (url: string): Promise<UserPageSsrD
     const user = await fetchJson<UserPageSsrPayload['user']>(userUrl);
     const recentActivitiesUrl = `${API_BASE_URL}/api/v2/users/${user.id}/recent_activity?limit=${USER_PAGE_ACTIVITY_LIMIT}&offset=0`;
     const recentActivitiesResponse = await fetchJson<unknown>(recentActivitiesUrl);
-    const recentActivities = Array.isArray(recentActivitiesResponse) ? recentActivitiesResponse : [];
+    const recentActivities = Array.isArray(recentActivitiesResponse)
+      ? recentActivitiesResponse
+      : [];
 
     return {
       route: {
@@ -131,7 +135,10 @@ export const fetchUserPageSsrPayload = async (url: string): Promise<UserPageSsrD
   }
 };
 
-export const injectUserPageSsrPayload = (html: string, payload: UserPageSsrDocumentPayload | null): string => {
+export const injectUserPageSsrPayload = (
+  html: string,
+  payload: UserPageSsrDocumentPayload | null
+): string => {
   if (!payload) return html;
 
   const script = `<script id="${USER_PAGE_SSR_SCRIPT_ID}" type="application/json">${escapeJsonForHtml(payload)}</script>`;

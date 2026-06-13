@@ -28,33 +28,33 @@ function App({ router = 'browser' }: AppProps) {
     <>
       <ScrollToTop />
       <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<HomePage />} />
-                  <Route path="login" element={<LoginPage />} />
-                  <Route path="register" element={<RegisterPage />} />
-                  <Route path="password-reset" element={<PasswordResetPage />} />
-                  <Route path="users/:userId" element={<UserPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  <Route path="rankings" element={<RankingsPage />} />
-                  <Route path="teams" element={<TeamsPage />} />
-                  <Route path="teams/create" element={<CreateTeamPage />} />
-                  <Route path="teams/:teamId" element={<TeamDetailPage />} />
-                  <Route path="teams/:teamId/edit" element={<CreateTeamPage />} />
-                  <Route path="messages" element={<MessagesPage />} />
-                  <Route path="how-to-join" element={<HowToJoinPage />} />
-                  <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-                  <Route path="beatmaps/:beatmapId" element={<BeatmapPage />} />
-                  <Route path="beatmapsets/:beatmapsetId" element={<BeatmapPage />} />
-                  <Route path="beatmapsets" element={<BeatmapsetsPage />} />
-                  <Route path="beatmaps" element={<Navigate to="/beatmapsets" replace />} />
-                  <Route
-                    path="*"
-                    element={
-                      <div className="flex items-center justify-center h-screen">
-                        <h1 className="text-2xl font-bold">{t('app.notFound')}</h1>
-                      </div>
-                    }
-                  />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="password-reset" element={<PasswordResetPage />} />
+          <Route path="users/:userId" element={<UserPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="rankings" element={<RankingsPage />} />
+          <Route path="teams" element={<TeamsPage />} />
+          <Route path="teams/create" element={<CreateTeamPage />} />
+          <Route path="teams/:teamId" element={<TeamDetailPage />} />
+          <Route path="teams/:teamId/edit" element={<CreateTeamPage />} />
+          <Route path="messages" element={<MessagesPage />} />
+          <Route path="how-to-join" element={<HowToJoinPage />} />
+          <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="beatmaps/:beatmapId" element={<BeatmapPage />} />
+          <Route path="beatmapsets/:beatmapsetId" element={<BeatmapPage />} />
+          <Route path="beatmapsets" element={<BeatmapsetsPage />} />
+          <Route path="beatmaps" element={<Navigate to="/beatmapsets" replace />} />
+          <Route
+            path="*"
+            element={
+              <div className="flex items-center justify-center h-screen">
+                <h1 className="text-2xl font-bold">{t('app.notFound')}</h1>
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </>

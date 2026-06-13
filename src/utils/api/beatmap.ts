@@ -1,8 +1,17 @@
 import { api } from './client';
 import { getApiErrorStatus } from '../typeGuards';
-import type { Beatmap, Beatmapset, BeatmapsetSearchQuery, BeatmapsetSearchResponse } from '../../types';
+import type {
+  Beatmap,
+  Beatmapset,
+  BeatmapsetSearchQuery,
+  BeatmapsetSearchResponse,
+} from '../../types';
 
-const appendArrayParams = <T extends string>(params: URLSearchParams, key: string, values?: T[]) => {
+const appendArrayParams = <T extends string>(
+  params: URLSearchParams,
+  key: string,
+  values?: T[]
+) => {
   values?.forEach((value) => params.append(key, value));
 };
 
@@ -18,7 +27,8 @@ const buildBeatmapsetSearchParams = (query: BeatmapsetSearchQuery): URLSearchPar
   params.set('sort', query.sort ?? 'ranked_desc');
   appendArrayParams(params, 'e', query.e);
   appendArrayParams(params, 'r', query.r);
-  if (query.played !== undefined && query.played !== null) params.set('played', String(query.played));
+  if (query.played !== undefined && query.played !== null)
+    params.set('played', String(query.played));
   params.set('nsfw', String(query.nsfw ?? false));
   if (query.cursor_string) params.set('cursor_string', query.cursor_string);
 

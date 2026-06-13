@@ -54,11 +54,7 @@ const LoginForm: React.FC = () => {
     <div className="max-w-md w-full space-y-3">
       <div className="text-center">
         <div className="w-12 h-12 mx-auto flex items-center justify-center mb-2">
-          <img
-            src="/g0v0.webp"
-            alt={t('common.brandAlt')}
-            className="w-12 h-12 object-contain"
-          />
+          <img src="/g0v0.webp" alt={t('common.brandAlt')} className="w-12 h-12 object-contain" />
         </div>
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('auth.login.title')}</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t('auth.login.subtitle')}</p>

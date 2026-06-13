@@ -19,7 +19,10 @@ const buildSearchUrl = (requestUrl: URL): string => {
 };
 
 const getSsrAuthorization = (authorization?: string): string => {
-  const token = authorization?.trim() || process.env.BEATMAPSETS_SSR_ACCESS_TOKEN?.trim() || DEFAULT_BEATMAPSETS_SSR_ACCESS_TOKEN;
+  const token =
+    authorization?.trim() ||
+    process.env.BEATMAPSETS_SSR_ACCESS_TOKEN?.trim() ||
+    DEFAULT_BEATMAPSETS_SSR_ACCESS_TOKEN;
   return token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 };
 

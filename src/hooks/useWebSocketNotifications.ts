@@ -212,7 +212,9 @@ export const useWebSocketNotifications = ({
           message.event === 'new_message' ||
           message.event === 'message'
         ) {
-          const chatData = message.data as { messages?: ChatMessage[]; message?: unknown; users?: User[] } | undefined;
+          const chatData = message.data as
+            | { messages?: ChatMessage[]; message?: unknown; users?: User[] }
+            | undefined;
           console.log('聊天事件数据:', chatData);
 
           if (chatData?.messages) {
@@ -272,7 +274,9 @@ export const useWebSocketNotifications = ({
             timestamp: message.data.timestamp as string,
             sender_id: message.data.sender_id as number,
             is_action: (message.data.is_action as boolean) || false,
-            sender: isRecord(message.data.sender) ? (message.data.sender as unknown as User) : undefined,
+            sender: isRecord(message.data.sender)
+              ? (message.data.sender as unknown as User)
+              : undefined,
             uuid: message.data.uuid as string | undefined,
           };
 
@@ -358,7 +362,6 @@ export const useWebSocketNotifications = ({
 
           const data = toNotificationPayload(message.data);
           if (data) {
-
             // 根据频道类型创建相应的通知
             if (data.category === 'channel' && data.name === 'channel_message') {
               const channelType = data.details?.type?.toLowerCase();
@@ -421,7 +424,8 @@ export const useWebSocketNotifications = ({
                 created_at: toStringValue(data.created_at || new Date().toISOString()),
                 object_type: toStringValue(data.object_type || 'channel'),
                 object_id: toStringValue(data.object_id || data.id),
-                source_user_id: typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
+                source_user_id:
+                  typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
                 is_read: toBooleanValue(data.is_read),
                 details: {
                   type: data.details?.type || channelType || 'unknown',
@@ -520,7 +524,8 @@ export const useWebSocketNotifications = ({
                 created_at: toStringValue(data.created_at || new Date().toISOString()),
                 object_type: toStringValue(data.object_type || 'unknown'),
                 object_id: toStringValue(data.object_id || data.id),
-                source_user_id: typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
+                source_user_id:
+                  typeof data.source_user_id === 'number' ? data.source_user_id : undefined,
                 is_read: toBooleanValue(data.is_read),
                 details: data.details || {},
               };

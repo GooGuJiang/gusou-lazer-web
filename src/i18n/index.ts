@@ -12,7 +12,9 @@ const getBrowserLanguage = (): AppLanguages => {
   if (typeof window === 'undefined') return defaultLanguage;
 
   const browserLang =
-    navigator.language || (navigator as Navigator & { userLanguage?: string }).userLanguage || defaultLanguage;
+    navigator.language ||
+    (navigator as Navigator & { userLanguage?: string }).userLanguage ||
+    defaultLanguage;
   const langCode = browserLang.split('-')[0].toLowerCase();
 
   // 检查是否是支持的语言

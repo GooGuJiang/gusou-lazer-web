@@ -105,9 +105,10 @@ const UserPage: React.FC = () => {
       .then((userData) => {
         // 只有当请求未被取消且仍然是最新的模式时才更新数据
         if (!abortController.signal.aborted && latestModeRef.current === selectedMode) {
-          const resolvedMode = !modeFromUrl && !isUserModeSwitch && userData.g0v0_playmode
-            ? userData.g0v0_playmode
-            : selectedMode;
+          const resolvedMode =
+            !modeFromUrl && !isUserModeSwitch && userData.g0v0_playmode
+              ? userData.g0v0_playmode
+              : selectedMode;
           setUser(userData);
           if (resolvedMode !== selectedMode) {
             setSelectedMode(resolvedMode);
