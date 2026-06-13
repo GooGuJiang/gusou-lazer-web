@@ -18,10 +18,27 @@
       ]
     }
   ],
+  "functions": {
+    "api/render.js": {
+      "includeFiles": "dist/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/:match*",
       "destination": "https://api.memesearch.app/api/:match*"
+    },
+    {
+      "source": "/assets/:match*",
+      "destination": "/assets/:match*"
+    },
+    {
+      "source": "/image/:match*",
+      "destination": "/image/:match*"
+    },
+    {
+      "source": "/users/:match*",
+      "destination": "/api/render"
     },
     {
       "source": "/(.*)",

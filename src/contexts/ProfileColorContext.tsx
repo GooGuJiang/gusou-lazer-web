@@ -31,27 +31,21 @@ const LOCAL_STORAGE_KEY = 'user_profile_color'; // 本地存储的键名
  * 2. 本地存储的用户设置颜色
  * 3. 默认颜色
  */
+const getLocalProfileColor = (): string => {
+  if (typeof window === 'undefined') return DEFAULT_PROFILE_COLOR;
+
+  try {
+    return window.localStorage.getItem(LOCAL_STORAGE_KEY) || DEFAULT_PROFILE_COLOR;
+  } catch {
+    return DEFAULT_PROFILE_COLOR;
+  }
+};
+
 export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
-  const [profileColor, setProfileColorState] = useState<string>(() => {
-    // 初始化时从本地存储读取
-    try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-      return stored || DEFAULT_PROFILE_COLOR;
-    } catch {
-      return DEFAULT_PROFILE_COLOR;
-    }
-  });
+  const [profileColor, setProfileColorState] = useState<string>(() => getLocalProfileColor());
   // 保留从服务器加载或成功保存的颜色，用于重置
-  const [savedProfileColor, setSavedProfileColor] = useState<string>(() => {
-    // 初始化时从本地存储读取
-    try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-      return stored || DEFAULT_PROFILE_COLOR;
-    } catch {
-      return DEFAULT_PROFILE_COLOR;
-    }
-  });
+  const [savedProfileColor, setSavedProfileColor] = useState<string>(() => getLocalProfileColor());
   const [isLoading, setIsLoading] = useState(true);
 
   // 加载用户的个人颜色设置
@@ -59,7 +53,7 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
     const loadProfileColor = async () => {
       if (!isAuthenticated) {
         // 未登录时使用本地存储的颜色或默认颜色
-        const storedColor = localStorage.getItem(LOCAL_STORAGE_KEY) || DEFAULT_PROFILE_COLOR;
+        const storedColor = getLocalProfileColor();
         setProfileColorState(storedColor);
         setSavedProfileColor(storedColor);
         applyColorToDOM(storedColor);
@@ -68,7 +62,7 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
       }
 
       // 先立即应用本地存储的颜色，避免延迟
-      const storedColor = localStorage.getItem(LOCAL_STORAGE_KEY) || DEFAULT_PROFILE_COLOR;
+      const storedColor = getLocalProfileColor();
       setProfileColorState(storedColor);
       setSavedProfileColor(storedColor);
       applyColorToDOM(storedColor);
@@ -88,7 +82,7 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
         if (serverColor !== storedColor) {
           setProfileColorState(serverColor);
           setSavedProfileColor(serverColor);
-          localStorage.setItem(LOCAL_STORAGE_KEY, serverColor);
+          window.localStorage.setItem(LOCAL_STORAGE_KEY, serverColor);
           applyColorToDOM(serverColor);
         }
       } catch (error) {
@@ -102,6 +96,8 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
 
   // 应用颜色到DOM的CSS变量
   const applyColorToDOM = (color: string) => {
+    if (typeof document === 'undefined') return;
+
     document.documentElement.style.setProperty('--profile-color', color);
     document.documentElement.style.setProperty('--osu-pink', color);
 
@@ -167,7 +163,7 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
       }
 
       // 保存到本地存储
-      localStorage.setItem(LOCAL_STORAGE_KEY, normalizedColor);
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, normalizedColor);
 
       // 成功后更新已保存颜色
       setSavedProfileColor(normalizedColor);

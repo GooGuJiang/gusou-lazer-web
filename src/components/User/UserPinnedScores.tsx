@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI, scoreAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
@@ -340,6 +340,7 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({
   const [scores, setScores] = useState<BestScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const loadedScoresKeyRef = useRef<string | null>(null);
 
   const canEdit = currentUser?.id === userId;
 
@@ -427,9 +428,13 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({
   };
 
   useEffect(() => {
-    if (userId) {
-      loadScores();
-    }
+    if (!userId) return;
+
+    const scoresKey = `${userId}:${selectedMode}`;
+    if (loadedScoresKeyRef.current === scoresKey) return;
+    loadedScoresKeyRef.current = scoresKey;
+
+    void loadScores();
   }, [userId, selectedMode]);
 
   const handleRefresh = () => {

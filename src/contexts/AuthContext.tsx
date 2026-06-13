@@ -96,6 +96,18 @@ const CacheUtil = {
   },
 };
 
+let currentUserRequest: Promise<User> | null = null;
+
+const fetchCurrentUserOnce = async (): Promise<User> => {
+  if (!currentUserRequest) {
+    currentUserRequest = userAPI.getMe().finally(() => {
+      currentUserRequest = null;
+    });
+  }
+
+  return currentUserRequest;
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -125,10 +137,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
 
-      // 缓存无效或不存在，请求 API
+      // 缓存无效或不存在，请求 API；StrictMode 下复用同一个 in-flight 请求避免重复加载当前用户
       try {
         console.log(t('auth.context.cache.fetchingFromApi'));
-        const userData = await userAPI.getMe();
+        const userData = await fetchCurrentUserOnce();
         setUser(userData);
         setIsAuthenticated(true);
         // 保存到缓存

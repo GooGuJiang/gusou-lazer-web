@@ -15,6 +15,11 @@ export interface TOTPCreateStart {
 
 export type TOTPBackupCodes = string[];
 
+const userRequestCache = new Map<string, Promise<unknown>>();
+
+const getUserRequestKey = (userIdOrName: string | number, ruleset?: string): string =>
+  `${userIdOrName}:${ruleset ?? 'default'}`;
+
 export const userAPI = {
   getMe: async (ruleset?: string) => {
     const url = ruleset ? `/api/v2/me/${ruleset}` : '/api/v2/me/';
@@ -25,9 +30,26 @@ export const userAPI = {
   getUser: async (userIdOrName: string | number, ruleset?: string, config?: AxiosRequestConfig) => {
     const url = ruleset
       ? `/api/v2/users/${userIdOrName}/${ruleset}`
-      : `/api/v2/users/${userIdOrName}`;
-    const response = await api.get(url, config);
-    return response.data;
+      : `/api/v2/users/${userIdOrName}/`;
+
+    // 带自定义 config 的请求可能有不同 header / signal，不做共享，避免误取消或配置串用。
+    if (config) {
+      const response = await api.get(url, config);
+      return response.data;
+    }
+
+    const requestKey = getUserRequestKey(userIdOrName, ruleset);
+    const cachedRequest = userRequestCache.get(requestKey);
+    if (cachedRequest) return cachedRequest;
+
+    const request = api
+      .get(url)
+      .then((response) => response.data)
+      .finally(() => {
+        userRequestCache.delete(requestKey);
+      });
+    userRequestCache.set(requestKey, request);
+    return request;
   },
 
   getAvatarUrl: (userId: number, bustCache: boolean = false) => {

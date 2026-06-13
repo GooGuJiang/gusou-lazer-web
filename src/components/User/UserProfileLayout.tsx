@@ -6,7 +6,7 @@ import RankHistoryChart from '../UI/RankHistoryChart';
 import PlayerRankCard from '../User/PlayerRankCard';
 import StatsCard from '../User/StatsCard';
 import LevelProgress from '../UI/LevelProgress';
-import { type User, type GameMode, type BestScore } from '../../types';
+import { type User, type GameMode, type BestScore, type UserActivity } from '../../types';
 import FriendStats from './FriendStats';
 import UserRecentActivity from './UserRecentActivity';
 import UserPinnedScores from './UserPinnedScores';
@@ -25,6 +25,10 @@ interface UserProfileLayoutProps {
   selectedMode: GameMode;
   onModeChange: (mode: GameMode) => void;
   onUserUpdate?: (user: User) => void; // 添加用户更新回调
+  initialRecentActivities?: UserActivity[];
+  initialRecentActivitiesHasMore?: boolean;
+  isRankHistoryUpdating?: boolean;
+  rankHistoryAnimationKey?: number;
 }
 
 const formatPlayTime = (seconds: number | undefined): string => {
@@ -118,6 +122,10 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
   selectedMode,
   onModeChange,
   onUserUpdate,
+  initialRecentActivities,
+  initialRecentActivitiesHasMore,
+  isRankHistoryUpdating = false,
+  rankHistoryAnimationKey = 0,
 }) => {
   const { t } = useTranslation();
   const { refreshUser, user: currentUser } = useAuth();
@@ -156,7 +164,6 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
     coverUrlRaw === 'https://assets.ppy.sh/user-profile-covers/default.jpeg'
       ? '/image/backgrounds/bgcover.jpg'
       : coverUrlRaw;
-  const [isUpdatingMode] = useState(false);
 
   // 检查是否可以编辑（仅自己的页面）
   const canEdit = currentUser?.id === user.id;
@@ -381,7 +388,8 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
               <div className="w-full mt-[-45px]">
                 <RankHistoryChart
                   rankHistory={user.rank_history}
-                  isUpdatingMode={isUpdatingMode}
+                  isUpdatingMode={isRankHistoryUpdating}
+                  refreshAnimationKey={rankHistoryAnimationKey}
                   selectedModeColor={profileColor}
                   delay={0.4}
                   height="8rem"
@@ -434,7 +442,11 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
 
         {/* 用户最近活动 */}
         <div className="bg-transparent md:bg-card px-3 md:px-6 lg:px-8 py-3 md:py-4 border-b border-card">
-          <UserRecentActivity userId={user.id} />
+          <UserRecentActivity
+            userId={user.id}
+            initialActivities={initialRecentActivities}
+            initialHasMore={initialRecentActivitiesHasMore}
+          />
         </div>
 
         {/* 用户置顶成绩 */}

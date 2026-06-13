@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
@@ -306,6 +306,8 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
 
+  const loadedScoresKeyRef = useRef<string | null>(null);
+
   // 检查是否是当前用户自己的页面
   const canEdit = currentUser?.id === userId;
 
@@ -357,14 +359,18 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({
   };
 
   useEffect(() => {
-    if (userId) {
-      // 重置所有相关状态
-      setOffset(0);
-      setScores([]);
-      setError(null);
-      setHasMore(true);
-      loadScores(true);
-    }
+    if (!userId) return;
+
+    const scoresKey = `${userId}:${selectedMode}`;
+    if (loadedScoresKeyRef.current === scoresKey) return;
+    loadedScoresKeyRef.current = scoresKey;
+
+    // 重置所有相关状态
+    setOffset(0);
+    setScores([]);
+    setError(null);
+    setHasMore(true);
+    void loadScores(true);
   }, [userId, selectedMode]);
 
   const handleLoadMore = () => {

@@ -1,3 +1,4 @@
+import type { UserActivity } from './activity';
 import type { GameMode } from './common';
 
 export interface TeamStatistics {
@@ -167,6 +168,17 @@ export interface User {
     weekly_streak_current: number;
     user_id: number;
   };
+}
+
+export interface UserPageSsrPayload {
+  route: {
+    userId: string;
+    mode?: GameMode;
+  };
+  user: User;
+  recentActivities: UserActivity[];
+  recentActivitiesHasMore: boolean;
+  fetchedAt: string;
 }
 
 export interface FriendRelation {

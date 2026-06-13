@@ -12,6 +12,34 @@ export type FriendStatus = {
   isSelf: boolean;
 };
 
+const relationshipStatusCache = new Map<string, FriendStatus>();
+const relationshipRequestCache = new Map<string, Promise<FriendStatus>>();
+
+interface RelationshipResponse {
+  is_following?: boolean;
+  isBlocked?: boolean;
+  mutual?: boolean;
+  is_followed?: boolean;
+}
+
+const createSelfStatus = (): FriendStatus => ({
+  isFriend: false,
+  isBlocked: false,
+  isMutual: false,
+  followsMe: false,
+  loading: false,
+  isSelf: true,
+});
+
+const mapRelationshipResponse = (response: RelationshipResponse | null | undefined): FriendStatus => ({
+  isFriend: !!response?.is_following,
+  isBlocked: !!response?.isBlocked,
+  isMutual: !!response?.mutual,
+  followsMe: !!response?.is_followed,
+  loading: false,
+  isSelf: false,
+});
+
 export function useFriendRelationship(targetUserId: number, selfUserId: number) {
   const mountedRef = useRef(true);
 
@@ -55,34 +83,48 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
       return;
     }
 
+    const relationshipKey = `${selfUserId}:${targetUserId}`;
+
+    if (targetUserId === selfUserId) {
+      const selfStatus = createSelfStatus();
+      relationshipStatusCache.set(relationshipKey, selfStatus);
+      setStatus(selfStatus);
+      return;
+    }
+
+    const cachedStatus = relationshipStatusCache.get(relationshipKey);
+    if (cachedStatus) {
+      setStatus(cachedStatus);
+      return;
+    }
+
     try {
       console.log('Making API call to check relationship for userId:', targetUserId);
       setStatus((prev) => ({ ...prev, loading: true }));
 
-      const res = await friendsAPI.checkRelationship(targetUserId);
-      console.log('API response:', res);
+      let relationshipRequest = relationshipRequestCache.get(relationshipKey);
+      if (!relationshipRequest) {
+        relationshipRequest = friendsAPI
+          .checkRelationship(targetUserId)
+          .then((res: RelationshipResponse) => {
+            console.log('API response:', res);
+            const nextStatus = mapRelationshipResponse(res);
+            relationshipStatusCache.set(relationshipKey, nextStatus);
+            return nextStatus;
+          })
+          .finally(() => {
+            relationshipRequestCache.delete(relationshipKey);
+          });
+        relationshipRequestCache.set(relationshipKey, relationshipRequest);
+      }
+
+      const nextStatus = await relationshipRequest;
 
       if (!mountedRef.current) return;
 
-      // 映射 API 响应字段到组件状态
-      setStatus({
-        isFriend: !!res?.is_following, // 我是否关注对方
-        isBlocked: !!res?.isBlocked, // 是否屏蔽（API 可能不返回此字段）
-        isMutual: !!res?.mutual, // 是否互相关注
-        followsMe: !!res?.is_followed, // 对方是否关注我
-        loading: false,
-        isSelf: false,
-      });
+      setStatus(nextStatus);
 
-      console.log('Mapped status:', {
-        original: res,
-        mapped: {
-          isFriend: !!res?.is_following,
-          isBlocked: !!res?.isBlocked,
-          isMutual: !!res?.mutual,
-          followsMe: !!res?.is_followed,
-        },
-      });
+      console.log('Mapped status:', nextStatus);
     } catch (err: unknown) {
       console.log('API call failed:', err);
 
@@ -95,15 +137,10 @@ export function useFriendRelationship(targetUserId: number, selfUserId: number) 
 
       if (isSelfError) {
         console.log('Detected self-relationship error, setting isSelf to true');
+        const selfStatus = createSelfStatus();
+        relationshipStatusCache.set(relationshipKey, selfStatus);
         if (mountedRef.current) {
-          setStatus({
-            isFriend: false,
-            isBlocked: false,
-            isMutual: false,
-            followsMe: false,
-            loading: false,
-            isSelf: true,
-          });
+          setStatus(selfStatus);
         }
         return; // 不显示错误toast，这是正常情况
       }

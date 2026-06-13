@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
@@ -288,6 +288,7 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
+  const loadedScoresKeyRef = useRef<string | null>(null);
 
   const loadScores = async (reset = false) => {
     try {
@@ -332,13 +333,17 @@ const UserRecentScores: React.FC<UserRecentScoresProps> = ({
   };
 
   useEffect(() => {
-    if (userId) {
-      setOffset(0);
-      setScores([]);
-      setError(null);
-      setHasMore(true);
-      loadScores(true);
-    }
+    if (!userId) return;
+
+    const scoresKey = `${userId}:${selectedMode}`;
+    if (loadedScoresKeyRef.current === scoresKey) return;
+    loadedScoresKeyRef.current = scoresKey;
+
+    setOffset(0);
+    setScores([]);
+    setError(null);
+    setHasMore(true);
+    void loadScores(true);
   }, [userId, selectedMode]);
 
   const handleLoadMore = () => {

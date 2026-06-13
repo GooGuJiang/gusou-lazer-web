@@ -11,6 +11,7 @@ interface RankHistoryData {
 interface RankHistoryChartProps {
   rankHistory?: RankHistoryData;
   isUpdatingMode?: boolean;
+  refreshAnimationKey?: number;
   selectedModeColor?: string;
   title?: string;
   delay?: number;
@@ -22,6 +23,7 @@ interface RankHistoryChartProps {
 const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
   rankHistory,
   isUpdatingMode = false,
+  refreshAnimationKey = 0,
   selectedModeColor = '#e91e63',
   delay = 0.4,
   height = '16rem',
@@ -59,11 +61,13 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
     return [dataMin - pad, dataMax + pad];
   }, [chartData]);
 
+  const shouldAnimateRefresh = refreshAnimationKey > 0;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
+      transition={shouldAnimateRefresh ? { delay } : { duration: 0 }}
       className="bg-card rounded-2xl p-6 outline-none focus:outline-none ring-0 focus:ring-0"
       style={{ outline: 'none' }}
     >
@@ -111,6 +115,7 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
                 formatter={(value) => [`#${value}`, t('profile.rankHistory.globalRank')]}
               />
               <Line
+                key={`rank-history-${refreshAnimationKey}`}
                 type="monotone"
                 dataKey="rank"
                 stroke={selectedModeColor}
@@ -120,6 +125,8 @@ const RankHistoryChart: React.FC<RankHistoryChartProps> = ({
                 connectNulls={false}
                 // 线端圆角，边缘看起来更自然
                 strokeLinecap="round"
+                isAnimationActive={shouldAnimateRefresh}
+                animationDuration={650}
               />
             </LineChart>
           </ResponsiveContainer>

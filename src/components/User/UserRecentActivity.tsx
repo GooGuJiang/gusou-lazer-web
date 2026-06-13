@@ -1,8 +1,9 @@
 import type { TFunction } from 'i18next';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userAPI } from '../../utils/api';
 import type { UserActivity } from '../../types';
+import { getUserPageSsrActivityLimit } from '../../utils/userPageSsr';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import BeatmapLink from '../UI/BeatmapLink';
@@ -11,6 +12,8 @@ import { FaTrophy, FaCrown, FaUpload, FaEdit, FaHeart, FaUser } from 'react-icon
 interface UserRecentActivityProps {
   userId: number;
   className?: string;
+  initialActivities?: UserActivity[];
+  initialHasMore?: boolean;
 }
 
 // 时间格式化函数
@@ -231,57 +234,80 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
   }
 };
 
-const UserRecentActivity: React.FC<UserRecentActivityProps> = ({ userId, className = '' }) => {
+const UserRecentActivity: React.FC<UserRecentActivityProps> = ({
+  userId,
+  className = '',
+  initialActivities,
+  initialHasMore,
+}) => {
   const { t } = useTranslation();
   const { profileColor } = useProfileColor();
-  const [activities, setActivities] = useState<UserActivity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const activityLimit = getUserPageSsrActivityLimit();
+  const hasInitialActivities = initialActivities !== undefined;
+  const [activities, setActivities] = useState<UserActivity[]>(() => initialActivities ?? []);
+  const [loading, setLoading] = useState(!hasInitialActivities);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialHasMore ?? true);
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(() => initialActivities?.length ?? 0);
 
-  const loadActivities = async (reset = false) => {
-    try {
-      const currentOffset = reset ? 0 : offset;
+  const initializedUserIdRef = useRef<number | null>(null);
 
-      if (reset) {
-        setLoading(true);
-        setError(null);
-      } else {
-        setLoadingMore(true);
+  const loadActivities = useCallback(
+    async (reset = false) => {
+      try {
+        const currentOffset = reset ? 0 : offset;
+
+        if (reset) {
+          setLoading(true);
+          setError(null);
+        } else {
+          setLoadingMore(true);
+        }
+
+        const response = await userAPI.getRecentActivity(userId, activityLimit, currentOffset);
+
+        // 假设 API 返回一个数组，没有 has_more 字段时，判断返回的数据是否小于请求的数量
+        const newActivities = Array.isArray(response) ? response : [];
+        const hasMoreData = newActivities.length === activityLimit; // 如果返回的数量等于请求的数量，可能还有更多
+
+        if (reset) {
+          setActivities(newActivities);
+          setOffset(newActivities.length);
+        } else {
+          setActivities((prev) => [...prev, ...newActivities]);
+          setOffset((prev) => prev + newActivities.length);
+        }
+
+        setHasMore(hasMoreData);
+      } catch (err) {
+        console.error('Failed to load user activities:', err);
+        setError('加载用户活动失败');
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-
-      const response = await userAPI.getRecentActivity(userId, 6, currentOffset);
-
-      // 假设 API 返回一个数组，没有 has_more 字段时，判断返回的数据是否小于请求的数量
-      const newActivities = Array.isArray(response) ? response : [];
-      const hasMoreData = newActivities.length === 6; // 如果返回的数量等于请求的数量，可能还有更多
-
-      if (reset) {
-        setActivities(newActivities);
-        setOffset(newActivities.length);
-      } else {
-        setActivities((prev) => [...prev, ...newActivities]);
-        setOffset((prev) => prev + newActivities.length);
-      }
-
-      setHasMore(hasMoreData);
-    } catch (err) {
-      console.error('Failed to load user activities:', err);
-      setError('加载用户活动失败');
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  };
+    },
+    [activityLimit, offset, userId]
+  );
 
   useEffect(() => {
-    if (userId) {
-      setOffset(0);
-      loadActivities(true);
+    if (!userId) return;
+
+    if (initializedUserIdRef.current === userId) return;
+    initializedUserIdRef.current = userId;
+
+    setActivities(initialActivities ?? []);
+    setOffset(initialActivities?.length ?? 0);
+    setHasMore(initialHasMore ?? true);
+    setError(null);
+
+    if (initialActivities === undefined) {
+      void loadActivities(true);
+    } else {
+      setLoading(false);
     }
-  }, [userId]);
+  }, [initialActivities, initialHasMore, loadActivities, userId]);
 
   const handleLoadMore = () => {
     if (!loadingMore && hasMore) {

@@ -1,9 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthProvider } from './contexts/AuthContext';
-import { AudioProvider } from './components/UI/AudioPlayer';
-import { VerificationProvider } from './contexts/VerificationContext';
-import { ProfileColorProvider } from './contexts/ProfileColorContext';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
@@ -21,17 +17,16 @@ import HowToJoinPage from './pages/HowToJoinPage';
 import BeatmapPage from './pages/BeatmapPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
-function App() {
-  const { t } = useTranslation();
+interface AppProps {
+  router?: 'browser' | 'static';
+}
 
-  return (
-    <AuthProvider>
-      <ProfileColorProvider>
-        <VerificationProvider>
-          <AudioProvider>
-            <Router>
-              <ScrollToTop />
-              <Routes>
+function App({ router = 'browser' }: AppProps) {
+  const { t } = useTranslation();
+  const routes = (
+    <>
+      <ScrollToTop />
+      <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<HomePage />} />
                   <Route path="login" element={<LoginPage />} />
@@ -65,14 +60,12 @@ function App() {
                       </div>
                     }
                   />
-                </Route>
-              </Routes>
-            </Router>
-          </AudioProvider>
-        </VerificationProvider>
-      </ProfileColorProvider>
-    </AuthProvider>
+        </Route>
+      </Routes>
+    </>
   );
+
+  return router === 'browser' ? <Router>{routes}</Router> : routes;
 }
 
 export default App;

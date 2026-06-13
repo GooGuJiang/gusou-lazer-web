@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev:ssr": "node server.js",
+    "build": "tsc -b && vite build --ssrManifest && vite build --ssr src/entry-server.tsx --outDir dist/server --emptyOutDir false",
     "lint": "eslint .",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
