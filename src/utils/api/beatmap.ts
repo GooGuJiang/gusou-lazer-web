@@ -1,6 +1,29 @@
 import { api } from './client';
 import { getApiErrorStatus } from '../typeGuards';
-import type { Beatmap, Beatmapset } from '../../types';
+import type { Beatmap, Beatmapset, BeatmapsetSearchQuery, BeatmapsetSearchResponse } from '../../types';
+
+const appendArrayParams = <T extends string>(params: URLSearchParams, key: string, values?: T[]) => {
+  values?.forEach((value) => params.append(key, value));
+};
+
+const buildBeatmapsetSearchParams = (query: BeatmapsetSearchQuery): URLSearchParams => {
+  const params = new URLSearchParams();
+
+  if (query.q?.trim()) params.set('q', query.q.trim());
+  appendArrayParams(params, 'c', query.c);
+  if (query.m !== undefined && query.m !== null) params.set('m', query.m.toString());
+  if (query.s) params.set('s', query.s);
+  if (query.g !== undefined && query.g !== null) params.set('g', query.g.toString());
+  if (query.l) params.set('l', query.l);
+  params.set('sort', query.sort ?? 'ranked_desc');
+  appendArrayParams(params, 'e', query.e);
+  appendArrayParams(params, 'r', query.r);
+  if (query.played !== undefined && query.played !== null) params.set('played', String(query.played));
+  params.set('nsfw', String(query.nsfw ?? false));
+  if (query.cursor_string) params.set('cursor_string', query.cursor_string);
+
+  return params;
+};
 
 export const beatmapAPI = {
   getBeatmapByBeatmapId: async (beatmapId: number): Promise<Beatmapset> => {
@@ -25,6 +48,45 @@ export const beatmapAPI = {
       }
       throw error;
     }
+  },
+
+  searchBeatmapsets: async (
+    query: BeatmapsetSearchQuery = {}
+  ): Promise<BeatmapsetSearchResponse> => {
+    const params = buildBeatmapsetSearchParams(query);
+    const response = await api.get(`/api/v2/beatmapsets/search?${params.toString()}`);
+    return response.data;
+  },
+
+  setBeatmapsetFavourite: async (
+    beatmapsetId: number,
+    action: 'favourite' | 'unfavourite'
+  ): Promise<void> => {
+    const formData = new URLSearchParams();
+    formData.set('action', action);
+
+    await api.post(`/api/v2/beatmapsets/${beatmapsetId}/favourites`, formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  },
+
+  getBeatmapsetDownloadUrl: async (beatmapsetId: number, noVideo = true): Promise<string> => {
+    const response = await api.get<string>(`/api/v2/beatmapsets/${beatmapsetId}/download`, {
+      params: {
+        noVideo,
+        link_only: true,
+      },
+      responseType: 'text',
+    });
+
+    const downloadUrl = response.data.trim();
+    if (!downloadUrl) {
+      throw new Error('Download link not found');
+    }
+
+    return downloadUrl;
   },
 
   extractBeatmapIdFromUrl: (url: string): number | null => {

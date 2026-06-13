@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout/Layout';
@@ -15,6 +15,7 @@ import CreateTeamPage from './pages/CreateTeamPage';
 import MessagesPage from './pages/MessagesPage';
 import HowToJoinPage from './pages/HowToJoinPage';
 import BeatmapPage from './pages/BeatmapPage';
+import BeatmapsetsPage from './pages/BeatmapsetsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 interface AppProps {
@@ -44,14 +45,8 @@ function App({ router = 'browser' }: AppProps) {
                   <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="beatmaps/:beatmapId" element={<BeatmapPage />} />
                   <Route path="beatmapsets/:beatmapsetId" element={<BeatmapPage />} />
-                  <Route
-                    path="beatmaps"
-                    element={
-                      <div className="flex items-center justify-center h-screen">
-                        <h1 className="text-2xl font-bold">{t('app.beatmapsComingSoon')}</h1>
-                      </div>
-                    }
-                  />
+                  <Route path="beatmapsets" element={<BeatmapsetsPage />} />
+                  <Route path="beatmaps" element={<Navigate to="/beatmapsets" replace />} />
                   <Route
                     path="*"
                     element={

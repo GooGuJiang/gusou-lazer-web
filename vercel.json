@@ -25,11 +25,15 @@
   },
   "rewrites": [
     {
-      "source": "/api/:match*",
-      "destination": "https://api.memesearch.app/api/:match*"
+      "source": "/users/:match*",
+      "destination": "/api/render"
     },
     {
-      "source": "/users/:match*",
+      "source": "/beatmapsets",
+      "destination": "/api/render"
+    },
+    {
+      "source": "/beatmapsets/",
       "destination": "/api/render"
     },
     {

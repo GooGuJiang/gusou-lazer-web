@@ -107,3 +107,145 @@ export interface Beatmapset {
   favourite_count: number;
   recent_favourites: unknown[];
 }
+
+export type BeatmapsetSearchGeneral =
+  | 'recommended'
+  | 'converts'
+  | 'follows'
+  | 'spotlights'
+  | 'featured_artists';
+
+export type BeatmapsetSearchCategory =
+  | 'any'
+  | 'leaderboard'
+  | 'ranked'
+  | 'qualified'
+  | 'loved'
+  | 'favourites'
+  | 'pending'
+  | 'wip'
+  | 'graveyard'
+  | 'mine';
+
+export type BeatmapsetSearchLanguage =
+  | 'any'
+  | 'unspecified'
+  | 'english'
+  | 'japanese'
+  | 'chinese'
+  | 'instrumental'
+  | 'korean'
+  | 'french'
+  | 'german'
+  | 'swedish'
+  | 'spanish'
+  | 'italian'
+  | 'russian'
+  | 'polish'
+  | 'other';
+
+export type BeatmapsetSearchSort =
+  | 'title_asc'
+  | 'artist_asc'
+  | 'difficulty_asc'
+  | 'updated_asc'
+  | 'ranked_asc'
+  | 'rating_asc'
+  | 'plays_asc'
+  | 'favourites_asc'
+  | 'relevance_asc'
+  | 'nominations_asc'
+  | 'title_desc'
+  | 'artist_desc'
+  | 'difficulty_desc'
+  | 'updated_desc'
+  | 'ranked_desc'
+  | 'rating_desc'
+  | 'plays_desc'
+  | 'favourites_desc'
+  | 'relevance_desc'
+  | 'nominations_desc';
+
+export type BeatmapsetSearchExtra = 'video' | 'storyboard';
+
+export type BeatmapsetSearchRank = 'XH' | 'X' | 'SH' | 'S' | 'A' | 'B' | 'C' | 'D';
+
+export interface BeatmapsetSearchQuery {
+  q?: string;
+  c?: BeatmapsetSearchGeneral[];
+  m?: number | null;
+  s?: BeatmapsetSearchCategory;
+  g?: number | null;
+  l?: BeatmapsetSearchLanguage;
+  sort?: BeatmapsetSearchSort;
+  e?: BeatmapsetSearchExtra[];
+  r?: BeatmapsetSearchRank[];
+  played?: boolean | null;
+  nsfw?: boolean;
+  cursor_string?: string | null;
+}
+
+export interface BeatmapsetSearchBeatmap {
+  beatmapset_id: number;
+  difficulty_rating: number;
+  id: number;
+  mode: string;
+  total_length: number;
+  user_id: number;
+  version: string;
+  url: string;
+  checksum: string;
+  max_combo: number | null;
+  ar: number;
+  cs: number;
+  drain: number;
+  accuracy: number;
+  bpm: number;
+  count_circles: number;
+  count_sliders: number;
+  count_spinners: number;
+  deleted_at: string | null;
+  hit_length: number;
+  last_updated: string;
+  status: string;
+  convert: boolean;
+  is_scoreable: boolean;
+  mode_int: number;
+  ranked: number;
+  playcount: number;
+  passcount: number;
+}
+
+export interface BeatmapsetSearchResult {
+  id: number;
+  artist: string;
+  artist_unicode: string;
+  covers: BeatmapCovers;
+  creator: string;
+  nsfw: boolean;
+  preview_url: string;
+  source: string;
+  spotlight: boolean;
+  title: string;
+  title_unicode: string;
+  track_id: number | null;
+  user_id: number;
+  video: boolean;
+  pack_tags: string[];
+  discussion_enabled: boolean;
+  status: string;
+  ranked: number;
+  favourite_count: number;
+  genre_id: number;
+  language_id: number;
+  play_count: number;
+  beatmaps: BeatmapsetSearchBeatmap[];
+  has_favourited?: boolean;
+}
+
+export interface BeatmapsetSearchResponse {
+  beatmapsets: BeatmapsetSearchResult[];
+  total: number;
+  cursor: Record<string, number | string | null> | null;
+  cursor_string: string | null;
+}

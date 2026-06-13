@@ -12,6 +12,11 @@ import {
   injectUserPageSsrPayload,
   setServerUserPageSsrPayload,
 } from './utils/userPageSsr';
+import {
+  injectBeatmapsetsSsrPayload,
+  setServerBeatmapsetsSsrPayload,
+} from './utils/beatmapsetsSsr';
+import { fetchBeatmapsetsSsrPayload } from './utils/beatmapsetsSsrServer';
 
 export const render = (url: string): string =>
   renderToString(
@@ -30,17 +35,29 @@ export const render = (url: string): string =>
     </StrictMode>
   );
 
-export const renderPage = async (url: string, template: string): Promise<string> => {
-  const payload = await fetchUserPageSsrPayload(url);
-  setServerUserPageSsrPayload(payload && 'user' in payload ? payload : null);
+export const renderPage = async (
+  url: string,
+  template: string,
+  authorization?: string
+): Promise<string> => {
+  const [userPayload, beatmapsetsPayload] = await Promise.all([
+    fetchUserPageSsrPayload(url),
+    fetchBeatmapsetsSsrPayload(url, authorization),
+  ]);
+  setServerUserPageSsrPayload(userPayload && 'user' in userPayload ? userPayload : null);
+  setServerBeatmapsetsSsrPayload(
+    beatmapsetsPayload && 'response' in beatmapsetsPayload ? beatmapsetsPayload : null
+  );
 
   try {
     const appHtml = render(url);
-    return injectUserPageSsrPayload(
-      template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`),
-      payload
+    const html = template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
+    return injectBeatmapsetsSsrPayload(
+      injectUserPageSsrPayload(html, userPayload),
+      beatmapsetsPayload
     );
   } finally {
     setServerUserPageSsrPayload(null);
+    setServerBeatmapsetsSsrPayload(null);
   }
 };

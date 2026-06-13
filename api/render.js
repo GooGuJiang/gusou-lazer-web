@@ -47,7 +47,11 @@ export default async function handler(request, response) {
       fs.readFile(templatePath, 'utf-8'),
       import(serverEntryRelPath),
     ]);
-    const html = await serverEntry.renderPage(resolveRequestUrl(request), template);
+    const html = await serverEntry.renderPage(
+      resolveRequestUrl(request),
+      template,
+      request.headers.authorization
+    );
 
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.status(200).send(html);

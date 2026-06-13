@@ -31,7 +31,10 @@ const NavItem = memo<{ item: NavItem }>(({ item }) => {
   const prevIsActiveRef = useRef<boolean | undefined>(undefined);
   const location = useLocation();
   const IconComponent = item.icon;
-  const isActive = location.pathname === item.path;
+  const isActive =
+    item.path === '/'
+      ? location.pathname === item.path
+      : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
 
   // 文字显示逻辑：活跃时强制显示，或者悬停时显示
   const shouldShowText = isActive || forceShowText || isHovered;
@@ -354,7 +357,10 @@ const MobileMenuDropdown = memo<{
               {/* 主要导航项 */}
               {items.map((item) => {
                 const IconComponent = item.icon;
-                const isActive = location.pathname === item.path;
+                const isActive =
+                  item.path === '/'
+                    ? location.pathname === item.path
+                    : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
 
                 return (
                   <Link
@@ -479,7 +485,7 @@ const Navbar: React.FC = () => {
       // 核心功能
       { path: '/', title: t('nav.home'), icon: FiHome },
       { path: '/rankings', title: t('nav.rankings'), icon: FiTrendingUp, requireAuth: true },
-      { path: '/beatmaps', title: t('nav.beatmaps'), icon: FiMusic, requireAuth: true },
+      { path: '/beatmapsets', title: t('nav.beatmaps'), icon: FiMusic, requireAuth: true },
       { path: '/teams', title: t('nav.teams'), icon: FiUsers, requireAuth: true },
       { path: '/how-to-join', title: t('nav.join'), icon: FiServer },
     ],

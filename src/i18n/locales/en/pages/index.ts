@@ -7,6 +7,7 @@ import { messagesPage } from './messages';
 import { profilePage } from './profile';
 import { howToJoinPage } from './how-to-join';
 import { beatmapPage } from './beatmap';
+import { beatmapsetsPage } from './beatmapsets';
 import { layout } from './layout';
 
 export const pages = {
@@ -19,5 +20,6 @@ export const pages = {
   ...profilePage,
   ...howToJoinPage,
   ...beatmapPage,
+  ...beatmapsetsPage,
   ...layout,
 } as const;

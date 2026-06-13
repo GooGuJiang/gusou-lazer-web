@@ -5,6 +5,7 @@ import type { Theme } from '../types';
  * 获取系统主题偏好
  */
 const getSystemTheme = (): 'light' | 'dark' => {
+  if (typeof window === 'undefined') return 'light';
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
@@ -21,6 +22,8 @@ const resolveTheme = (theme: Theme): 'light' | 'dark' => {
 export const useTheme = () => {
   // 从 localStorage 读取保存的主题偏好，默认为 'system'
   const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof localStorage === 'undefined') return 'system';
+
     const saved = localStorage.getItem('theme') as Theme | null;
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
       return saved;
@@ -34,7 +37,9 @@ export const useTheme = () => {
   // 应用主题到 DOM
   const applyTheme = useCallback((resolved: 'light' | 'dark') => {
     setResolvedTheme(resolved);
-    document.documentElement.classList.toggle('dark', resolved === 'dark');
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', resolved === 'dark');
+    }
   }, []);
 
   useEffect(() => {
@@ -57,7 +62,9 @@ export const useTheme = () => {
   // 设置主题并持久化到 localStorage
   const setSpecificTheme = useCallback((newTheme: Theme) => {
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
   }, []);
 
   // 循环切换主题：light → dark → system → light

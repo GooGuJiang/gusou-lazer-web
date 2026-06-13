@@ -32,7 +32,7 @@ const server = createHttpServer(async (request, response) => {
     const requestUrl = request.url ?? '/';
     const template = await vite.transformIndexHtml(requestUrl, fallbackTemplate);
     const { renderPage } = await vite.ssrLoadModule('/src/entry-server.tsx');
-    const html = await renderPage(requestUrl, template);
+    const html = await renderPage(requestUrl, template, request.headers.authorization);
 
     response.writeHead(200, { 'Content-Type': 'text/html' });
     response.end(html);
