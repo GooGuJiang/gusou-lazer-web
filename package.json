@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:ssr": "node server.js",
-    "build": "tsc -b && vite build --ssrManifest && vite build --ssr src/entry-server.tsx --outDir dist/server --emptyOutDir false",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server --emptyOutDir false",
+    "vercel-build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist/server --emptyOutDir false",
     "lint": "eslint .",
     "format": "prettier . --write",
     "format:check": "prettier . --check",

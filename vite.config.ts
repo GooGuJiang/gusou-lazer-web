@@ -10,4 +10,14 @@ export default defineConfig({
       external: ['error', 'warn'],
     }),
   ],
+  ssr: {
+    noExternal: ['@fingerprintjs/fingerprintjs'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });
