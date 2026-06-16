@@ -192,7 +192,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 interface AudioPlayButtonProps {
   audioUrl: string;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'fill';
   showProgress?: boolean;
 }
 
@@ -213,15 +213,20 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
     sm: 'w-8 h-8',
     md: 'w-12 h-12',
     lg: 'w-16 h-16',
+    fill: 'w-full h-full',
   };
 
   const iconSizes = {
     sm: 16,
     md: 20,
     lg: 24,
+    fill: 22,
   };
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (isCurrentlyPlaying) {
       pause();
     } else if (isCurrentTrack) {
@@ -234,6 +239,7 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
 
   return (
     <motion.button
+      type="button"
       onClick={handleClick}
       className={`
         relative flex items-center justify-center rounded-full

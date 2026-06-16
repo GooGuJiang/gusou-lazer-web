@@ -22,6 +22,7 @@ import { beatmapAPI } from '../utils/api';
 import { formatDuration, formatNumber } from '../utils/format';
 import { getErrorMessage } from '../utils/typeGuards';
 import { useUserPreferences } from '../hooks/useUserPreferences';
+import { AudioPlayButton, AudioPlayerControls } from '../components/UI/AudioPlayer';
 import {
   getBeatmapsetsSsrMaxAge,
   getBeatmapsetsSsrPayloadFromDocument,
@@ -821,9 +822,9 @@ const BeatmapsetsPage = () => {
           </div>
         </section>
 
-        <section className="mt-5">
+        <section className="mt-5 min-w-0">
           {loading ? (
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid min-w-0 gap-3 md:grid-cols-2">
               {Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={index}
@@ -841,7 +842,7 @@ const BeatmapsetsPage = () => {
               <p className="mt-2 text-text-secondary">{t('beatmapsets.search.notFoundQuote')}</p>
             </div>
           ) : (
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid min-w-0 gap-3 md:grid-cols-2">
               {beatmapsets.map((beatmapset) => (
                 <BeatmapsetCard
                   key={beatmapset.id}
@@ -880,6 +881,8 @@ const BeatmapsetsPage = () => {
           </div>
         </div>
       )}
+
+      <AudioPlayerControls />
     </div>
   );
 };
@@ -1003,7 +1006,7 @@ const BeatmapsetCard = ({
       tabIndex={0}
       onClick={openBeatmapset}
       onKeyDown={handleCardKeyDown}
-      className="group relative z-0 block min-h-28 cursor-pointer rounded-2xl border border-border-color bg-card pr-12 shadow-lg transition hover:z-30 hover:-translate-y-0.5 hover:border-osu-pink/50 hover:bg-card-hover hover:shadow-xl hover:shadow-osu-pink/10 focus:outline-none focus:ring-2 focus:ring-osu-pink/70"
+      className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 shadow-lg transition hover:z-30 hover:-translate-y-0.5 hover:border-osu-pink/50 hover:bg-card-hover hover:shadow-xl hover:shadow-osu-pink/10 focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
     >
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <div
@@ -1019,13 +1022,22 @@ const BeatmapsetCard = ({
         />
       </div>
 
-      <div className="relative z-10 flex h-full min-h-28 rounded-2xl">
-        <img
-          src={cover}
-          alt=""
-          className="h-28 w-28 flex-none rounded-l-2xl object-cover"
-          loading="lazy"
-        />
+      <div className="relative z-10 flex h-full min-h-24 min-w-0 rounded-2xl sm:min-h-28">
+        <div className="group/media relative w-24 flex-none self-stretch overflow-hidden rounded-l-2xl sm:w-28">
+          <img
+            src={cover}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover/media:scale-105"
+            loading="lazy"
+          />
+          {beatmapset.preview_url && (
+            <AudioPlayButton
+              audioUrl={beatmapset.preview_url}
+              size="fill"
+              className="absolute inset-0 z-10 !h-full !w-full !rounded-l-2xl !rounded-r-none !bg-black/25 !shadow-none opacity-100 hover:!bg-black/40 focus-visible:opacity-100 sm:opacity-0 sm:group-hover/media:opacity-100"
+            />
+          )}
+        </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between p-3 text-text-primary">
           <div className="min-w-0">
             <div className="flex items-start justify-between gap-2">
@@ -1055,7 +1067,7 @@ const BeatmapsetCard = ({
               {t(`beatmapsets.category.${beatmapset.status}`, { defaultValue: beatmapset.status })}
             </span>
             <div
-              className="group/difficulties relative flex min-w-0 items-center gap-1 text-text-primary"
+              className="group/difficulties relative flex min-w-0 max-w-full flex-wrap items-center gap-1 overflow-hidden text-text-primary sm:overflow-visible"
               aria-label={difficultyRange}
             >
               {modeGroups.map((group) => (
@@ -1085,7 +1097,7 @@ const BeatmapsetCard = ({
                 </span>
               ))}
 
-              <div className="invisible pointer-events-none absolute left-0 top-full z-30 w-[min(30rem,calc(100vw-2rem))] origin-top-left translate-y-1 scale-[0.98] pt-1 opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover/difficulties:visible group-hover/difficulties:pointer-events-auto group-hover/difficulties:translate-y-0 group-hover/difficulties:scale-100 group-hover/difficulties:opacity-100">
+              <div className="invisible pointer-events-none absolute left-0 top-full z-30 hidden w-[min(30rem,calc(100vw-2rem))] origin-top-left translate-y-1 scale-[0.98] pt-1 opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover/difficulties:visible group-hover/difficulties:pointer-events-auto group-hover/difficulties:translate-y-0 group-hover/difficulties:scale-100 group-hover/difficulties:opacity-100 sm:block">
                 <div
                   className="max-h-80 overflow-y-auto rounded-2xl border border-osu-pink/50 bg-card-hover p-2 text-sm font-semibold text-text-primary shadow-2xl shadow-osu-pink/20 backdrop-blur-md"
                   onClick={(event) => event.stopPropagation()}
@@ -1151,7 +1163,7 @@ const BeatmapsetCard = ({
         </div>
       </div>
 
-      <div className="absolute bottom-0 right-0 top-0 z-20 flex w-12 translate-x-2 flex-col items-center justify-center gap-3 rounded-r-2xl border-l border-border-color bg-navbar/90 opacity-0 backdrop-blur-sm transition group-hover:translate-x-0 group-hover:opacity-100">
+      <div className="absolute bottom-0 right-0 top-0 z-20 flex w-10 flex-col items-center justify-center gap-2 rounded-r-2xl border-l border-border-color bg-navbar/90 opacity-100 backdrop-blur-sm transition sm:w-12 sm:translate-x-2 sm:gap-3 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100">
         <button
           type="button"
           onClick={handleFavourite}
