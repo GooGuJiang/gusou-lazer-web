@@ -136,3 +136,76 @@ export interface BestScore {
     pp: number;
   };
 }
+
+// 谱面排行榜类型
+export type BeatmapLeaderboardType = 'global' | 'friend' | 'country' | 'team';
+
+// 谱面排行榜分数（与 BestScore 类似但包含用户信息）
+export interface BeatmapScore {
+  beatmap_id: number;
+  best_id: number | null;
+  id: number;
+  rank: string;
+  type: string;
+  user_id: number;
+  accuracy: number;
+  build_id: number | null;
+  ended_at: string;
+  has_replay: boolean;
+  is_perfect_combo: boolean;
+  legacy_perfect: boolean;
+  max_combo: number;
+  passed: boolean;
+  pp: number;
+  ruleset_id: number;
+  started_at: string | null;
+  total_score: number;
+  maximum_statistics: Record<string, number>;
+  mods: Array<{ acronym: string }>;
+  statistics: Record<string, number>;
+  total_score_without_mods: number;
+  classic_total_score: number | null;
+  preserve: boolean;
+  processed: boolean;
+  ranked: boolean;
+  user: {
+    avatar_url: string;
+    country_code: string;
+    default_group: string;
+    id: number;
+    is_active: boolean;
+    is_bot: boolean;
+    is_deleted: boolean;
+    is_online: boolean;
+    is_supporter: boolean;
+    last_visit: string | null;
+    pm_friends_only: boolean;
+    profile_colour: string | null;
+    username: string;
+    cover: {
+      url: string;
+      custom_url: string | null;
+      id: string | null;
+    };
+    country: {
+      code: string;
+      name: string;
+    };
+    team: {
+      id: number;
+      name: string;
+      short_name: string;
+      flag_url: string;
+    } | null;
+  };
+}
+
+// 谱面排行榜响应
+export interface BeatmapScoresResponse {
+  scores: BeatmapScore[];
+  user_score: {
+    position: number;
+    score: BeatmapScore;
+  } | null;
+  score_count: number;
+}

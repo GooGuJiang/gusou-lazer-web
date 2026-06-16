@@ -6,6 +6,9 @@ import type {
   BeatmapsetSearchCursor,
   BeatmapsetSearchQuery,
   BeatmapsetSearchResponse,
+  BeatmapScoresResponse,
+  BeatmapLeaderboardType,
+  GameMode,
 } from '../../types';
 
 const appendArrayParams = <T extends string>(
@@ -45,6 +48,21 @@ const buildBeatmapsetSearchParams = (query: BeatmapsetSearchQuery): URLSearchPar
 };
 
 export const beatmapAPI = {
+  // 获取谱面排行榜
+  getBeatmapScores: async (
+    beatmapId: number,
+    mode: GameMode,
+    type: BeatmapLeaderboardType = 'global',
+    limit = 50
+  ): Promise<BeatmapScoresResponse> => {
+    const params = new URLSearchParams({
+      mode,
+      type,
+      limit: limit.toString(),
+    });
+    const response = await api.get(`/api/v2/beatmaps/${beatmapId}/scores?${params.toString()}`);
+    return response.data;
+  },
   getBeatmapByBeatmapId: async (beatmapId: number): Promise<Beatmapset> => {
     try {
       const response = await api.get(`/api/v2/beatmapsets/lookup?beatmap_id=${beatmapId}`);

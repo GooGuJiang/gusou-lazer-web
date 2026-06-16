@@ -14,6 +14,7 @@ interface CustomSelectProps {
   disabled?: boolean;
   placeholder?: string;
   className?: string;
+  buttonClassName?: string;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -23,6 +24,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   disabled = false,
   placeholder = 'Select...',
   className = '',
+  buttonClassName = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -51,11 +53,12 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full px-4 py-2.5 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white 
+        className={`w-full px-4 py-2.5 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white
                    focus:ring-2 focus:ring-osu-pink focus:border-transparent transition-all duration-200
                    flex items-center justify-between
                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-osu-pink/50'}
-                   ${isOpen ? 'border-osu-pink ring-2 ring-osu-pink/20' : 'border-card'}`}
+                   ${isOpen ? 'border-osu-pink ring-2 ring-osu-pink/20' : 'border-card'}
+                   ${buttonClassName}`}
       >
         <span
           className={
