@@ -36,6 +36,7 @@ import CustomSelect from '../components/UI/CustomSelect';
 import LazyAvatar from '../components/UI/LazyAvatar';
 import LazyFlag from '../components/UI/LazyFlag';
 import RankBadge from '../components/UI/RankBadge';
+import ModsDisplay from '../components/UI/ModsDisplay';
 import { getErrorMessage } from '../utils/typeGuards';
 
 // ── 难度颜色光谱（与 BeatmapsetsPage 一致） ──────────────────────────────────
@@ -1368,22 +1369,7 @@ const FeaturedScoreCard: React.FC<FeaturedScoreCardProps> = ({
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          {score.mods.length > 0 ? (
-            score.mods.map((mod, index) => (
-              <span
-                key={`${mod.acronym}-${index}`}
-                className="inline-flex h-5 min-w-7 items-center justify-center rounded-md bg-white/10 px-1.5 text-[10px] font-black text-white shadow-sm"
-              >
-                {mod.acronym}
-              </span>
-            ))
-          ) : (
-            <span className="inline-flex h-5 min-w-7 items-center justify-center rounded-md bg-white/10 px-1.5 text-[10px] font-black text-white/60">
-              NM
-            </span>
-          )}
-        </div>
+        <ModsDisplay mods={score.mods} className="gap-1.5" size="md" />
       </div>
     </div>
   );
@@ -1510,20 +1496,7 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
         {getScorePpText(score)}
       </td>
       <td className="px-2 py-2 align-middle">
-        {score.mods.length > 0 ? (
-          <div className="flex items-center gap-1 flex-wrap">
-            {score.mods.map((mod, index) => (
-              <span
-                key={`${mod.acronym}-${index}`}
-                className="inline-flex items-center justify-center min-w-6 h-5 px-1 text-[10px] font-bold bg-card-hover text-text-secondary rounded"
-              >
-                {mod.acronym}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <span className="text-text-muted">-</span>
-        )}
+        <ModsDisplay mods={score.mods} size="sm" />
       </td>
       <td className="px-2 py-2 align-middle text-xs text-text-muted whitespace-nowrap">
         <span

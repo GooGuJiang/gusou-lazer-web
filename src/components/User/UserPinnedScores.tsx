@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
+import ModsDisplay from '../UI/ModsDisplay';
 import ScoreActionsMenu from '../Score/ScoreActionsMenu';
 import {
   DndContext,
@@ -84,28 +85,6 @@ const getRankIcon = (rank: string) => {
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
-};
-
-// MOD 图标组件
-const ModIcon: React.FC<{ mod: { acronym: string } }> = ({ mod }) => {
-  return (
-    <div className="w-6 h-6 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-gray-300">
-      {mod.acronym}
-    </div>
-  );
-};
-
-// 模组组件
-const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) => {
-  if (!mods || mods.length === 0) return null;
-
-  return (
-    <div className="flex items-center gap-1">
-      {mods.map((mod, index) => (
-        <ModIcon key={index} mod={mod} />
-      ))}
-    </div>
-  );
 };
 
 // 可拖拽的成绩卡片组件
@@ -240,7 +219,7 @@ const ScoreCard: React.FC<{
             </div>
 
             <div className="flex-shrink-0 flex items-center gap-2 mr-6">
-              <ModsDisplay mods={mods} />
+              <ModsDisplay mods={mods} showNoMod={false} />
               <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 {accuracy}%
               </div>
@@ -299,7 +278,7 @@ const ScoreCard: React.FC<{
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ModsDisplay mods={mods} />
+                  <ModsDisplay mods={mods} showNoMod={false} />
                   <div className="text-sm font-bold text-cyan-600 dark:text-cyan-300 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                     {accuracy}%
                   </div>

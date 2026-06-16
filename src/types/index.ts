@@ -12,3 +12,4 @@ export * from './beatmap';
 export * from './device';
 export * from './preferences';
 export * from './oauth';
+export * from './mods';

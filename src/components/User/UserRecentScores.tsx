@@ -7,6 +7,7 @@ import { useProfileColor } from '../../contexts/ProfileColorContext';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
+import ModsDisplay from '../UI/ModsDisplay';
 
 interface UserRecentScoresProps {
   userId: number;
@@ -61,28 +62,6 @@ const getRankIcon = (rank: string) => {
   };
 
   return rankImageMap[rank] || rankImageMap['F'];
-};
-
-// MOD 图标组件
-const ModIcon: React.FC<{ mod: { acronym: string } }> = ({ mod }) => {
-  return (
-    <div className="w-6 h-6 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-gray-300">
-      {mod.acronym}
-    </div>
-  );
-};
-
-// 模组组件
-const ModsDisplay: React.FC<{ mods: Array<{ acronym: string }> }> = ({ mods }) => {
-  if (!mods || mods.length === 0) return null;
-
-  return (
-    <div className="flex items-center gap-1">
-      {mods.map((mod, index) => (
-        <ModIcon key={index} mod={mod} />
-      ))}
-    </div>
-  );
 };
 
 // 单个成绩卡片组件 - 基于 osu! 官方设计
@@ -187,7 +166,7 @@ const ScoreCard: React.FC<{
             {/* 中间成绩数据 */}
             <div className="flex-shrink-0 flex items-center gap-2 mr-6">
               {/* MOD图标 + 准确率 */}
-              <ModsDisplay mods={mods} />
+              <ModsDisplay mods={mods} showNoMod={false} />
               <div
                 className={`text-sm font-bold ml-2 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}
               >
@@ -252,7 +231,7 @@ const ScoreCard: React.FC<{
               {/* 第三行：MOD、准确率和PP */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ModsDisplay mods={mods} />
+                  <ModsDisplay mods={mods} showNoMod={false} />
                   <div
                     className={`text-sm font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-cyan-600 dark:text-cyan-300'}`}
                   >

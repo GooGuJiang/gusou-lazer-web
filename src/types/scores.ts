@@ -1,3 +1,5 @@
+import type { ScoreMod } from './mods';
+
 export interface BestScore {
   classic_total_score: number;
   preserve: boolean;
@@ -12,9 +14,7 @@ export interface BestScore {
     small_bonus?: number;
     legacy_combo_increase?: number;
   };
-  mods: Array<{
-    acronym: string;
-  }>;
+  mods: ScoreMod[];
   statistics: {
     ok?: number;
     miss?: number;
@@ -161,7 +161,7 @@ export interface BeatmapScore {
   started_at: string | null;
   total_score: number;
   maximum_statistics: Record<string, number>;
-  mods: Array<{ acronym: string }>;
+  mods: ScoreMod[];
   statistics: Record<string, number>;
   total_score_without_mods: number;
   classic_total_score: number | null;
