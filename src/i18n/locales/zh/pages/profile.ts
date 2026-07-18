@@ -252,7 +252,7 @@ export const profilePage = {
         missingColor: '需要指定颜色',
         invalidColor: '颜色格式无效',
         missingSize: '需要指定字体大小',
-        invalidSize: '字体大小无效或不支持',
+        invalidSize: '字体大小无效（范围为 30~200）',
         missingQuotes: '引用作者应使用双引号包围',
         missingUrl: '需要目标 URL',
         invalidUrl: '不支持的 URL',

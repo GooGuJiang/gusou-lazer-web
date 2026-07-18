@@ -363,7 +363,7 @@ export class BBCodeParser {
       validator: (_param?: string, content?: string) => {
         if (!content) return new TagValidationResult(false, et('missingUrl'));
         return new TagValidationResult(
-          /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(content),
+          /^https?:\/\/.+$/i.test(content),
           et('invalidImageUrl')
         );
       },
@@ -402,7 +402,7 @@ export class BBCodeParser {
       validator: (_param?: string, content?: string) => {
         if (!content) return new TagValidationResult(false, et('missingUrl'));
         return new TagValidationResult(
-          /^https?:\/\/.+\.(mp3|wav|ogg|m4a)$/i.test(content),
+          /^https?:\/\/.+$/i.test(content),
           et('invalidAudioUrl')
         );
       },

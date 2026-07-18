@@ -253,7 +253,7 @@ export const profilePage = {
         missingColor: 'Missing color',
         invalidColor: 'Invalid color format',
         missingSize: 'Missing font size',
-        invalidSize: 'Invalid or unsupported font size',
+        invalidSize: 'Invalid font size (should be within 30-200)',
         missingQuotes: 'The author should be wrapped in double quotes',
         missingUrl: 'Missing target URL',
         invalidUrl: 'Unsupported URL',
