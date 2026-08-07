@@ -1,248 +1,194 @@
-# AGENTS.md - 项目开发约束指南
+# AGENTS.md
 
-## 项目概述
+## 项目定位
 
-**gusou-lazer-web** 是一个基于 React 19 + TypeScript 的 osu! lazer 相关 Web 应用，使用 Vite 构建，Tailwind CSS 样式，pnpm 作为包管理器。
+`gusou-lazer-web` 是面向 g0v0 / osu! lazer 生态的 React Web 客户端，同时支持浏览器端单页应用（SPA）和部分页面的服务端渲染（SSR）。
 
-**仓库**: <https://github.com/GooGuJiang/gusou-lazer-web>
+- 仓库：<https://github.com/GooGuJiang/gusou-lazer-web>
+- API 服务默认地址：`https://lazer-api.g0v0.top`
+- OpenAPI 参考：<https://lazer-api.g0v0.top/openapi.json>
+- 许可证：AGPL-3.0-only。任何修改、衍生或部署都必须显著署名 `GooGuTeam - https://github.com/GooGuTeam/g0v0-server`。
 
----
+本文件汇总当前仓库的开发约束。实现细节以现有代码以及 `package.json`、TypeScript、ESLint、Prettier 和 Vite 配置为准。
 
 ## 技术栈
 
-| 类别        | 技术                                                                |
-| ----------- | ------------------------------------------------------------------- |
-| 框架        | React 19 (`^19.1.1`)                                                |
-| 语言        | TypeScript (`~5.8.3`)，严格模式                                     |
-| 构建工具    | Vite 7 (`^7.1.5`)                                                   |
-| 包管理器    | pnpm                                                                |
-| 路由        | React Router v6 (`^6.25.0`)，使用 `BrowserRouter`                   |
-| 样式        | Tailwind CSS v3 (`^3.4.0`) + CSS 自定义属性（OKLCH 色彩空间）       |
-| 状态管理    | React Context + useState / jotai (`^2.9.0`)                         |
-| HTTP 客户端 | Axios (`^1.12.0`)，含拦截器的 API 客户端封装                        |
-| 国际化      | react-i18next (`^15.7.3`)                                           |
-| 动画        | framer-motion (`^11.3.6`) / motion (`^12.23.12`) / gsap (`^3.13.0`) |
-| 图标        | lucide-react (`^0.542.0`) + react-icons (`^5.2.1`)                  |
-| 部署        | Vercel                                                              |
-
----
-
-## 严格约束（必须遵守）
-
-### TypeScript 规则
-
-1. **禁止使用 `any` 类型** — ESLint 规则 `@typescript-eslint/no-explicit-any: 'error'`，必须使用明确的类型定义
-2. **禁止未使用的变量** — `noUnusedLocals: true`，`noUnusedParameters: true`
-3. **禁止未使用的 import** — `@typescript-eslint/no-unused-vars: 'error'`
-4. **必须使用 `const`** — `prefer-const: 'error'`，不可变引用使用 `const`
-5. **严格模式** — `strict: true`，所有代码必须通过严格类型检查
-6. **使用 `import type` 导入类型** — `verbatimModuleSyntax: true` 要求类型导入必须使用 `import type` 语法
-7. **仅允许可擦除语法** — `erasableSyntaxOnly: true`，不要使用需要运行时转换的 TypeScript 语法（如 `enum`、`namespace`），使用 `const` 对象或类型别名替代
-
-### 代码风格
-
-1. **组件导出必须单一** — ESLint 规则 `react-refresh/only-export-components: 'error'`，每个文件只导出一个组件（默认导出或具名导出）
-2. **console 语句限制** — 构建时通过 `vite-plugin-remove-console` 移除 `console.log` 等调试语句，仅保留 `console.error` 和 `console.warn`
-3. **中文注释** — 项目中已有中文注释的习惯，新代码建议使用中文注释以保持一致性
-
----
+| 范畴       | 当前实现                                                                 |
+| ---------- | ------------------------------------------------------------------------ |
+| 框架       | React 19、React DOM 19、TypeScript 5.8                                   |
+| 构建与开发 | Vite 7、pnpm、ESM                                                        |
+| 路由       | React Router v6，客户端 `BrowserRouter` 与 SSR `StaticRouter`            |
+| 样式       | Tailwind CSS 3、CSS 自定义属性、OKLCH 主题色                             |
+| HTTP       | Axios，共享拦截器处理认证、设备标识和 token 刷新                         |
+| 状态       | React Context、Hooks、局部 `useState`                                    |
+| 国际化     | i18next、react-i18next，目前支持 `en` 和 `zh`                            |
+| UI 与动画  | lucide-react、react-icons、Headless UI、Floating UI、Framer Motion、GSAP |
+| 部署       | Vercel，`api/render.js` 提供 SSR 函数                                    |
 
 ## 项目结构
 
-```
-src/
-├── App.tsx              # 路由定义（React Router v6 扁平结构）
-├── main.tsx             # 应用入口（StrictMode + i18n 初始化）
-├── index.css            # 全局样式入口（Tailwind 指令）
-├── assets/              # 静态资源
-├── components/          # 组件目录（按功能模块分子目录）
-│   ├── Auth/            # 认证相关组件
-│   ├── BBCode/          # BBCode 渲染
-│   ├── Beatmap/         # 谱面相关组件
-│   ├── Chat/            # 聊天功能
-│   ├── Device/          # 设备管理
-│   ├── Home/            # 首页组件
-│   ├── Layout/          # 布局组件（Navbar、侧边栏等）
-│   ├── Preferences/     # 偏好设置
-│   ├── Rankings/        # 排行榜
-│   ├── Score/           # 分数相关
-│   ├── Settings/        # 设置页面组件
-│   ├── Teams/           # 组队功能
-│   ├── TOTP/            # TOTP 双因素认证
-│   ├── UI/              # 通用 UI 组件（按钮、模态框等）
-│   ├── User/            # 用户相关组件
-│   └── VerificationModal/ # 验证模态框
-├── contexts/            # React Context（Auth、Notification、ProfileColor、Verification）
-├── data/                # 静态数据
-├── docs/                # 项目文档
-├── hooks/               # 自定义 Hooks
-├── i18n/                # 国际化配置和语言包
-│   ├── index.ts         # i18next 初始化
-│   ├── resources.ts     # 语言资源注册
-│   └── locales/         # 语言文件（zh / en / ja / ko 等）
-├── pages/               # 页面组件（一个页面一个文件）
-├── styles/              # 额外样式文件（bbcode.css 等）
-├── types/               # TypeScript 类型定义（按领域划分）
-└── utils/               # 工具函数
-    ├── api/             # API 请求模块（按领域划分）
-    │   ├── client.ts    # Axios 实例 + 拦截器（token 刷新逻辑）
-    │   ├── config.ts    # API 配置
-    │   └── ...          # 各领域 API（auth、user、beatmap 等）
-    └── ...              # 其他工具函数
+```text
+.
+├── api/
+│   └── render.js                 # Vercel SSR 入口，失败时回退到 SPA
+├── public/                       # 直接静态资源
+├── src/
+│   ├── App.tsx                   # 路由树，支持 browser/static 两种路由模式
+│   ├── main.tsx                  # 浏览器入口，按服务端 HTML 选择 hydrate 或 createRoot
+│   ├── entry-server.tsx          # SSR 渲染与页面预取入口
+│   ├── index.css                 # 全局样式入口，导入 styles/index.css
+│   ├── assets/                   # 由 Vite 打包的资源
+│   ├── components/               # 可复用 UI，按业务域拆分
+│   │   ├── Auth/ Beatmap/ Chat/ Device/ Home/ Preferences/
+│   │   ├── Rankings/ Score/ Settings/ Teams/ TOTP/ User/
+│   │   ├── Layout/               # Layout、Navbar 等页面骨架
+│   │   ├── UI/                   # 跨业务的通用组件
+│   │   └── VerificationModal/ BBCode/
+│   ├── contexts/                 # Auth、通知、验证、主题色 Context 及配套 hooks/core
+│   ├── data/                     # 静态业务数据
+│   ├── docs/                     # 功能设计与架构说明
+│   ├── hooks/                    # 跨组件复用的状态逻辑
+│   ├── i18n/
+│   │   ├── index.ts              # i18next 初始化和语言选择
+│   │   ├── resources.ts          # 语言资源汇总及语言类型
+│   │   └── locales/en|zh/        # 分领域语言包
+│   ├── pages/                    # 路由页面组件
+│   ├── styles/                   # Tailwind 入口、主题变量和专项 CSS
+│   ├── types/                    # 共享领域类型，通过 types/index.ts 汇总导出
+│   └── utils/
+│       ├── api/                  # API 客户端、领域 API 模块、错误处理
+│       ├── apiCache.ts           # API 缓存工具
+│       ├── userPageSsr.ts        # 用户页 SSR 数据契约和注入
+│       └── beatmapsetsSsr*.ts    # 谱面集 SSR 数据契约和服务端请求
+├── server.js                     # 本地 SSR 开发服务器
+├── vercel.json                   # Vercel headers、SSR rewrites 和函数配置
+├── vite.config.ts                # React、移除 console、SSR 构建配置
+├── tailwind.config.js             # Tailwind 扫描范围、断点和主题 token
+└── .env.example                  # 非敏感环境变量模板
 ```
 
----
+## 强制约束
 
-## 编码规范
+### TypeScript 与质量
 
-### 文件命名
+- 采用严格 TypeScript，已开启 `strict`、未使用本地变量和参数检查。
+- 禁止 `any`。对于不确定的数据，请用明确的 `interface`、`type`、泛型、`unknown` 和类型守卫来表达。
+- 为满足 `verbatimModuleSyntax`，类型导入必须使用 `import type`。
+- `erasableSyntaxOnly` 已启用，不要新增 `enum`、`namespace` 或其他需要运行时 TypeScript 转换的语法。
+- 不可重新赋值的引用一律使用 `const`。
+- 禁止未使用的变量、参数和导入；提交前需通过 `pnpm lint`。
+- React Fast Refresh 约束已开启。导出 React 组件的模块不要混入非组件值，请将 hook、常量、类型或 Context core 拆分到独立文件，沿用 `notificationContextCore.ts`、`useNotificationContext.ts` 等现有模式。
+- 默认使用函数组件和 Hooks；页面组件使用默认导出，普通组件遵循相邻模块的既有导出方式。
+- 仅在逻辑难以直接理解时添加简洁的中文注释，不要添加复述代码含义的注释。
 
-- **组件文件**: PascalCase `.tsx`（如 `Navbar.tsx`、`HomePage.tsx`）
-- **Hooks 文件**: camelCase `.ts`，以 `use` 开头（如 `useAuth.ts`）
-- **工具文件**: camelCase `.ts`（如 `bbcodeParser.ts`、`imageUtils.ts`）
-- **类型文件**: camelCase `.ts`（如 `user.ts`、`beatmap.ts`）
-- **样式文件**: camelCase `.css`（如 `bbcode.css`、`index.css`）
+### 命名与模块边界
 
-### 组件编写规范
+- 页面和组件文件采用 PascalCase，例如 `BeatmapsetsPage.tsx`、`UserProfileLayout.tsx`。
+- 自定义 Hook 采用 camelCase 并以 `use` 开头，例如 `useTheme.ts`。
+- 工具、API、类型和数据文件采用 camelCase，例如 `apiCache.ts`、`beatmap.ts`。
+- 新路由页面放在 `src/pages/`，并在 `src/App.tsx` 的嵌套路由中注册。
+- 复用组件放在对应的业务目录，只有跨业务通用组件才放入 `src/components/UI/`。
+- 跨业务领域类型放在 `src/types/` 并由 `src/types/index.ts` 导出；仅单个模块使用的类型可就近定义。
+- 不做与当前需求无关的目录迁移、批量重命名或重构。
 
-1. **使用函数组件 + Hooks**，不使用 class 组件
-2. **页面组件放在 `src/pages/`**，一个页面对应一个文件
-3. **可复用组件放在 `src/components/`**，按功能模块分子目录
-4. **通用 UI 组件放在 `src/components/UI/`**
-5. **组件默认导出**（`export default`）用于页面，具名导出用于子组件
+### 格式与日志
 
-示例模式：
+- Prettier 是唯一的格式化标准：2 空格、100 列、单引号、分号、ES5 trailing comma、LF。
+- 开发时避免遗留调试日志。生产构建会通过 `vite-plugin-remove-console` 删除除 `console.error` 和 `console.warn` 之外的 `console` 调用。
+- 不要用 `// eslint-disable` 或 TypeScript 忽略注释来规避类型和 lint 问题，除非有具体的兼容性原因且改动范围最小。
 
-```tsx
-// src/pages/SomePage.tsx
-import { useTranslation } from 'react-i18next';
+## API 规范
 
-export default function SomePage() {
-  const { t } = useTranslation();
+### 接口契约
 
-  return <div className="...">{/* ... */}</div>;
-}
-```
+- 新增或修改接口前，先查阅 [OpenAPI 文档](https://lazer-api.g0v0.top/openapi.json)。路径、HTTP 方法、字段、响应和状态码均以该文档为准，不要凭经验猜测。
+- API 基地址从 `VITE_API_BASE_URL` 读取，未设置时回退到 `https://lazer-api.g0v0.top`。不要在业务模块中复制硬编码基地址。
+- API 模块按领域放在 `src/utils/api/`，例如 `user.ts`、`beatmap.ts`、`teams.ts`；需要对外复用时从 `src/utils/api/index.ts` 汇总导出。
+- 新增的共享返回类型应放在 `src/types/`，并与 OpenAPI schema 保持一致。
 
-### 自定义 Hooks 规范
+### 请求客户端与认证
 
-1. **放在 `src/hooks/`** 目录
-2. **命名以 `use` 开头**
-3. **封装可复用的状态逻辑**（如 `useAuth`、`useDebounce`、`useTheme`）
+- 普通浏览器 API 请求默认使用 `src/utils/api/client.ts` 导出的 `api` Axios 实例，它统一处理 `Authorization`、`X-UUID`、默认 `x-api-version: 20250913` 以及 401 token 刷新队列。
+- 不要在业务组件中直接发起 HTTP 请求，应封装在领域 API 模块中。
+- OAuth 表单请求、浏览器文件上传以及 SSR 预取是现有例外。只有共享 `api` 无法正确表达请求时才直接使用 Axios 或 `fetch`，并显式补齐该接口需要的认证、`X-UUID` 和 `x-api-version` 请求头。
+- 修改 token 刷新、验证处理器或缓存清理逻辑时，必须考虑并发 401 请求、刷新请求自身失败和重试循环，避免绕过 `client.ts` 的队列。
+- 浏览器 token 存放在 `localStorage`，认证用户缓存位于 `sessionStorage`。修改登录、登出或用户更新流程时，需同步维护 token、缓存和 Context 状态。
+- 不要新增、提交或在客户端暴露真实 access token、服务端密钥或其他机密，`VITE_` 前缀的环境变量会进入浏览器包。
 
-### API 请求规范
+## 状态、路由与 SSR
 
-1. **所有 HTTP 请求通过 `src/utils/api/client.ts` 导出的 `api` Axios 实例进行**
-2. **不要直接使用 `axios` 或 `fetch`**（token 刷新逻辑在 client.ts 拦截器中统一处理）
-3. **API 模块按领域划分**：`src/utils/api/user.ts`、`src/utils/api/beatmap.ts` 等
-4. **设备标识**: 所有请求自动附带 `X-UUID` header（由拦截器处理）
-5. **API 版本**: 请求头自动包含 `x-api-version: '20250913'`
-6. **环境变量**: API 地址通过 `VITE_API_BASE_URL` 环境变量配置
+### 状态管理
 
-### 类型定义规范
+- 组件内的局部交互状态使用 `useState` 或现有自定义 Hook。
+- 跨页面状态优先复用现有 Context：`AuthProvider`、`ProfileColorProvider`、`VerificationProvider`、`NotificationProvider`。其中通知 Provider 由 `Layout` 按认证状态挂载，音频 Provider 挂载在应用根部。
+- 不要为短生命周期的局部状态新增全局 Context 或全局 store。
 
-1. **类型定义放在 `src/types/`**，按领域划分文件（`user.ts`、`beatmap.ts` 等）
-2. **通过 `src/types/index.ts`** 统一导出
-3. **使用 `interface` 定义对象结构，`type` 定义联合类型和工具类型**
-4. **导入类型必须使用 `import type` 语法**
+### 路由与渲染
 
-### 状态管理规范
+- 所有页面路由都维护在 `src/App.tsx` 的 `<Layout />` 子路由下，新增页面时需同步处理导航入口、鉴权和 404 行为。
+- `main.tsx` 在服务端已有根节点内容时调用 `hydrateRoot`，否则调用 `createRoot`，不要破坏这个分支。
+- `entry-server.tsx` 通过 `StaticRouter` 渲染，目前会预取用户页和谱面集搜索页数据，并将 JSON payload 注入 HTML。
+- SSR 可触达的模块不得在模块初始化或渲染阶段直接使用 `window`、`document`、`localStorage`、`sessionStorage` 或 `navigator`。确有必要时，使用 `typeof window !== 'undefined'` 等运行时保护，或放入 Effect。
+- 修改 provider 树、路由或需要预取的页面时，应保持 `main.tsx` 与 `entry-server.tsx` 的应用树一致，并核对 Vercel rewrite 是否需要同步调整。
+- 服务端预取使用原生 `fetch` 是合理例外。它不能依赖浏览器存储或 Axios 浏览器拦截器，必须自行构建请求头和认证信息。
 
-1. **全局状态使用 React Context**（`src/contexts/`）
-   - `AuthContext` — 认证状态
-   - `NotificationContext` — 通知状态
-   - `ProfileColorContext` — 主题颜色
-   - `VerificationContext` — 用户验证
-2. **轻量级全局状态可使用 jotai**
-3. **局部状态使用 `useState`**
-4. **缓存策略**: 使用 `sessionStorage` 缓存认证信息，`src/utils/apiCache.ts` 管理 API 缓存
+## 样式与界面
 
----
+- 优先使用 Tailwind 工具类，并复用 `tailwind.config.js` 中的断点、颜色 token 和字体配置。
+- 全局主题变量和组件类位于 `src/styles/index.css`，由 `src/index.css` 导入。新全局样式或可复用样式应放入正确的 layer 或现有样式文件，不要在页面内重复定义。
+- 颜色优先使用 CSS 变量和 Tailwind 映射，例如 `bg-card`、`bg-page`、`text-text-primary`、`text-text-secondary`、`border-default`，以支持亮色、深色和用户色相主题。
+- 主题切换依赖根元素的 `dark` class，用户主题色通过 `--hue`、`--profile-color` 等变量驱动。不要写死背景、文字和边框颜色，以免破坏主题。
+- 保持现有的响应式断点、可访问性语义、键盘交互以及加载/错误/空状态。图标优先使用 `lucide-react` 或项目现有图标库，不要手写重复的 SVG 图标。
 
-## 样式规范
+## 国际化
 
-### Tailwind CSS 使用
+- 用户可见的新文案应通过 `useTranslation()` 和 `t()` 提供，不要只在某个页面硬编码单一语言。
+- 翻译按领域维护在 `src/i18n/locales/en/` 与 `src/i18n/locales/zh/`，新增文案时两种语言必须同步增加相同的 key。
+- 新语言资源需要在 `src/i18n/resources.ts` 注册，并同步更新 `AppLanguages`、语言选择器和 `supportedLanguages`。
+- 不要修改已有 key 的语义或层级来复用不匹配的文案。
 
-1. **使用 Tailwind 工具类** 作为主要样式方式
-2. **使用项目自定义颜色**：`bg-card`、`text-text-primary`、`border-border-color` 等（定义在 `tailwind.config.js` 中的 OKLCH 色彩变量）
-3. **深色模式**: 使用 `dark:` 前缀，基于 `class` 策略切换
-4. **自定义 CSS 组件类**: 在 `src/styles/index.css` 的 `@layer components` 中定义可复用样式（如 `.card-base`、`.card-standard`、`.float-panel`、`.modal-card`）
-5. **毛玻璃效果**: 使用 `.glass-morphism` 或 `.glass-effect` 类
-6. **用户可自定义主题色**: 通过 `--hue` CSS 变量实现 OKLCH 色彩空间动态调色
+## 环境变量与部署
 
-### CSS 文件组织
+| 变量                           | 用途                                   | 作用域                |
+| ------------------------------ | -------------------------------------- | --------------------- |
+| `VITE_API_BASE_URL`            | API 服务基地址                         | 浏览器与 SSR 构建可见 |
+| `VITE_TURNSTILE_SITE_KEY`      | Cloudflare Turnstile 站点 key          | 浏览器可见            |
+| `PORT`                         | `server.js` 本地 SSR 端口，默认 `5173` | 本地 Node 进程        |
+| `BEATMAPSETS_SSR_ACCESS_TOKEN` | 谱面集 SSR 请求认证 token              | 仅服务端环境          |
 
-- `src/index.css` — Tailwind 指令 + 全局样式
-- `src/styles/index.css` — 自定义组件类 + 主题变量
-- `src/styles/bbcode.css` — BBCode 渲染样式
+- `.env.example` 只放可公开的模板值；`.env`、`.env.local` 和任何真实凭据不得提交。
+- 部署使用 `vercel.json`：`/users/*` 和 `/beatmapsets` 转发到 `api/render.js`，其他路由回退到客户端 `index.html`。变更 SSR 覆盖范围时需一并更新该文件。
+- 生产构建会生成客户端 `dist/` 和服务端 `dist/server/` 产物，不要提交构建产物。
 
----
-
-## 国际化 (i18n)
-
-1. **使用 `react-i18next`** 进行国际化
-2. **支持语言**: 中文 (zh)、英文 (en)、日文 (ja)、韩文 (ko) 等
-3. **翻译 key 统一定义在 `src/i18n/locales/` 目录**
-4. **组件中使用 `useTranslation()` hook** 获取 `t` 函数
-5. **添加新翻译时，需要在所有语言文件中同步添加对应 key**
-6. **入口初始化**: `src/main.tsx` 中 `import './i18n'` 触发初始化
-
----
-
-## 环境变量
-
-| 变量名                    | 说明                                           |
-| ------------------------- | ---------------------------------------------- |
-| `VITE_API_BASE_URL`       | API 服务器地址（默认 `http://127.0.0.1:8000`） |
-| `VITE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile 验证站点密钥              |
-
-环境变量文件：
-
-- `.env.example` — 模板文件（已提交到仓库）
-- `.env` — 实际配置（不要提交到仓库）
-
----
-
-## 开发命令
+## 开发与验证
 
 ```bash
-# 安装依赖（必须使用 pnpm）
+# 安装依赖，只使用 pnpm
 pnpm install
 
-# 启动开发服务器
+# 浏览器端 Vite 开发服务器
 pnpm dev
 
-# 构建生产版本（TypeScript 类型检查 + Vite 构建）
+# 本地 SSR 开发服务器
+pnpm dev:ssr
+
+# 类型检查、客户端构建和 SSR 构建
 pnpm build
 
-# ESLint 代码检查
-pnpm lint
+# 部署构建脚本
+pnpm vercel-build
 
-# Prettier 代码格式化
+# 静态检查和格式校验
+pnpm lint
+pnpm format:check
+
+# 自动格式化，命令会改写文件
 pnpm format
 
-# 预览构建结果
+# 预览客户端构建产物
 pnpm preview
 ```
 
----
-
-## 开发注意事项
-
-1. **包管理器必须使用 pnpm**，不要使用 npm 或 yarn
-2. **修改 API 相关代码时**，注意 `client.ts` 中的 token 刷新队列逻辑，避免重复刷新
-3. **新增页面路由**：在 `src/App.tsx` 中添加 `<Route>` 定义
-4. **新增组件目录**：遵循 `src/components/模块名/` 的结构
-5. **构建会自动移除 `console.log`**，仅保留 `console.error` 和 `console.warn`
-6. **TypeScript 编译检查是构建的一部分**（`tsc -b && vite build`），构建前确保类型无误
-7. **Tailwind 配置中已启用 line-clamp 插件**（`@tailwindcss/line-clamp`）
-8. **部署目标为 Vercel**，`vercel.json` 包含部署配置
-9. **使用 `import type` 导入类型**，不要混用普通 import 导入类型
-
----
-
-## Git 规范
-
-- 主分支: 根据远程仓库设置（GitHub remote: `origin`）
-- 提交前确保 `pnpm lint` 和 `pnpm build` 通过
-- 不要提交 `node_modules/`、`dist/`、`.env` 等文件（参见 `.gitignore`）
+- 当前没有配置自动化测试脚本。涉及代码改动时，最低执行 `pnpm lint` 和 `pnpm build`；仅文档改动至少执行 `pnpm format:check`。
+- 涉及路由、SSR、认证、上传、主题或响应式界面的改动，需要在对应的浏览器流程中手动验证，并覆盖必要的窄屏视图。
+- 不修改无关文件，不提交 `node_modules/`、`dist/`、`.env` 或本地编辑器文件。
