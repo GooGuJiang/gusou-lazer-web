@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { userAPI } from '../../utils/api';
+import { userAPI, beatmapAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import { useAuth } from '../../hooks/useAuth';
@@ -105,7 +105,12 @@ const ScoreCard: React.FC<{
   const isPinned = score.current_user_attributes?.pin?.is_pinned || false; // 是否已置顶
   const hasReplay = score.has_replay || false; // 是否有回放
 
-  const beatmapUrl = score.beatmap?.url || '#';
+  const beatmapUrl =
+    beatmapAPI.buildInternalBeatmapUrl(
+      score.beatmap?.beatmapset_id,
+      score.beatmap?.mode,
+      score.beatmap?.id
+    ) ?? '#';
   const coverImage = score.beatmapset?.covers?.['cover@2x'] || score.beatmapset?.covers?.cover;
 
   // 将主题颜色转换为 RGB 以便使用透明度

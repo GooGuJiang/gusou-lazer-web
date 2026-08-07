@@ -148,6 +148,24 @@ export const beatmapAPI = {
     return null;
   },
 
+  // 根据谱面信息构建站内 beatmap 链接（难度和模式都对应）
+  buildInternalBeatmapUrl: (
+    beatmapsetId?: number,
+    mode?: string,
+    beatmapId?: number
+  ): string | null => {
+    if (beatmapsetId && mode && beatmapId) {
+      return `/beatmapsets/${beatmapsetId}#${mode}/${beatmapId}`;
+    }
+    if (beatmapId) {
+      return `/beatmaps/${beatmapId}`;
+    }
+    if (beatmapsetId) {
+      return `/beatmapsets/${beatmapsetId}`;
+    }
+    return null;
+  },
+
   convertToInternalBeatmapUrl: (url: string): string | null => {
     const beatmapsetMatch = url.match(/\/beatmapsets\/(\d+)(?:#([^/]+)\/(\d+))?/);
     if (beatmapsetMatch) {
