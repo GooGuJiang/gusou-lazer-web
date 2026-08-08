@@ -92,6 +92,7 @@ export const profilePage = {
         unpinSuccess: '成功取消置顶',
         downloadReplay: '下载回放',
         downloadSuccess: '回放下载成功',
+        viewDetails: '查看详情',
       },
     },
     recentScores: {

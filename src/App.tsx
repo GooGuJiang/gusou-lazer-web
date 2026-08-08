@@ -17,6 +17,7 @@ import HowToJoinPage from './pages/HowToJoinPage';
 import BeatmapPage from './pages/BeatmapPage';
 import BeatmapsetsPage from './pages/BeatmapsetsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import ScorePage from './pages/ScorePage';
 
 interface AppProps {
   router?: 'browser' | 'static';
@@ -47,6 +48,7 @@ function App({ router = 'browser' }: AppProps) {
           <Route path="beatmapsets/:beatmapsetId" element={<BeatmapPage />} />
           <Route path="beatmapsets" element={<BeatmapsetsPage />} />
           <Route path="beatmaps" element={<Navigate to="/beatmapsets" replace />} />
+          <Route path="scores/:scoreId" element={<ScorePage />} />
           <Route
             path="*"
             element={

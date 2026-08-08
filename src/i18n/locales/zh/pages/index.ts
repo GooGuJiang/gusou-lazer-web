@@ -9,6 +9,7 @@ import { howToJoinPage } from './how-to-join';
 import { beatmapPage } from './beatmap';
 import { beatmapsetsPage } from './beatmapsets';
 import { layout } from './layout';
+import { scorePage } from './score';
 
 export const pages = {
   ...appPages,
@@ -22,4 +23,5 @@ export const pages = {
   ...beatmapPage,
   ...beatmapsetsPage,
   ...layout,
+  ...scorePage,
 } as const;

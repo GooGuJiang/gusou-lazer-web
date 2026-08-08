@@ -137,6 +137,117 @@ export interface BestScore {
   };
 }
 
+export type ScoreStatistics = Record<string, number>;
+
+export interface ScoreDetailTeam {
+  id: number;
+  name: string;
+  short_name: string;
+  flag_url: string;
+}
+
+export interface ScoreDetailUser {
+  avatar_url: string;
+  country_code: string;
+  default_group: string;
+  id: number;
+  is_active: boolean;
+  is_bot: boolean;
+  is_deleted?: boolean;
+  is_online: boolean;
+  is_supporter: boolean;
+  last_visit?: string | null;
+  pm_friends_only: boolean;
+  profile_colour?: string | null;
+  username: string;
+  cover?: {
+    url: string;
+    custom_url?: string | null;
+    id?: string | null;
+  } | null;
+  country?: {
+    code: string;
+    name: string;
+  } | null;
+  team?: ScoreDetailTeam | null;
+}
+
+export interface ScoreDetailBeatmap {
+  beatmapset_id: number;
+  difficulty_rating: number;
+  id: number;
+  mode: string;
+  total_length: number;
+  version: string;
+  status: string;
+  max_combo?: number | null;
+}
+
+export interface ScoreDetailBeatmapset {
+  id: number;
+  artist: string;
+  artist_unicode?: string;
+  creator: string;
+  title: string;
+  title_unicode?: string;
+  status: string;
+  covers: {
+    cover: string;
+    'cover@2x'?: string;
+    card?: string;
+    'card@2x'?: string;
+    list?: string;
+    'list@2x'?: string;
+    slimcover?: string;
+    'slimcover@2x'?: string;
+  };
+}
+
+export interface ScoreDetail {
+  beatmap_id: number;
+  id: number;
+  rank: string;
+  type: string;
+  user_id: number;
+  accuracy: number;
+  build_id: number | null;
+  ended_at: string;
+  has_replay: boolean;
+  max_combo: number;
+  passed: boolean;
+  pp: number | null;
+  started_at: string | null;
+  total_score: number;
+  maximum_statistics: ScoreStatistics;
+  mods: ScoreMod[];
+  total_score_without_mods: number;
+  classic_total_score: number | null;
+  preserve: boolean;
+  processed: boolean;
+  ranked: boolean;
+  best_id: number | null;
+  legacy_perfect: boolean;
+  legacy_score_id?: number | null;
+  legacy_total_score: number;
+  is_perfect_combo: boolean;
+  ruleset_id: number;
+  statistics: ScoreStatistics;
+  beatmap: ScoreDetailBeatmap;
+  beatmapset: ScoreDetailBeatmapset;
+  user: ScoreDetailUser;
+  current_user_attributes?: {
+    pin?: {
+      is_pinned: boolean;
+      score_id: number;
+    };
+  };
+  rank_global?: number | null;
+  rank_country?: number | null;
+  position?: number | null;
+  replay?: boolean;
+  weight?: number | { percentage: number; pp: number };
+}
+
 // 谱面排行榜类型
 export type BeatmapLeaderboardType = 'global' | 'friend' | 'country' | 'team';
 

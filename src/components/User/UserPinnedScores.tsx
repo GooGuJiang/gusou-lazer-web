@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { userAPI, scoreAPI, beatmapAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
@@ -181,13 +182,23 @@ const ScoreCard: React.FC<{
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/75 to-white/60 dark:from-gray-800/90 dark:via-gray-800/75 dark:to-gray-800/60" />
 
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
+        {/* 整卡成绩详情链接 */}
+        <Link
+          to={`/scores/${score.id}`}
+          className="absolute inset-0 z-10"
+          aria-label={t('profile.bestScores.actions.viewDetails')}
+        />
+
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
           <div className="flex items-center h-12 pl-5 pr-24">
             <div className="flex-shrink-0 mr-3 flex items-center gap-2">
               {/* 拖拽手柄 */}
               {canEdit && dragHandleProps && (
-                <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing p-1">
+                <div
+                  {...dragHandleProps}
+                  className="relative z-20 cursor-grab active:cursor-grabbing p-1"
+                >
                   <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
                   </svg>
@@ -201,7 +212,7 @@ const ScoreCard: React.FC<{
                 <div className="flex items-baseline gap-1 text-sm leading-tight">
                   <BeatmapLink
                     beatmapUrl={beatmapUrl}
-                    className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
+                    className="relative z-20 font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
                     title={title}
                   >
                     {title}
@@ -231,7 +242,7 @@ const ScoreCard: React.FC<{
             </div>
           </div>
 
-          <div className="absolute right-0 top-0 h-full flex items-center justify-center gap-2 pr-2">
+          <div className="absolute right-0 top-0 h-full flex items-center justify-center gap-2 pr-2 z-20">
             <div className="text-sm font-bold text-profile-color drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               {originalPp} PP
             </div>
@@ -252,7 +263,10 @@ const ScoreCard: React.FC<{
             <div className="flex-shrink-0 flex items-center gap-2">
               {/* 拖拽手柄 */}
               {canEdit && dragHandleProps && (
-                <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing p-1">
+                <div
+                  {...dragHandleProps}
+                  className="relative z-20 cursor-grab active:cursor-grabbing p-1"
+                >
                   <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
                   </svg>
@@ -265,7 +279,7 @@ const ScoreCard: React.FC<{
               <div className="flex items-baseline gap-1 text-sm leading-tight mb-1">
                 <BeatmapLink
                   beatmapUrl={beatmapUrl}
-                  className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
+                  className="relative z-20 font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
                   title={title}
                 >
                   {title}
@@ -293,12 +307,14 @@ const ScoreCard: React.FC<{
                     {originalPp} PP
                   </div>
                   {canEdit && (
-                    <ScoreActionsMenu
-                      scoreId={score.id}
-                      isPinned={isPinned}
-                      hasReplay={hasReplay}
-                      onPinChange={onPinChange}
-                    />
+                    <div className="relative z-20">
+                      <ScoreActionsMenu
+                        scoreId={score.id}
+                        isPinned={isPinned}
+                        hasReplay={hasReplay}
+                        onPinChange={onPinChange}
+                      />
+                    </div>
                   )}
                 </div>
               </div>

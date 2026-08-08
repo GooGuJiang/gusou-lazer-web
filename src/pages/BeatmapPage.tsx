@@ -38,82 +38,8 @@ import LazyFlag from '../components/UI/LazyFlag';
 import RankBadge from '../components/UI/RankBadge';
 import ModsDisplay from '../components/UI/ModsDisplay';
 import { getErrorMessage } from '../utils/typeGuards';
-
-// ── 难度颜色光谱（与 BeatmapsetsPage 一致） ──────────────────────────────────
-
-type DifficultySpectrumStop = readonly [number, string];
-
-const STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF = 6.5;
-const STAR_DIFFICULTY_TEXT_GRADIENT_CUTOFF = 9.0;
-
-const STAR_DIFFICULTY_SPECTRUM: DifficultySpectrumStop[] = [
-  [0.1, '#4290fb'],
-  [1.25, '#4fc0ff'],
-  [2.0, '#4fffd5'],
-  [2.5, '#7cff4f'],
-  [3.3, '#f6f05c'],
-  [4.2, '#ff8068'],
-  [4.9, '#ff4e6f'],
-  [5.8, '#c645b8'],
-  [6.7, '#6563de'],
-  [7.7, '#18158e'],
-  [9.0, '#000000'],
-  [10.0, '#000000'],
-];
-
-const STAR_DIFFICULTY_TEXT_SPECTRUM: DifficultySpectrumStop[] = [
-  [9.0, '#f6f05c'],
-  [9.9, '#ff8068'],
-  [10.6, '#ff4e6f'],
-  [11.5, '#c645b8'],
-  [12.4, '#6563de'],
-];
-
-const hexToRgb = (hex: string): { r: number; g: number; b: number } => ({
-  r: parseInt(hex.slice(1, 3), 16),
-  g: parseInt(hex.slice(3, 5), 16),
-  b: parseInt(hex.slice(5, 7), 16),
-});
-
-const rgbToHex = ({ r, g, b }: { r: number; g: number; b: number }): string =>
-  `#${[r, g, b].map((value) => Math.round(value).toString(16).padStart(2, '0')).join('')}`;
-
-const sampleSpectrum = (spectrum: DifficultySpectrumStop[], value: number): string => {
-  const roundedValue = Math.round(value * 100) / 100;
-  const firstStop = spectrum[0];
-  const lastStop = spectrum[spectrum.length - 1];
-
-  if (!firstStop || !lastStop) return '#ffffff';
-  if (roundedValue <= firstStop[0]) return firstStop[1];
-  if (roundedValue >= lastStop[0]) return lastStop[1];
-
-  for (let index = 1; index < spectrum.length; index += 1) {
-    const previous = spectrum[index - 1];
-    const current = spectrum[index];
-    if (!previous || !current || roundedValue > current[0]) continue;
-
-    const progress = (roundedValue - previous[0]) / (current[0] - previous[0]);
-    const from = hexToRgb(previous[1]);
-    const to = hexToRgb(current[1]);
-
-    return rgbToHex({
-      r: from.r + (to.r - from.r) * progress,
-      g: from.g + (to.g - from.g) * progress,
-      b: from.b + (to.b - from.b) * progress,
-    });
-  }
-
-  return lastStop[1];
-};
-
-const getStarDifficultyColor = (stars: number): string =>
-  sampleSpectrum(STAR_DIFFICULTY_SPECTRUM, stars);
-
-const getStarDifficultyTextColor = (stars: number): string => {
-  if (stars < STAR_DIFFICULTY_DEFINED_COLOUR_CUTOFF) return 'rgba(0, 0, 0, 0.75)';
-  if (stars < STAR_DIFFICULTY_TEXT_GRADIENT_CUTOFF) return '#ff8068';
-  return sampleSpectrum(STAR_DIFFICULTY_TEXT_SPECTRUM, stars);
-};
+import { getStarDifficultyColor, getStarDifficultyTextColor } from '../utils/starRating';
+import StarRatingBadge from '../components/UI/StarRatingBadge';
 
 // ── 状态颜色 ─────────────────────────────────────────────────────────────────
 
@@ -840,16 +766,7 @@ const BeatmapPage: React.FC = () => {
               <div className="px-6 py-4 border-b border-border-color bg-gradient-to-r from-osu-pink/10 to-transparent">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-bold text-text-primary">{selectedBeatmap.version}</h2>
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-black shadow-sm"
-                    style={{
-                      backgroundColor: getStarDifficultyColor(selectedBeatmap.difficulty_rating),
-                      color: getStarDifficultyTextColor(selectedBeatmap.difficulty_rating),
-                    }}
-                  >
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    {selectedBeatmap.difficulty_rating.toFixed(2)}
-                  </span>
+                  <StarRatingBadge stars={selectedBeatmap.difficulty_rating} size="sm" />
                 </div>
               </div>
 
@@ -1392,6 +1309,7 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
   highlighted = false,
   t,
 }) => {
+  const navigate = useNavigate();
   const isTopThree = rank <= 3;
   const isFullCombo = score.is_perfect_combo || score.max_combo >= beatmapMaxCombo;
   const timeAgo = formatTimeAgo(score.ended_at, t);
@@ -1537,10 +1455,10 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
                 {...getFloatingProps()}
                 className="w-48 bg-card rounded-lg shadow-xl border border-border-color overflow-hidden z-[9999]"
               >
-                {/* 查看详情（占位） */}
+                {/* 查看详情 */}
                 <button
                   onClick={() => {
-                    toast('Coming soon!', { icon: '🔜' });
+                    navigate(`/scores/${score.id}`);
                     setMenuOpen(false);
                   }}
                   className="w-full px-4 py-3 text-left hover:bg-card-hover flex items-center gap-3 text-sm text-text-primary border-b border-border-color transition-colors"

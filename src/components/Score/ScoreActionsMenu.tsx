@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { FaEllipsisV, FaThumbtack, FaDownload } from 'react-icons/fa';
+import { Eye } from 'lucide-react';
 import { scoreAPI, handleApiError } from '../../utils/api';
 import toast from 'react-hot-toast';
 import {
@@ -35,6 +37,7 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
   className = '',
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -130,6 +133,17 @@ const ScoreActionsMenu: React.FC<ScoreActionsMenuProps> = ({
               {...getFloatingProps()}
               className="w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-[9999]"
             >
+              <button
+                onClick={() => {
+                  navigate(`/scores/${scoreId}`);
+                  setIsOpen(false);
+                }}
+                className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 transition-colors"
+              >
+                <Eye className="w-4 h-4" />
+                <span>{t('profile.bestScores.actions.viewDetails')}</span>
+              </button>
+
               <button
                 onClick={handleTogglePin}
                 disabled={isLoading}

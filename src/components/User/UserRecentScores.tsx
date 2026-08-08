@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { userAPI, beatmapAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
@@ -120,6 +121,13 @@ const ScoreCard: React.FC<{
       {!passed && <div className="absolute inset-0 bg-red-500/10 dark:bg-red-500/20" />}
 
       <div className="relative bg-transparent hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors duration-150 group">
+        {/* 整卡成绩详情链接 */}
+        <Link
+          to={`/scores/${score.id}`}
+          className="absolute inset-0 z-10"
+          aria-label={t('profile.bestScores.actions.viewDetails')}
+        />
+
         {/* 桌面端布局 */}
         <div className="hidden sm:block">
           {/* 主要内容区域 */}
@@ -140,7 +148,7 @@ const ScoreCard: React.FC<{
                 <div className="flex items-baseline gap-1 text-sm leading-tight">
                   <BeatmapLink
                     beatmapUrl={beatmapUrl}
-                    className={`font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
+                    className={`relative z-20 font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
                     title={title}
                   >
                     {title}
@@ -211,7 +219,7 @@ const ScoreCard: React.FC<{
               <div className="flex items-baseline gap-1 text-sm leading-tight mb-1">
                 <BeatmapLink
                   beatmapUrl={beatmapUrl}
-                  className={`font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
+                  className={`relative z-20 font-semibold hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors ${!passed ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-white'}`}
                   title={title}
                 >
                   {title}

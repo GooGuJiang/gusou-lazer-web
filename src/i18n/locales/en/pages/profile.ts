@@ -92,6 +92,7 @@ export const profilePage = {
         unpinSuccess: 'Score unpinned successfully',
         downloadReplay: 'Download Replay',
         downloadSuccess: 'Replay downloaded successfully',
+        viewDetails: 'View Details',
       },
     },
     recentScores: {

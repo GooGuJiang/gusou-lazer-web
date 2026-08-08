@@ -1,6 +1,13 @@
 import { api } from './client';
+import type { ScoreDetail } from '../../types';
 
 export const scoreAPI = {
+  // 获取成绩详情
+  getScore: async (scoreId: number, signal?: AbortSignal): Promise<ScoreDetail> => {
+    const response = await api.get<ScoreDetail>(`/api/v2/scores/${scoreId}`, { signal });
+    return response.data;
+  },
+
   // 置顶成绩
   pinScore: async (scoreId: number) => {
     console.log('置顶成绩:', scoreId);
@@ -29,9 +36,9 @@ export const scoreAPI = {
   },
 
   // 下载成绩回放
-  downloadReplay: async (scoreId: number) => {
+  downloadReplay: async (scoreId: number): Promise<Blob> => {
     console.log('下载成绩回放:', scoreId);
-    const response = await api.get(`/api/v2/scores/${scoreId}/download`, {
+    const response = await api.get<Blob>(`/api/v2/scores/${scoreId}/download`, {
       responseType: 'blob',
     });
     return response.data;
