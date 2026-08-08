@@ -135,7 +135,7 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
                 {t('profile.activities.types.rank.rankPrefix')}
               </span>
               <span className="font-bold text-yellow-600 dark:text-yellow-400 text-xs sm:text-sm">
-                #{activity.rank}
+                {activity.rank}
               </span>
             </>
           )}

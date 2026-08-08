@@ -10,7 +10,7 @@ export const beatmapPage = {
   'beatmap.download': 'download',
   'beatmap.downloadVideo': 'download with video',
   'beatmap.downloadNoVideo': 'download without video',
-  'beatmap.osuDirect': 'osu!direct',
+  'beatmap.osuDirect': 'open in osu!direct',
   'beatmap.preview': 'Preview',
   'beatmap.viewOnOsu': 'View in osu!',
   'beatmap.favourite': 'Favourite',

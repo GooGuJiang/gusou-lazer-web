@@ -14,7 +14,7 @@ export const scorePage = {
   'score.labels.globalRank': 'Global Rank',
   'score.labels.countryRank': 'Country Rank',
   'score.labels.pp': 'PP',
-  'score.labels.playedAt': 'Played {{date}}',
+  'score.labels.playedAt': 'Played on {{date}}',
   'score.labels.client': 'Client',
   'score.client.lazer': 'Lazer',
   'score.client.stable': 'Stable',

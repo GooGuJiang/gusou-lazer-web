@@ -2,7 +2,7 @@ export const homePage = {
   hero: {
     tagline: '可能是最好的 osu! 私服',
     descriptionPrefix: 'g0v0! 是一个全新的',
-    descriptionHighlight: '支持 lazer 客户端',
+    descriptionHighlight: '为 lazer 客户端打造',
     descriptionSuffix:
       '的 osu! 第三方服务器。提供了 standard / taiko / catch / mania 四大模式支持，支持 RX/AP pp计算与无限制改名，让你的节奏旅程更自由。',
     statusOperational: '服务正常运行中',
@@ -43,7 +43,7 @@ export const homePage = {
         imageAlt: '活跃的社区支持',
       },
       {
-        title: '最强客制化',
+        title: '极致客制化',
         content:
           '我们支持随意改名，上传自定义头图，以及创建花哨的个人简介和签名，在这里充分发挥您的想象力',
         imageAlt: '最强客制化',
@@ -60,16 +60,16 @@ export const homePage = {
         imageAlt: '开源开放',
       },
       {
-        title: 'rulesets排行',
+        title: '规则集排行榜',
         content:
           '我们支持<customRulesetLink>自定义 ruleset</customRulesetLink> 模式的分数计算和成绩上传，并提供完善的排行榜支持',
-        imageAlt: 'rulesets排行',
+        imageAlt: '规则集排行榜',
       },
       {
-        title: '允许用户谱面提交',
+        title: '用户谱面提交',
         content:
           '我们允许您提交自制的谱面或在官方服务器中无法计算 pp 的未上榜谱面并通过审核（开发中）',
-        imageAlt: '允许用户谱面提交',
+        imageAlt: '用户谱面提交',
       },
     ],
   },

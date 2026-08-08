@@ -10,7 +10,7 @@ export const beatmapPage = {
   'beatmap.download': '下载',
   'beatmap.downloadVideo': '包含视频下载',
   'beatmap.downloadNoVideo': '不含视频下载',
-  'beatmap.osuDirect': 'osu!direct',
+  'beatmap.osuDirect': '在 osu!direct 中查看',
   'beatmap.preview': '预览',
   'beatmap.viewOnOsu': '在 osu! 中查看',
   'beatmap.favourite': '收藏',
@@ -105,5 +105,5 @@ export const beatmapPage = {
   'beatmap.scoreboard.viewDetails': '查看详情',
   'beatmap.scoreboard.downloadReplay': '下载回放',
   'beatmap.scoreboard.scoreFirst': '领先',
-  'beatmap.scoreboard.scoreOwn': '你的最佳成绩',
+  'beatmap.scoreboard.scoreOwn': '个人最佳成绩',
 } as const;

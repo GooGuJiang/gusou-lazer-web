@@ -41,6 +41,7 @@ export const common = {
   filter: '筛选',
   refresh: '刷新',
   close: '关闭',
+  copied: '已复制到剪贴板',
   retry: '重试',
   updatedAt: '更新于',
   manualRefresh: '手动刷新',

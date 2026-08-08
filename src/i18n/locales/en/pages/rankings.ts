@@ -7,7 +7,7 @@ export const rankingsPage = {
     },
     rankingTypes: {
       performance: 'Performance',
-      score: 'Score',
+      score: 'Ranked Score',
     },
     gameModes: {
       osu: 'osu!',

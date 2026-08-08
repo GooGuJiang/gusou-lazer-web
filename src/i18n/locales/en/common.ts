@@ -40,6 +40,7 @@ export const common = {
   filter: 'Filter',
   refresh: 'Refresh',
   close: 'Close',
+  copied: 'Copied to clipboard',
   retry: 'Retry',
   updatedAt: 'Updated at',
   manualRefresh: 'Manual refresh',

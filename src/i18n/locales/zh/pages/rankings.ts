@@ -7,7 +7,7 @@ export const rankingsPage = {
     },
     rankingTypes: {
       performance: '表现分',
-      score: '分数',
+      score: '计分成绩总分',
     },
     gameModes: {
       osu: 'osu!',

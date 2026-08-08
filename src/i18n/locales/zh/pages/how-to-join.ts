@@ -22,8 +22,8 @@ export const howToJoinPage = {
         step2: {
           title: '启动游戏，打开 设置 → 在线，在"Custom API Server URL"字段中填入：',
           description:
-            '在osu lazer的设置中找到“在线”Section，找到“Custom API Server URL”设置项，并在其输入框中输入下面的文本：',
-          imageHint: '如图所示',
+            '在 osu!lazer 的设置中找到“在线”一栏，找到“Custom API Server URL”设置项，并在其输入框中输入下面的文本：',
+          imageAlt: '如图所示',
         },
         step3: {
           title: '重启游戏，开始享受游戏！',

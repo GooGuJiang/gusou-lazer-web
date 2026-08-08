@@ -93,7 +93,7 @@ export const messagesPage = {
         private: '私聊',
         team: '团队频道',
         public: '公共频道',
-        moderated: '管制',
+        moderated: '管制频道',
       },
       noMessage: '暂无消息',
       avatarAlt: '用户头像',

@@ -14,7 +14,7 @@ export const scorePage = {
   'score.labels.globalRank': '全球排名',
   'score.labels.countryRank': '地区排名',
   'score.labels.pp': 'PP',
-  'score.labels.playedAt': '游玩时间 {{date}}',
+  'score.labels.playedAt': '游玩于 {{date}}',
   'score.labels.client': '客户端',
   'score.client.lazer': 'Lazer',
   'score.client.stable': 'Stable',

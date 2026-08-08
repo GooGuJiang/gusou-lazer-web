@@ -50,8 +50,8 @@ export const profilePage = {
         rank: {
           prefix: 'on',
           middle: 'achieved',
-          grade: 'rank',
-          rankPrefix: 'ranked #',
+          grade: '',
+          rankPrefix: 'rank #',
         },
         rankLost: {
           prefix: 'on',

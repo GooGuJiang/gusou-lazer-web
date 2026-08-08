@@ -25,7 +25,7 @@ export const howToJoinPage = {
             'Launch the game, go to Settings → Online, and enter in the "Custom API Server URL" field:',
           description:
             'In the osu!lazer settings, go to the “Online” section, find the “Custom API Server URL” setting, and enter the following text in the input box:',
-          imageHint: 'As shown in the image',
+          imageAlt: 'As shown in the image',
         },
         step3: {
           title: 'Restart the game and enjoy!',
