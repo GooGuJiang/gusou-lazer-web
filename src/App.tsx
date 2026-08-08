@@ -18,6 +18,7 @@ import BeatmapPage from './pages/BeatmapPage';
 import BeatmapsetsPage from './pages/BeatmapsetsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import ScorePage from './pages/ScorePage';
+import OAuthAuthorizePage from './pages/OAuthAuthorizePage';
 
 interface AppProps {
   router?: 'browser' | 'static';
@@ -49,6 +50,7 @@ function App({ router = 'browser' }: AppProps) {
           <Route path="beatmapsets" element={<BeatmapsetsPage />} />
           <Route path="beatmaps" element={<Navigate to="/beatmapsets" replace />} />
           <Route path="scores/:scoreId" element={<ScorePage />} />
+          <Route path="oauth/authorize" element={<OAuthAuthorizePage />} />
           <Route
             path="*"
             element={

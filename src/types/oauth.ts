@@ -5,6 +5,7 @@ export interface OAuthApp {
   name: string;
   description: string;
   redirect_uris: string[];
+  owner_id: number;
   created_at: string;
   updated_at?: string;
 }
@@ -42,5 +43,6 @@ export interface GenerateCodeRequest {
 
 export interface GenerateCodeResponse {
   code: string;
-  expires_at: string;
+  redirect_uri: string;
+  expires_in: number;
 }

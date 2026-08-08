@@ -10,6 +10,7 @@ import { beatmapPage } from './beatmap';
 import { beatmapsetsPage } from './beatmapsets';
 import { layout } from './layout';
 import { scorePage } from './score';
+import { oauthPage } from './oauth';
 
 export const pages = {
   ...appPages,
@@ -24,4 +25,5 @@ export const pages = {
   ...beatmapsetsPage,
   ...layout,
   ...scorePage,
+  ...oauthPage,
 } as const;

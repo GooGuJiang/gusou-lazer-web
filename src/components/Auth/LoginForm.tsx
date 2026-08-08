@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -14,6 +14,7 @@ const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState<LoginFormType>({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
@@ -30,7 +31,13 @@ const LoginForm: React.FC = () => {
 
     const loggedInUser = await login(formData.username, formData.password, turnstileToken);
     if (loggedInUser) {
-      navigate(`/users/${loggedInUser.id}`);
+      const redirect = searchParams.get('redirect');
+      // 只允许站内相对路径，防止开放重定向
+      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
+        navigate(redirect);
+      } else {
+        navigate(`/users/${loggedInUser.id}`);
+      }
     } else {
       // Refresh turnstile on error
       if (turnstileRef.current) {
