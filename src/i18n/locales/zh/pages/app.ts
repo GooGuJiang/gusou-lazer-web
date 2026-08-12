@@ -17,7 +17,7 @@ export const appPages = {
 
 > 请不要因此攻击 peppy。他们的沟通非常礼貌，而且正是因为 osu!，我们才会相聚在这里。
 
-我们会尽快回来。有新消息时，我们会在这里发布更新。`,
+我们会尽快回来。有新消息时，我们会在 [QQ 群](https://qm.qq.com/q/Uw8tOkgJSS)和 [Discord](https://discord.gg/AhzJXXWYfF) 发布更新。`,
     imageAlt: '双手比心、神情难过的角色',
   },
 } as const;
