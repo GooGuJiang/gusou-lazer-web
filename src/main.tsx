@@ -3,13 +3,17 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import './index.css';
 import './i18n';
 import App from './App.tsx';
+import MaintenanceAnnouncement from './components/MaintenanceAnnouncement';
 import { AuthProvider } from './contexts/AuthContext';
 import { AudioProvider } from './components/UI/AudioPlayer';
 import { VerificationProvider } from './contexts/VerificationContext';
 import { ProfileColorProvider } from './contexts/ProfileColorContext';
+import { MAINTENANCE_MODE } from './utils/maintenance';
 
 const rootElement = document.getElementById('root')!;
-const app = (
+const app = MAINTENANCE_MODE ? (
+  <MaintenanceAnnouncement />
+) : (
   <StrictMode>
     <AuthProvider>
       <ProfileColorProvider>

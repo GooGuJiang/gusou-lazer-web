@@ -74,4 +74,13 @@ export const common = {
   members: '名成员',
   showMore: '显示更多',
   showLess: '收起',
+  maintenance: {
+    badge: '服务暂停',
+    title: 'g0v0! 已经暂停服务。',
+    paragraph1:
+      '我们收到了 peppy 就 osu! 商标使用事宜发来的停止与终止函（Cease and Desist）。osu! GU 客户端与注入器已下架，在审查并妥善处理我们项目中所有涉及商标的内容之前，服务器和网站将保持离线。',
+    paragraph2:
+      '你的所有数据都完好保留，没有任何内容被删除。请不要因为这件事去针对 peppy——他们是礼貌地提出要求的，而 osu! 正是我们大家相聚于此的原因。',
+    paragraph3: '我们会尽快回归，有消息将在 <discordLink>Discord</discordLink> 上更新。',
+  },
 } as const;
