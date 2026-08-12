@@ -87,6 +87,16 @@ export default function ShutdownNoticeDialog() {
                           {children}
                         </strong>
                       ),
+                      a: ({ children, href }) => (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold text-text-primary underline decoration-dotted underline-offset-4 transition-colors hover:text-primary"
+                        >
+                          {children}
+                        </a>
+                      ),
                       blockquote: ({ children }) => (
                         <blockquote className="my-5 border-l-4 border-osu-pink/60 pl-4 italic text-text-secondary">
                           {children}

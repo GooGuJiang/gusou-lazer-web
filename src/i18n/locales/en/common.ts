@@ -74,14 +74,4 @@ export const common = {
   members: 'members',
   showMore: 'Show more',
   showLess: 'Show less',
-  maintenance: {
-    badge: 'Service Paused',
-    title: 'g0v0! is offline for now.',
-    paragraph1:
-      'We received a cease and desist from peppy regarding our use of the osu! trademark. The osu! GU client and the injector have been taken down, and the server and website will remain offline until we review and resolve all trademark usage across our projects.',
-    paragraph2:
-      "Your data is safe — nothing has been deleted. Please don't direct any negativity toward peppy over this: they reached out politely, and osu! is the reason any of us are here.",
-    paragraph3:
-      'We will be back as soon as we can, and news will be posted on <discordLink>Discord</discordLink>.',
-  },
 } as const;
