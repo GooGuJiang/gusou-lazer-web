@@ -21,16 +21,7 @@ export const howToJoinPage = {
           downloadClient: 'Download g0v0! Client',
         },
         step2: {
-          title:
-            'Launch the game, go to Settings → Online, and enter in the "Custom API Server URL" field:',
-          description:
-            'In the g0v0! settings, go to the “Online” section, find the “Custom API Server URL” setting, and enter the following text in the input box:',
-          imageAlt: 'As shown in the image',
-        },
-        step3: {
-          title: 'Restart the game and enjoy!',
-          description:
-            'After entering the URL, exit g0v0! and restart it for the changes to take effect.',
+          title: 'Start the game and enjoy g0v0!',
         },
       },
     },

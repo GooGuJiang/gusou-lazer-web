@@ -10,9 +10,7 @@ import {
   FaApple,
   FaChevronLeft,
 } from 'react-icons/fa';
-import { PhotoProvider, PhotoView } from 'react-photo-view';
 import { useTranslation } from 'react-i18next';
-import 'react-photo-view/dist/react-photo-view.css';
 
 // --- Sub-components for cleaner code ---
 
@@ -96,8 +94,7 @@ const HowToJoinPage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <PhotoProvider maskOpacity={0.8}>
-      <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* Page Header */}
           <div className="mb-6 sm:mb-8">
@@ -162,62 +159,16 @@ const HowToJoinPage: React.FC = () => {
 
                 {/* Step 2 */}
                 <StepItem number={2}>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    {t('howToJoin.method1.steps.step2.description')}
-                  </h3>
-                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
-                    {/* Copy section with character */}
-                    <div className="relative mb-4">
-                      <div className="max-w-lg">
-                        <CodeSnippet label="Server Address" text="lazer-api.g0v0.top" />
-                      </div>
-                      {/* Character pointing to copy button - absolute positioned */}
-                      <div
-                        className="hidden sm:block absolute top-0 z-10 pointer-events-none mt-[-35px]"
-                        style={{ left: 'min(100%, 32rem)', marginLeft: '-5rem' }}
-                      >
-                        <img
-                          src="/htj/p2.webp"
-                          alt="Character pointing"
-                          className="w-36 h-auto object-contain"
-                        />
-                      </div>
-                    </div>
-                    {/* Screenshot below */}
-                    <div className="w-full max-w-xs">
-                      <PhotoView src="/image/join_photos/1.png">
-                        <div className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                          <img
-                            src="/image/join_photos/1.png"
-                            alt={t('howToJoin.method1.steps.step2.imageAlt')}
-                            className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
-                              View
-                            </span>
-                          </div>
-                        </div>
-                      </PhotoView>
-                    </div>
-                  </div>
-                </StepItem>
-
-                {/* Step 3 */}
-                <StepItem number={3}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                        {t('howToJoin.method1.steps.step3.description')}
-                      </h3>
-                      <p className="text-gray-500 dark:text-gray-400 mt-1">Enjoy the game!</p>
-                    </div>
+                  <div className="flex items-start">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                      {t('howToJoin.method1.steps.step2.title')}
+                    </h3>
                     {/* Character */}
-                    <div className="hidden sm:block flex-shrink-0 mt-4">
+                    <div className="hidden sm:block flex-shrink-0 ml-1">
                       <img
                         src="/htj/p3.webp"
                         alt="Character"
-                        className="w-40 h-auto object-contain"
+                        className="w-32 h-auto object-contain"
                       />
                     </div>
                   </div>
@@ -344,7 +295,6 @@ const HowToJoinPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </PhotoProvider>
   );
 };
 

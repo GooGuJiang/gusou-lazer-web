@@ -20,14 +20,7 @@ export const howToJoinPage = {
           downloadClient: '下载 g0v0! 客户端',
         },
         step2: {
-          title: '启动游戏，打开 设置 → 在线，在"自定义 API 服务器链接"字段中填入：',
-          description:
-            '在 g0v0! 的设置中找到“在线”一栏，找到“自定义 API 服务器链接”设置项，并在其输入框中输入下面的文本：',
-          imageAlt: '如图所示',
-        },
-        step3: {
-          title: '重启游戏，开始享受游戏！',
-          description: '输入 URL 后退出 g0v0! 并重新启动即可生效',
+          title: '打开游戏，体验 g0v0!',
         },
       },
     },
