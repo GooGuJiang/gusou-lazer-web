@@ -141,7 +141,7 @@ const HowToJoinPage: React.FC = () => {
                   <div className="flex items-center gap-0">
                     {/* Download button */}
                     <a
-                      href="https://github.com/GooGuTeam/osu/releases/latest"
+                      href="https://github.com/GooGuTeam/g0v0/releases/latest"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-3 px-10 py-4 bg-osu-pink text-white font-bold rounded-xl shadow-lg shadow-osu-pink/20 transition-all duration-200 hover:bg-osu-pink/90 hover:scale-105 hover:shadow-xl hover:shadow-osu-pink/30 active:scale-95"

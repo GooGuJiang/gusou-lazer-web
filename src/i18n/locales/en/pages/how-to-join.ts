@@ -5,37 +5,37 @@ export const howToJoinPage = {
     copyFailed: 'Copy failed:',
     clickToCopy: 'Click to copy',
     method1: {
-      title: 'Using Our Custom Client',
+      title: 'Using Our Client',
       recommended: 'Recommended',
       description:
-        'This method is recommended for all users who can run osu!lazer on their platform.',
+        'This method is recommended for all users who can run original osu!lazer on their platform.',
       steps: {
         title: 'Steps:',
         step1: {
-          title: 'Download g0v0! Custom Client',
+          title: 'Download g0v0! Client',
           pcVersion: 'PC Version:',
           androidVersion: 'Android Version:',
           downloadPc: 'Download from GitHub Releases',
           downloadAndroidDomestic: 'Download (China Only)',
           downloadAndroidOverseas: 'Download (For global network)',
-          downloadClient: 'Download Custom Client',
+          downloadClient: 'Download g0v0! Client',
         },
         step2: {
           title:
             'Launch the game, go to Settings → Online, and enter in the "Custom API Server URL" field:',
           description:
-            'In the osu!lazer settings, go to the “Online” section, find the “Custom API Server URL” setting, and enter the following text in the input box:',
+            'In the g0v0! settings, go to the “Online” section, find the “Custom API Server URL” setting, and enter the following text in the input box:',
           imageAlt: 'As shown in the image',
         },
         step3: {
           title: 'Restart the game and enjoy!',
           description:
-            'After entering the URL, exit osu!lazer and restart it for the changes to take effect.',
+            'After entering the URL, exit g0v0! and restart it for the changes to take effect.',
         },
       },
     },
     method2: {
-      title: 'Using EnhancedAuth Ruleset',
+      title: 'Using osu!lazer with EnhancedAuth Ruleset',
       suitableFor: 'This method is available on the following platforms:',
       platforms: {
         windows: 'Windows (amd64, arm64)',
