@@ -19,7 +19,6 @@ import BeatmapsetsPage from './pages/BeatmapsetsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import ScorePage from './pages/ScorePage';
 import OAuthAuthorizePage from './pages/OAuthAuthorizePage';
-import ShutdownNoticeDialog from './components/UI/ShutdownNoticeDialog';
 
 interface AppProps {
   router?: 'browser' | 'static';
@@ -29,7 +28,6 @@ function App({ router = 'browser' }: AppProps) {
   const { t } = useTranslation();
   const routes = (
     <>
-      <ShutdownNoticeDialog />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
