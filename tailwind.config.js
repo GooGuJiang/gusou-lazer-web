@@ -13,11 +13,11 @@ export default {
     },
     extend: {
       colors: {
-        'osu-pink': 'var(--osu-pink, #ED8EA6)',
-        'profile-color': 'var(--profile-color, #ED8EA6)',
+        'osu-pink': 'var(--osu-pink, #5CA9E5)',
+        'profile-color': 'var(--profile-color, #5CA9E5)',
         'osu-blue': '#7DD5D4',
         'osu-purple': '#7DD5D4',
-        primary: 'var(--osu-pink, #ED8EA6)',
+        primary: 'var(--osu-pink, #5CA9E5)',
         secondary: '#7DD5D4',
         'bg-primary': 'var(--bg-primary)',
         'bg-secondary': 'var(--bg-secondary)',

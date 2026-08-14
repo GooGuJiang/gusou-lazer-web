@@ -49,7 +49,7 @@ const Layout: React.FC = () => {
             },
             success: {
               iconTheme: {
-                primary: 'var(--osu-pink, #ED8EA6)',
+                primary: 'var(--osu-pink, #5CA9E5)',
                 secondary: 'white',
               },
             },

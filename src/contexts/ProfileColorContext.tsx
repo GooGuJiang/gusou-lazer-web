@@ -19,7 +19,7 @@ interface ProfileColorProviderProps {
   children: ReactNode;
 }
 
-export const DEFAULT_PROFILE_COLOR = '#ED8EA6'; // 默认的 osu-pink 颜色
+export const DEFAULT_PROFILE_COLOR = '#5CA9E5'; // 默认的 osu-blue 颜色
 const LOCAL_STORAGE_KEY = 'user_profile_color'; // 本地存储的键名
 
 /**

@@ -43,7 +43,7 @@ export type LevelProgressProps = {
 export default function LevelProgress({
   levelCurrent,
   levelProgress,
-  tint = 'var(--profile-color, #ED8EA6)', // default to dynamic profile color
+  tint = 'var(--profile-color, #5CA9E5)', // default to dynamic profile color
   className = '',
   barHeight,
   barWidth,

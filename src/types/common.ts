@@ -34,20 +34,20 @@ export const getProfileColor = () => {
     const color = getComputedStyle(document.documentElement)
       .getPropertyValue('--profile-color')
       .trim();
-    return color || '#ED8EA6';
+    return color || '#5CA9E5';
   }
-  return '#ED8EA6';
+  return '#5CA9E5';
 };
 
 export const GAME_MODE_COLORS: Record<GameMode, string> = {
-  osu: 'var(--profile-color, #ED8EA6)',
-  osurx: 'var(--profile-color, #ED8EA6)',
-  osuap: 'var(--profile-color, #ED8EA6)',
-  taiko: 'var(--profile-color, #ED8EA6)',
-  taikorx: 'var(--profile-color, #ED8EA6)',
-  fruits: 'var(--profile-color, #ED8EA6)',
-  fruitsrx: 'var(--profile-color, #ED8EA6)',
-  mania: 'var(--profile-color, #ED8EA6)',
+  osu: 'var(--profile-color, #5CA9E5)',
+  osurx: 'var(--profile-color, #5CA9E5)',
+  osuap: 'var(--profile-color, #5CA9E5)',
+  taiko: 'var(--profile-color, #5CA9E5)',
+  taikorx: 'var(--profile-color, #5CA9E5)',
+  fruits: 'var(--profile-color, #5CA9E5)',
+  fruitsrx: 'var(--profile-color, #5CA9E5)',
+  mania: 'var(--profile-color, #5CA9E5)',
 };
 
 export type Theme = 'light' | 'dark' | 'system';

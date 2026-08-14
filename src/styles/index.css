@@ -142,9 +142,9 @@
 }
 
 :root {
-  --hue: 340; /* 默认色相值，对应 osu-pink */
-  --profile-color: #ed8ea6;
-  --osu-pink: var(--profile-color, #ed8ea6);
+  --hue: 244; /* 默认色相值，对应 osu-blue #5ca9e5 */
+  --profile-color: #5ca9e5;
+  --osu-pink: var(--profile-color, #5ca9e5);
 
   /* 使用 OKLCH 颜色空间，参考 fuwari 实现 */
   /* 页面背景 */
@@ -163,7 +163,7 @@
 
   /* 边框颜色 */
   --border-color: #e2e8f0;
-  --border-hover: rgba(237, 142, 166, 0.2);
+  --border-hover: rgba(92, 169, 229, 0.2);
 
   /* 按钮背景 */
   --btn-bg: oklch(0.95 0.025 var(--hue));
@@ -171,8 +171,8 @@
   --btn-bg-active: oklch(0.85 0.08 var(--hue));
 
   /* 重点色 */
-  --bg-accent-light: rgba(237, 142, 166, 0.05);
-  --bg-accent-medium: rgba(237, 142, 166, 0.1);
+  --bg-accent-light: rgba(92, 169, 229, 0.05);
+  --bg-accent-medium: rgba(92, 169, 229, 0.1);
 
   /* 浮动面板 */
   --float-panel-bg: rgba(255, 255, 255, 0.9);
@@ -198,7 +198,7 @@
 
   /* 边框颜色 - 更柔和 */
   --border-color: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(237, 142, 166, 0.3);
+  --border-hover: rgba(92, 169, 229, 0.3);
 
   /* 按钮背景 - 与 Fuwari 一致 */
   --btn-bg: oklch(0.33 0.035 var(--hue));
@@ -210,8 +210,8 @@
   --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
 
   /* 重点色 */
-  --bg-accent-light: rgba(237, 142, 166, 0.08);
-  --bg-accent-medium: rgba(237, 142, 166, 0.15);
+  --bg-accent-light: rgba(92, 169, 229, 0.08);
+  --bg-accent-medium: rgba(92, 169, 229, 0.15);
 
   /* 浮动面板 - 与 Fuwari 一致，使用 oklch */
   --float-panel-bg: oklch(0.19 0.015 var(--hue) / 0.95);
@@ -220,8 +220,8 @@
   --navbar-bg: oklch(0.19 0.015 var(--hue) / 0.9);
 
   /* 深色模式专用颜色 */
-  --osu-pink: var(--profile-color, #ed8ea6);
-  --profile-color: #ed8ea6;
+  --osu-pink: var(--profile-color, #5ca9e5);
+  --profile-color: #5ca9e5;
 }
 
 * {
@@ -284,14 +284,14 @@ body {
 
 /* Gradient utilities */
 .gradient-text {
-  background: linear-gradient(135deg, var(--profile-color, #ed8ea6), #7dd5d4);
+  background: linear-gradient(135deg, var(--profile-color, #5ca9e5), #7dd5d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .osu-gradient {
-  background: linear-gradient(135deg, var(--profile-color, #ed8ea6) 0%, #7dd5d4 50%, #7dd5d4 100%);
+  background: linear-gradient(135deg, var(--profile-color, #5ca9e5) 0%, #7dd5d4 50%, #7dd5d4 100%);
 }
 
 .glass-morphism {
@@ -367,7 +367,7 @@ body {
 
 /* Enhanced gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #ed8ea6, #7dd5d4);
+  background: linear-gradient(135deg, #5ca9e5, #7dd5d4);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -434,7 +434,7 @@ body {
 /* Loading spinner */
 .spinner {
   border: 2px solid var(--border-color);
-  border-top: 2px solid var(--osu-pink, #ed8ea6);
+  border-top: 2px solid var(--osu-pink, #5ca9e5);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -469,7 +469,7 @@ body {
 
 /* Button styles */
 .btn-primary {
-  background: var(--osu-pink, #ed8ea6);
+  background: var(--osu-pink, #5ca9e5);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
@@ -481,24 +481,24 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px 0 rgba(237, 142, 166, 0.25);
+  box-shadow: 0 4px 14px 0 rgba(92, 169, 229, 0.25);
 }
 
 .btn-primary:hover {
   filter: brightness(0.95);
-  box-shadow: 0 6px 20px rgba(237, 142, 166, 0.4);
+  box-shadow: 0 6px 20px rgba(92, 169, 229, 0.4);
   transform: translateY(-2px);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(237, 142, 166, 0.3);
+  box-shadow: 0 2px 8px rgba(92, 169, 229, 0.3);
 }
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid var(--osu-pink, #ed8ea6);
-  color: var(--osu-pink, #ed8ea6);
+  border: 2px solid var(--osu-pink, #5ca9e5);
+  color: var(--osu-pink, #5ca9e5);
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -519,15 +519,15 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--osu-pink, #ed8ea6);
+  background: var(--osu-pink, #5ca9e5);
   transition: left 0.3s ease;
   z-index: -1;
 }
 
 .btn-secondary:hover {
   color: white;
-  border-color: var(--osu-pink, #ed8ea6);
-  box-shadow: 0 4px 14px rgba(237, 142, 166, 0.3);
+  border-color: var(--osu-pink, #5ca9e5);
+  box-shadow: 0 4px 14px rgba(92, 169, 229, 0.3);
   transform: translateY(-1px);
 }
 
@@ -604,8 +604,8 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: #ed8ea6;
-  box-shadow: 0 0 0 3px rgba(237, 142, 166, 0.1);
+  border-color: #5ca9e5;
+  box-shadow: 0 0 0 3px rgba(92, 169, 229, 0.1);
 }
 
 .form-label {
@@ -667,13 +667,13 @@ body {
 }
 
 .nav-link:hover {
-  color: var(--osu-pink, #ed8ea6);
-  background: rgba(237, 142, 166, 0.1);
+  color: var(--osu-pink, #5ca9e5);
+  background: rgba(92, 169, 229, 0.1);
 }
 
 .nav-link.active {
-  color: var(--osu-pink, #ed8ea6);
-  background: rgba(237, 142, 166, 0.1);
+  color: var(--osu-pink, #5ca9e5);
+  background: rgba(92, 169, 229, 0.1);
 }
 
 /* Spacing utilities */
@@ -800,12 +800,12 @@ body {
 .chart-line {
   background: linear-gradient(
     90deg,
-    rgba(237, 138, 166, 0.6) 0%,
-    rgba(237, 138, 166, 0.9) 20%,
-    rgba(237, 138, 166, 1) 40%,
-    rgba(237, 138, 166, 1) 60%,
-    rgba(237, 138, 166, 0.9) 80%,
-    rgba(237, 138, 166, 0.6) 100%
+    rgba(92, 169, 229, 0.6) 0%,
+    rgba(92, 169, 229, 0.9) 20%,
+    rgba(92, 169, 229, 1) 40%,
+    rgba(92, 169, 229, 1) 60%,
+    rgba(92, 169, 229, 0.9) 80%,
+    rgba(92, 169, 229, 0.6) 100%
   );
   clip-path: polygon(
     0 90%,
@@ -879,8 +879,8 @@ textarea {
 
 .imagemap__link:hover {
   /* 鼠标悬停时显示半透明覆盖层 */
-  background-color: rgba(237, 110, 160, 0.3);
-  border: 1px solid rgba(237, 110, 160, 0.7);
+  background-color: rgba(92, 169, 229, 0.3);
+  border: 1px solid rgba(92, 169, 229, 0.7);
 }
 
 /* 对于 span 元素（无链接区域），鼠标样式为默认 */
@@ -959,10 +959,10 @@ span.imagemap__link:hover {
 }
 
 .user-page-content blockquote {
-  border-left: 4px solid #ed6ea0;
+  border-left: 4px solid #5ca9e5;
   padding-left: 12px;
   margin: 8px 0;
-  background: rgba(237, 110, 160, 0.1);
+  background: rgba(92, 169, 229, 0.1);
   padding: 8px 12px;
   border-radius: 4px;
 }

@@ -183,7 +183,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({
       }
       // 查看他人页面或本地无存储时，使用用户的 profile_colour
       // 确保颜色值以 # 开头
-      const rawColor = user.profile_colour || 'ED8EA6';
+      const rawColor = user.profile_colour || '5CA9E5';
       return rawColor.startsWith('#') ? rawColor : `#${rawColor}`;
     };
 

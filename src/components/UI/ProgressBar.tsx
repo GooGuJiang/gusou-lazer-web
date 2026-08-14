@@ -18,7 +18,7 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = 'var(--profile-color, #ED8EA6)', // 默认使用动态 profile color
+  color = 'var(--profile-color, #5CA9E5)', // 默认使用动态 profile color
   height = 'h-3',
   showLabel = false,
   animated = true,
