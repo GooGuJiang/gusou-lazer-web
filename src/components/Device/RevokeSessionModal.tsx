@@ -42,7 +42,7 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
   // 获取客户端显示名称（简化版本，与主组件保持一致）
   const getClientDisplayName = (session: DeviceSession) => {
     if (session.user_agent === 'osu!' || session.user_agent.toLowerCase().includes('osu!')) {
-      return 'osu!lazer';
+      return 'g0v0! or osu!lazer';
     }
     if (session.client_display_name && session.client_display_name !== 'osu! web') {
       return session.client_display_name;

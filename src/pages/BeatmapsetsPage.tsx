@@ -183,10 +183,10 @@ const DEFAULT_STATE: SearchState = {
 };
 
 const MODE_DISPLAY_NAMES: Record<string, string> = {
-  osu: 'osu!',
-  taiko: 'osu!taiko',
-  fruits: 'osu!catch',
-  mania: 'osu!mania',
+  osu: 'standard',
+  taiko: 'taiko',
+  fruits: 'catch',
+  mania: 'mania',
   osurx: 'osu!relax',
   osuap: 'osu!autopilot',
   taikorx: 'taiko relax',

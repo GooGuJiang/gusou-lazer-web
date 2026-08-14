@@ -10,10 +10,10 @@ export const rankingsPage = {
       score: '计分成绩总分',
     },
     gameModes: {
-      osu: 'osu!',
-      taiko: 'osu!taiko',
-      fruits: 'osu!catch',
-      mania: 'osu!mania',
+      osu: 'standard',
+      taiko: 'taiko',
+      fruits: 'catch',
+      mania: 'mania',
     },
     subModes: {
       vanilla: '常规',

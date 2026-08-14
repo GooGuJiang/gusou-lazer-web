@@ -96,7 +96,7 @@ const SessionManagement: React.FC<SessionManagementProps> = ({ className = '' })
     const { user_agent_info } = session;
 
     if (user_agent_info.is_client) {
-      return 'osu!lazer';
+      return 'g0v0! or osu!lazer';
     }
 
     if (user_agent_info.browser && user_agent_info.browser !== 'Unknown') {

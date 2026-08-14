@@ -102,7 +102,7 @@ const DeviceManagement: React.FC = () => {
   const getClientDisplayName = (session: DeviceSession) => {
     // 检查是否是 osu!lazer 客户端
     if (session.user_agent === 'osu!' || session.user_agent.toLowerCase().includes('osu!')) {
-      return 'osu!lazer';
+      return 'g0v0! or osu!lazer';
     }
 
     // 如果有自定义显示名称，优先使用

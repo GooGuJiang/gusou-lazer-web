@@ -7,10 +7,10 @@ export const messagesPage = {
     },
     channels: {
       general: 'General',
-      osu: 'osu!',
-      taiko: 'osu!taiko',
-      fruits: 'osu!catch',
-      mania: 'osu!mania',
+      osu: 'standard',
+      taiko: 'taiko',
+      fruits: 'catch',
+      mania: 'mania',
     },
     chat: {
       placeholder: 'Type a message...',

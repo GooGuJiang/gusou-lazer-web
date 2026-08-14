@@ -14,9 +14,9 @@ export const teamsPage = {
     loadingTeams: 'Loading team rankings data...',
     gameModes: {
       osu: 'osu!',
-      taiko: 'osu!taiko',
-      fruits: 'osu!catch',
-      mania: 'osu!mania',
+      taiko: 'taiko',
+      fruits: 'catch',
+      mania: 'mania',
     },
     rankingTypes: {
       performance: 'Performance',

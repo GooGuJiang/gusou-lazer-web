@@ -13,10 +13,10 @@ export const teamsPage = {
     teamRankings: '战队排行榜',
     loadingTeams: '加载战队排行榜数据中...',
     gameModes: {
-      osu: 'osu!',
-      taiko: 'osu!taiko',
-      fruits: 'osu!catch',
-      mania: 'osu!mania',
+      osu: 'standard',
+      taiko: 'taiko',
+      fruits: 'catch',
+      mania: 'mania',
     },
     rankingTypes: {
       performance: '表现分',
