@@ -558,17 +558,18 @@ const BeatmapsetsPage = () => {
             <div className="relative space-y-5">
               <form
                 onSubmit={handleSubmit}
-                className="flex overflow-hidden rounded-xl border border-border-color bg-btn-bg shadow-inner backdrop-blur"
+                className="flex overflow-hidden rounded-xl border border-border-color bg-card transition-colors focus-within:border-osu-pink focus-within:ring-2 focus-within:ring-osu-pink/20"
               >
                 <input
+                  type="search"
                   value={inputValue}
                   onChange={(event) => setInputValue(event.target.value)}
                   placeholder={t('beatmapsets.search.prompt')}
-                  className="min-w-0 flex-1 bg-transparent px-4 py-3 text-base text-text-primary outline-none placeholder:text-text-muted sm:text-lg"
+                  className="min-w-0 flex-1 bg-card px-4 py-3 text-base text-text-primary outline-none placeholder:text-text-muted sm:text-lg"
                 />
                 <button
                   type="submit"
-                  className="flex items-center gap-2 bg-btn-bg-hover px-4 text-osu-pink transition hover:bg-osu-pink hover:text-white sm:px-5"
+                  className="flex items-center gap-2 border-l border-border-color bg-card px-4 text-osu-pink transition-colors hover:bg-card-hover hover:text-osu-pink sm:px-5"
                   aria-label={t('beatmapsets.search.submit')}
                 >
                   <Search className="h-5 w-5" />
@@ -751,13 +752,13 @@ const BeatmapsetsPage = () => {
 
         <section className="mt-5 min-w-0">
           {loading ? (
-            <div className="grid min-w-0 gap-3 md:grid-cols-2">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-28 animate-pulse rounded-2xl border border-border-color bg-card/70"
-                />
-              ))}
+            <div role="status" aria-busy="true" aria-live="polite">
+              <span className="sr-only">{t('beatmapsets.search.loading')}</span>
+              <div className="grid min-w-0 gap-3 md:grid-cols-2">
+                {Array.from({ length: 8 }, (_, index) => (
+                  <BeatmapsetCardSkeleton key={index} />
+                ))}
+              </div>
             </div>
           ) : error ? (
             <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-8 text-center text-red-200">
@@ -841,6 +842,41 @@ const FilterPill = ({
   >
     {children}
   </button>
+);
+
+const SkeletonBlock = ({ className }: { className: string }) => (
+  <div className={`rounded-md bg-card-hover ${className}`} />
+);
+
+const BeatmapsetCardSkeleton = () => (
+  <div
+    aria-hidden="true"
+    className="relative w-full min-w-0 overflow-hidden rounded-2xl border border-border-color bg-card pr-10 motion-safe:animate-pulse sm:min-h-28 sm:pr-12"
+  >
+    <div className="flex h-full min-h-24 min-w-0 sm:min-h-28">
+      <div className="w-24 flex-none self-stretch bg-card-hover sm:w-28" />
+
+      <div className="flex min-w-0 flex-1 flex-col justify-between p-3">
+        <div className="min-w-0 space-y-1.5">
+          <SkeletonBlock className="h-5 w-3/4 sm:h-6" />
+          <SkeletonBlock className="h-4 w-1/2" />
+          <SkeletonBlock className="h-3 w-2/5" />
+        </div>
+
+        <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
+          <SkeletonBlock className="h-5 w-16" />
+          <SkeletonBlock className="h-4 w-20" />
+          <SkeletonBlock className="h-4 w-12" />
+          <SkeletonBlock className="h-4 w-10" />
+        </div>
+      </div>
+    </div>
+
+    <div className="absolute bottom-0 right-0 top-0 flex w-10 flex-col items-center justify-center gap-3 border-l border-border-color bg-navbar/90 sm:w-12">
+      <SkeletonBlock className="h-7 w-7 rounded-full" />
+      <SkeletonBlock className="h-7 w-7 rounded-full" />
+    </div>
+  </div>
 );
 
 const BeatmapsetCard = ({
@@ -933,7 +969,7 @@ const BeatmapsetCard = ({
       tabIndex={0}
       onClick={openBeatmapset}
       onKeyDown={handleCardKeyDown}
-      className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 shadow-lg transition hover:z-30 hover:-translate-y-0.5 hover:border-osu-pink/50 hover:bg-card-hover hover:shadow-xl hover:shadow-osu-pink/10 focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
+      className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 transition hover:z-30 hover:-translate-y-0.5 hover:border-osu-pink/50 hover:bg-card-hover focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
     >
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <div
@@ -1024,7 +1060,7 @@ const BeatmapsetCard = ({
                 </span>
               ))}
 
-              <div className="invisible pointer-events-none absolute left-0 top-full z-30 hidden w-[min(30rem,calc(100vw-2rem))] origin-top-left translate-y-1 scale-[0.98] pt-1 opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover/difficulties:visible group-hover/difficulties:pointer-events-auto group-hover/difficulties:translate-y-0 group-hover/difficulties:scale-100 group-hover/difficulties:opacity-100 sm:block">
+              <div className="invisible pointer-events-none absolute right-0 top-full z-30 hidden w-[min(18rem,calc(100vw-2rem))] origin-top-right translate-y-1 scale-[0.98] pt-1 opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover/difficulties:visible group-hover/difficulties:pointer-events-auto group-hover/difficulties:translate-y-0 group-hover/difficulties:scale-100 group-hover/difficulties:opacity-100 xl:block">
                 <div
                   className="max-h-80 overflow-y-auto rounded-2xl border border-osu-pink/50 bg-card-hover p-2 text-sm font-semibold text-text-primary shadow-2xl shadow-osu-pink/20 backdrop-blur-md"
                   onClick={(event) => event.stopPropagation()}

@@ -40,6 +40,7 @@ import ModsDisplay from '../components/UI/ModsDisplay';
 import { getErrorMessage } from '../utils/typeGuards';
 import { getStarDifficultyColor, getStarDifficultyTextColor } from '../utils/starRating';
 import StarRatingBadge from '../components/UI/StarRatingBadge';
+import BeatmapPageSkeleton from '../components/Beatmap/BeatmapPageSkeleton';
 
 // ── 状态颜色 ─────────────────────────────────────────────────────────────────
 
@@ -453,11 +454,7 @@ const BeatmapPage: React.FC = () => {
   // ── Loading / Error ─────────────────────────────────────────────────────
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600" />
-      </div>
-    );
+    return <BeatmapPageSkeleton />;
   }
 
   if (error || !beatmapset || !selectedBeatmap) {
@@ -530,10 +527,10 @@ const BeatmapPage: React.FC = () => {
   // ── 渲染 ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full min-w-0 max-w-full overflow-x-clip bg-background">
       {/* Hero Section */}
-      <div className="px-4 lg:px-6 pt-0 pb-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="w-full min-w-0 px-4 pb-6 pt-0 lg:px-6">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <div
             className="relative min-h-[29rem] overflow-hidden rounded-2xl shadow-lg"
             style={{
@@ -543,7 +540,7 @@ const BeatmapPage: React.FC = () => {
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/80" />
-            <div className="relative px-5 py-6 sm:px-6 lg:px-8 min-h-[29rem] flex flex-col justify-between gap-6 text-white">
+            <div className="relative flex min-h-[29rem] min-w-0 flex-col justify-between gap-6 px-5 py-6 text-white sm:px-6 lg:px-8">
               <div className="flex items-start justify-between gap-4">
                 {/* 状态徽章 */}
                 <div className="flex items-center gap-2 flex-wrap">
@@ -606,29 +603,35 @@ const BeatmapPage: React.FC = () => {
                 </div>
 
                 {/* 操作与时间信息 */}
-                <div className="rounded-2xl border border-white/15 bg-black/35 p-4 shadow-2xl backdrop-blur-md">
+                <div className="min-w-0 rounded-2xl border border-white/15 bg-black/35 p-4 shadow-2xl backdrop-blur-md">
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="rounded-xl bg-white/10 p-3">
                       <div className="text-xs font-bold uppercase tracking-wide text-white/65">
                         {t('beatmap.submitted')}
                       </div>
-                      <div className="mt-1 font-semibold text-white">{submittedDate}</div>
+                      <div className="mt-1 min-w-0 break-words text-sm font-semibold text-white sm:text-base">
+                        {submittedDate}
+                      </div>
                     </div>
                     <div className="rounded-xl bg-white/10 p-3">
                       <div className="text-xs font-bold uppercase tracking-wide text-white/65">
                         {featuredDate.label}
                       </div>
-                      <div className="mt-1 font-semibold text-white">{featuredDate.value}</div>
+                      <div className="mt-1 min-w-0 break-words text-sm font-semibold text-white sm:text-base">
+                        {featuredDate.value}
+                      </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div
-                      className={`grid gap-2 ${beatmapset.video ? 'grid-cols-3' : 'grid-cols-2'}`}
+                      className={`grid grid-cols-1 gap-2 ${
+                        beatmapset.video ? 'sm:grid-cols-3' : 'sm:grid-cols-2'
+                      }`}
                     >
                       <button
                         onClick={handleDownloadVideo}
-                        className="flex items-center justify-center gap-2 px-3 py-2.5 bg-osu-pink hover:bg-osu-pink/90 text-white font-semibold rounded-lg transition-all shadow-md text-sm"
+                        className="flex min-w-0 items-center justify-center gap-2 rounded-lg bg-osu-pink px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-osu-pink/90"
                       >
                         <Download className="w-4 h-4" />
                         {t('beatmap.download')}
@@ -636,7 +639,7 @@ const BeatmapPage: React.FC = () => {
                       {beatmapset.video && (
                         <button
                           onClick={handleDownloadNoVideo}
-                          className="flex items-center justify-center gap-2 px-3 py-2.5 bg-osu-pink hover:bg-osu-pink/90 text-white font-semibold rounded-lg transition-all shadow-md text-sm"
+                          className="flex min-w-0 items-center justify-center gap-2 rounded-lg bg-osu-pink px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-osu-pink/90"
                         >
                           <Download className="w-4 h-4" />
                           {t('beatmap.downloadNoVideo')}
@@ -644,14 +647,14 @@ const BeatmapPage: React.FC = () => {
                       )}
                       <button
                         onClick={handleOsuDirect}
-                        className="flex items-center justify-center gap-2 px-3 py-2.5 bg-osu-pink hover:bg-osu-pink/90 text-white font-semibold rounded-lg transition-all shadow-md text-sm"
+                        className="flex min-w-0 items-center justify-center gap-2 rounded-lg bg-osu-pink px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-osu-pink/90"
                       >
                         <Download className="w-4 h-4" />
                         {t('beatmap.osuDirect')}
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       <button
                         onClick={handleFavourite}
                         disabled={favouriteLoading}
@@ -683,10 +686,10 @@ const BeatmapPage: React.FC = () => {
       </div>
 
       {/* 主内容区域 */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-6 lg:px-6 lg:py-8">
+        <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-3">
           {/* 左侧主内容 */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="min-w-0 space-y-6 lg:col-span-2">
             {/* 难度选择器 - 按模式分组 */}
             <div className="bg-card rounded-xl shadow-sm border border-border-color overflow-hidden">
               <div className="px-6 py-4 border-b border-border-color bg-card-hover">
@@ -839,7 +842,7 @@ const BeatmapPage: React.FC = () => {
           </div>
 
           {/* 右侧边栏 */}
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             {/* 基本信息 */}
             <div className="bg-card rounded-xl shadow-sm border border-border-color overflow-hidden">
               <div className="px-6 py-4 bg-gradient-to-r from-osu-pink to-osu-pink/80">
@@ -858,16 +861,16 @@ const BeatmapPage: React.FC = () => {
                 ].map((item, i) => (
                   <div key={i}>
                     {i > 0 && <div className="h-px bg-border-color mb-3" />}
-                    <div className="flex justify-between items-start">
-                      <span className="text-text-secondary font-medium">{item.label}</span>
-                      <span className="font-semibold text-text-primary text-right">
+                    <div className="flex min-w-0 items-start justify-between gap-4">
+                      <span className="shrink-0 font-medium text-text-secondary">{item.label}</span>
+                      <span className="min-w-0 break-words text-right font-semibold text-text-primary">
                         {item.value}
                       </span>
                     </div>
                   </div>
                 ))}
                 <div className="h-px bg-border-color" />
-                <div className="flex justify-between items-start">
+                <div className="flex min-w-0 items-start justify-between gap-4">
                   <span className="text-text-secondary font-medium">{t('beatmap.playCount')}</span>
                   <span className="font-semibold text-osu-pink flex items-center gap-1">
                     <Play className="h-3.5 w-3.5" />
@@ -875,7 +878,7 @@ const BeatmapPage: React.FC = () => {
                   </span>
                 </div>
                 <div className="h-px bg-border-color" />
-                <div className="flex justify-between items-start">
+                <div className="flex min-w-0 items-start justify-between gap-4">
                   <span className="text-text-secondary font-medium">
                     {t('beatmap.favouriteCount')}
                   </span>
@@ -911,7 +914,7 @@ const BeatmapPage: React.FC = () => {
                           {tagList.map((tag, index) => (
                             <span
                               key={`${tag}-${index}`}
-                              className="px-3 py-1.5 bg-card-hover text-text-secondary rounded-full text-sm font-medium hover:bg-osu-pink/10 hover:text-osu-pink transition-colors cursor-pointer"
+                              className="max-w-full break-all rounded-full bg-card-hover px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-osu-pink/10 hover:text-osu-pink"
                             >
                               {tag}
                             </span>
@@ -929,7 +932,7 @@ const BeatmapPage: React.FC = () => {
                           {userTagIds.map((tagId, index) => (
                             <span
                               key={`${tagId}-${index}`}
-                              className="px-3 py-1.5 bg-card-hover text-text-secondary rounded-full text-xs font-medium"
+                              className="max-w-full break-all rounded-full bg-card-hover px-3 py-1.5 text-xs font-medium text-text-secondary"
                             >
                               #{tagId}
                             </span>
@@ -961,15 +964,15 @@ const BeatmapPage: React.FC = () => {
         </div>
 
         {/* ═══════════ 排行榜 ═══════════ */}
-        <div className="mt-6 bg-card rounded-xl shadow-sm border border-border-color overflow-hidden">
+        <div className="mt-6 min-w-0 overflow-hidden rounded-xl border border-border-color bg-card shadow-sm">
           {/* 标题栏 */}
-          <div className="px-6 py-4 border-b border-border-color flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex min-w-0 flex-col gap-3 border-b border-border-color px-6 py-4 xl:flex-row xl:items-center xl:justify-between">
             <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
               <span className="text-osu-pink">●</span>
               {t('beatmap.scoreboard.title')}
             </h2>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <div className="flex">
                 <GameModeSelector
                   selectedMode={selectedMode}
@@ -1004,10 +1007,10 @@ const BeatmapPage: React.FC = () => {
               {t(`beatmap.scoreboard.noScores.${leaderboardType}`)}
             </div>
           ) : (
-            <div className="space-y-3 p-4 sm:p-5">
+            <div className="min-w-0 space-y-3 p-4 sm:p-5">
               {(firstFeaturedScore || shouldShowOwnFeaturedScore) && (
                 <div
-                  className={`grid gap-3 ${
+                  className={`grid min-w-0 gap-3 ${
                     shouldShowOwnFeaturedScore ? 'xl:grid-cols-2' : 'grid-cols-1'
                   }`}
                 >
@@ -1035,36 +1038,36 @@ const BeatmapPage: React.FC = () => {
               )}
 
               {(scoreboardRows.length > 0 || (ownFeaturedEntry && !ownScoreInScoreboard)) && (
-                <div className="overflow-x-auto rounded-xl border border-border-color">
-                  <table className="min-w-[56rem] w-full table-auto text-sm">
+                <div className="max-w-full overflow-hidden rounded-xl border border-border-color">
+                  <table className="w-full table-fixed text-sm">
                     <thead className="bg-card-hover/80 text-xs uppercase tracking-wide text-text-secondary">
                       <tr>
-                        <th className="px-3 py-2 text-left w-16">
+                        <th className="w-10 px-1 py-2 text-left sm:w-16 sm:px-3">
                           {t('beatmap.scoreboard.headers.rank')}
                         </th>
-                        <th className="px-2 py-2 text-left w-14" />
-                        <th className="px-2 py-2 text-left min-w-[12rem]">
+                        <th className="hidden w-14 px-2 py-2 text-left sm:table-cell" />
+                        <th className="px-2 py-2 text-left">
                           {t('beatmap.scoreboard.headers.player')}
                         </th>
-                        <th className="px-2 py-2 text-right">
+                        <th className="w-24 px-2 py-2 text-right sm:w-28">
                           {t('beatmap.scoreboard.headers.score')}
                         </th>
-                        <th className="px-2 py-2 text-right">
+                        <th className="hidden w-20 px-2 py-2 text-right md:table-cell">
                           {t('beatmap.scoreboard.headers.accuracy')}
                         </th>
-                        <th className="px-2 py-2 text-right">
+                        <th className="hidden w-24 px-2 py-2 text-right md:table-cell">
                           {t('beatmap.scoreboard.headers.combo')}
                         </th>
-                        <th className="px-2 py-2 text-right">
+                        <th className="hidden w-16 px-2 py-2 text-right md:table-cell">
                           {t('beatmap.scoreboard.headers.pp')}
                         </th>
-                        <th className="px-2 py-2 text-left">
+                        <th className="hidden w-28 px-2 py-2 text-left xl:table-cell">
                           {t('beatmap.scoreboard.headers.mods')}
                         </th>
-                        <th className="px-2 py-2 text-left">
+                        <th className="hidden w-24 px-2 py-2 text-left xl:table-cell">
                           {t('beatmap.scoreboard.headers.time')}
                         </th>
-                        <th className="px-2 py-2 text-right w-10" aria-label="Actions" />
+                        <th className="w-10 px-1 py-2 text-right sm:px-2" aria-label="Actions" />
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-color">
@@ -1360,18 +1363,22 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
             : ''
       }`}
     >
-      <td className="px-3 py-2 align-middle">
-        <RankBadge rank={rank} size="sm" />
+      <td className="w-10 px-0 py-2 align-middle sm:w-16 sm:px-3">
+        <RankBadge
+          rank={rank}
+          size="sm"
+          className="max-sm:w-10 max-sm:rounded-md max-sm:text-[10px]"
+        />
       </td>
-      <td className="px-2 py-2 align-middle">
+      <td className="hidden w-14 px-2 py-2 align-middle sm:table-cell">
         <img src={getRankIcon(score.rank)} alt={score.rank} className="w-8 h-8" loading="lazy" />
       </td>
-      <td className="px-2 py-2 align-middle min-w-[12rem]">
+      <td className="min-w-0 px-2 py-2 align-middle">
         <div className="flex items-center gap-2 min-w-0">
-          <Link to={`/users/${score.user.id}`} className="flex-shrink-0">
+          <Link to={`/users/${score.user.id}`} className="hidden flex-shrink-0 sm:block">
             <LazyAvatar src={score.user.avatar_url} alt={score.user.username} size="md" />
           </Link>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 min-w-0">
               <Link
                 to={`/users/${score.user.id}`}
@@ -1383,40 +1390,40 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
                 <LazyFlag
                   src={`/image/flag/${score.user.country_code.toLowerCase()}.svg`}
                   alt={score.user.country_code}
-                  className="w-4 h-3 rounded-sm flex-shrink-0"
+                  className="hidden h-3 w-4 flex-shrink-0 rounded-sm sm:block"
                 />
               )}
               {score.user.team && (
                 <LazyFlag
                   src={score.user.team.flag_url}
                   alt={score.user.team.short_name}
-                  className="w-4 h-3 rounded-sm flex-shrink-0"
+                  className="hidden h-3 w-4 flex-shrink-0 rounded-sm sm:block"
                 />
               )}
             </div>
           </div>
         </div>
       </td>
-      <td className="px-2 py-2 align-middle text-right font-bold text-text-primary tabular-nums whitespace-nowrap">
+      <td className="w-24 whitespace-nowrap px-2 py-2 text-right align-middle text-xs font-bold tabular-nums text-text-primary sm:w-28 sm:text-sm">
         {score.total_score.toLocaleString()}
       </td>
-      <td className="px-2 py-2 align-middle text-right text-text-secondary tabular-nums whitespace-nowrap">
+      <td className="hidden w-20 whitespace-nowrap px-2 py-2 text-right align-middle tabular-nums text-text-secondary md:table-cell">
         {accuracy}
       </td>
       <td
-        className={`px-2 py-2 align-middle text-right tabular-nums whitespace-nowrap ${
+        className={`hidden w-24 whitespace-nowrap px-2 py-2 text-right align-middle tabular-nums md:table-cell ${
           isFullCombo ? 'text-osu-pink font-bold' : 'text-text-secondary'
         }`}
       >
         {score.max_combo}x<span className="text-text-muted">/{beatmapMaxCombo}x</span>
       </td>
-      <td className="px-2 py-2 align-middle text-right font-semibold text-osu-pink tabular-nums whitespace-nowrap">
+      <td className="hidden w-16 whitespace-nowrap px-2 py-2 text-right align-middle font-semibold tabular-nums text-osu-pink md:table-cell">
         {getScorePpText(score)}
       </td>
-      <td className="px-2 py-2 align-middle">
-        <ModsDisplay mods={score.mods} size="sm" />
+      <td className="hidden w-28 overflow-hidden px-2 py-2 align-middle xl:table-cell">
+        <ModsDisplay mods={score.mods} size="sm" className="max-w-full overflow-hidden" />
       </td>
-      <td className="px-2 py-2 align-middle text-xs text-text-muted whitespace-nowrap">
+      <td className="hidden w-24 truncate whitespace-nowrap px-2 py-2 align-middle text-xs text-text-muted xl:table-cell">
         <span
           className="cursor-help"
           data-tooltip-id={`score-time-${score.id}`}
@@ -1436,7 +1443,7 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
           }}
         />
       </td>
-      <td className="px-2 py-2 align-middle text-right">
+      <td className="w-10 px-1 py-2 text-right align-middle sm:px-2">
         <button
           ref={refs.setReference}
           {...getReferenceProps()}
