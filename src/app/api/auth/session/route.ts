@@ -36,7 +36,7 @@ export const POST = async (request: Request) => {
   const user = await fetchAuthenticatedUser(accessToken);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const response = NextResponse.json({ authenticated: true });
+  const response = NextResponse.json({ authenticated: true, user });
   response.cookies.set(AUTH_SESSION_COOKIE, accessToken, getAuthSessionCookieOptions());
   return response;
 };

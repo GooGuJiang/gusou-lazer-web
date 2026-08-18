@@ -98,18 +98,6 @@ const CacheUtil = {
   },
 };
 
-let currentUserRequest: Promise<User> | null = null;
-
-const fetchCurrentUserOnce = async (): Promise<User> => {
-  if (!currentUserRequest) {
-    currentUserRequest = userAPI.getMe().finally(() => {
-      currentUserRequest = null;
-    });
-  }
-
-  return currentUserRequest;
-};
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUser = null }) => {
   const [user, setUser] = useState<User | null>(initialUser);
   const [isLoading, setIsLoading] = useState(!initialUser);
@@ -140,37 +128,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
         console.log(t('auth.context.cache.usingCachedState'));
         setUser(cachedData.user);
         setIsAuthenticated(cachedData.isAuthenticated);
-        if (token) await syncServerAuthSession(token);
+        if (token) {
+          const serverUser = await syncServerAuthSession(token);
+          if (serverUser) {
+            setUser(serverUser);
+            setIsAuthenticated(true);
+            CacheUtil.saveUserCache(serverUser);
+          }
+        }
         setIsLoading(false);
         return;
       }
 
-      // 缓存无效或不存在，请求 API；StrictMode 下复用同一个 in-flight 请求避免重复加载当前用户
+      // 服务端会话端点负责验证 token，避免 hydration 后由浏览器直连远程 API。
       try {
-        console.log(t('auth.context.cache.fetchingFromApi'));
-        const userData = await fetchCurrentUserOnce();
-        setUser(userData);
-        setIsAuthenticated(true);
-        // 保存到缓存
-        CacheUtil.saveUserCache(userData);
-        const currentAccessToken = localStorage.getItem('access_token');
-        if (currentAccessToken) await syncServerAuthSession(currentAccessToken);
-      } catch (error) {
-        // 如果获取用户信息失败，axios 拦截器会自动尝试刷新 token
-        // 这里只需要处理刷新失败的情况
-        const err = error as { response?: { status?: number } };
-
-        // 如果是 401 错误且已经重定向到登录页，说明刷新失败
-        // 否则可能是网络错误或其他问题，不应该清除 token
-        if (err.response?.status === 401) {
-          // 拦截器会处理重定向，这里只清理状态
-          setUser(null);
-          setIsAuthenticated(false);
-          CacheUtil.clearCache();
-        } else {
-          // 其他错误，保持登录状态，可能是网络问题
-          console.error('Failed to fetch user data:', error);
+        if (token) {
+          const userData = await syncServerAuthSession(token);
+          if (userData) {
+            setUser(userData);
+            setIsAuthenticated(true);
+            CacheUtil.saveUserCache(userData);
+          }
+          return;
         }
+
+        // 只有 refresh token 时等待下一次受保护请求触发统一刷新队列。
+        return;
       } finally {
         setIsLoading(false);
       }
@@ -197,10 +180,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
       // Store tokens
       localStorage.setItem('access_token', tokenResponse.access_token);
       localStorage.setItem('refresh_token', tokenResponse.refresh_token);
-      await syncServerAuthSession(tokenResponse.access_token);
+      const sessionUser = await syncServerAuthSession(tokenResponse.access_token);
 
-      // Get user data
-      const userData = await userAPI.getMe();
+      // 会话端点已完成服务端验证，失败时才回退到既有浏览器请求。
+      const userData = sessionUser ?? (await userAPI.getMe());
       setUser(userData);
       setIsAuthenticated(true);
 

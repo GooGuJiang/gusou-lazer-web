@@ -1,6 +1,8 @@
+import type { User } from '../types';
+
 const SESSION_ENDPOINT = '/api/auth/session';
 
-export const syncServerAuthSession = async (accessToken: string): Promise<void> => {
+export const syncServerAuthSession = async (accessToken: string): Promise<User | null> => {
   try {
     const response = await fetch(SESSION_ENDPOINT, {
       method: 'POST',
@@ -10,8 +12,12 @@ export const syncServerAuthSession = async (accessToken: string): Promise<void> 
     });
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const payload = (await response.json()) as { user?: User };
+    return payload.user ?? null;
   } catch (error) {
     console.warn('Failed to synchronize the server auth session:', error);
+    return null;
   }
 };
 

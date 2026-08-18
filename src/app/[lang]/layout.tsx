@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import NextTopLoader from 'nextjs-toploader';
 import { notFound } from 'next/navigation';
 import '../../index.css';
 import { SUPPORTED_LANGUAGES, isSupportedLanguage } from '../../i18n/config';
@@ -52,7 +53,14 @@ const LanguageLayout = async ({ children, params }: LanguageLayoutProps) => {
 
   return (
     <html lang={lang === 'zh' ? 'zh-CN' : 'en'} suppressHydrationWarning>
-      <body>
+      <body suppressHydrationWarning>
+        <NextTopLoader
+          color="var(--profile-color, #5ca9e5)"
+          height={3}
+          showSpinner={false}
+          shadow="0 0 10px var(--profile-color, #5ca9e5), 0 0 5px var(--profile-color, #5ca9e5)"
+          zIndex={1600}
+        />
         {children}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script','tfqh5w2yov');`}

@@ -464,7 +464,7 @@ const MobileMenuDropdown = memo<{
 MobileMenuDropdown.displayName = 'MobileMenuDropdown';
 
 const Navbar: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isLoading, isAuthenticated, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const initialPathnameRef = useRef(location.pathname);
@@ -581,10 +581,10 @@ const Navbar: React.FC = () => {
               {/* Right side actions */}
               <div className="flex items-center justify-end space-x-1.5 md:space-x-2 lg:space-x-3">
                 {/* Language Selector - only show when not authenticated */}
-                {!isAuthenticated && <LanguageSelector variant="desktop" />}
+                {!isLoading && !isAuthenticated && <LanguageSelector variant="desktop" />}
 
                 {/* Notification (if authenticated) */}
-                {isAuthenticated && (
+                {!isLoading && isAuthenticated && (
                   <Link to="/messages">
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -622,9 +622,9 @@ const Navbar: React.FC = () => {
                 <ThemeSelector />
 
                 {/* User actions */}
-                {isAuthenticated && user ? (
+                {!isLoading && isAuthenticated && user ? (
                   <UserDropdown user={user} onLogout={handleLogout} />
-                ) : (
+                ) : !isLoading ? (
                   <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Link
@@ -643,7 +643,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     </motion.div>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -682,7 +682,7 @@ const Navbar: React.FC = () => {
           {/* Mobile actions */}
           <div className="flex items-center space-x-2">
             {/* User actions */}
-            {isAuthenticated && user ? (
+            {!isLoading && isAuthenticated && user ? (
               <div className="flex items-center space-x-2">
                 {/* User Avatar */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -699,7 +699,7 @@ const Navbar: React.FC = () => {
                   </Link>
                 </motion.div>
               </div>
-            ) : (
+            ) : !isLoading ? (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/login"
@@ -708,7 +708,7 @@ const Navbar: React.FC = () => {
                   {t('nav.login')}
                 </Link>
               </motion.div>
-            )}
+            ) : null}
 
             {/* Mobile menu dropdown */}
             <MobileMenuDropdown
