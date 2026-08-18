@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import {
   ArrowDown,
   ArrowUp,
+  ChevronDown,
   ChevronUp,
   Clock,
   Download,
-  Filter,
   Grid3X3,
   Heart,
   Loader2,
@@ -380,10 +380,16 @@ const BeatmapsetsPage = () => {
   const [searchState, setSearchState] = useState<SearchState>(() => getInitialState(searchParams));
   const [inputValue, setInputValue] = useState(searchState.query);
   const [sortManuallyChanged, setSortManuallyChanged] = useState(searchParams.has('sort'));
+  const [showMoreFilters, setShowMoreFilters] = useState(
+    () =>
+      searchState.extra.length > 0 ||
+      searchState.language !== DEFAULT_STATE.language ||
+      searchState.ranks.length > 0 ||
+      searchState.played !== null
+  );
   const [beatmapsets, setBeatmapsets] = useState<BeatmapsetSearchResult[]>(
     () => ssrPayload?.response.beatmapsets ?? []
   );
-  const [total, setTotal] = useState(() => ssrPayload?.response.total ?? 0);
   const [cursor, setCursor] = useState<BeatmapsetSearchCursor | null>(
     () => ssrPayload?.response.cursor ?? null
   );
@@ -452,14 +458,12 @@ const BeatmapsetsPage = () => {
         const response = await beatmapAPI.searchBeatmapsets(queryForSearch);
         if (ignore) return;
         setBeatmapsets(response.beatmapsets);
-        setTotal(response.total);
         setCursor(response.cursor);
       } catch (fetchError: unknown) {
         if (ignore) return;
         const message = getErrorMessage(fetchError) || t('beatmapsets.search.error');
         setError(message);
         setBeatmapsets([]);
-        setTotal(0);
         setCursor(null);
         toast.error(message);
       } finally {
@@ -543,7 +547,7 @@ const BeatmapsetsPage = () => {
   return (
     <div className="relative min-h-screen bg-bg-primary pb-12 text-text-primary">
       <div className="relative mx-auto max-w-7xl px-4 py-6 lg:px-6">
-        <section className="overflow-hidden rounded-3xl border border-border-color bg-card shadow-2xl backdrop-blur-xl">
+        <section className="overflow-hidden rounded-3xl border border-border-color bg-card backdrop-blur-xl">
           <div className="flex items-center gap-3 border-b border-border-color bg-navbar px-5 py-4 text-text-primary sm:px-7">
             <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-osu-pink/70 bg-osu-pink/10 text-osu-pink">
               <Sparkles className="h-5 w-5" />
@@ -556,8 +560,8 @@ const BeatmapsetsPage = () => {
             </div>
           </div>
 
-          <div className="relative bg-card-hover p-5 text-text-primary sm:p-7">
-            <div className="relative space-y-5">
+          <div className="relative bg-card-hover p-4 text-text-primary sm:p-5">
+            <div className="relative space-y-3">
               <form
                 onSubmit={handleSubmit}
                 className="flex overflow-hidden rounded-xl border border-border-color bg-card transition-colors focus-within:border-osu-pink focus-within:ring-2 focus-within:ring-osu-pink/20"
@@ -567,7 +571,7 @@ const BeatmapsetsPage = () => {
                   value={inputValue}
                   onChange={(event) => setInputValue(event.target.value)}
                   placeholder={t('beatmapsets.search.prompt')}
-                  className="min-w-0 flex-1 bg-card px-4 py-3 text-base text-text-primary outline-none placeholder:text-text-muted sm:text-lg"
+                  className="min-w-0 flex-1 bg-card px-4 py-2.5 text-base text-text-primary outline-none placeholder:text-text-muted sm:text-lg"
                 />
                 <button
                   type="submit"
@@ -578,7 +582,7 @@ const BeatmapsetsPage = () => {
                 </button>
               </form>
 
-              <div className="space-y-3 text-sm">
+              <div className="space-y-2 text-sm">
                 <FilterRow label={t('beatmapsets.filters.general')}>
                   {GENERAL_OPTIONS.map((option) => (
                     <FilterPill
@@ -624,95 +628,114 @@ const BeatmapsetsPage = () => {
                   ))}
                 </FilterRow>
 
-                <FilterRow label={t('beatmapsets.filters.extra')}>
-                  {EXTRA_OPTIONS.map((option) => (
-                    <FilterPill
-                      key={option.value}
-                      active={searchState.extra.includes(option.value)}
-                      onClick={() =>
-                        updateSearchState((previous) => ({
-                          ...previous,
-                          extra: toggleArrayValue(previous.extra, option.value),
-                        }))
-                      }
-                    >
-                      {t(option.labelKey)}
-                    </FilterPill>
-                  ))}
+                <FilterRow label={t('beatmapsets.filters.nsfw')}>
+                  <FilterPill
+                    active={!searchState.nsfw}
+                    onClick={() => updateSearchState((previous) => ({ ...previous, nsfw: false }))}
+                  >
+                    {t('beatmapsets.nsfw.hide')}
+                  </FilterPill>
                   <FilterPill
                     active={searchState.nsfw}
-                    onClick={() =>
-                      updateSearchState((previous) => ({ ...previous, nsfw: !previous.nsfw }))
-                    }
+                    onClick={() => updateSearchState((previous) => ({ ...previous, nsfw: true }))}
                   >
-                    {t('beatmapsets.extra.nsfw')}
+                    {t('beatmapsets.nsfw.show')}
                   </FilterPill>
                 </FilterRow>
 
-                <FilterRow label={t('beatmapsets.filters.language')}>
-                  {LANGUAGE_OPTIONS.map((option) => (
-                    <FilterPill
-                      key={option.value}
-                      active={searchState.language === option.value}
-                      onClick={() =>
-                        updateSearchState((previous) => ({ ...previous, language: option.value }))
-                      }
-                    >
-                      {t(option.labelKey)}
-                    </FilterPill>
-                  ))}
-                </FilterRow>
+                {showMoreFilters && (
+                  <>
+                    <FilterRow label={t('beatmapsets.filters.extra')}>
+                      {EXTRA_OPTIONS.map((option) => (
+                        <FilterPill
+                          key={option.value}
+                          active={searchState.extra.includes(option.value)}
+                          onClick={() =>
+                            updateSearchState((previous) => ({
+                              ...previous,
+                              extra: toggleArrayValue(previous.extra, option.value),
+                            }))
+                          }
+                        >
+                          {t(option.labelKey)}
+                        </FilterPill>
+                      ))}
+                    </FilterRow>
+                    <FilterRow label={t('beatmapsets.filters.language')}>
+                      {LANGUAGE_OPTIONS.map((option) => (
+                        <FilterPill
+                          key={option.value}
+                          active={searchState.language === option.value}
+                          onClick={() =>
+                            updateSearchState((previous) => ({
+                              ...previous,
+                              language: option.value,
+                            }))
+                          }
+                        >
+                          {t(option.labelKey)}
+                        </FilterPill>
+                      ))}
+                    </FilterRow>
 
-                <FilterRow label={t('beatmapsets.filters.rank')}>
-                  {RANK_OPTIONS.map((option) => (
-                    <FilterPill
-                      key={option.value}
-                      active={searchState.ranks.includes(option.value)}
-                      onClick={() =>
-                        updateSearchState((previous) => ({
-                          ...previous,
-                          ranks: toggleArrayValue(previous.ranks, option.value),
-                        }))
-                      }
-                    >
-                      {t(option.labelKey)}
-                    </FilterPill>
-                  ))}
-                </FilterRow>
+                    <FilterRow label={t('beatmapsets.filters.rank')}>
+                      {RANK_OPTIONS.map((option) => (
+                        <FilterPill
+                          key={option.value}
+                          active={searchState.ranks.includes(option.value)}
+                          onClick={() =>
+                            updateSearchState((previous) => ({
+                              ...previous,
+                              ranks: toggleArrayValue(previous.ranks, option.value),
+                            }))
+                          }
+                        >
+                          {t(option.labelKey)}
+                        </FilterPill>
+                      ))}
+                    </FilterRow>
 
-                <FilterRow label={t('beatmapsets.filters.played')}>
-                  {PLAYED_OPTIONS.map((option) => (
-                    <FilterPill
-                      key={option.value}
-                      active={selectedPlayedValue === option.value}
-                      onClick={() =>
-                        updateSearchState((previous) => ({
-                          ...previous,
-                          played:
-                            option.value === 'any'
-                              ? null
-                              : option.value === 'played'
-                                ? true
-                                : false,
-                        }))
-                      }
-                    >
-                      {t(option.labelKey)}
-                    </FilterPill>
-                  ))}
-                </FilterRow>
+                    <FilterRow label={t('beatmapsets.filters.played')}>
+                      {PLAYED_OPTIONS.map((option) => (
+                        <FilterPill
+                          key={option.value}
+                          active={selectedPlayedValue === option.value}
+                          onClick={() =>
+                            updateSearchState((previous) => ({
+                              ...previous,
+                              played:
+                                option.value === 'any'
+                                  ? null
+                                  : option.value === 'played'
+                                    ? true
+                                    : false,
+                            }))
+                          }
+                        >
+                          {t(option.labelKey)}
+                        </FilterPill>
+                      ))}
+                    </FilterRow>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowMoreFilters((previous) => !previous)}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-osu-pink transition hover:text-osu-pink/80 sm:text-sm"
+                >
+                  <span>{t('beatmapsets.filters.more')}</span>
+                  {showMoreFilters ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-border-color bg-navbar px-4 py-3 text-sm text-text-primary sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <div className="flex items-center gap-2 text-text-secondary">
-              <Filter className="h-4 w-4" />
-              <span>{t('beatmapsets.sort.label')}</span>
-              <span className="text-text-muted">·</span>
-              <span>{t('beatmapsets.search.total', { count: total })}</span>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="border-t border-border-color bg-navbar px-4 py-2.5 text-sm text-text-primary sm:px-5">
+            <div className="flex flex-wrap items-center gap-1.5">
               {SORT_OPTIONS.map((option) => (
                 <button
                   key={option.value}
@@ -727,7 +750,7 @@ const BeatmapsetsPage = () => {
                           : 'desc',
                     }));
                   }}
-                  className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 font-medium transition ${
+                  className={`inline-flex items-center gap-1 rounded-lg px-3 py-1 font-medium transition ${
                     searchState.sortField === option.value
                       ? 'bg-osu-pink text-white shadow-lg shadow-osu-pink/20'
                       : 'bg-btn-bg text-text-secondary hover:bg-btn-bg-hover hover:text-osu-pink'
@@ -818,9 +841,9 @@ const BeatmapsetsPage = () => {
 };
 
 const FilterRow = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="grid gap-2 sm:grid-cols-[76px_1fr] sm:items-start">
-    <div className="pt-1 font-semibold text-text-primary">{label}</div>
-    <div className="flex flex-wrap gap-x-2 gap-y-1.5">{children}</div>
+  <div className="grid gap-1 sm:grid-cols-[76px_1fr] sm:items-start">
+    <div className="pt-0.5 font-semibold text-text-primary">{label}</div>
+    <div className="flex flex-wrap gap-x-2 gap-y-0.5">{children}</div>
   </div>
 );
 
@@ -836,7 +859,7 @@ const FilterPill = ({
   <button
     type="button"
     onClick={onClick}
-    className={`rounded-md px-2 py-1 text-xs font-semibold transition sm:text-sm ${
+    className={`rounded-md px-2 py-0.5 text-xs font-semibold transition sm:text-sm ${
       active
         ? 'bg-osu-pink text-white shadow-sm shadow-osu-pink/20'
         : 'text-text-secondary hover:bg-btn-bg-hover hover:text-osu-pink'
