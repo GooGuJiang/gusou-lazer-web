@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowDown,
   ArrowUp,
@@ -22,6 +23,7 @@ import { formatDuration, formatNumber } from '../utils/format';
 import { getErrorMessage } from '../utils/typeGuards';
 import { getStarDifficultyColor } from '../utils/starRating';
 import StarRatingBadge from '../components/UI/StarRatingBadge';
+import LazyImage from '../components/UI/LazyImage';
 import { useUserPreferences } from '../hooks/useUserPreferences';
 import { AudioPlayButton, AudioPlayerControls } from '../components/UI/AudioPlayer';
 import {
@@ -399,6 +401,7 @@ const BeatmapsetsPage = () => {
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState(false);
 
   const queryForSearch = useMemo(() => buildQuery(searchState), [searchState]);
 
@@ -643,92 +646,106 @@ const BeatmapsetsPage = () => {
                   </FilterPill>
                 </FilterRow>
 
-                {showMoreFilters && (
-                  <>
-                    <FilterRow label={t('beatmapsets.filters.extra')}>
-                      {EXTRA_OPTIONS.map((option) => (
-                        <FilterPill
-                          key={option.value}
-                          active={searchState.extra.includes(option.value)}
-                          onClick={() =>
-                            updateSearchState((previous) => ({
-                              ...previous,
-                              extra: toggleArrayValue(previous.extra, option.value),
-                            }))
-                          }
-                        >
-                          {t(option.labelKey)}
-                        </FilterPill>
-                      ))}
-                    </FilterRow>
-                    <FilterRow label={t('beatmapsets.filters.language')}>
-                      {LANGUAGE_OPTIONS.map((option) => (
-                        <FilterPill
-                          key={option.value}
-                          active={searchState.language === option.value}
-                          onClick={() =>
-                            updateSearchState((previous) => ({
-                              ...previous,
-                              language: option.value,
-                            }))
-                          }
-                        >
-                          {t(option.labelKey)}
-                        </FilterPill>
-                      ))}
-                    </FilterRow>
+                <AnimatePresence initial={false}>
+                  {showMoreFilters && (
+                    <motion.div
+                      id="more-search-filters"
+                      className="overflow-hidden"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                    >
+                      <div className="space-y-2 pb-2 pt-0.5">
+                        <FilterRow label={t('beatmapsets.filters.extra')}>
+                          {EXTRA_OPTIONS.map((option) => (
+                            <FilterPill
+                              key={option.value}
+                              active={searchState.extra.includes(option.value)}
+                              onClick={() =>
+                                updateSearchState((previous) => ({
+                                  ...previous,
+                                  extra: toggleArrayValue(previous.extra, option.value),
+                                }))
+                              }
+                            >
+                              {t(option.labelKey)}
+                            </FilterPill>
+                          ))}
+                        </FilterRow>
+                        <FilterRow label={t('beatmapsets.filters.language')}>
+                          {LANGUAGE_OPTIONS.map((option) => (
+                            <FilterPill
+                              key={option.value}
+                              active={searchState.language === option.value}
+                              onClick={() =>
+                                updateSearchState((previous) => ({
+                                  ...previous,
+                                  language: option.value,
+                                }))
+                              }
+                            >
+                              {t(option.labelKey)}
+                            </FilterPill>
+                          ))}
+                        </FilterRow>
 
-                    <FilterRow label={t('beatmapsets.filters.rank')}>
-                      {RANK_OPTIONS.map((option) => (
-                        <FilterPill
-                          key={option.value}
-                          active={searchState.ranks.includes(option.value)}
-                          onClick={() =>
-                            updateSearchState((previous) => ({
-                              ...previous,
-                              ranks: toggleArrayValue(previous.ranks, option.value),
-                            }))
-                          }
-                        >
-                          {t(option.labelKey)}
-                        </FilterPill>
-                      ))}
-                    </FilterRow>
+                        <FilterRow label={t('beatmapsets.filters.rank')}>
+                          {RANK_OPTIONS.map((option) => (
+                            <FilterPill
+                              key={option.value}
+                              active={searchState.ranks.includes(option.value)}
+                              onClick={() =>
+                                updateSearchState((previous) => ({
+                                  ...previous,
+                                  ranks: toggleArrayValue(previous.ranks, option.value),
+                                }))
+                              }
+                            >
+                              {t(option.labelKey)}
+                            </FilterPill>
+                          ))}
+                        </FilterRow>
 
-                    <FilterRow label={t('beatmapsets.filters.played')}>
-                      {PLAYED_OPTIONS.map((option) => (
-                        <FilterPill
-                          key={option.value}
-                          active={selectedPlayedValue === option.value}
-                          onClick={() =>
-                            updateSearchState((previous) => ({
-                              ...previous,
-                              played:
-                                option.value === 'any'
-                                  ? null
-                                  : option.value === 'played'
-                                    ? true
-                                    : false,
-                            }))
-                          }
-                        >
-                          {t(option.labelKey)}
-                        </FilterPill>
-                      ))}
-                    </FilterRow>
-                  </>
-                )}
+                        <FilterRow label={t('beatmapsets.filters.played')}>
+                          {PLAYED_OPTIONS.map((option) => (
+                            <FilterPill
+                              key={option.value}
+                              active={selectedPlayedValue === option.value}
+                              onClick={() =>
+                                updateSearchState((previous) => ({
+                                  ...previous,
+                                  played:
+                                    option.value === 'any'
+                                      ? null
+                                      : option.value === 'played'
+                                        ? true
+                                        : false,
+                                }))
+                              }
+                            >
+                              {t(option.labelKey)}
+                            </FilterPill>
+                          ))}
+                        </FilterRow>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <button
                   type="button"
                   onClick={() => setShowMoreFilters((previous) => !previous)}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-osu-pink transition hover:text-osu-pink/80 sm:text-sm"
+                  className="flex w-full flex-col items-center justify-center gap-0.5 py-1 text-xs font-semibold text-osu-pink transition hover:text-osu-pink/80 sm:text-sm"
+                  aria-expanded={showMoreFilters}
+                  aria-controls="more-search-filters"
                 >
                   <span>{t('beatmapsets.filters.more')}</span>
-                  {showMoreFilters ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
+                  <motion.span
+                    animate={{ rotate: showMoreFilters ? 180 : 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
                     <ChevronDown className="h-4 w-4" />
-                  )}
+                  </motion.span>
                 </button>
               </div>
             </div>
@@ -820,8 +837,12 @@ const BeatmapsetsPage = () => {
       </div>
 
       {showBackToTop && (
-        <div className="fixed inset-x-0 bottom-6 z-40 pointer-events-none">
-          <div className="mx-auto flex max-w-7xl justify-end px-4 lg:px-6">
+        <div
+          className={`fixed inset-x-0 z-40 pointer-events-none ${
+            isAudioPlayerVisible ? 'bottom-24' : 'bottom-6'
+          }`}
+        >
+          <div className="mx-auto flex max-w-7xl justify-start px-4 lg:px-6">
             <button
               type="button"
               onClick={scrollToTop}
@@ -835,7 +856,7 @@ const BeatmapsetsPage = () => {
         </div>
       )}
 
-      <AudioPlayerControls />
+      <AudioPlayerControls onVisibilityChange={setIsAudioPlayerVisible} />
     </div>
   );
 };
@@ -997,9 +1018,11 @@ const BeatmapsetCard = ({
       className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 transition hover:z-30 hover:border-osu-pink/50 hover:bg-card-hover focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
     >
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-35 transition duration-300 group-hover:opacity-45 dark:opacity-45 dark:group-hover:opacity-55"
-          style={{ backgroundImage: `url(${cover})` }}
+        <LazyImage
+          src={cover}
+          alt=""
+          className="pointer-events-none absolute inset-0"
+          imageClassName="h-full w-full opacity-35 group-hover:opacity-45 dark:opacity-45 dark:group-hover:opacity-55"
         />
         <div
           className="absolute inset-0"
@@ -1012,11 +1035,11 @@ const BeatmapsetCard = ({
 
       <div className="relative z-10 flex h-full min-h-24 min-w-0 rounded-2xl sm:min-h-28">
         <div className="group/media relative w-24 flex-none self-stretch overflow-hidden rounded-l-2xl sm:w-28">
-          <img
+          <LazyImage
             src={cover}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover/media:scale-105"
-            loading="lazy"
+            className="absolute inset-0"
+            imageClassName="absolute inset-0 group-hover/media:scale-105"
           />
           {beatmapset.preview_url && (
             <AudioPlayButton

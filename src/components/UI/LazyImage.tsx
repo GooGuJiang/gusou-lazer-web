@@ -4,6 +4,7 @@ interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
+  imageClassName?: string;
   blurDataURL?: string;
   onLoad?: () => void;
   onError?: () => void;
@@ -15,6 +16,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
   src,
   alt,
   className = '',
+  imageClassName = '',
   blurDataURL,
   onLoad,
   onError,
@@ -79,7 +81,9 @@ const LazyImage: React.FC<LazyImageProps> = ({
         <img
           src={src}
           alt={alt}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${
+          loading="lazy"
+          decoding="async"
+          className={`h-full w-full object-cover transition-[opacity,transform] duration-300 ${imageClassName} ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={handleLoad}

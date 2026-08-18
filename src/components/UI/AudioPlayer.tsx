@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AudioState {
   isPlaying: boolean;
@@ -51,9 +52,41 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   useEffect(() => {
     const audio = new Audio();
     audioRef.current = audio;
+    let animationFrameId: number | null = null;
 
     // Set initial volume
     audio.volume = state.volume;
+
+    const syncPlaybackTime = () => {
+      const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
+      setState((prev) => {
+        if (prev.currentTime === audio.currentTime && prev.duration === duration) return prev;
+        return { ...prev, currentTime: audio.currentTime, duration };
+      });
+    };
+
+    const updatePlaybackProgress = () => {
+      syncPlaybackTime();
+
+      if (!audio.paused && !audio.ended) {
+        animationFrameId = window.requestAnimationFrame(updatePlaybackProgress);
+      } else {
+        animationFrameId = null;
+      }
+    };
+
+    const startProgressAnimation = () => {
+      if (animationFrameId !== null) return;
+      updatePlaybackProgress();
+    };
+
+    const stopProgressAnimation = () => {
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      syncPlaybackTime();
+    };
 
     const handleLoadStart = () => {
       setState((prev) => ({ ...prev, isLoading: true }));
@@ -61,29 +94,31 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
     const handleCanPlay = () => {
       setState((prev) => ({ ...prev, isLoading: false }));
+      syncPlaybackTime();
     };
 
     const handlePlay = () => {
       setState((prev) => ({ ...prev, isPlaying: true }));
+      startProgressAnimation();
     };
 
     const handlePause = () => {
       setState((prev) => ({ ...prev, isPlaying: false }));
+      stopProgressAnimation();
     };
 
     const handleTimeUpdate = () => {
-      setState((prev) => ({
-        ...prev,
-        currentTime: audio.currentTime,
-        duration: audio.duration || 0,
-      }));
+      syncPlaybackTime();
     };
 
     const handleEnded = () => {
+      stopProgressAnimation();
       setState((prev) => ({
         ...prev,
         isPlaying: false,
         currentTime: 0,
+        duration: 0,
+        currentUrl: undefined,
       }));
     };
 
@@ -96,6 +131,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
 
     const handleError = () => {
+      stopProgressAnimation();
       setState((prev) => ({
         ...prev,
         isLoading: false,
@@ -122,6 +158,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('volumechange', handleVolumeChange);
       audio.removeEventListener('error', handleError);
+      if (animationFrameId !== null) window.cancelAnimationFrame(animationFrameId);
       audio.pause();
       audio.src = '';
     };
@@ -160,6 +197,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.currentTime = time;
+    setState((prev) => ({ ...prev, currentTime: audio.currentTime }));
   }, []);
 
   const setVolume = useCallback((volume: number) => {
@@ -202,12 +240,16 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
   size = 'md',
   showProgress = false,
 }) => {
+  const { t } = useTranslation();
   const { play, pause, stop, isPlaying, currentUrl, currentTime, duration, isLoading } = useAudio();
 
   const isCurrentTrack = currentUrl === audioUrl;
   const isCurrentlyPlaying = isCurrentTrack && isPlaying;
 
-  const progress = isCurrentTrack && duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progress =
+    isCurrentTrack && duration > 0
+      ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
+      : 0;
 
   const sizeClasses = {
     sm: 'w-8 h-8',
@@ -245,18 +287,21 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
         relative flex items-center justify-center rounded-full
         bg-osu-pink hover:bg-osu-pink/80 text-white shadow-lg
         transition-colors duration-200
-        ${sizeClasses[size]} ${className}
+        ${sizeClasses[size]} ${isCurrentlyPlaying ? '!opacity-100' : ''} ${className}
       `}
+      aria-label={t(isCurrentlyPlaying ? 'beatmap.pausePreview' : 'beatmap.playPreview')}
+      title={t(isCurrentlyPlaying ? 'beatmap.pausePreview' : 'beatmap.playPreview')}
       disabled={isLoading}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={size === 'fill' ? undefined : { scale: 1.05 }}
+      whileTap={size === 'fill' ? undefined : { scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
     >
       {/* 进度环 */}
       {showProgress && isCurrentTrack && (
         <motion.svg
-          className="absolute inset-0 w-full h-full transform -rotate-90"
+          className="pointer-events-none absolute inset-0 h-full w-full -rotate-90"
           viewBox="0 0 36 36"
+          aria-hidden="true"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
@@ -268,16 +313,16 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
             fill="none"
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           />
-          <motion.path
+          <path
             className="text-white"
             stroke="currentColor"
             strokeWidth="2"
             fill="none"
-            strokeDasharray={`${progress}, 100`}
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-            initial={{ strokeDasharray: '0, 100' }}
-            animate={{ strokeDasharray: `${progress}, 100` }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            style={{
+              strokeDasharray: `${progress}, 100`,
+              transition: 'stroke-dasharray 80ms linear',
+            }}
           />
         </motion.svg>
       )}
@@ -319,9 +364,13 @@ export const AudioPlayButton: React.FC<AudioPlayButtonProps> = ({
 // 完整的音频播放器控制栏（类似 osu-web 的主播放器）
 interface AudioPlayerControlsProps {
   className?: string;
+  onVisibilityChange?: (visible: boolean) => void;
 }
 
-export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ className = '' }) => {
+export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
+  className = '',
+  onVisibilityChange,
+}) => {
   const {
     isPlaying,
     currentTime,
@@ -340,6 +389,10 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
   const volumeRef = useRef<HTMLDivElement>(null);
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+
+  useEffect(() => {
+    onVisibilityChange?.(Boolean(currentUrl));
+  }, [currentUrl, onVisibilityChange]);
 
   // 计算进度百分比
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -493,9 +546,10 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({ classN
           transition={{ duration: 0.2 }}
         >
           <div
-            className="h-full bg-osu-pink rounded-full relative group-hover:bg-osu-pink/90 shadow-sm transition-all duration-100"
+            className="relative h-full w-full origin-left rounded-full bg-osu-pink shadow-sm transition-[transform,background-color] duration-75 ease-linear group-hover:bg-osu-pink/90"
             style={{
-              width: `${progress}%`,
+              transform: `scaleX(${progress / 100})`,
+              transitionDuration: isDraggingProgress ? '0ms' : undefined,
             }}
           >
             {/* 进度条光泽效果 */}
