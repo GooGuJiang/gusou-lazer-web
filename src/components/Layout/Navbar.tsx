@@ -624,26 +624,28 @@ const Navbar: React.FC = () => {
                 {/* User actions */}
                 {!isLoading && isAuthenticated && user ? (
                   <UserDropdown user={user} onLogout={handleLogout} />
-                ) : !isLoading ? (
-                  <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link
-                        to="/login"
-                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
-                      >
-                        {t('nav.login')}
-                      </Link>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link
-                        to="/register"
-                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
-                      >
-                        {t('nav.register')}
-                      </Link>
-                    </motion.div>
-                  </div>
-                ) : null}
+                ) : (
+                  !isLoading && (
+                    <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link
+                          to="/login"
+                          className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
+                        >
+                          {t('nav.login')}
+                        </Link>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link
+                          to="/register"
+                          className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
+                        >
+                          {t('nav.register')}
+                        </Link>
+                      </motion.div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -699,16 +701,18 @@ const Navbar: React.FC = () => {
                   </Link>
                 </motion.div>
               </div>
-            ) : !isLoading ? (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
-                >
-                  {t('nav.login')}
-                </Link>
-              </motion.div>
-            ) : null}
+            ) : (
+              !isLoading && (
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
+                  >
+                    {t('nav.login')}
+                  </Link>
+                </motion.div>
+              )
+            )}
 
             {/* Mobile menu dropdown */}
             <MobileMenuDropdown
