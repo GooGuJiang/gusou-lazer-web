@@ -350,7 +350,11 @@ const BeatmapPage: React.FC = () => {
           setSelectedMode(targetBeatmap.mode as GameMode);
           const mode = targetBeatmap.mode || 'osu';
           const newUrl = `/beatmapsets/${beatmapsetData.id}#${mode}/${targetBeatmap.id}`;
-          if (window.location.pathname + window.location.hash !== newUrl) {
+          const currentInternalUrl = `${window.location.pathname.replace(
+            /^\/(?:en|zh)(?=\/|$)/,
+            ''
+          )}${window.location.hash}`;
+          if (currentInternalUrl !== newUrl) {
             navigate(newUrl, { replace: true });
           }
         }

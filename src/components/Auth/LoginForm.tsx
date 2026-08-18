@@ -8,7 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import type { LoginForm as LoginFormType } from '../../types';
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();

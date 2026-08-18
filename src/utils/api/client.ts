@@ -1,9 +1,9 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getDeviceUUID } from '../deviceUUID';
+import { API_BASE_URL } from './baseUrl';
 
-// 从环境变量读取 API 地址，如果没有设置则使用线上 API 地址
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://lazer-api.g0v0.top';
+export { API_BASE_URL } from './baseUrl';
 
 // 全局验证处理器，由 VerificationProvider 设置
 let globalVerificationHandler: ((error: unknown) => boolean) | null = null;

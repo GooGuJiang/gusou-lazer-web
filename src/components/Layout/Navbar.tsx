@@ -23,6 +23,7 @@ import UserDropdown from '../UI/UserDropdown';
 import Avatar from '../UI/Avatar';
 import LanguageSelector from '../UI/LanguageSelector';
 import type { NavItem } from '../../types';
+import type { AppLanguages } from '../../i18n/resources';
 
 // 将 NavItem 组件提取并使用 memo 优化，防止不必要的重新渲染
 const NavItem = memo<{ item: NavItem }>(({ item }) => {
@@ -164,7 +165,7 @@ NavItem.displayName = 'NavItem';
 
 // 语言配置接口
 interface LanguageConfig {
-  code: string;
+  code: AppLanguages;
   name: string;
   nativeName: string;
   flag: string;
@@ -192,14 +193,19 @@ const LanguageMenuSection = memo<{
   t: ReturnType<typeof import('react-i18next').useTranslation>['t'];
 }>(({ i18n, t }) => {
   const [showLanguages, setShowLanguages] = useState(false);
+  const location = useLocation();
 
   const currentLanguage =
     SUPPORTED_LANGUAGES.find((lang) => lang.code === (i18n.resolvedLanguage ?? i18n.language)) ||
     SUPPORTED_LANGUAGES[0];
 
-  const handleLanguageSelect = (languageCode: string) => {
-    void i18n.changeLanguage(languageCode);
+  const handleLanguageSelect = (languageCode: AppLanguages) => {
     setShowLanguages(false);
+    localStorage.setItem('app-language', languageCode);
+    document.cookie = `app-language=${languageCode}; Path=/; Max-Age=31536000; SameSite=Lax`;
+
+    const pathname = location.pathname === '/' ? '' : location.pathname;
+    window.location.assign(`/${languageCode}${pathname}${location.search}${location.hash}`);
   };
 
   if (!showLanguages) {

@@ -201,7 +201,6 @@ export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ chil
   return <ProfileColorContext.Provider value={value}>{children}</ProfileColorContext.Provider>;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useProfileColor = (): ProfileColorContextType => {
   const context = useContext(ProfileColorContext);
   if (context === undefined) {

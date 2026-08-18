@@ -5,14 +5,16 @@ import UserProfileLayout from '../components/User/UserProfileLayout';
 import { userAPI } from '../utils/api';
 import type { User, GameMode, UserPageSsrPayload } from '../types';
 import { getUserPageSsrMaxAge, getUserPageSsrPayloadFromDocument } from '../utils/userPageSsr';
+import { useSsrData } from '../contexts/useSsrData';
 
 const UserPage: React.FC = () => {
   const { t } = useTranslation();
+  const { userPage: serverPayload } = useSsrData();
   const { userId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const modeFromUrl = searchParams.get('mode') as GameMode | null;
   const initialSsrPayload = useMemo<UserPageSsrPayload | null>(() => {
-    const payload = getUserPageSsrPayloadFromDocument();
+    const payload = serverPayload ?? getUserPageSsrPayloadFromDocument();
     if (!payload || !userId) return null;
 
     const isCurrentRoute = payload.route.userId === userId;
@@ -20,7 +22,7 @@ const UserPage: React.FC = () => {
     const isFresh = Date.now() - new Date(payload.fetchedAt).getTime() <= getUserPageSsrMaxAge();
 
     return isCurrentRoute && isCurrentMode && isFresh ? payload : null;
-  }, [modeFromUrl, userId]);
+  }, [modeFromUrl, serverPayload, userId]);
   const [user, setUser] = useState<User | null>(() => initialSsrPayload?.user ?? null);
   const [loading, setLoading] = useState(!initialSsrPayload);
   const [error, setError] = useState<string | null>(null);

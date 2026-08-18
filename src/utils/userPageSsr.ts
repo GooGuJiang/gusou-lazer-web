@@ -1,5 +1,5 @@
 import type { GameMode, UserPageSsrPayload } from '../types';
-import { API_BASE_URL } from './api/client';
+import { API_BASE_URL } from './api/baseUrl';
 
 const USER_PAGE_SSR_SCRIPT_ID = '__USER_PAGE_SSR_DATA__';
 const USER_PAGE_SSR_MAX_AGE = 60_000;

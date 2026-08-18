@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { authAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key by default
 
 type ResetStep = 'request' | 'reset';
 

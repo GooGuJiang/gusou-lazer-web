@@ -1,30 +1,32 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout/Layout';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import PasswordResetPage from './pages/PasswordResetPage';
-import UserPage from './pages/UserPage';
-import SettingsPage from './pages/SettingsPage';
-import RankingsPage from './pages/RankingsPage';
-import TeamsPage from './pages/TeamsPage';
-import TeamDetailPage from './pages/TeamDetailPage';
-import CreateTeamPage from './pages/CreateTeamPage';
-import MessagesPage from './pages/MessagesPage';
-import HowToJoinPage from './pages/HowToJoinPage';
-import BeatmapPage from './pages/BeatmapPage';
-import BeatmapsetsPage from './pages/BeatmapsetsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import ScorePage from './pages/ScorePage';
-import OAuthAuthorizePage from './pages/OAuthAuthorizePage';
+import HomePage from './views/HomePage';
+import LoginPage from './views/LoginPage';
+import RegisterPage from './views/RegisterPage';
+import PasswordResetPage from './views/PasswordResetPage';
+import UserPage from './views/UserPage';
+import SettingsPage from './views/SettingsPage';
+import RankingsPage from './views/RankingsPage';
+import TeamsPage from './views/TeamsPage';
+import TeamDetailPage from './views/TeamDetailPage';
+import CreateTeamPage from './views/CreateTeamPage';
+import MessagesPage from './views/MessagesPage';
+import HowToJoinPage from './views/HowToJoinPage';
+import BeatmapPage from './views/BeatmapPage';
+import BeatmapsetsPage from './views/BeatmapsetsPage';
+import PrivacyPolicyPage from './views/PrivacyPolicyPage';
+import ScorePage from './views/ScorePage';
+import OAuthAuthorizePage from './views/OAuthAuthorizePage';
 
 interface AppProps {
   router?: 'browser' | 'static';
+  basename?: string;
+  location?: string;
 }
 
-function App({ router = 'browser' }: AppProps) {
+function App({ router = 'browser', basename, location = '/' }: AppProps) {
   const { t } = useTranslation();
   const routes = (
     <>
@@ -64,7 +66,13 @@ function App({ router = 'browser' }: AppProps) {
     </>
   );
 
-  return router === 'browser' ? <Router>{routes}</Router> : routes;
+  return router === 'browser' ? (
+    <BrowserRouter basename={basename}>{routes}</BrowserRouter>
+  ) : (
+    <MemoryRouter basename={basename} initialEntries={[location]}>
+      {routes}
+    </MemoryRouter>
+  );
 }
 
 export default App;

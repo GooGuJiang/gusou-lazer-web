@@ -28,6 +28,7 @@ import {
   getBeatmapsetsSsrMaxAge,
   getBeatmapsetsSsrPayloadFromDocument,
 } from '../utils/beatmapsetsSsr';
+import { useSsrData } from '../contexts/useSsrData';
 import type {
   BeatmapsetSearchCategory,
   BeatmapDownload,
@@ -364,16 +365,17 @@ const getStatusColor = (status: string): string => {
 
 const BeatmapsetsPage = () => {
   const { t } = useTranslation();
+  const { beatmapsets: serverPayload } = useSsrData();
   const [searchParams, setSearchParams] = useSearchParams();
   const { preferences } = useUserPreferences();
   const currentSearch = searchParams.toString() ? `?${searchParams.toString()}` : '';
   const ssrPayload = useMemo(() => {
-    const payload = getBeatmapsetsSsrPayloadFromDocument();
+    const payload = serverPayload ?? getBeatmapsetsSsrPayloadFromDocument();
     if (!payload) return null;
     if (payload.route.search !== currentSearch) return null;
     if (Date.now() - new Date(payload.fetchedAt).getTime() > getBeatmapsetsSsrMaxAge()) return null;
     return payload;
-  }, [currentSearch]);
+  }, [currentSearch, serverPayload]);
   const skippedInitialSsrFetchRef = useRef(false);
   const [searchState, setSearchState] = useState<SearchState>(() => getInitialState(searchParams));
   const [inputValue, setInputValue] = useState(searchState.query);

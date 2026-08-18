@@ -314,7 +314,7 @@ const SettingsPage: React.FC = () => {
               coverUrl={user.cover_url}
               editable={true}
               onCoverUpdate={(newCoverUrl) => {
-                if (import.meta.env.DEV) {
+                if (process.env.NODE_ENV === 'development') {
                   console.log('头图已更新:', newCoverUrl);
                 }
                 // 这里可以选择是否立即刷新用户信息

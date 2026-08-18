@@ -1,9 +1,6 @@
 import type { BeatmapsetSearchResponse } from '../types';
-import { API_BASE_URL } from './api/client';
+import { API_BASE_URL } from './api/baseUrl';
 import type { BeatmapsetsSsrDocumentPayload } from './beatmapsetsSsr';
-
-const DEFAULT_BEATMAPSETS_SSR_ACCESS_TOKEN =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZXhwIjoxNzgxNDE1NzU5LCJqdGkiOiJlN2M3ODM2MGU2NzY0NmE1OWRhMjFhODUxNzhkYzFkYSIsImF1ZCI6IjUiLCJpc3MiOiJodHRwczovL2xhemVyLWFwaS5nMHYwLnRvcC8ifQ.bpTj2_6Vz4jZBC8XbDKGlx-TH9XTTxsRDjxMdavSYDs';
 
 const normalizeBeatmapsetsPath = (pathname: string): boolean => /^\/beatmapsets\/?$/.test(pathname);
 
@@ -19,10 +16,10 @@ const buildSearchUrl = (requestUrl: URL): string => {
 };
 
 const getSsrAuthorization = (authorization?: string): string => {
-  const token =
-    authorization?.trim() ||
-    process.env.BEATMAPSETS_SSR_ACCESS_TOKEN?.trim() ||
-    DEFAULT_BEATMAPSETS_SSR_ACCESS_TOKEN;
+  const token = authorization?.trim() || process.env.BEATMAPSETS_SSR_ACCESS_TOKEN?.trim();
+  if (!token) {
+    throw new Error('BEATMAPSETS_SSR_ACCESS_TOKEN is required for beatmap search SSR');
+  }
   return token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 };
 
