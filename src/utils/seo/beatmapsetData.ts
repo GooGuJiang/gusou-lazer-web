@@ -9,15 +9,28 @@ const getBeatmapEndpoint = (pathname: string): string | null => {
   return beatmapMatch?.[1] ? `/api/v2/beatmapsets/lookup?beatmap_id=${beatmapMatch[1]}` : null;
 };
 
-export const fetchBeatmapsetSeoData = async (pathname: string): Promise<Beatmapset | null> => {
+export const fetchBeatmapsetSeoData = async (
+  pathname: string,
+  authorization?: string
+): Promise<Beatmapset | null> => {
   const endpoint = getBeatmapEndpoint(pathname);
   if (!endpoint) return null;
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json', 'x-api-version': '20250913' },
-      next: { revalidate: 300 },
-    });
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-version': '20250913',
+    };
+    if (authorization) {
+      headers.Authorization = authorization.startsWith('Bearer ')
+        ? authorization
+        : `Bearer ${authorization}`;
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}${endpoint}`,
+      authorization ? { headers, cache: 'no-store' } : { headers, next: { revalidate: 300 } }
+    );
     return response.ok ? ((await response.json()) as Beatmapset) : null;
   } catch {
     return null;

@@ -15,11 +15,9 @@ const buildSearchUrl = (requestUrl: URL): string => {
   return `${API_BASE_URL}/api/v2/beatmapsets/search?${searchParams.toString()}`;
 };
 
-const getSsrAuthorization = (authorization?: string): string => {
+const getSsrAuthorization = (authorization?: string): string | undefined => {
   const token = authorization?.trim() || process.env.BEATMAPSETS_SSR_ACCESS_TOKEN?.trim();
-  if (!token) {
-    throw new Error('BEATMAPSETS_SSR_ACCESS_TOKEN is required for beatmap search SSR');
-  }
+  if (!token) return undefined;
   return token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 };
 
@@ -31,11 +29,12 @@ export const fetchBeatmapsetsSsrPayload = async (
   if (!normalizeBeatmapsetsPath(requestUrl.pathname)) return null;
 
   try {
+    const authorizationHeader = getSsrAuthorization(authorization);
     const response = await fetch(buildSearchUrl(requestUrl), {
       headers: {
         'Content-Type': 'application/json',
         'x-api-version': '20250913',
-        Authorization: getSsrAuthorization(authorization),
+        ...(authorizationHeader ? { Authorization: authorizationHeader } : {}),
       },
     });
 

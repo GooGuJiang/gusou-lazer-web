@@ -45,10 +45,10 @@ const getSearch = (searchParams: SearchParams): string => {
   return search ? `?${search}` : '';
 };
 
-const resolveSeoData = async (pathname: string, search: string) => {
+const resolveSeoData = async (pathname: string, search: string, authorization?: string) => {
   const [userPayload, beatmapset] = await Promise.all([
     getUserPageData(`${pathname}${search}`),
-    getBeatmapsetData(pathname),
+    authorization ? getBeatmapsetData(pathname, authorization) : getBeatmapsetData(pathname),
   ]);
 
   return {
@@ -82,11 +82,12 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
   const search = getSearch(resolvedSearchParams);
   const internalUrl = `${pathname}${search}`;
   const cookieStore = await cookies();
+  const accessToken = cookieStore.get(AUTH_SESSION_COOKIE)?.value;
   const [userPayload, beatmapsetsPayload, seoData, initialUser] = await Promise.all([
     getUserPageData(internalUrl),
-    getBeatmapsetsData(internalUrl),
-    resolveSeoData(pathname, search),
-    fetchAuthenticatedUser(cookieStore.get(AUTH_SESSION_COOKIE)?.value),
+    getBeatmapsetsData(internalUrl, accessToken),
+    resolveSeoData(pathname, search, accessToken),
+    fetchAuthenticatedUser(accessToken),
   ]);
   const userPage = userPayload && 'user' in userPayload ? userPayload : null;
   const beatmapsets =
@@ -101,6 +102,7 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
         initialUser={initialUser}
         userPage={userPage}
         beatmapsets={beatmapsets}
+        beatmapset={seoData.beatmapset ?? null}
       />
     </>
   );

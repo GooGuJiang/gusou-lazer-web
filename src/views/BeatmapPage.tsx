@@ -41,6 +41,7 @@ import { getErrorMessage } from '../utils/typeGuards';
 import { getStarDifficultyColor, getStarDifficultyTextColor } from '../utils/starRating';
 import StarRatingBadge from '../components/UI/StarRatingBadge';
 import BeatmapPageSkeleton from '../components/Beatmap/BeatmapPageSkeleton';
+import { useSsrData } from '../contexts/useSsrData';
 
 // ── 状态颜色 ─────────────────────────────────────────────────────────────────
 
@@ -275,21 +276,37 @@ const BeatmapPage: React.FC = () => {
   const { beatmapId, beatmapsetId } = useParams<{ beatmapId?: string; beatmapsetId?: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { beatmapset: serverBeatmapset } = useSsrData();
+  const routeBeatmapId = beatmapId ? Number.parseInt(beatmapId, 10) : null;
+  const routeBeatmapsetId = beatmapsetId ? Number.parseInt(beatmapsetId, 10) : null;
+  const initialBeatmapset =
+    serverBeatmapset &&
+    ((routeBeatmapsetId !== null && serverBeatmapset.id === routeBeatmapsetId) ||
+      (routeBeatmapId !== null &&
+        serverBeatmapset.beatmaps.some((beatmap) => beatmap.id === routeBeatmapId)))
+      ? serverBeatmapset
+      : null;
+  const initialBeatmap =
+    initialBeatmapset?.beatmaps.find((beatmap) => beatmap.id === routeBeatmapId) ??
+    initialBeatmapset?.beatmaps[0] ??
+    null;
 
   // 谱面数据
-  const [beatmapset, setBeatmapset] = useState<Beatmapset | null>(null);
-  const [selectedBeatmap, setSelectedBeatmap] = useState<Beatmap | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [beatmapset, setBeatmapset] = useState<Beatmapset | null>(initialBeatmapset);
+  const [selectedBeatmap, setSelectedBeatmap] = useState<Beatmap | null>(initialBeatmap);
+  const [loading, setLoading] = useState(!initialBeatmapset);
   const [error, setError] = useState<string | null>(null);
 
   // 收藏状态
-  const [isFavourited, setIsFavourited] = useState(false);
-  const [favouriteCount, setFavouriteCount] = useState(0);
+  const [isFavourited, setIsFavourited] = useState(initialBeatmapset?.has_favourited ?? false);
+  const [favouriteCount, setFavouriteCount] = useState(initialBeatmapset?.favourite_count ?? 0);
   const [favouriteLoading, setFavouriteLoading] = useState(false);
 
   // 排行榜状态
   const [leaderboardType, setLeaderboardType] = useState<BeatmapLeaderboardType>('global');
-  const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
+  const [selectedMode, setSelectedMode] = useState<GameMode>(
+    (initialBeatmap?.mode as GameMode | undefined) ?? 'osu'
+  );
   const [scoresData, setScoresData] = useState<BeatmapScoresResponse | null>(null);
   const [scoresLoading, setScoresLoading] = useState(false);
   const [scoresError, setScoresError] = useState<string | null>(null);
@@ -309,6 +326,23 @@ const BeatmapPage: React.FC = () => {
 
       if (!targetBeatmapId && !targetBeatmapsetId) {
         setError(t('beatmap.notFound'));
+        setLoading(false);
+        return;
+      }
+
+      const hasMatchingBeatmapset = targetBeatmapsetId
+        ? beatmapset?.id === targetBeatmapsetId
+        : beatmapset?.beatmaps.some((beatmap) => beatmap.id === targetBeatmapId);
+
+      if (beatmapset && hasMatchingBeatmapset) {
+        const targetBeatmap =
+          beatmapset.beatmaps.find((beatmap) => beatmap.id === targetBeatmapId) ??
+          beatmapset.beatmaps[0];
+
+        if (targetBeatmap) {
+          setSelectedBeatmap(targetBeatmap);
+          setSelectedMode(targetBeatmap.mode as GameMode);
+        }
         setLoading(false);
         return;
       }
@@ -368,7 +402,7 @@ const BeatmapPage: React.FC = () => {
     };
 
     fetchBeatmapData();
-  }, [beatmapId, beatmapsetId, navigate, t]);
+  }, [beatmapId, beatmapset, beatmapsetId, navigate, t]);
 
   // ── 加载排行榜 ──────────────────────────────────────────────────────────
 
