@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import NextApplication from '../../../components/NextApplication';
 import StructuredData from '../../../components/StructuredData';
@@ -13,6 +14,7 @@ import {
   isKnownApplicationPath,
 } from '../../../utils/seo';
 import { fetchBeatmapsetSeoData } from '../../../utils/seo';
+import { AUTH_SESSION_COOKIE, fetchAuthenticatedUser } from '../../../utils/authSessionServer';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -79,10 +81,12 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
 
   const search = getSearch(resolvedSearchParams);
   const internalUrl = `${pathname}${search}`;
-  const [userPayload, beatmapsetsPayload, seoData] = await Promise.all([
+  const cookieStore = await cookies();
+  const [userPayload, beatmapsetsPayload, seoData, initialUser] = await Promise.all([
     getUserPageData(internalUrl),
     getBeatmapsetsData(internalUrl),
     resolveSeoData(pathname, search),
+    fetchAuthenticatedUser(cookieStore.get(AUTH_SESSION_COOKIE)?.value),
   ]);
   const userPage = userPayload && 'user' in userPayload ? userPayload : null;
   const beatmapsets =
@@ -94,6 +98,7 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
       <NextApplication
         language={language}
         location={`/${language}${internalUrl === '/' ? '' : internalUrl}`}
+        initialUser={initialUser}
         userPage={userPage}
         beatmapsets={beatmapsets}
       />

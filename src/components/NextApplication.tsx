@@ -10,23 +10,30 @@ import SsrDataProvider from '../contexts/SsrDataProvider';
 import { VerificationProvider } from '../contexts/VerificationContext';
 import { createAppI18n } from '../i18n';
 import type { AppLanguages } from '../i18n/resources';
-import type { UserPageSsrPayload } from '../types';
+import type { User, UserPageSsrPayload } from '../types';
 import type { BeatmapsetsSsrSuccessPayload } from '../utils/beatmapsetsSsr';
 
 interface NextApplicationProps {
   language: AppLanguages;
   location: string;
+  initialUser: User | null;
   userPage: UserPageSsrPayload | null;
   beatmapsets: BeatmapsetsSsrSuccessPayload | null;
 }
 
-const NextApplication = ({ language, location, userPage, beatmapsets }: NextApplicationProps) => {
+const NextApplication = ({
+  language,
+  location,
+  initialUser,
+  userPage,
+  beatmapsets,
+}: NextApplicationProps) => {
   const [i18n] = useState(() => createAppI18n(language));
   const router = typeof window === 'undefined' ? 'static' : 'browser';
 
   return (
     <I18nextProvider i18n={i18n}>
-      <AuthProvider>
+      <AuthProvider initialUser={initialUser}>
         <ProfileColorProvider>
           <VerificationProvider>
             <AudioProvider>

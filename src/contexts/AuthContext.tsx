@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { authAPI, userAPI, handleApiError, CLIENT_CONFIG } from '../utils/api';
+import { clearServerAuthSession, syncServerAuthSession } from '../utils/authSession';
 import type { User, TokenResponse } from '../types';
 import toast from 'react-hot-toast';
 
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
+  initialUser?: User | null;
 }
 
 // 缓存键名
@@ -108,14 +110,19 @@ const fetchCurrentUserOnce = async (): Promise<User> => {
   return currentUserRequest;
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUser = null }) => {
+  const [user, setUser] = useState<User | null>(initialUser);
+  const [isLoading, setIsLoading] = useState(!initialUser);
+  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(initialUser));
   const { t } = useTranslation();
 
   // Check if user is authenticated on mount
   useEffect(() => {
+    if (initialUser) {
+      CacheUtil.saveUserCache(initialUser);
+      return;
+    }
+
     const checkAuth = async () => {
       const token = localStorage.getItem('access_token');
       const refreshToken = localStorage.getItem('refresh_token');
@@ -133,6 +140,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.log(t('auth.context.cache.usingCachedState'));
         setUser(cachedData.user);
         setIsAuthenticated(cachedData.isAuthenticated);
+        if (token) await syncServerAuthSession(token);
         setIsLoading(false);
         return;
       }
@@ -145,6 +153,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(true);
         // 保存到缓存
         CacheUtil.saveUserCache(userData);
+        const currentAccessToken = localStorage.getItem('access_token');
+        if (currentAccessToken) await syncServerAuthSession(currentAccessToken);
       } catch (error) {
         // 如果获取用户信息失败，axios 拦截器会自动尝试刷新 token
         // 这里只需要处理刷新失败的情况
@@ -167,7 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [initialUser]);
 
   const login = async (
     username: string,
@@ -187,6 +197,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store tokens
       localStorage.setItem('access_token', tokenResponse.access_token);
       localStorage.setItem('refresh_token', tokenResponse.refresh_token);
+      await syncServerAuthSession(tokenResponse.access_token);
 
       // Get user data
       const userData = await userAPI.getMe();
@@ -265,6 +276,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    void clearServerAuthSession();
     setUser(null);
     setIsAuthenticated(false);
     // 清除缓存

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getDeviceUUID } from '../deviceUUID';
+import { clearServerAuthSession, syncServerAuthSession } from '../authSession';
 import { API_BASE_URL } from './baseUrl';
 
 export { API_BASE_URL } from './baseUrl';
@@ -83,6 +84,7 @@ const refreshToken = async (): Promise<string> => {
   // 更新 localStorage
   localStorage.setItem('access_token', access_token);
   localStorage.setItem('refresh_token', new_refresh_token);
+  await syncServerAuthSession(access_token);
 
   return access_token;
 };
@@ -122,6 +124,7 @@ api.interceptors.response.use(
       if (originalRequest.url?.includes('/oauth/token')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        void clearServerAuthSession();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(error);
@@ -166,6 +169,7 @@ api.interceptors.response.use(
         processQueue(new Error('Token refresh failed'));
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        void clearServerAuthSession();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(refreshError);
