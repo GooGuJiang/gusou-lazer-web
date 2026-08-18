@@ -838,21 +838,19 @@ const BeatmapsetsPage = () => {
 
       {showBackToTop && (
         <div
-          className={`fixed inset-x-0 z-40 pointer-events-none ${
+          className={`pointer-events-none fixed right-4 z-40 sm:right-6 ${
             isAudioPlayerVisible ? 'bottom-24' : 'bottom-6'
           }`}
         >
-          <div className="mx-auto flex max-w-7xl justify-start px-4 lg:px-6">
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-border-color bg-navbar text-osu-pink shadow-xl backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-osu-pink/40 hover:bg-osu-pink hover:text-white hover:shadow-osu-pink/25"
-              aria-label={t('common.back')}
-              title={t('common.back')}
-            >
-              <ChevronUp className="h-6 w-6" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-border-color bg-navbar text-osu-pink shadow-xl backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-osu-pink/40 hover:bg-osu-pink hover:text-white hover:shadow-osu-pink/25"
+            aria-label={t('common.back')}
+            title={t('common.back')}
+          >
+            <ChevronUp className="h-6 w-6" />
+          </button>
         </div>
       )}
 
@@ -1021,7 +1019,7 @@ const BeatmapsetCard = ({
         <LazyImage
           src={cover}
           alt=""
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none !absolute inset-0"
           imageClassName="h-full w-full opacity-35 group-hover:opacity-45 dark:opacity-45 dark:group-hover:opacity-55"
         />
         <div
@@ -1038,7 +1036,7 @@ const BeatmapsetCard = ({
           <LazyImage
             src={cover}
             alt=""
-            className="absolute inset-0"
+            className="!absolute inset-0"
             imageClassName="absolute inset-0 group-hover/media:scale-105"
           />
           {beatmapset.preview_url && (
