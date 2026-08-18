@@ -3,6 +3,7 @@ import type { FormEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import {
   ArrowDown,
   ArrowUp,
@@ -170,6 +171,8 @@ const DEFAULT_SORT_FIELD: SortField = 'ranked';
 const DEFAULT_SORT_DIRECTION: SortDirection = 'desc';
 const SEARCH_SORT_FIELD: SortField = 'relevance';
 const SEARCH_SORT_DIRECTION: SortDirection = 'desc';
+const VIRTUAL_ROW_ESTIMATE = 124;
+const VIRTUAL_OVERSCAN = 6;
 
 const DEFAULT_STATE: SearchState = {
   query: '',
@@ -400,10 +403,31 @@ const BeatmapsetsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const listParentRef = useRef<HTMLDivElement | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState(false);
+  const [cardsPerRow, setCardsPerRow] = useState(1);
+  const [isVirtualizationEnabled, setIsVirtualizationEnabled] = useState(false);
+  const [scrollMargin, setScrollMargin] = useState(0);
 
   const queryForSearch = useMemo(() => buildQuery(searchState), [searchState]);
+  const beatmapsetRows = useMemo(() => {
+    const rows: BeatmapsetSearchResult[][] = [];
+
+    for (let index = 0; index < beatmapsets.length; index += cardsPerRow) {
+      rows.push(beatmapsets.slice(index, index + cardsPerRow));
+    }
+
+    return rows;
+  }, [beatmapsets, cardsPerRow]);
+  const rowVirtualizer = useWindowVirtualizer({
+    count: beatmapsetRows.length,
+    estimateSize: () => VIRTUAL_ROW_ESTIMATE,
+    getItemKey: (index) => beatmapsetRows[index]?.[0]?.id ?? index,
+    overscan: VIRTUAL_OVERSCAN,
+    scrollMargin,
+    enabled: isVirtualizationEnabled,
+  });
 
   const syncParams = useCallback(
     (nextState: SearchState) => {
@@ -496,6 +520,23 @@ const BeatmapsetsPage = () => {
     }
   }, [cursor, error, loading, loadingMore, searchState, t]);
 
+  const handleFavouriteChange = useCallback((beatmapsetId: number, isFavourited: boolean) => {
+    setBeatmapsets((previous) =>
+      previous.map((beatmapset) =>
+        beatmapset.id === beatmapsetId
+          ? {
+              ...beatmapset,
+              has_favourited: isFavourited,
+              favourite_count: Math.max(
+                0,
+                beatmapset.favourite_count + (isFavourited ? 1 : -1)
+              ),
+            }
+          : beatmapset
+      )
+    );
+  }, []);
+
   useEffect(() => {
     const target = loadMoreRef.current;
     if (!target || !cursor || loading || error) return;
@@ -522,6 +563,37 @@ const BeatmapsetsPage = () => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const updateCardsPerRow = () => setCardsPerRow(mediaQuery.matches ? 2 : 1);
+
+    updateCardsPerRow();
+    setIsVirtualizationEnabled(true);
+    mediaQuery.addEventListener('change', updateCardsPerRow);
+
+    return () => mediaQuery.removeEventListener('change', updateCardsPerRow);
+  }, []);
+
+  useEffect(() => {
+    const updateScrollMargin = () => {
+      const listParent = listParentRef.current;
+      if (!listParent) return;
+
+      setScrollMargin(listParent.getBoundingClientRect().top + window.scrollY);
+    };
+
+    updateScrollMargin();
+    window.addEventListener('resize', updateScrollMargin);
+
+    const observer = new ResizeObserver(updateScrollMargin);
+    observer.observe(document.body);
+
+    return () => {
+      window.removeEventListener('resize', updateScrollMargin);
+      observer.disconnect();
+    };
+  }, [beatmapsets.length, error, loading, showMoreFilters]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -812,14 +884,52 @@ const BeatmapsetsPage = () => {
               <p className="mt-2 text-text-secondary">{t('beatmapsets.search.notFoundQuote')}</p>
             </div>
           ) : (
-            <div className="grid min-w-0 gap-3 md:grid-cols-2">
-              {beatmapsets.map((beatmapset) => (
-                <BeatmapsetCard
-                  key={beatmapset.id}
-                  beatmapset={beatmapset}
-                  beatmapDownload={beatmapDownload}
-                />
-              ))}
+            <div ref={listParentRef} className="min-w-0">
+              {isVirtualizationEnabled ? (
+                <div
+                  style={{
+                    height: `${rowVirtualizer.getTotalSize()}px`,
+                    position: 'relative',
+                  }}
+                >
+                  {rowVirtualizer.getVirtualItems().map((virtualRow) => (
+                    <div
+                      key={virtualRow.key}
+                      data-index={virtualRow.index}
+                      ref={rowVirtualizer.measureElement}
+                      className="grid min-w-0 gap-3 pb-3 md:grid-cols-2"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        transform: `translateY(${virtualRow.start - scrollMargin}px)`,
+                      }}
+                    >
+                      {beatmapsetRows[virtualRow.index]?.map((beatmapset, cardIndex) => (
+                        <BeatmapsetCard
+                          key={beatmapset.id}
+                          beatmapset={beatmapset}
+                          beatmapDownload={beatmapDownload}
+                          dataIndex={virtualRow.index * cardsPerRow + cardIndex}
+                          onFavouriteChange={handleFavouriteChange}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid min-w-0 gap-3 md:grid-cols-2">
+                  {beatmapsets.map((beatmapset) => (
+                    <BeatmapsetCard
+                      key={beatmapset.id}
+                      beatmapset={beatmapset}
+                      beatmapDownload={beatmapDownload}
+                      onFavouriteChange={handleFavouriteChange}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -926,9 +1036,13 @@ const BeatmapsetCardSkeleton = () => (
 const BeatmapsetCard = ({
   beatmapset,
   beatmapDownload,
+  dataIndex,
+  onFavouriteChange,
 }: {
   beatmapset: BeatmapsetSearchResult;
   beatmapDownload: BeatmapDownload;
+  dataIndex?: number;
+  onFavouriteChange?: (beatmapsetId: number, isFavourited: boolean) => void;
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -960,6 +1074,7 @@ const BeatmapsetCard = ({
       );
       setIsFavourited(nextFavourited);
       setFavouriteCount((previous) => Math.max(0, previous + (nextFavourited ? 1 : -1)));
+      onFavouriteChange?.(beatmapset.id, nextFavourited);
       toast.success(
         nextFavourited
           ? t('beatmapsets.card.favouriteSuccess')
@@ -1011,6 +1126,7 @@ const BeatmapsetCard = ({
     <div
       role="link"
       tabIndex={0}
+      data-index={dataIndex}
       onClick={openBeatmapset}
       onKeyDown={handleCardKeyDown}
       className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 transition hover:z-30 hover:border-osu-pink/50 hover:bg-card-hover focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
