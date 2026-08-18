@@ -120,6 +120,14 @@ api.interceptors.response.use(
 
     // 处理 401 错误（token 过期）
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const storedAccessToken = localStorage.getItem('access_token');
+      const storedRefreshToken = localStorage.getItem('refresh_token');
+
+      // 未登录用户访问公开页面时，接口可能仍会返回 401。此时不应尝试刷新或跳转登录页。
+      if (!storedAccessToken && !storedRefreshToken) {
+        return Promise.reject(error);
+      }
+
       // 如果请求是刷新 token 的请求本身失败了，直接登出
       if (originalRequest.url?.includes('/oauth/token')) {
         localStorage.removeItem('access_token');

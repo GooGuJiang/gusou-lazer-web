@@ -3,7 +3,23 @@ import type { FormEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import {
+  autoUpdate,
+  flip,
+  FloatingPortal,
+  offset,
+  safePolygon,
+  shift,
+  useClick,
+  useDismiss,
+  useFloating,
+  useFocus,
+  useHover,
+  useInteractions,
+  useRole,
+} from '@floating-ui/react';
 import {
   ArrowDown,
   ArrowUp,
@@ -436,39 +452,43 @@ const BeatmapsetsPage = () => {
     [setSearchParams]
   );
 
-  const updateSearchState = useCallback(
-    (updater: (previous: SearchState) => SearchState) => {
-      setSearchState((previous) => {
-        const nextState = updater(previous);
-        if (nextState === previous) return previous;
+  const updateSearchState = useCallback((updater: (previous: SearchState) => SearchState) => {
+    setSearchState(updater);
+  }, []);
 
-        syncParams(nextState);
-        return nextState;
-      });
-    },
-    [syncParams]
-  );
-
+  const hasSyncedSearchParamsRef = useRef(false);
   useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      updateSearchState((previous) => {
-        if (previous.query === inputValue) return previous;
+    if (!hasSyncedSearchParamsRef.current) {
+      hasSyncedSearchParamsRef.current = true;
+      return;
+    }
 
-        if (!sortManuallyChanged) {
+    syncParams(searchState);
+  }, [searchState, syncParams]);
+
+  const debouncedUpdateSearchQuery = useDebouncedCallback(
+    (nextInputValue: string, nextSortManuallyChanged: boolean) => {
+      updateSearchState((previous) => {
+        if (previous.query === nextInputValue) return previous;
+
+        if (!nextSortManuallyChanged) {
           return {
             ...previous,
-            query: inputValue,
-            sortField: inputValue.trim() ? SEARCH_SORT_FIELD : DEFAULT_SORT_FIELD,
-            sortDirection: inputValue.trim() ? SEARCH_SORT_DIRECTION : DEFAULT_SORT_DIRECTION,
+            query: nextInputValue,
+            sortField: nextInputValue.trim() ? SEARCH_SORT_FIELD : DEFAULT_SORT_FIELD,
+            sortDirection: nextInputValue.trim() ? SEARCH_SORT_DIRECTION : DEFAULT_SORT_DIRECTION,
           };
         }
 
-        return { ...previous, query: inputValue };
+        return { ...previous, query: nextInputValue };
       });
-    }, 420);
+    },
+    { wait: 420 }
+  );
 
-    return () => window.clearTimeout(timeout);
-  }, [inputValue, sortManuallyChanged, updateSearchState]);
+  useEffect(() => {
+    debouncedUpdateSearchQuery(inputValue, sortManuallyChanged);
+  }, [debouncedUpdateSearchQuery, inputValue, sortManuallyChanged]);
 
   useEffect(() => {
     if (ssrPayload && !skippedInitialSsrFetchRef.current) {
@@ -527,10 +547,7 @@ const BeatmapsetsPage = () => {
           ? {
               ...beatmapset,
               has_favourited: isFavourited,
-              favourite_count: Math.max(
-                0,
-                beatmapset.favourite_count + (isFavourited ? 1 : -1)
-              ),
+              favourite_count: Math.max(0, beatmapset.favourite_count + (isFavourited ? 1 : -1)),
             }
           : beatmapset
       )
@@ -1033,6 +1050,125 @@ const BeatmapsetCardSkeleton = () => (
   </div>
 );
 
+const DifficultyDetailsPopover = ({
+  modeGroups,
+  difficultyRange,
+}: {
+  modeGroups: BeatmapModeGroup[];
+  difficultyRange: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
+    placement: 'bottom-start',
+    strategy: 'fixed',
+    middleware: [offset(8), flip({ padding: 12 }), shift({ padding: 12 })],
+    whileElementsMounted: autoUpdate,
+  });
+  const hover = useHover(context, { move: false, handleClose: safePolygon() });
+  const focus = useFocus(context);
+  const click = useClick(context);
+  const dismiss = useDismiss(context);
+  const role = useRole(context, { role: 'dialog' });
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    hover,
+    focus,
+    click,
+    dismiss,
+    role,
+  ]);
+
+  return (
+    <>
+      <button
+        ref={refs.setReference}
+        type="button"
+        {...getReferenceProps({
+          className:
+            'group/difficulties flex min-w-0 max-w-full flex-wrap items-center gap-1 overflow-hidden text-left text-text-primary sm:overflow-visible',
+          'aria-label': difficultyRange,
+          onClick: (event) => event.stopPropagation(),
+        })}
+      >
+        {modeGroups.map((group) => (
+          <span key={group.mode} className="flex items-center gap-1">
+            <span
+              className={`${getModeClass(group.mode)} text-sm text-text-primary`}
+              aria-label={getModeDisplayName(group.mode)}
+            />
+            {group.beatmaps.length > 8 ? (
+              <span className="text-xs font-black text-text-primary">{group.beatmaps.length}</span>
+            ) : (
+              <span className="flex items-center gap-0.5">
+                {group.beatmaps.map((beatmap) => (
+                  <span
+                    key={beatmap.id}
+                    className="h-3 w-1.5 rounded-full"
+                    style={{
+                      backgroundColor: getStarDifficultyColor(beatmap.difficulty_rating),
+                    }}
+                    aria-label={`${getModeDisplayName(beatmap.mode)} · ${beatmap.difficulty_rating.toFixed(2)}★ · ${beatmap.version}`}
+                  />
+                ))}
+              </span>
+            )}
+          </span>
+        ))}
+      </button>
+
+      {isOpen && (
+        <FloatingPortal>
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            {...getFloatingProps({
+              className:
+                'z-[100] w-[min(18rem,calc(100vw-2rem))] max-h-80 overflow-y-auto rounded-2xl border border-osu-pink/50 bg-card-hover p-2 text-sm font-semibold text-text-primary shadow-2xl shadow-osu-pink/20 backdrop-blur-md',
+            })}
+          >
+            {modeGroups.map((group, groupIndex) => (
+              <div
+                key={group.mode}
+                className={groupIndex > 0 ? 'mt-2 border-t border-border-color/70 pt-2' : ''}
+              >
+                <div className="mb-1 flex items-center gap-2 px-1 text-xs font-black text-text-primary">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/70">
+                    <span
+                      className={`${getModeClass(group.mode)} text-sm`}
+                      aria-label={getModeDisplayName(group.mode)}
+                    />
+                  </span>
+                  <span>{getModeDisplayName(group.mode)}</span>
+                </div>
+                {group.beatmaps.map((beatmap) => (
+                  <Link
+                    key={beatmap.id}
+                    to={getBeatmapLink(beatmap)}
+                    className="flex min-w-0 items-center gap-2 rounded-lg px-1.5 py-0.5 text-text-primary transition hover:bg-btn-bg-hover hover:text-osu-pink"
+                  >
+                    <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/70">
+                      <span
+                        className={`${getModeClass(beatmap.mode)} text-sm`}
+                        aria-label={getModeDisplayName(beatmap.mode)}
+                      />
+                    </span>
+                    <StarRatingBadge
+                      stars={beatmap.difficulty_rating}
+                      className="min-w-[4.75rem] flex-none"
+                    />
+                    <span className="truncate">{beatmap.version}</span>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        </FloatingPortal>
+      )}
+    </>
+  );
+};
+
 const BeatmapsetCard = ({
   beatmapset,
   beatmapDownload,
@@ -1191,81 +1327,7 @@ const BeatmapsetCard = ({
             >
               {t(`beatmapsets.category.${beatmapset.status}`, { defaultValue: beatmapset.status })}
             </span>
-            <div
-              className="group/difficulties relative flex min-w-0 max-w-full flex-wrap items-center gap-1 overflow-hidden text-text-primary sm:overflow-visible"
-              aria-label={difficultyRange}
-            >
-              {modeGroups.map((group) => (
-                <span key={group.mode} className="flex items-center gap-1">
-                  <span
-                    className={`${getModeClass(group.mode)} text-sm text-text-primary`}
-                    aria-label={getModeDisplayName(group.mode)}
-                  />
-                  {group.beatmaps.length > 8 ? (
-                    <span className="text-xs font-black text-text-primary">
-                      {group.beatmaps.length}
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-0.5">
-                      {group.beatmaps.map((beatmap) => (
-                        <span
-                          key={beatmap.id}
-                          className="h-3 w-1.5 rounded-full"
-                          style={{
-                            backgroundColor: getStarDifficultyColor(beatmap.difficulty_rating),
-                          }}
-                          aria-label={`${getModeDisplayName(beatmap.mode)} · ${beatmap.difficulty_rating.toFixed(2)}★ · ${beatmap.version}`}
-                        />
-                      ))}
-                    </span>
-                  )}
-                </span>
-              ))}
-
-              <div className="invisible pointer-events-none absolute right-0 top-full z-30 hidden w-[min(18rem,calc(100vw-2rem))] origin-top-right translate-y-1 scale-[0.98] pt-1 opacity-0 transition-[opacity,transform,visibility] duration-100 ease-out group-hover/difficulties:visible group-hover/difficulties:pointer-events-auto group-hover/difficulties:translate-y-0 group-hover/difficulties:scale-100 group-hover/difficulties:opacity-100 xl:block">
-                <div
-                  className="max-h-80 overflow-y-auto rounded-2xl border border-osu-pink/50 bg-card-hover p-2 text-sm font-semibold text-text-primary shadow-2xl shadow-osu-pink/20 backdrop-blur-md"
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  {modeGroups.map((group, groupIndex) => (
-                    <div
-                      key={group.mode}
-                      className={groupIndex > 0 ? 'mt-2 border-t border-border-color/70 pt-2' : ''}
-                    >
-                      <div className="mb-1 flex items-center gap-2 px-1 text-xs font-black text-text-primary">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/70">
-                          <span
-                            className={`${getModeClass(group.mode)} text-sm`}
-                            aria-label={getModeDisplayName(group.mode)}
-                          />
-                        </span>
-                        <span>{getModeDisplayName(group.mode)}</span>
-                      </div>
-                      {group.beatmaps.map((beatmap) => (
-                        <Link
-                          key={beatmap.id}
-                          to={getBeatmapLink(beatmap)}
-                          className="flex min-w-0 items-center gap-2 rounded-lg px-1.5 py-0.5 text-text-primary transition hover:bg-btn-bg-hover hover:text-osu-pink"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/70">
-                            <span
-                              className={`${getModeClass(beatmap.mode)} text-sm`}
-                              aria-label={getModeDisplayName(beatmap.mode)}
-                            />
-                          </span>
-                          <StarRatingBadge
-                            stars={beatmap.difficulty_rating}
-                            className="min-w-[4.75rem] flex-none"
-                          />
-                          <span className="truncate">{beatmap.version}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <DifficultyDetailsPopover modeGroups={modeGroups} difficultyRange={difficultyRange} />
             <span className="flex items-center gap-1 text-text-secondary">
               <Clock className="h-3.5 w-3.5" />
               {getBeatmapLength(beatmapset)}
