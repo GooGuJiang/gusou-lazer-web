@@ -1,5 +1,5 @@
 export const layout = {
   footer: {
-    copyright: '© 2025-present g0v0.top. Crafted for rhythm game players.',
+    copyright: '© 2026 g0v0.top. Crafted for rhythm game players.',
   },
 } as const;
