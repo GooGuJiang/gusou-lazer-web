@@ -30,13 +30,21 @@ export const fetchBeatmapsetsSsrPayload = async (
 
   try {
     const authorizationHeader = getSsrAuthorization(authorization);
-    const response = await fetch(buildSearchUrl(requestUrl), {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-version': '20250913',
-        ...(authorizationHeader ? { Authorization: authorizationHeader } : {}),
-      },
-    });
+    const searchUrl = buildSearchUrl(requestUrl);
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-api-version': '20250913',
+      ...(authorizationHeader ? { Authorization: authorizationHeader } : {}),
+    };
+    let response = await fetch(searchUrl, { headers });
+    if (response.status === 401 && authorizationHeader) {
+      response = await fetch(searchUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-version': '20250913',
+        },
+      });
+    }
 
     if (!response.ok) {
       return {

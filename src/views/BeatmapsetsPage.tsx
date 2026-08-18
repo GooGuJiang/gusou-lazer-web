@@ -546,14 +546,14 @@ const BeatmapsetsPage = () => {
 
   return (
     <div className="relative min-h-screen bg-bg-primary pb-12 text-text-primary">
-      <div className="relative mx-auto max-w-7xl px-4 py-6 lg:px-6">
+      <div className="relative mx-auto max-w-7xl px-4 py-3 lg:px-6">
         <section className="overflow-hidden rounded-3xl border border-border-color bg-card backdrop-blur-xl">
-          <div className="flex items-center gap-3 border-b border-border-color bg-navbar px-5 py-4 text-text-primary sm:px-7">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-osu-pink/70 bg-osu-pink/10 text-osu-pink">
-              <Sparkles className="h-5 w-5" />
+          <div className="flex items-center gap-2 border-b border-border-color bg-navbar px-4 py-2.5 text-text-primary sm:px-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-osu-pink/70 bg-osu-pink/10 text-osu-pink">
+              <Sparkles className="h-4 w-4" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-text-primary sm:text-2xl">
+              <h1 className="text-lg font-bold text-text-primary sm:text-xl">
                 {t('beatmapsets.title')}
               </h1>
               <p className="text-xs text-text-secondary sm:text-sm">{t('beatmapsets.subtitle')}</p>
@@ -994,7 +994,7 @@ const BeatmapsetCard = ({
       tabIndex={0}
       onClick={openBeatmapset}
       onKeyDown={handleCardKeyDown}
-      className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 transition hover:z-30 hover:-translate-y-0.5 hover:border-osu-pink/50 hover:bg-card-hover focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
+      className="group relative z-0 block w-full min-w-0 cursor-pointer rounded-2xl border border-border-color bg-card pr-10 transition hover:z-30 hover:border-osu-pink/50 hover:bg-card-hover focus:outline-none focus:ring-2 focus:ring-osu-pink/70 sm:min-h-28 sm:pr-12"
     >
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <div
