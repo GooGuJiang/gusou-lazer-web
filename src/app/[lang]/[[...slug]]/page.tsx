@@ -12,7 +12,7 @@ import {
   createStructuredData,
   isKnownApplicationPath,
 } from '../../../utils/seo';
-import { fetchBeatmapsetSeoData } from '../../../utils/seoData';
+import { fetchBeatmapsetSeoData } from '../../../utils/seo';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

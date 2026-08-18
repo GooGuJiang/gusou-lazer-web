@@ -21,7 +21,6 @@ export const common = {
   },
   authAgreement: '登录即表示你同意我们的服务条款和隐私政策',
   registerAgreement: '注册即表示你同意我们的服务条款和隐私政策',
-  privacyPolicy: '隐私政策',
   loading: '加载中...',
   error: '错误',
   success: '成功',

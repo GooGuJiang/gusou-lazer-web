@@ -8,7 +8,6 @@ const PUBLIC_PATHS = [
   { path: '/beatmapsets', changeFrequency: 'daily', priority: 0.9 },
   { path: '/teams', changeFrequency: 'daily', priority: 0.8 },
   { path: '/how-to-join', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/privacy-policy', changeFrequency: 'yearly', priority: 0.3 },
 ] as const;
 
 const sitemap = (): MetadataRoute.Sitemap =>

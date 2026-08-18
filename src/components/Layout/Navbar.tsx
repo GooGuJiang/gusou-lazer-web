@@ -24,6 +24,7 @@ import Avatar from '../UI/Avatar';
 import LanguageSelector from '../UI/LanguageSelector';
 import type { NavItem } from '../../types';
 import type { AppLanguages } from '../../i18n/resources';
+import { createPageMetadata } from '../../utils/seo';
 
 // 将 NavItem 组件提取并使用 memo 优化，防止不必要的重新渲染
 const NavItem = memo<{ item: NavItem }>(({ item }) => {
@@ -464,7 +465,22 @@ MobileMenuDropdown.displayName = 'MobileMenuDropdown';
 
 const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const initialPathnameRef = useRef(location.pathname);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const language: AppLanguages = i18n.resolvedLanguage === 'zh' ? 'zh' : 'en';
+    const isBeatmapDetail = /^\/(?:beatmaps|beatmapsets)\/\d+$/.test(location.pathname);
+    const isInitialBeatmapRender =
+      initialPathnameRef.current === location.pathname && isBeatmapDetail;
+
+    // 保留服务端为首屏谱面详情生成的精确标题；后续客户端切换使用通用详情标题。
+    if (isInitialBeatmapRender) return;
+    document.title = String(createPageMetadata(language, location.pathname).title ?? 'g0v0!');
+  }, [i18n.resolvedLanguage, location.pathname]);
   // 通过全局通知上下文获取统一的 unreadCount
   let unreadCount: {
     total: number;
