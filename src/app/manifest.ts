@@ -10,9 +10,9 @@ const manifest = (): MetadataRoute.Manifest => ({
   theme_color: '#5ca9e5',
   icons: [
     {
-      src: '/lazer.ico',
-      sizes: 'any',
-      type: 'image/x-icon',
+      src: '/favicon.png',
+      sizes: '256x256',
+      type: 'image/png',
     },
   ],
 });

@@ -17,6 +17,7 @@ import { useAuth } from '../hooks/useAuth';
 import type { ScoreDetail, ScoreStatistics, User } from '../types';
 import { beatmapAPI, handleApiError, scoreAPI, userAPI } from '../utils/api';
 import { getApiErrorStatus } from '../utils/typeGuards';
+import { useSsrData } from '../contexts/useSsrData';
 
 type SupportedRulesetId = 0 | 1 | 2 | 3;
 type StatisticColor = 'perfect' | 'great' | 'good' | 'ok' | 'meh' | 'miss' | 'extra';
@@ -223,18 +224,24 @@ const getTitle = (score: ScoreDetail): string =>
 
 const ScorePage = () => {
   const { scoreId } = useParams<{ scoreId: string }>();
+  const { publicPage } = useSsrData();
+  const initialData = publicPage?.pathname === `/scores/${scoreId}` ? publicPage : null;
   const { t, i18n } = useTranslation();
   const { user: currentUser } = useAuth();
-  const [score, setScore] = useState<ScoreDetail | null>(null);
-  const [scoreUser, setScoreUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const isSignedIn = Boolean(currentUser);
+  const [score, setScore] = useState<ScoreDetail | null>(initialData?.score ?? null);
+  const [scoreUser, setScoreUser] = useState<User | null>(initialData?.scoreUser ?? null);
+  const [loading, setLoading] = useState(!initialData?.score);
   const [error, setError] = useState<string | null>(null);
-  const [isPinned, setIsPinned] = useState(false);
+  const [isPinned, setIsPinned] = useState(
+    initialData?.score?.current_user_attributes?.pin?.is_pinned ?? false
+  );
   const [pinLoading, setPinLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
 
   useEffect(() => {
+    if (initialData?.score && !isSignedIn) return;
     const numericScoreId = Number(scoreId);
     if (!scoreId || !Number.isSafeInteger(numericScoreId) || numericScoreId <= 0) {
       setError(t('score.error.invalidId'));
@@ -276,7 +283,7 @@ const ScorePage = () => {
 
     void loadScore();
     return () => abortController.abort();
-  }, [scoreId, t]);
+  }, [scoreId, t, initialData, isSignedIn]);
 
   if (loading) {
     return (

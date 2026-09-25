@@ -10,12 +10,18 @@ interface Country {
 // 全局缓存对象，按模式存储
 const countryCache: Record<string, Country[]> = {};
 
-export const useAvailableCountries = (mode: GameMode) => {
-  const [countries, setCountries] = useState<Country[]>([]);
+export const useAvailableCountries = (mode: GameMode, initialCountries?: Country[]) => {
+  const [countries, setCountries] = useState<Country[]>(initialCountries ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const skipInitialFetchRef = useRef(Boolean(initialCountries));
 
   useEffect(() => {
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false;
+      if (initialCountries) countryCache[mode] = initialCountries;
+      return;
+    }
     const fetchCountries = async () => {
       // 如果已有缓存，直接使用
       if (countryCache[mode]) {

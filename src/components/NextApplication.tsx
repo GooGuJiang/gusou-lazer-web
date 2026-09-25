@@ -12,6 +12,7 @@ import { createAppI18n } from '../i18n';
 import type { AppLanguages } from '../i18n/resources';
 import type { Beatmapset, User, UserPageSsrPayload } from '../types';
 import type { BeatmapsetsSsrSuccessPayload } from '../utils/beatmapsetsSsr';
+import type { PublicPageSsrData } from '../utils/publicPageSsr';
 
 interface NextApplicationProps {
   language: AppLanguages;
@@ -20,6 +21,7 @@ interface NextApplicationProps {
   userPage: UserPageSsrPayload | null;
   beatmapsets: BeatmapsetsSsrSuccessPayload | null;
   beatmapset: Beatmapset | null;
+  publicPage: PublicPageSsrData | null;
 }
 
 const NextApplication = ({
@@ -29,6 +31,7 @@ const NextApplication = ({
   userPage,
   beatmapsets,
   beatmapset,
+  publicPage,
 }: NextApplicationProps) => {
   const [i18n] = useState(() => createAppI18n(language));
   const router = typeof window === 'undefined' ? 'static' : 'browser';
@@ -43,6 +46,7 @@ const NextApplication = ({
                 userPage={userPage}
                 beatmapsets={beatmapsets}
                 beatmapset={beatmapset}
+                publicPage={publicPage}
               >
                 <App router={router} basename={`/${language}`} location={location} />
               </SsrDataProvider>

@@ -7,13 +7,19 @@ import TeamDetailUserCard from '../components/Rankings/TeamDetailUserCard';
 import TeamActions from '../components/Teams/TeamActions';
 import MemberActions from '../components/Teams/MemberActions';
 import type { TeamDetailResponse, User, GameMode } from '../types';
+import { useSsrData } from '../contexts/useSsrData';
 
 const TeamDetailPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { teamId } = useParams<{ teamId: string }>();
+  const { publicPage } = useSsrData();
+  const initialTeamDetail =
+    publicPage?.pathname === `/teams/${teamId}` ? publicPage.teamDetail : null;
   const [searchParams] = useSearchParams();
-  const [teamDetail, setTeamDetail] = useState<TeamDetailResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [teamDetail, setTeamDetail] = useState<TeamDetailResponse | null>(
+    initialTeamDetail ?? null
+  );
+  const [isLoading, setIsLoading] = useState(!initialTeamDetail);
 
   // 从 URL 参数获取模式,如果没有则默认为 'osu'
   const modeFromUrl = searchParams.get('mode') as GameMode | null;
@@ -21,6 +27,7 @@ const TeamDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (!teamId) return;
+    if (initialTeamDetail) return;
 
     const loadTeamDetail = async () => {
       setIsLoading(true);
@@ -36,7 +43,7 @@ const TeamDetailPage: React.FC = () => {
     };
 
     loadTeamDetail();
-  }, [teamId]);
+  }, [teamId, initialTeamDetail]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(i18n.language === 'zh' ? 'zh-CN' : 'en-US', {

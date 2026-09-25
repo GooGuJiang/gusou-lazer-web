@@ -35,8 +35,8 @@ export const generateMetadata = async ({ params }: LanguageLayoutProps): Promise
     publisher: 'GooGuTeam',
     category: 'gaming',
     icons: {
-      icon: '/lazer.ico',
-      shortcut: '/lazer.ico',
+      icon: '/favicon.png',
+      shortcut: '/favicon.png',
     },
     manifest: '/manifest.webmanifest',
     formatDetection: {

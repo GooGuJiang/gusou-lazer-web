@@ -10,25 +10,35 @@ import LoadingSpinner from '../components/UI/LoadingSpinner';
 import GameModeSelector from '../components/UI/GameModeSelector';
 import { useAvailableCountries } from '../hooks/useAvailableCountries';
 import type { GameMode, TopUsersResponse, CountryResponse, TabType, RankingType } from '../types';
+import { useSsrData } from '../contexts/useSsrData';
 
 const RankingsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { publicPage } = useSsrData();
+  const initialData = publicPage?.pathname === '/rankings' ? publicPage : null;
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   const [selectedTab, setSelectedTab] = useState<TabType>('users');
   const [rankingType, setRankingType] = useState<RankingType>('performance');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCountry, setSelectedCountry] = useState<string>('');
 
-  const [userRankings, setUserRankings] = useState<TopUsersResponse | null>(null);
-  const [countryRankings, setCountryRankings] = useState<CountryResponse | null>(null);
+  const [userRankings, setUserRankings] = useState<TopUsersResponse | null>(
+    initialData?.userRankings ?? null
+  );
+  const [countryRankings, setCountryRankings] = useState<CountryResponse | null>(
+    initialData?.countryRankings ?? null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // 使用 ref 跟踪请求，防止竞态条件
   const abortControllerRef = useRef<AbortController | null>(null);
+  const skipInitialFetchRef = useRef(Boolean(initialData?.userRankings));
 
   // 获取可用国家列表
-  const { countries: availableCountries, isLoading: isLoadingCountries } =
-    useAvailableCountries(selectedMode);
+  const { countries: availableCountries, isLoading: isLoadingCountries } = useAvailableCountries(
+    selectedMode,
+    initialData?.countryRankings?.ranking
+  );
 
   // Load user rankings with request cancellation
   const loadUserRankings = useCallback(async () => {
@@ -104,6 +114,10 @@ const RankingsPage: React.FC = () => {
 
   // Load data when dependencies change
   useEffect(() => {
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false;
+      return;
+    }
     if (selectedTab === 'users') {
       loadUserRankings();
     } else {

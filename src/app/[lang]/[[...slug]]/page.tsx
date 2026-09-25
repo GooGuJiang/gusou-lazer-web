@@ -8,6 +8,7 @@ import { isSupportedLanguage } from '../../../i18n/config';
 import type { AppLanguages } from '../../../i18n/resources';
 import { fetchBeatmapsetsSsrPayload } from '../../../utils/beatmapsetsSsrServer';
 import { fetchUserPageSsrPayload } from '../../../utils/userPageSsr';
+import { fetchBeatmapScoresSsrData, fetchPublicPageSsrData } from '../../../utils/publicPageSsr';
 import {
   createPageMetadata,
   createStructuredData,
@@ -26,6 +27,7 @@ interface ApplicationPageProps {
 const getUserPageData = cache(fetchUserPageSsrPayload);
 const getBeatmapsetsData = cache(fetchBeatmapsetsSsrPayload);
 const getBeatmapsetData = cache(fetchBeatmapsetSeoData);
+const getPublicPageData = cache(fetchPublicPageSsrData);
 
 const getPathname = (slug?: string[]): string =>
   slug?.length ? `/${slug.map(encodeURIComponent).join('/')}` : '/';
@@ -83,15 +85,17 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
   const internalUrl = `${pathname}${search}`;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(AUTH_SESSION_COOKIE)?.value;
-  const [userPayload, beatmapsetsPayload, seoData, initialUser] = await Promise.all([
+  const [userPayload, beatmapsetsPayload, seoData, initialUser, publicPage] = await Promise.all([
     getUserPageData(internalUrl),
     getBeatmapsetsData(internalUrl, accessToken),
     resolveSeoData(pathname, search, accessToken),
     fetchAuthenticatedUser(accessToken),
+    getPublicPageData(pathname),
   ]);
   const userPage = userPayload && 'user' in userPayload ? userPayload : null;
   const beatmapsets =
     beatmapsetsPayload && 'response' in beatmapsetsPayload ? beatmapsetsPayload : null;
+  const beatmapPage = await fetchBeatmapScoresSsrData(pathname, seoData.beatmapset ?? null);
 
   return (
     <>
@@ -103,6 +107,7 @@ const ApplicationPage = async ({ params, searchParams }: ApplicationPageProps) =
         userPage={userPage}
         beatmapsets={beatmapsets}
         beatmapset={seoData.beatmapset ?? null}
+        publicPage={publicPage ?? beatmapPage}
       />
     </>
   );

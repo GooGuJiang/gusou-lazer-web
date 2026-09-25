@@ -20,19 +20,22 @@ const resolveTheme = (theme: Theme): 'light' | 'dark' => {
 };
 
 export const useTheme = () => {
-  // 从 localStorage 读取保存的主题偏好，默认为 'system'
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof localStorage === 'undefined') return 'system';
-
-    const saved = localStorage.getItem('theme') as Theme | null;
-    if (saved === 'light' || saved === 'dark' || saved === 'system') {
-      return saved;
-    }
-    return 'system';
-  });
+  const [theme, setTheme] = useState<Theme>('system');
+  const [preferenceLoaded, setPreferenceLoaded] = useState(false);
 
   // 实际应用到 DOM 的主题
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => resolveTheme(theme));
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark' || saved === 'system') setTheme(saved);
+    } catch {
+      setTheme('system');
+    } finally {
+      setPreferenceLoaded(true);
+    }
+  }, []);
 
   // 应用主题到 DOM
   const applyTheme = useCallback((resolved: 'light' | 'dark') => {
@@ -43,6 +46,7 @@ export const useTheme = () => {
   }, []);
 
   useEffect(() => {
+    if (!preferenceLoaded) return;
     const resolved = resolveTheme(theme);
     applyTheme(resolved);
 
@@ -57,7 +61,7 @@ export const useTheme = () => {
         mediaQuery.removeEventListener('change', handleSystemThemeChange);
       };
     }
-  }, [theme, applyTheme]);
+  }, [theme, applyTheme, preferenceLoaded]);
 
   // 设置主题并持久化到 localStorage
   const setSpecificTheme = useCallback((newTheme: Theme) => {

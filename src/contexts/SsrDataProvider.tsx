@@ -6,8 +6,14 @@ interface SsrDataProviderProps extends SsrDataContextValue {
   children: ReactNode;
 }
 
-const SsrDataProvider = ({ children, userPage, beatmapsets, beatmapset }: SsrDataProviderProps) => (
-  <SsrDataContext.Provider value={{ userPage, beatmapsets, beatmapset }}>
+const SsrDataProvider = ({
+  children,
+  userPage,
+  beatmapsets,
+  beatmapset,
+  publicPage,
+}: SsrDataProviderProps) => (
+  <SsrDataContext.Provider value={{ userPage, beatmapsets, beatmapset, publicPage }}>
     {children}
   </SsrDataContext.Provider>
 );

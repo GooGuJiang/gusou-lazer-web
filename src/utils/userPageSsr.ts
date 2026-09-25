@@ -52,9 +52,9 @@ const getUserPageApiVersionHeaders = () => ({
   'x-api-version': '20250913',
 });
 
-const fetchJson = async <T>(url: string): Promise<T> => {
+const fetchJson = async <T>(url: string, apiVersion = '20250913'): Promise<T> => {
   const response = await fetch(url, {
-    headers: getUserPageApiVersionHeaders(),
+    headers: { ...getUserPageApiVersionHeaders(), 'x-api-version': apiVersion },
   });
 
   if (!response.ok) {
@@ -111,6 +111,18 @@ export const fetchUserPageSsrPayload = async (
     const recentActivities = Array.isArray(recentActivitiesResponse)
       ? recentActivitiesResponse
       : [];
+    const scoreMode = mode ?? user.g0v0_playmode ?? 'osu';
+    const scoreBase = `${API_BASE_URL}/api/v2/users/${user.id}/scores`;
+    const scoreQuery = new URLSearchParams({ mode: scoreMode, limit: '6', offset: '0' });
+    const [bestResult, pinnedResult, recentResult] = await Promise.allSettled([
+      fetchJson<unknown>(`${scoreBase}/best?${scoreQuery}`, '20220705'),
+      fetchJson<unknown>(`${scoreBase}/pinned?mode=${encodeURIComponent(scoreMode)}`, '20220705'),
+      fetchJson<unknown>(`${scoreBase}/recent?${scoreQuery}&include_fails=false`, '20220705'),
+    ]);
+    const scoreList = (result: PromiseSettledResult<unknown>) =>
+      result.status === 'fulfilled' && Array.isArray(result.value)
+        ? (result.value as NonNullable<UserPageSsrPayload['bestScores']>)
+        : undefined;
 
     return {
       route: {
@@ -120,6 +132,9 @@ export const fetchUserPageSsrPayload = async (
       user,
       recentActivities: recentActivities as UserPageSsrPayload['recentActivities'],
       recentActivitiesHasMore: recentActivities.length === USER_PAGE_ACTIVITY_LIMIT,
+      bestScores: scoreList(bestResult),
+      pinnedScores: scoreList(pinnedResult),
+      recentScores: scoreList(recentResult),
       fetchedAt: new Date().toISOString(),
     };
   } catch (error) {

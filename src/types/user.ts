@@ -1,5 +1,6 @@
 import type { UserActivity } from './activity';
 import type { GameMode } from './common';
+import type { BestScore } from './scores';
 
 export interface TeamStatistics {
   play_count: number;
@@ -178,6 +179,9 @@ export interface UserPageSsrPayload {
   user: User;
   recentActivities: UserActivity[];
   recentActivitiesHasMore: boolean;
+  bestScores?: BestScore[];
+  pinnedScores?: BestScore[];
+  recentScores?: BestScore[];
   fetchedAt: string;
 }
 

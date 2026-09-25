@@ -43,9 +43,9 @@ const getLocalProfileColor = (): string => {
 
 export const ProfileColorProvider: React.FC<ProfileColorProviderProps> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
-  const [profileColor, setProfileColorState] = useState<string>(() => getLocalProfileColor());
+  const [profileColor, setProfileColorState] = useState<string>(DEFAULT_PROFILE_COLOR);
   // 保留从服务器加载或成功保存的颜色，用于重置
-  const [savedProfileColor, setSavedProfileColor] = useState<string>(() => getLocalProfileColor());
+  const [savedProfileColor, setSavedProfileColor] = useState<string>(DEFAULT_PROFILE_COLOR);
   const [isLoading, setIsLoading] = useState(true);
 
   // 加载用户的个人颜色设置

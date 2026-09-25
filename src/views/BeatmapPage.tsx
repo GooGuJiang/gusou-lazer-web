@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -21,6 +21,7 @@ import {
   FloatingFocusManager,
 } from '@floating-ui/react';
 import { beatmapAPI, scoreAPI, handleApiError } from '../utils/api';
+import { useAuth } from '../hooks/useAuth';
 import type {
   Beatmapset,
   Beatmap,
@@ -276,7 +277,8 @@ const BeatmapPage: React.FC = () => {
   const { beatmapId, beatmapsetId } = useParams<{ beatmapId?: string; beatmapsetId?: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { beatmapset: serverBeatmapset } = useSsrData();
+  const { isAuthenticated } = useAuth();
+  const { beatmapset: serverBeatmapset, publicPage } = useSsrData();
   const routeBeatmapId = beatmapId ? Number.parseInt(beatmapId, 10) : null;
   const routeBeatmapsetId = beatmapsetId ? Number.parseInt(beatmapsetId, 10) : null;
   const initialBeatmapset =
@@ -290,6 +292,12 @@ const BeatmapPage: React.FC = () => {
     initialBeatmapset?.beatmaps.find((beatmap) => beatmap.id === routeBeatmapId) ??
     initialBeatmapset?.beatmaps[0] ??
     null;
+  const initialScores =
+    publicPage?.pathname ===
+      (beatmapId ? `/beatmaps/${beatmapId}` : `/beatmapsets/${beatmapsetId}`) &&
+    publicPage.beatmapScores?.beatmapId === initialBeatmap?.id
+      ? (publicPage.beatmapScores?.response ?? null)
+      : null;
 
   // 谱面数据
   const [beatmapset, setBeatmapset] = useState<Beatmapset | null>(initialBeatmapset);
@@ -307,8 +315,9 @@ const BeatmapPage: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<GameMode>(
     (initialBeatmap?.mode as GameMode | undefined) ?? 'osu'
   );
-  const [scoresData, setScoresData] = useState<BeatmapScoresResponse | null>(null);
+  const [scoresData, setScoresData] = useState<BeatmapScoresResponse | null>(initialScores);
   const [scoresLoading, setScoresLoading] = useState(false);
+  const skippedInitialScoresFetchRef = useRef(Boolean(initialScores) && !isAuthenticated);
   const [scoresError, setScoresError] = useState<string | null>(null);
 
   // 标签折叠状态
@@ -427,6 +436,10 @@ const BeatmapPage: React.FC = () => {
   }, [selectedBeatmap, selectedMode, leaderboardType, t]);
 
   useEffect(() => {
+    if (skippedInitialScoresFetchRef.current) {
+      skippedInitialScoresFetchRef.current = false;
+      return;
+    }
     loadScores();
   }, [loadScores]);
 

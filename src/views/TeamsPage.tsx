@@ -10,15 +10,20 @@ import RankingTypeSelector from '../components/UI/RankingTypeSelector';
 import PaginationControls from '../components/Rankings/PaginationControls';
 import GameModeSelector from '../components/UI/GameModeSelector';
 import type { GameMode, TeamRankingsResponse, RankingType } from '../types';
+import { useSsrData } from '../contexts/useSsrData';
 
 const TeamsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { publicPage } = useSsrData();
+  const initialRankings = publicPage?.pathname === '/teams' ? publicPage.teamRankings : undefined;
   const { isAuthenticated, user } = useAuth();
   const [selectedMode, setSelectedMode] = useState<GameMode>('osu');
   const [rankingType, setRankingType] = useState<RankingType>('performance');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [teamRankings, setTeamRankings] = useState<TeamRankingsResponse | null>(null);
+  const [teamRankings, setTeamRankings] = useState<TeamRankingsResponse | null>(
+    initialRankings ?? null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // 加载战队排行榜
@@ -35,21 +40,18 @@ const TeamsPage: React.FC = () => {
     }
   };
 
-  // 重置分页并加载数据
-  const resetAndLoad = () => {
-    setCurrentPage(1);
-    loadTeamRankings();
-    // 滚动到顶部
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // 模式改变时重置并加载数据
+  // 模式改变时重置分页
   useEffect(() => {
-    resetAndLoad();
+    setCurrentPage(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [selectedMode, rankingType]);
 
-  // 分页改变时加载数据
+  const skipInitialFetchRef = React.useRef(Boolean(initialRankings));
   useEffect(() => {
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false;
+      return;
+    }
     loadTeamRankings();
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'smooth' });
