@@ -1,1 +1,1 @@
-export const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lazer.g0v0.top');
+export const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://osu.g0v0.top');
