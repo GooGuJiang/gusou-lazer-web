@@ -6,6 +6,7 @@ import { userAPI, beatmapAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import { useAuth } from '../../hooks/useAuth';
+import { useSsrData } from '../../contexts/useSsrData';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
@@ -291,14 +292,20 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({
   bestScoresActionRef,
 }) => {
   const { t } = useTranslation();
+  const { userPage } = useSsrData();
+  const initialScores =
+    userPage?.user.id === userId &&
+    (userPage.route.mode ?? userPage.user.g0v0_playmode ?? 'osu') === selectedMode
+      ? userPage.bestScores
+      : undefined;
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
-  const [scores, setScores] = useState<BestScore[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [scores, setScores] = useState<BestScore[]>(initialScores ?? []);
+  const [loading, setLoading] = useState(initialScores === undefined);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialScores ? initialScores.length === 6 : true);
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(initialScores?.length ?? 0);
 
   const loadedScoresKeyRef = useRef<string | null>(null);
 
@@ -358,6 +365,8 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({
     const scoresKey = `${userId}:${selectedMode}`;
     if (loadedScoresKeyRef.current === scoresKey) return;
     loadedScoresKeyRef.current = scoresKey;
+
+    if (initialScores !== undefined) return;
 
     // 重置所有相关状态
     setOffset(0);

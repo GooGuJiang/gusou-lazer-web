@@ -1,9 +1,10 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getDeviceUUID } from '../deviceUUID';
+import { clearServerAuthSession, syncServerAuthSession } from '../authSession';
+import { API_BASE_URL } from './baseUrl';
 
-// 从环境变量读取 API 地址，如果没有设置则使用线上 API 地址
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://lazer-api.g0v0.top';
+export { API_BASE_URL } from './baseUrl';
 
 // 全局验证处理器，由 VerificationProvider 设置
 let globalVerificationHandler: ((error: unknown) => boolean) | null = null;
@@ -83,6 +84,7 @@ const refreshToken = async (): Promise<string> => {
   // 更新 localStorage
   localStorage.setItem('access_token', access_token);
   localStorage.setItem('refresh_token', new_refresh_token);
+  await syncServerAuthSession(access_token);
 
   return access_token;
 };
@@ -118,10 +120,19 @@ api.interceptors.response.use(
 
     // 处理 401 错误（token 过期）
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const storedAccessToken = localStorage.getItem('access_token');
+      const storedRefreshToken = localStorage.getItem('refresh_token');
+
+      // 未登录用户访问公开页面时，接口可能仍会返回 401。此时不应尝试刷新或跳转登录页。
+      if (!storedAccessToken && !storedRefreshToken) {
+        return Promise.reject(error);
+      }
+
       // 如果请求是刷新 token 的请求本身失败了，直接登出
       if (originalRequest.url?.includes('/oauth/token')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        void clearServerAuthSession();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(error);
@@ -166,6 +177,7 @@ api.interceptors.response.use(
         processQueue(new Error('Token refresh failed'));
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        void clearServerAuthSession();
         clearAuthCache(); // 清除缓存
         window.location.href = '/login';
         return Promise.reject(refreshError);

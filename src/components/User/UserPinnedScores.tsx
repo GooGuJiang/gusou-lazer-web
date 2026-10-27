@@ -6,6 +6,7 @@ import { userAPI, scoreAPI, beatmapAPI } from '../../utils/api';
 import type { BestScore, GameMode, User } from '../../types';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import { useAuth } from '../../hooks/useAuth';
+import { useSsrData } from '../../contexts/useSsrData';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import LazyBackgroundImage from '../UI/LazyBackgroundImage';
 import BeatmapLink from '../UI/BeatmapLink';
@@ -335,10 +336,16 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({
   bestScoresActionRef,
 }) => {
   const { t } = useTranslation();
+  const { userPage } = useSsrData();
+  const initialScores =
+    userPage?.user.id === userId &&
+    (userPage.route.mode ?? userPage.user.g0v0_playmode ?? 'osu') === selectedMode
+      ? userPage.pinnedScores
+      : undefined;
   const { profileColor } = useProfileColor();
   const { user: currentUser } = useAuth();
-  const [scores, setScores] = useState<BestScore[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [scores, setScores] = useState<BestScore[]>(initialScores ?? []);
+  const [loading, setLoading] = useState(initialScores === undefined);
   const [error, setError] = useState<string | null>(null);
   const loadedScoresKeyRef = useRef<string | null>(null);
 
@@ -433,6 +440,8 @@ const UserPinnedScores: React.FC<UserPinnedScoresProps> = ({
     const scoresKey = `${userId}:${selectedMode}`;
     if (loadedScoresKeyRef.current === scoresKey) return;
     loadedScoresKeyRef.current = scoresKey;
+
+    if (initialScores !== undefined) return;
 
     void loadScores();
   }, [userId, selectedMode]);

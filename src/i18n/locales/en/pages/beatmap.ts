@@ -12,6 +12,8 @@ export const beatmapPage = {
   'beatmap.downloadNoVideo': 'download without video',
   'beatmap.osuDirect': 'open in osu!direct',
   'beatmap.preview': 'Preview',
+  'beatmap.playPreview': 'Play preview',
+  'beatmap.pausePreview': 'Pause preview',
   'beatmap.viewOnOsu': 'View in osu!',
   'beatmap.favourite': 'Favourite',
   'beatmap.unfavourite': 'Unfavourite',

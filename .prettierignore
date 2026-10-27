@@ -14,6 +14,7 @@ coverage
 *.log
 
 pnpm-lock.yaml
+next-env.d.ts
 
 public/**/*.svg
 public/**/*.png

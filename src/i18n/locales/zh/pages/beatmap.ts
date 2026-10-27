@@ -12,6 +12,8 @@ export const beatmapPage = {
   'beatmap.downloadNoVideo': '不含视频下载',
   'beatmap.osuDirect': '在 osu!direct 中查看',
   'beatmap.preview': '预览',
+  'beatmap.playPreview': '播放预览',
+  'beatmap.pausePreview': '暂停预览',
   'beatmap.viewOnOsu': '在 osu! 中查看',
   'beatmap.favourite': '收藏',
   'beatmap.unfavourite': '取消收藏',

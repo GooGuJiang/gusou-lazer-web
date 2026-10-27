@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiChevronDown, FiGlobe, FiCheck } from 'react-icons/fi';
+import { useLocation } from 'react-router-dom';
 import type { AppLanguages } from '../../i18n/resources';
 
 // 语言配置接口
@@ -73,6 +74,7 @@ interface LanguageSelectorProps {
 const LanguageSelector: React.FC<LanguageSelectorProps> = memo(
   ({ variant = 'desktop', className = '' }) => {
     const { i18n, t } = useTranslation();
+    const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -89,10 +91,14 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = memo(
     // 选择语言
     const handleLanguageSelect = useCallback(
       (languageCode: AppLanguages) => {
-        void i18n.changeLanguage(languageCode);
         setIsOpen(false);
+        localStorage.setItem('app-language', languageCode);
+        document.cookie = `app-language=${languageCode}; Path=/; Max-Age=31536000; SameSite=Lax`;
+
+        const pathname = location.pathname === '/' ? '' : location.pathname;
+        window.location.assign(`/${languageCode}${pathname}${location.search}${location.hash}`);
       },
-      [i18n]
+      [location.hash, location.pathname, location.search]
     );
 
     // 点击外部关闭

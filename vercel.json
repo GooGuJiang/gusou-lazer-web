@@ -1,44 +1,17 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "content-type"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "DELETE,PUT,POST,GET,OPTIONS"
-        }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Headers", "value": "content-type" },
+        { "key": "Access-Control-Allow-Methods", "value": "DELETE,PUT,POST,GET,OPTIONS" }
       ]
-    }
-  ],
-  "functions": {
-    "api/render.js": {
-      "includeFiles": "dist/**"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/users/:match*",
-      "destination": "/api/render"
-    },
-    {
-      "source": "/beatmapsets",
-      "destination": "/api/render"
-    },
-    {
-      "source": "/beatmapsets/",
-      "destination": "/api/render"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }

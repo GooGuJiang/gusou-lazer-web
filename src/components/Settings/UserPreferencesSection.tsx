@@ -6,7 +6,7 @@ import HueSlider from '../UI/HueSlider';
 import { preferencesAPI } from '../../utils/api';
 import GameModeSelector from '../UI/GameModeSelector';
 import CustomSelect from '../UI/CustomSelect';
-import { useDebounce } from '../../hooks/useDebounce';
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer';
 import { useProfileColor } from '../../contexts/ProfileColorContext';
 import type { UserPreferences, BeatmapsetCardSize, BeatmapDownload } from '../../types';
 
@@ -165,20 +165,23 @@ const UserPreferencesSection: React.FC = () => {
   const pendingColorRef = useRef<string | null>(null);
 
   // 防抖保存颜色（600ms 延迟）
-  const debouncedSaveColor = useDebounce(async (color: string) => {
-    try {
-      // 使用 ProfileColorContext 的 setProfileColor 方法
-      // 这会同时保存到服务器和本地存储
-      await setProfileColor(color);
-      setPreferences((prev) => ({ ...prev, profile_colour: color }));
-      setOriginalPreferences((prev) => ({ ...prev, profile_colour: color }));
-      pendingColorRef.current = null;
-      toast.success(t('settings.preferences.saveSuccess'));
-    } catch (error) {
-      console.error('Failed to save profile_colour:', error);
-      toast.error(t('settings.preferences.saveError'));
-    }
-  }, 600);
+  const debouncedSaveColor = useDebouncedCallback(
+    async (color: string) => {
+      try {
+        // 使用 ProfileColorContext 的 setProfileColor 方法
+        // 这会同时保存到服务器和本地存储
+        await setProfileColor(color);
+        setPreferences((prev) => ({ ...prev, profile_colour: color }));
+        setOriginalPreferences((prev) => ({ ...prev, profile_colour: color }));
+        pendingColorRef.current = null;
+        toast.success(t('settings.preferences.saveSuccess'));
+      } catch (error) {
+        console.error('Failed to save profile_colour:', error);
+        toast.error(t('settings.preferences.saveError'));
+      }
+    },
+    { wait: 600 }
+  );
 
   // 优化：使用 useMemo 缓存颜色变化的回调函数
   const handleHueChange = useMemo(

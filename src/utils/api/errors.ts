@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { t } from '../i18n.ts';
+import { t } from '../i18n';
 
 export const handleApiError = <T extends Record<string, unknown>>(error: unknown) => {
   const err = error as {

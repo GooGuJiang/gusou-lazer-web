@@ -2,7 +2,7 @@
  * BBCode Parser for osu! style BBCode
  * 基于官方osu-web BBCodeFromDB.php实现，确保输出与官方网站一致
  */
-import { t, type TranslationOptions } from './i18n.ts';
+import { t, type TranslationOptions } from './i18n';
 
 // 用于翻译错误消息的便捷方法
 function et(key: string, options?: TranslationOptions): string {
@@ -362,10 +362,7 @@ export class BBCodeParser {
       isBlock: true,
       validator: (_param?: string, content?: string) => {
         if (!content) return new TagValidationResult(false, et('missingUrl'));
-        return new TagValidationResult(
-          /^https?:\/\/.+$/i.test(content),
-          et('invalidImageUrl')
-        );
+        return new TagValidationResult(/^https?:\/\/.+$/i.test(content), et('invalidImageUrl'));
       },
       renderer: (content: string) => {
         return `<img alt="" src="${this.escapeHtml(content)}" loading="lazy" />`;
@@ -401,10 +398,7 @@ export class BBCodeParser {
       isBlock: true,
       validator: (_param?: string, content?: string) => {
         if (!content) return new TagValidationResult(false, et('missingUrl'));
-        return new TagValidationResult(
-          /^https?:\/\/.+$/i.test(content),
-          et('invalidAudioUrl')
-        );
+        return new TagValidationResult(/^https?:\/\/.+$/i.test(content), et('invalidAudioUrl'));
       },
       renderer: (content: string) => {
         return `<audio controls preload="none" src="${this.escapeHtml(content)}"></audio>`;

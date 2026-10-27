@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
+*.tsbuildinfo
 *.local
 
 # Environment variables
@@ -32,3 +34,6 @@ gashamkal-main/*
 osu-web-master/*
 fuwari-main/*
 .vercel
+
+# pnpm store
+.pnpm-store

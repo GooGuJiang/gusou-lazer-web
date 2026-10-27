@@ -23,6 +23,8 @@ import UserDropdown from '../UI/UserDropdown';
 import Avatar from '../UI/Avatar';
 import LanguageSelector from '../UI/LanguageSelector';
 import type { NavItem } from '../../types';
+import type { AppLanguages } from '../../i18n/resources';
+import { createPageMetadata } from '../../utils/seo';
 
 // 将 NavItem 组件提取并使用 memo 优化，防止不必要的重新渲染
 const NavItem = memo<{ item: NavItem }>(({ item }) => {
@@ -164,7 +166,7 @@ NavItem.displayName = 'NavItem';
 
 // 语言配置接口
 interface LanguageConfig {
-  code: string;
+  code: AppLanguages;
   name: string;
   nativeName: string;
   flag: string;
@@ -192,14 +194,19 @@ const LanguageMenuSection = memo<{
   t: ReturnType<typeof import('react-i18next').useTranslation>['t'];
 }>(({ i18n, t }) => {
   const [showLanguages, setShowLanguages] = useState(false);
+  const location = useLocation();
 
   const currentLanguage =
     SUPPORTED_LANGUAGES.find((lang) => lang.code === (i18n.resolvedLanguage ?? i18n.language)) ||
     SUPPORTED_LANGUAGES[0];
 
-  const handleLanguageSelect = (languageCode: string) => {
-    void i18n.changeLanguage(languageCode);
+  const handleLanguageSelect = (languageCode: AppLanguages) => {
     setShowLanguages(false);
+    localStorage.setItem('app-language', languageCode);
+    document.cookie = `app-language=${languageCode}; Path=/; Max-Age=31536000; SameSite=Lax`;
+
+    const pathname = location.pathname === '/' ? '' : location.pathname;
+    window.location.assign(`/${languageCode}${pathname}${location.search}${location.hash}`);
   };
 
   if (!showLanguages) {
@@ -457,8 +464,23 @@ const MobileMenuDropdown = memo<{
 MobileMenuDropdown.displayName = 'MobileMenuDropdown';
 
 const Navbar: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuth();
-  const { t } = useTranslation();
+  const { user, isLoading, isAuthenticated, logout } = useAuth();
+  const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const initialPathnameRef = useRef(location.pathname);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const language: AppLanguages = i18n.resolvedLanguage === 'zh' ? 'zh' : 'en';
+    const isBeatmapDetail = /^\/(?:beatmaps|beatmapsets)\/\d+$/.test(location.pathname);
+    const isInitialBeatmapRender =
+      initialPathnameRef.current === location.pathname && isBeatmapDetail;
+
+    // 保留服务端为首屏谱面详情生成的精确标题；后续客户端切换使用通用详情标题。
+    if (isInitialBeatmapRender) return;
+    document.title = String(createPageMetadata(language, location.pathname).title ?? 'g0v0!');
+  }, [i18n.resolvedLanguage, location.pathname]);
   // 通过全局通知上下文获取统一的 unreadCount
   let unreadCount: {
     total: number;
@@ -529,7 +551,7 @@ const Navbar: React.FC = () => {
                   >
                     <div className="relative">
                       <img
-                        src="/lazer.ico"
+                        src="/logo.png"
                         alt={t('common.brandAlt')}
                         className="w-8 h-8 lg:w-9 lg:h-9 object-contain"
                       />
@@ -559,10 +581,10 @@ const Navbar: React.FC = () => {
               {/* Right side actions */}
               <div className="flex items-center justify-end space-x-1.5 md:space-x-2 lg:space-x-3">
                 {/* Language Selector - only show when not authenticated */}
-                {!isAuthenticated && <LanguageSelector variant="desktop" />}
+                {!isLoading && !isAuthenticated && <LanguageSelector variant="desktop" />}
 
                 {/* Notification (if authenticated) */}
-                {isAuthenticated && (
+                {!isLoading && isAuthenticated && (
                   <Link to="/messages">
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -600,27 +622,29 @@ const Navbar: React.FC = () => {
                 <ThemeSelector />
 
                 {/* User actions */}
-                {isAuthenticated && user ? (
+                {!isLoading && isAuthenticated && user ? (
                   <UserDropdown user={user} onLogout={handleLogout} />
                 ) : (
-                  <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link
-                        to="/login"
-                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
-                      >
-                        {t('nav.login')}
-                      </Link>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link
-                        to="/register"
-                        className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
-                      >
-                        {t('nav.register')}
-                      </Link>
-                    </motion.div>
-                  </div>
+                  !isLoading && (
+                    <div className="flex items-center space-x-1.5 md:space-x-2 lg:space-x-3">
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link
+                          to="/login"
+                          className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-osu-blue hover:text-osu-blue/80 border border-osu-blue/30 hover:border-osu-blue/50 rounded-xl hover:bg-osu-blue/5 transition-all duration-200"
+                        >
+                          {t('nav.login')}
+                        </Link>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link
+                          to="/register"
+                          className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white bg-osu-pink hover:bg-osu-pink/90 rounded-xl shadow-lg shadow-osu-pink/25 hover:shadow-osu-pink/35 transition-all duration-200"
+                        >
+                          {t('nav.register')}
+                        </Link>
+                      </motion.div>
+                    </div>
+                  )
                 )}
               </div>
             </div>
@@ -642,7 +666,7 @@ const Navbar: React.FC = () => {
             <Link to="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <img
-                  src="/lazer.ico"
+                  src="/logo.png"
                   alt={t('common.brandAlt')}
                   className="w-8 h-8 object-contain"
                 />
@@ -660,7 +684,7 @@ const Navbar: React.FC = () => {
           {/* Mobile actions */}
           <div className="flex items-center space-x-2">
             {/* User actions */}
-            {isAuthenticated && user ? (
+            {!isLoading && isAuthenticated && user ? (
               <div className="flex items-center space-x-2">
                 {/* User Avatar */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -678,14 +702,16 @@ const Navbar: React.FC = () => {
                 </motion.div>
               </div>
             ) : (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
-                >
-                  {t('nav.login')}
-                </Link>
-              </motion.div>
+              !isLoading && (
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-sm font-medium text-osu-pink hover:text-osu-pink/80 bg-osu-pink/10 hover:bg-osu-pink/15 rounded-xl transition-all duration-200"
+                  >
+                    {t('nav.login')}
+                  </Link>
+                </motion.div>
+              )
             )}
 
             {/* Mobile menu dropdown */}

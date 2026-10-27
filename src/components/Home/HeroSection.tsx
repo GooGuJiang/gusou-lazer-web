@@ -76,12 +76,12 @@ const HeroSection: React.FC = () => {
               <div className="flex items-center justify-center lg:justify-start">
                 <div className="relative">
                   {/* 泛光层 - 模糊效果 */}
-                  <h1
+                  <div
                     aria-hidden="true"
                     className="absolute inset-0 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight blur-xl opacity-70"
                   >
                     <span className="gradient-text">{t('common.brandName')}</span>
-                  </h1>
+                  </div>
                   {/* 原标题层 */}
                   <h1 className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
                     <span className="gradient-text">{t('common.brandName')}</span>
@@ -92,13 +92,13 @@ const HeroSection: React.FC = () => {
               {/* 副标题 */}
               <div className="relative">
                 {/* 泛光层 - 模糊效果 */}
-                <h2
+                <div
                   aria-hidden="true"
                   lang={isEN ? 'en' : undefined}
                   className={`absolute inset-0 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-700 dark:text-gray-200 leading-snug tracking-tight max-w-2xl blur-lg opacity-60 ${isEN ? 'lg:max-w-[36ch] xl:max-w-[42ch]' : 'lg:max-w-[32ch]'}`}
                 >
                   {t('hero.tagline')}
-                </h2>
+                </div>
                 {/* 原副标题层 */}
                 <h2
                   lang={isEN ? 'en' : undefined}
