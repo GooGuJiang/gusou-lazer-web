@@ -7,6 +7,7 @@ export const PRIVATE_PATHS = [
   /^\/settings$/,
   /^\/messages$/,
   /^\/oauth\/authorize$/,
+  /^\/client-verifications\/create$/,
   /^\/teams\/create$/,
   /^\/teams\/[^/]+\/edit$/,
 ];
@@ -15,6 +16,7 @@ const KNOWN_PATHS = [
   /^\/$/,
   /^\/(?:login|register|password-reset|settings|rankings|teams|messages|how-to-join|beatmapsets)$/,
   /^\/oauth\/authorize$/,
+  /^\/client-verifications\/create$/,
   /^\/users\/[^/]+$/,
   /^\/teams\/[^/]+(?:\/edit)?$/,
   /^\/beatmaps\/\d+$/,

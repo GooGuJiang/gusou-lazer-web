@@ -11,6 +11,7 @@ import { beatmapsetsPage } from './beatmapsets';
 import { layout } from './layout';
 import { scorePage } from './score';
 import { oauthPage } from './oauth';
+import { clientVerificationPage } from './clientVerification';
 
 export const pages = {
   ...appPages,
@@ -26,4 +27,5 @@ export const pages = {
   ...layout,
   ...scorePage,
   ...oauthPage,
+  ...clientVerificationPage,
 } as const;

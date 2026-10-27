@@ -64,6 +64,16 @@ const STATIC_SEO: Record<string, Record<AppLanguages, SeoCopy>> = {
     en: { title: 'Create an account | g0v0!', description: 'Create a g0v0! player account.' },
     zh: { title: '创建账号 | 咕哦！', description: '创建咕哦！玩家账号。' },
   },
+  '/client-verifications/create': {
+    en: {
+      title: 'Client login verification | g0v0!',
+      description: 'Allow an osu!(stable) client to log in and count this device as trusted.',
+    },
+    zh: {
+      title: '客户端登录验证 | 咕哦！',
+      description: '允许 osu!(stable) 客户端登录，并将该设备计入可信设备。',
+    },
+  },
 };
 
 const getDynamicSeo = (

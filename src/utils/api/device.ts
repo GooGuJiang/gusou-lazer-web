@@ -36,6 +36,11 @@ export const deviceAPI = {
     await api.delete(`/api/private/admin/trusted-devices/${deviceId}`);
   },
 
+  // 允许 osu!(stable) 客户端登录，将该设备计入可信设备
+  verifyStableClient: async (deviceHash: string): Promise<void> => {
+    await api.post('/api/private/admin/stable-verification', { device_hash: deviceHash });
+  },
+
   // ========== 旧的 API 端点（保留以兼容现有代码）==========
 
   // 获取活跃会话
