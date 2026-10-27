@@ -34,3 +34,6 @@ gashamkal-main/*
 osu-web-master/*
 fuwari-main/*
 .vercel
+
+# pnpm store
+.pnpm-store
