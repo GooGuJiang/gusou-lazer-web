@@ -13,5 +13,19 @@
         { "key": "Access-Control-Allow-Methods", "value": "DELETE,PUT,POST,GET,OPTIONS" }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "lazer.g0v0.top" }],
+      "destination": "https://osu.g0v0.top/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.g0v0.top" }],
+      "destination": "https://osu.g0v0.top/:path*",
+      "permanent": true
+    }
   ]
 }

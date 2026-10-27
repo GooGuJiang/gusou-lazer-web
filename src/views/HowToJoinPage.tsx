@@ -268,7 +268,7 @@ const HowToJoinPage: React.FC = () => {
                     />
                     <CodeSnippet
                       label={t('howToJoin.method2.steps.step3.websiteUrl')}
-                      text="https://lazer.g0v0.top"
+                      text="https://osu.g0v0.top"
                     />
                   </div>
                 </StepItem>
