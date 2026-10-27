@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { authAPI, userAPI, handleApiError, CLIENT_CONFIG } from '../utils/api';
 import { clearServerAuthSession, syncServerAuthSession } from '../utils/authSession';
+import { useVerification } from './useVerification';
 import type { User, TokenResponse } from '../types';
 import toast from 'react-hot-toast';
 
@@ -103,11 +104,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
   const [isLoading, setIsLoading] = useState(!initialUser);
   const [isAuthenticated, setIsAuthenticated] = useState(Boolean(initialUser));
   const { t } = useTranslation();
+  const { showVerificationModal } = useVerification();
+
+  // 根据 /me 返回的会话验证状态启动二次验证
+  const requestVerificationIfNeeded = useCallback(
+    (userData: User) => {
+      if (userData.session_verified === false) {
+        void showVerificationModal(userData.session_verification_method ?? 'mail');
+      }
+    },
+    [showVerificationModal]
+  );
 
   // Check if user is authenticated on mount
   useEffect(() => {
     if (initialUser) {
       CacheUtil.saveUserCache(initialUser);
+      requestVerificationIfNeeded(initialUser);
       return;
     }
 
@@ -134,6 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
             setUser(serverUser);
             setIsAuthenticated(true);
             CacheUtil.saveUserCache(serverUser);
+            requestVerificationIfNeeded(serverUser);
           }
         }
         setIsLoading(false);
@@ -148,6 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
             setUser(userData);
             setIsAuthenticated(true);
             CacheUtil.saveUserCache(userData);
+            requestVerificationIfNeeded(userData);
           }
           return;
         }
@@ -180,15 +195,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, initialUse
       // Store tokens
       localStorage.setItem('access_token', tokenResponse.access_token);
       localStorage.setItem('refresh_token', tokenResponse.refresh_token);
-      const sessionUser = await syncServerAuthSession(tokenResponse.access_token);
 
-      // 会话端点已完成服务端验证，失败时才回退到既有浏览器请求。
-      const userData = sessionUser ?? (await userAPI.getMe());
+      // 登录成功后立即请求 /me，用响应中的会话验证状态判断是否进入二次验证。
+      const userData = await userAPI.getMe();
+      await syncServerAuthSession(tokenResponse.access_token);
+
       setUser(userData);
       setIsAuthenticated(true);
 
       // 保存到缓存
       CacheUtil.saveUserCache(userData);
+
+      requestVerificationIfNeeded(userData);
 
       toast.success(t('auth.context.messages.welcomeBack', { username: userData.username }));
       return userData;

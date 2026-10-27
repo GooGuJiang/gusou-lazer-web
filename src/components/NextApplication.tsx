@@ -38,9 +38,9 @@ const NextApplication = ({
 
   return (
     <I18nextProvider i18n={i18n}>
-      <AuthProvider initialUser={initialUser}>
-        <ProfileColorProvider>
-          <VerificationProvider>
+      <VerificationProvider>
+        <AuthProvider initialUser={initialUser}>
+          <ProfileColorProvider>
             <AudioProvider>
               <SsrDataProvider
                 userPage={userPage}
@@ -51,9 +51,9 @@ const NextApplication = ({
                 <App router={router} basename={`/${language}`} location={location} />
               </SsrDataProvider>
             </AudioProvider>
-          </VerificationProvider>
-        </ProfileColorProvider>
-      </AuthProvider>
+          </ProfileColorProvider>
+        </AuthProvider>
+      </VerificationProvider>
     </I18nextProvider>
   );
 };

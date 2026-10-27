@@ -157,6 +157,7 @@ export interface User {
   user_achievements: unknown[];
   team?: Team;
   session_verified: boolean;
+  session_verification_method?: 'totp' | 'mail' | null;
   daily_challenge_user_stats?: {
     daily_streak_best: number;
     daily_streak_current: number;
