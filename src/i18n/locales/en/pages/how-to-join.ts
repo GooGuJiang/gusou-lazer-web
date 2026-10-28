@@ -19,6 +19,22 @@ export const howToJoinPage = {
           downloadAndroidDomestic: 'Download (China Only)',
           downloadAndroidOverseas: 'Download (For global network)',
           downloadClient: 'Download g0v0! Client',
+          platform: 'Platform:',
+          platforms: {
+            windows: 'Windows',
+            linux: 'Linux',
+            macos: 'macOS',
+            android: 'Android',
+            ios: 'iOS',
+          },
+          architecture: 'Architecture:',
+          architectures: {
+            x64: 'x64',
+            aarch64: 'aarch64',
+            intel: 'x64 (Intel)',
+            appleSilicon: 'aarch64 (Apple Silicon)',
+          },
+          useUnstable: 'Use unstable version (robin channel)',
         },
         step2: {
           title: 'Start the game and enjoy g0v0!',

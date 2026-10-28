@@ -1,0 +1,91 @@
+name: Update robin release tag
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-robin-release-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Find the latest g0v0 pre-release
+        id: latest-release
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const releases = await github.paginate(github.rest.repos.listReleases, {
+              owner: 'GooGuTeam',
+              repo: 'g0v0',
+              per_page: 100,
+            });
+            const preRelease = releases
+              .filter((release) => release.prerelease && !release.draft)
+              .sort((left, right) => {
+                const leftDate = Date.parse(left.published_at ?? left.created_at);
+                const rightDate = Date.parse(right.published_at ?? right.created_at);
+                return rightDate - leftDate;
+              })[0];
+
+            if (!preRelease) {
+              core.setFailed('No published g0v0 pre-release was found.');
+              return;
+            }
+
+            if (!/^v[0-9]+(?:\.[0-9]+)+-robin$/.test(preRelease.tag_name)) {
+              core.setFailed(`Unexpected g0v0 pre-release tag: ${preRelease.tag_name}`);
+              return;
+            }
+
+            core.setOutput('tag', preRelease.tag_name);
+
+      - name: Update robinReleaseTag
+        env:
+          ROBIN_RELEASE_TAG: ${{ steps.latest-release.outputs.tag }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          tag = os.environ['ROBIN_RELEASE_TAG']
+          if not re.fullmatch(r'v[0-9]+(?:\.[0-9]+)+-robin', tag):
+              raise SystemExit(f'Unexpected release tag: {tag}')
+
+          path = Path('src/views/HowToJoinPage.tsx')
+          source = path.read_text()
+          updated, replacements = re.subn(
+              r"const robinReleaseTag = '[^']*';",
+              f"const robinReleaseTag = '{tag}';",
+              source,
+              count=1,
+          )
+          if replacements != 1:
+              raise SystemExit('Could not find robinReleaseTag in the source file.')
+
+          if updated == source:
+              print(f'robinReleaseTag is already {tag}.')
+          else:
+              path.write_text(updated)
+              print(f'Updated robinReleaseTag to {tag}.')
+          PY
+
+      - name: Commit and push the change
+        run: |
+          if git diff --quiet -- src/views/HowToJoinPage.tsx; then
+            echo 'No robin release tag change to commit.'
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/views/HowToJoinPage.tsx
+          git commit -m 'chore: update robin release tag'
+          git push

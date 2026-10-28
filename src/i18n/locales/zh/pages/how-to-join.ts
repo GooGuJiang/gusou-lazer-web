@@ -18,6 +18,22 @@ export const howToJoinPage = {
           downloadAndroidDomestic: '国内网盘下载',
           downloadAndroidOverseas: '国外网盘下载',
           downloadClient: '下载 g0v0! 客户端',
+          platform: '系统：',
+          platforms: {
+            windows: 'Windows',
+            linux: 'Linux',
+            macos: 'macOS',
+            android: 'Android',
+            ios: 'iOS',
+          },
+          architecture: '架构：',
+          architectures: {
+            x64: 'x64',
+            aarch64: 'aarch64',
+            intel: 'x64 (Intel)',
+            appleSilicon: 'aarch64 (Apple Silicon)',
+          },
+          useUnstable: '使用不稳定版（robin 分支）',
         },
         step2: {
           title: '打开游戏，体验 g0v0!',
