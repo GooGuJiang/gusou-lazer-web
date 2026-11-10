@@ -104,6 +104,6 @@ export const errors = {
   invalid_auth_code: '认证码无效',
   scope_not_public: "范围必须使用 'public'",
   no_download_endpoints_available: '没有可用的下载站',
-  failed_connect_osu_servers: '无法连接到 osu! 服务器',
+  failed_connect_osu_servers: '无法连接到上游服务器',
   internal_error_fetching_audio: '获取音频时发生内部错误',
 } as const;

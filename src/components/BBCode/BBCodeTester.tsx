@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { parseBBCode } from '../../utils/bbcodeParser';
+import { SITE_URL } from '../../utils/seo/site';
 import BBCodeRenderer from '../BBCode/BBCodeRenderer';
 
 /**
@@ -31,7 +32,7 @@ function hello() {
 [*]列表项3
 [/list]
 
-[url=https://osu.ppy.sh]osu!官网[/url]
+[url=${SITE_URL.href}]g0v0! 官网[/url]
 [profile=123456]用户链接[/profile]
 
 [centre]居中文本[/centre]
@@ -40,7 +41,7 @@ function hello() {
 
 [notice]重要通知内容[/notice]
 
-[img]https://assets.ppy.sh/images/osu-logo.png[/img]
+[img]${new URL('/g0v0.webp', SITE_URL).href}[/img]
 
 [youtube]dQw4w9WgXcQ[/youtube]`);
 

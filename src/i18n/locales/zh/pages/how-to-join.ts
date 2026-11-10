@@ -7,7 +7,7 @@ export const howToJoinPage = {
     method1: {
       title: '使用我们的客户端',
       recommended: '推荐',
-      description: '此方法推荐给所有能在其平台上运行原版 osu!lazer 的用户。',
+      description: '此方法推荐给所有能在其平台上运行 g0v0! 客户端的用户。',
       steps: {
         title: '操作步骤：',
         step1: {
@@ -41,7 +41,7 @@ export const howToJoinPage = {
       },
     },
     method2: {
-      title: '在 osu!lazer 使用 EnhancedAuth 规则集',
+      title: '在 lazer 中使用 EnhancedAuth 规则集',
       suitableFor: '此方法适用于以下平台：',
       platforms: {
         windows: 'Windows（amd64、arm64）',
@@ -56,9 +56,9 @@ export const howToJoinPage = {
           button: '下载 EnhancedAuth',
         },
         step2: {
-          title: '将规则集 DLL 安装到 osu!lazer 中',
+          title: '将规则集 DLL 安装到 lazer 中',
           description:
-            '打开 osu! 的数据目录（设置中点击「Open osu! folder」），将下载的 osu.Game.Rulesets.EnhancedAuth.dll 复制到 rulesets 目录中',
+            '在设置中打开 lazer 的数据目录，将下载的 osu.Game.Rulesets.EnhancedAuth.dll 复制到 rulesets 目录中。',
         },
         step3: {
           title: '启动游戏，进入 设置 → 游戏模式，然后填入以下信息：',
@@ -74,7 +74,7 @@ export const howToJoinPage = {
       warning: {
         title: '重要提示',
         description:
-          '使用此规则集连接官方服务器将导致您的 osu! 账号被封禁！请仅在私服上使用，并确保在使用前已退出官方服务器。',
+          '使用此规则集连接官方服务器将导致账号被封禁！请仅在第三方服务器上使用，并确保在使用前已退出官方服务器。',
       },
     },
   },

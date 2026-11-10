@@ -130,7 +130,7 @@ const DefaultModeSelector: React.FC = () => {
                 ></i>
               </div>
               <span className="text-lg font-medium text-gray-900 dark:text-white">
-                {currentMode ? getModeName(currentMode) : 'osu!'}
+                {getModeName(currentMode ?? 'osu')}
               </span>
             </div>
             <button onClick={handleStartEdit} className="btn-secondary !px-4 !py-2 text-sm">

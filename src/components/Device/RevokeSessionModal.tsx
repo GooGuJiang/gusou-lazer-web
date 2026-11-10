@@ -42,13 +42,13 @@ const RevokeSessionModal: React.FC<RevokeSessionModalProps> = ({
   // 获取客户端显示名称（简化版本，与主组件保持一致）
   const getClientDisplayName = (session: DeviceSession) => {
     if (session.user_agent === 'osu!' || session.user_agent.toLowerCase().includes('osu!')) {
-      return 'g0v0! or osu!lazer';
+      return t('settings.device.clientNames.game');
     }
     if (session.client_display_name && session.client_display_name !== 'osu! web') {
       return session.client_display_name;
     }
     if (session.device_type === 'osu_web') {
-      return 'osu! web';
+      return t('settings.device.clientNames.web');
     }
     const ua = session.user_agent.toLowerCase();
     if (ua.includes('edge')) return 'Microsoft Edge';

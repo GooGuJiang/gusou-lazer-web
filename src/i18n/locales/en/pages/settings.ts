@@ -169,6 +169,10 @@ export const settingsPage = {
     device: {
       title: 'Device Management',
       description: 'Manage your login sessions and trusted devices',
+      clientNames: {
+        game: 'Game client',
+        web: 'g0v0! Web',
+      },
       sessions: {
         title: 'Login Sessions',
         noSessions: 'No active sessions found',
@@ -353,7 +357,7 @@ export const settingsPage = {
         downloadDescription: 'Beatmap download preference',
         downloadAll: 'with video if available',
         downloadNoVideo: 'without video',
-        downloadDirect: 'open in osu!direct',
+        downloadDirect: 'Open in client',
         showNsfw: 'Show explicit content',
         showNsfwDescription: 'Display beatmaps with sensitive content',
       },

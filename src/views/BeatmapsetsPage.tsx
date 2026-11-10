@@ -209,8 +209,8 @@ const MODE_DISPLAY_NAMES: Record<string, string> = {
   taiko: 'taiko',
   fruits: 'catch',
   mania: 'mania',
-  osurx: 'osu!relax',
-  osuap: 'osu!autopilot',
+  osurx: 'standard (RX)',
+  osuap: 'standard (AP)',
   taikorx: 'taiko relax',
   fruitsrx: 'catch relax',
   sentakki: 'sentakki',
@@ -366,7 +366,7 @@ const getBeatmapLink = (beatmap: BeatmapsetSearchBeatmap): string =>
   `/beatmapsets/${beatmap.beatmapset_id}#${beatmap.mode}/${beatmap.id}`;
 
 const getModeDisplayName = (mode: string): string =>
-  (MODE_DISPLAY_NAMES[mode.toLowerCase()] ?? mode).toLowerCase();
+  MODE_DISPLAY_NAMES[mode.toLowerCase()] ?? mode.toLowerCase();
 
 const getModeClass = (mode: string): string => {
   const normalizedMode = mode.toLowerCase();

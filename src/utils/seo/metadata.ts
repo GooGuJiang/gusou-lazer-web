@@ -19,8 +19,8 @@ export const createPageMetadata = (
     description: copy.description,
     keywords:
       language === 'zh'
-        ? ['osu!', 'osu! lazer', '私服', '谱面', '排行榜', '节奏游戏']
-        : ['osu!', 'osu! lazer', 'private server', 'beatmaps', 'rankings', 'rhythm game'],
+        ? ['g0v0!', '咕哦！', 'stable', 'lazer', '谱面', '排行榜', '节奏游戏']
+        : ['g0v0!', 'stable', 'lazer', 'beatmaps', 'rankings', 'rhythm game'],
     alternates: {
       canonical,
       languages: {

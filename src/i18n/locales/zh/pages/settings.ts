@@ -159,6 +159,10 @@ export const settingsPage = {
     device: {
       title: '设备管理',
       description: '管理您的登录会话和受信任设备',
+      clientNames: {
+        game: '游戏客户端',
+        web: 'g0v0! Web',
+      },
       sessions: {
         title: '登录会话',
         noSessions: '没有找到活跃会话',
@@ -339,7 +343,7 @@ export const settingsPage = {
         downloadDescription: '谱面下载偏好',
         downloadAll: '包含视频（若可用）',
         downloadNoVideo: '不包含视频',
-        downloadDirect: '在 osu!direct 中查看',
+        downloadDirect: '在客户端中打开',
         showNsfw: '显示不良内容',
         showNsfwDescription: '显示包含敏感内容的谱面',
       },

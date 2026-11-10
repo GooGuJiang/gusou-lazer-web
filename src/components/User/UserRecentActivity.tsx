@@ -42,26 +42,6 @@ const formatTimeAgo = (dateString: string, t: TFunction): string => {
   }
 };
 
-// 成就图标组件
-const AchievementIcon: React.FC<{ slug: string; alt: string; className?: string }> = ({
-  slug,
-  alt,
-  className = 'w-6 h-6',
-}) => {
-  const [imgSrc, setImgSrc] = useState(`/image/achievement_images/${slug}@2x.png`);
-  const [hasError, setHasError] = useState(false);
-
-  const handleError = () => {
-    if (!hasError) {
-      // 尝试普通版本
-      setImgSrc(`/image/achievement_images/${slug}.png`);
-      setHasError(true);
-    }
-  };
-
-  return <img src={imgSrc} alt={alt} className={className} onError={handleError} />;
-};
-
 // 评级图标映射
 const getRankIcon = (rank: string) => {
   const rankImageMap: Record<string, string> = {
@@ -165,11 +145,6 @@ const getActivityDescription = (activity: UserActivity, t: TFunction) => {
           <span className="text-xs sm:text-sm">{t('profile.activities.types.achievement')}</span>
           {activity.achievement && (
             <>
-              <AchievementIcon
-                slug={activity.achievement.slug}
-                alt={activity.achievement.name || activity.achievement.slug}
-                className="w-4 h-4 sm:w-5 sm:h-5"
-              />
               <a
                 href={`https://inex.osekai.net/medals/${activity.achievement.name || activity.achievement.slug}`}
                 target="_blank"

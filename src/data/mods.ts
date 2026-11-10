@@ -863,7 +863,7 @@ export const MOD_DEFINITIONS = [
   {
     acronym: "SV2",
     name: "Score V2",
-    description: "Score set on earlier osu! versions with the V2 scoring algorithm active.",
+    description: "Score set on an earlier version with the V2 scoring algorithm active.",
     type: "System",
     icon: "/image/mods/mod-score-v2.svg",
     settings: [],

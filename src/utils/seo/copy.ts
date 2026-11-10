@@ -3,14 +3,14 @@ import type { DynamicSeoData, SeoCopy } from './types';
 
 const DEFAULT_SEO: Record<AppLanguages, SeoCopy> = {
   en: {
-    title: 'g0v0! — osu! lazer private server',
+    title: 'g0v0! — A free and open rhythm game server',
     description:
-      'Play osu! lazer with standard, taiko, catch, mania, RX and AP support, complete pp calculation, rankings, teams and community features.',
+      'g0v0! is a free and open rhythm game server with support for both stable and lazer clients and RX/AP pp calculation, designed to offer a freer rhythm experience.',
   },
   zh: {
-    title: '咕哦！— osu! lazer 私服',
+    title: '咕哦！— 自由开放的节奏游戏服务器',
     description:
-      '面向 osu! lazer 的第三方服务器，支持 standard、taiko、catch、mania、RX/AP、完整 PP 计算、排行榜、战队与社区功能。',
+      'g0v0! 是一个自由开放的节奏游戏服务器，支持 stable 和 lazer 双客户端及 RX/AP pp 计算，旨在提供更自由的节奏体验。',
   },
 };
 
@@ -18,8 +18,7 @@ const STATIC_SEO: Record<string, Record<AppLanguages, SeoCopy>> = {
   '/rankings': {
     en: {
       title: 'Player and team rankings | g0v0!',
-      description:
-        'Explore g0v0! player, country and team rankings across supported osu! rulesets.',
+      description: 'Explore g0v0! player, country and team rankings across supported game modes.',
     },
     zh: {
       title: '玩家与战队排行榜 | 咕哦！',
@@ -29,31 +28,31 @@ const STATIC_SEO: Record<string, Record<AppLanguages, SeoCopy>> = {
   '/teams': {
     en: {
       title: 'Teams | g0v0!',
-      description: 'Discover and join player teams in the g0v0! osu! lazer community.',
+      description: 'Discover and join player teams in the g0v0! community.',
     },
     zh: {
       title: '战队 | 咕哦！',
-      description: '发现并加入咕哦！osu! lazer 社区中的玩家战队。',
+      description: '发现并加入咕哦！社区中的玩家战队。',
     },
   },
   '/beatmapsets': {
     en: {
-      title: 'Browse osu! beatmaps | g0v0!',
-      description: 'Search and discover osu! beatmapsets for every supported game mode.',
+      title: 'Browse beatmaps | g0v0!',
+      description: 'Search and discover beatmapsets for every supported game mode.',
     },
     zh: {
       title: '浏览谱面 | 咕哦！',
-      description: '搜索并发现适用于各个游戏模式的 osu! 谱面。',
+      description: '搜索并发现适用于各个游戏模式的谱面。',
     },
   },
   '/how-to-join': {
     en: {
-      title: 'How to join g0v0! with osu! lazer',
-      description: 'Follow the setup guide to connect osu! lazer to the g0v0! server.',
+      title: 'How to join g0v0!',
+      description: 'Follow the setup guide to connect your client to the g0v0! server.',
     },
     zh: {
-      title: '如何使用 osu! lazer 加入咕哦！',
-      description: '按照配置指南将 osu! lazer 连接到咕哦！服务器。',
+      title: '如何加入咕哦！',
+      description: '按照配置指南将客户端连接到咕哦！服务器。',
     },
   },
   '/login': {
@@ -67,11 +66,11 @@ const STATIC_SEO: Record<string, Record<AppLanguages, SeoCopy>> = {
   '/client-verifications/create': {
     en: {
       title: 'Client login verification | g0v0!',
-      description: 'Allow an osu!(stable) client to log in and count this device as trusted.',
+      description: 'Allow the stable client to log in and count this device as trusted.',
     },
     zh: {
       title: '客户端登录验证 | 咕哦！',
-      description: '允许 osu!(stable) 客户端登录，并将该设备计入可信设备。',
+      description: '允许 stable 客户端登录，并将该设备计入可信设备。',
     },
   },
 };
@@ -86,11 +85,11 @@ const getDynamicSeo = (
     return language === 'zh'
       ? {
           title: `${username ?? '玩家资料'} | 咕哦！`,
-          description: `查看 ${username ?? '玩家'} 在咕哦！的 osu! 成绩、排名和近期活动。`,
+          description: `查看 ${username ?? '玩家'} 在咕哦！的成绩、排名和近期活动。`,
         }
       : {
           title: `${username ?? 'Player profile'} | g0v0!`,
-          description: `View ${username ?? 'this player'}'s osu! scores, rankings and recent activity on g0v0!.`,
+          description: `View ${username ?? 'this player'}'s scores, rankings and recent activity on g0v0!.`,
         };
   }
 
@@ -101,26 +100,26 @@ const getDynamicSeo = (
       return language === 'zh'
         ? {
             title: `${name} | 咕哦！谱面`,
-            description: `查看由 ${beatmapset.creator} 创建的 osu! 谱面 ${name}。`,
+            description: `查看由 ${beatmapset.creator} 创建的谱面 ${name}。`,
           }
         : {
             title: `${name} | g0v0! beatmap`,
-            description: `View the osu! beatmap ${name}, mapped by ${beatmapset.creator}.`,
+            description: `View the beatmap ${name}, mapped by ${beatmapset.creator}.`,
           };
     }
 
     return language === 'zh'
-      ? { title: '谱面 | 咕哦！', description: '查看 osu! 谱面详情与排行榜。' }
-      : { title: 'Beatmap | g0v0!', description: 'View osu! beatmap details and rankings.' };
+      ? { title: '谱面 | 咕哦！', description: '查看谱面详情与排行榜。' }
+      : { title: 'Beatmap | g0v0!', description: 'View beatmap details and rankings.' };
   }
 
   if (/^\/teams\/[^/]+$/.test(pathname)) return STATIC_SEO['/teams'][language];
   if (/^\/scores\/\d+$/.test(pathname)) {
     return language === 'zh'
-      ? { title: '成绩 | 咕哦！', description: '查看 osu! 成绩详情与回放信息。' }
+      ? { title: '成绩 | 咕哦！', description: '查看成绩详情与回放信息。' }
       : {
-          title: 'osu! score | g0v0!',
-          description: 'View osu! score details and replay information.',
+          title: 'Score | g0v0!',
+          description: 'View score details and replay information.',
         };
   }
 

@@ -1,16 +1,16 @@
 export const clientVerificationPage = {
   clientVerification: {
-    title: 'Allow the osu!(stable) client to log in?',
+    title: 'Allow the stable client to log in?',
     description:
       'Once allowed, the client will be counted as a trusted device. Client logins will not require verification for a short period.',
     allow: 'Allow',
     deny: 'Deny',
     allowedTitle: 'Client login allowed',
     allowedDescription:
-      'The osu!(stable) client is now counted as a trusted device. You can close this page and return to the client to continue logging in.',
+      'The stable client is now counted as a trusted device. You can close this page and return to the client to continue logging in.',
     deniedTitle: 'Client login denied',
     deniedDescription:
-      'The osu!(stable) client was not counted as a trusted device. You can close this page.',
+      'The stable client was not counted as a trusted device. You can close this page.',
     backHome: 'Back to Home',
     errors: {
       invalidRequest: 'Invalid request',

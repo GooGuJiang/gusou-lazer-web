@@ -1,10 +1,9 @@
 export const homePage = {
   hero: {
-    tagline: 'Probably the best osu! private server',
-    descriptionPrefix: 'g0v0! is a brand-new osu! private server ',
-    descriptionHighlight: 'built for the lazer client',
-    descriptionSuffix:
-      '. We support the standard / taiko / catch / mania rulesets, RX/AP pp calculation, and unlimited renames so you can play your way.',
+    tagline: 'A free and open rhythm experience',
+    descriptionPrefix: 'g0v0! is a free and open rhythm game server with ',
+    descriptionHighlight: 'support for both stable and lazer clients',
+    descriptionSuffix: ' and RX/AP pp calculation, designed to offer a freer rhythm experience.',
     statusOperational: 'All services are operational',
     statusCommunity: 'Join our QQ / Discord community for support and updates',
     joinCta: 'Join Now',
@@ -25,10 +24,10 @@ export const homePage = {
   features: {
     items: [
       {
-        title: 'Works on every platform',
+        title: 'Cross-platform support',
         content:
-          'g0v0! is designed for lazer, which means you can play on any system that supports osu! lazer without platform limitations.',
-        imageAlt: 'Works on every platform',
+          'g0v0! supports multiple desktop and mobile platforms, so you can enjoy rhythm gaming across your devices.',
+        imageAlt: 'Cross-platform support',
       },
       {
         title: 'Faster beatmap downloads',
@@ -51,7 +50,7 @@ export const homePage = {
       {
         title: 'Developer friendly',
         content:
-          'Our server follows the official osu! v1/v2 API specs so you can integrate bots and services into g0v0! faster and easier.',
+          'Our server provides upstream-compatible v1/v2 APIs to make it easier to integrate bots and services with g0v0!.',
         imageAlt: 'Developer friendly',
       },
       {

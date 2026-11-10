@@ -1,6 +1,6 @@
 export const beatmapsetsPage = {
   'beatmapsets.title': '谱面列表',
-  'beatmapsets.subtitle': '搜索、筛选并发现 osu! 谱面',
+  'beatmapsets.subtitle': '搜索、筛选并发现谱面',
   'beatmapsets.search.prompt': '输入关键字...',
   'beatmapsets.search.submit': '搜索',
   'beatmapsets.search.loading': '正在加载...',

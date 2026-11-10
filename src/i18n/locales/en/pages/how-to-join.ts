@@ -8,7 +8,7 @@ export const howToJoinPage = {
       title: 'Using Our Client',
       recommended: 'Recommended',
       description:
-        'This method is recommended for all users who can run original osu!lazer on their platform.',
+        'This method is recommended for all users who can run the g0v0! client on their platform.',
       steps: {
         title: 'Steps:',
         step1: {
@@ -42,7 +42,7 @@ export const howToJoinPage = {
       },
     },
     method2: {
-      title: 'Using osu!lazer with EnhancedAuth Ruleset',
+      title: 'Using lazer with the EnhancedAuth Ruleset',
       suitableFor: 'This method is available on the following platforms:',
       platforms: {
         windows: 'Windows (amd64, arm64)',
@@ -57,9 +57,9 @@ export const howToJoinPage = {
           button: 'Download EnhancedAuth',
         },
         step2: {
-          title: 'Install the ruleset DLL into osu!lazer',
+          title: 'Install the ruleset DLL into lazer',
           description:
-            "Open the osu! data directory (click 'Open osu! folder' in settings), then copy the downloaded osu.Game.Rulesets.EnhancedAuth.dll into the rulesets directory",
+            'Open the lazer data directory from settings, then copy the downloaded osu.Game.Rulesets.EnhancedAuth.dll into the rulesets directory.',
         },
         step3: {
           title:
@@ -77,7 +77,7 @@ export const howToJoinPage = {
       warning: {
         title: 'Important Notice',
         description:
-          'Using this ruleset to connect to the official osu! servers will result in your account being banned! Only use it on private servers, and make sure you have disconnected from the official servers before using it.',
+          'Using this ruleset to connect to the official servers will result in your account being banned! Only use it on third-party servers, and make sure you have disconnected from the official servers before using it.',
       },
     },
   },

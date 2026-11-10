@@ -122,18 +122,12 @@
   content: '\e805';
 }
 
-.fa-extra-team-leader::before {
-  font-family: 'Extra';
-  content: '\e806';
-}
-
 /* 通用图标字体基础样式 */
 .fa-extra-mode-osu,
 .fa-extra-mode-fruits,
 .fa-extra-mode-mania,
 .fa-extra-mode-taiko,
-.fa-extra-osu,
-.fa-extra-team-leader {
+.fa-extra-osu {
   display: inline-block;
   font-style: normal;
   font-variant: normal;

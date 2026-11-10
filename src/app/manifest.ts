@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next';
 
 const manifest = (): MetadataRoute.Manifest => ({
-  name: 'g0v0! osu! lazer',
+  name: 'g0v0!',
   short_name: 'g0v0!',
-  description: 'An osu! lazer private server for every supported ruleset.',
+  description:
+    'g0v0! is a free and open rhythm game server with support for both stable and lazer clients and RX/AP pp calculation, designed to offer a freer rhythm experience.',
   start_url: '/',
   display: 'standalone',
   background_color: '#18191f',

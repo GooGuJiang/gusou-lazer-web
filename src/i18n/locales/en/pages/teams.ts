@@ -13,7 +13,7 @@ export const teamsPage = {
     teamRankings: 'Team Rankings',
     loadingTeams: 'Loading team rankings data...',
     gameModes: {
-      osu: 'osu!',
+      osu: 'standard',
       taiko: 'taiko',
       fruits: 'catch',
       mania: 'mania',
@@ -73,7 +73,7 @@ export const teamsPage = {
       deleteTeam: 'Delete Team',
       kickMember: 'Kick',
       kicking: 'Kicking...',
-      joinRequestSent: 'Join request sent, please wait for the leader\'s approval',
+      joinRequestSent: "Join request sent, please wait for the leader's approval",
       leftTeam: 'Left the team',
       confirmLeave: 'Are you sure you want to leave this team?',
       confirmDelete: 'Are you sure you want to delete this team? This action cannot be undone!',

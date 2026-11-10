@@ -106,6 +106,6 @@ export const errors = {
   invalid_auth_code: 'Invalid authorization code',
   scope_not_public: "Scope must be 'public'",
   no_download_endpoints_available: 'No download endpoints available',
-  failed_connect_osu_servers: 'Failed to connect to osu! servers',
+  failed_connect_osu_servers: 'Failed to connect to upstream servers',
   internal_error_fetching_audio: 'Internal server error while fetching audio',
 } as const;

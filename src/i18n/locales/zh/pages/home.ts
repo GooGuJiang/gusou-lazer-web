@@ -1,10 +1,9 @@
 export const homePage = {
   hero: {
-    tagline: '可能是最好的 osu! 私服',
-    descriptionPrefix: 'g0v0! 是一个全新的',
-    descriptionHighlight: '为 lazer 客户端打造',
-    descriptionSuffix:
-      '的 osu! 第三方服务器。提供了 standard / taiko / catch / mania 四大模式支持，支持 RX/AP pp计算与无限制改名，让你的节奏旅程更自由。',
+    tagline: '自由开放的节奏体验',
+    descriptionPrefix: 'g0v0! 是一个自由开放的节奏游戏服务器，',
+    descriptionHighlight: '支持 stable 和 lazer 双客户端',
+    descriptionSuffix: '及 RX/AP pp 计算，旨在提供更自由的节奏体验。',
     statusOperational: '服务正常运行中',
     statusCommunity: '加入 QQ / Discord 社区获取支持与更新',
     joinCta: '快来加入',
@@ -25,10 +24,9 @@ export const homePage = {
   features: {
     items: [
       {
-        title: '全平台支持',
-        content:
-          'g0v0! 专为 lazer 而打造，这意味着您可在任何支持 osu! lazer 的系统上游玩 g0v0! 而不受平台限制',
-        imageAlt: '全平台支持',
+        title: '跨平台支持',
+        content: 'g0v0! 支持多种桌面与移动平台，让您能在不同设备上享受节奏游戏。',
+        imageAlt: '跨平台支持',
       },
       {
         title: '谱面加速下载',
@@ -50,8 +48,7 @@ export const homePage = {
       },
       {
         title: '开发者友好',
-        content:
-          '我们的服务端完全按照官方的 osu! v1/v2 API 规范设计，让您更加方便快速的接入bot/服务到 g0v0!',
+        content: '我们的服务端提供与上游兼容的 v1/v2 API 接口，方便您将 bot 和服务接入 g0v0!。',
         imageAlt: '开发者友好',
       },
       {

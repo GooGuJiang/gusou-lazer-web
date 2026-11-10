@@ -1,6 +1,6 @@
 export const beatmapsetsPage = {
   'beatmapsets.title': 'Beatmap Listing',
-  'beatmapsets.subtitle': 'Search, filter, and discover osu! beatmaps',
+  'beatmapsets.subtitle': 'Search, filter, and discover beatmaps',
   'beatmapsets.search.prompt': 'Type in keywords...',
   'beatmapsets.search.submit': 'Search',
   'beatmapsets.search.loading': 'Loading...',

@@ -1,6 +1,6 @@
 # gusou-lazer-web
 
-面向 g0v0! / osu! lazer 生态的 Next.js Web 客户端。公开页面由 App Router 按请求服务端渲染，并通过 `/en` 与 `/zh` 提供独立的可索引语言版本。
+面向 g0v0 server 的 Next.js Web 客户端。公开页面由 App Router 按请求服务端渲染，并通过 `/en` 与 `/zh` 提供独立的可索引语言版本。
 
 ## 本地开发
 

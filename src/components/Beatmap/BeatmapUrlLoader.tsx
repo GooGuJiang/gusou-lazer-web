@@ -85,7 +85,7 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://osu.ppy.sh/beatmapsets/123456#osu/789012"
+              placeholder={t('beatmap.urlPasteHint')}
               className="w-full px-4 py-3 pl-10 pr-12 border-2 border-slate-200 dark:border-slate-700 rounded-lg 
                         bg-white dark:bg-slate-900 text-slate-900 dark:text-white
                         focus:ring-2 focus:ring-osu-pink focus:border-osu-pink
@@ -125,30 +125,6 @@ const BeatmapUrlLoader: React.FC<BeatmapUrlLoaderProps> = ({ onLoad, className =
           )}
         </button>
       </form>
-
-      <div className="px-6 pb-6 text-sm text-slate-600 dark:text-slate-400">
-        <p className="mb-2 font-medium">{t('beatmap.supportedUrls')}:</p>
-        <ul className="space-y-1.5 text-xs">
-          <li className="flex items-start gap-2">
-            <span className="text-osu-pink mt-0.5">●</span>
-            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">
-              https://osu.ppy.sh/beatmapsets/123456
-            </code>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-osu-pink mt-0.5">●</span>
-            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">
-              https://osu.ppy.sh/beatmapsets/123456#osu/789012
-            </code>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-osu-pink mt-0.5">●</span>
-            <code className="flex-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">
-              https://osu.ppy.sh/beatmaps/789012
-            </code>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 };
