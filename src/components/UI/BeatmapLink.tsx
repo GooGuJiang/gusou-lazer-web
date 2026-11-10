@@ -11,7 +11,7 @@ interface BeatmapLinkProps {
 }
 
 /**
- * BeatmapLink component that converts external osu! beatmap URLs to internal routes
+ * BeatmapLink component that converts external upstream beatmap URLs to internal routes
  * or falls back to external links when needed
  */
 const BeatmapLink: React.FC<BeatmapLinkProps> = ({

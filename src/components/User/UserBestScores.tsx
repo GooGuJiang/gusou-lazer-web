@@ -77,7 +77,7 @@ const getRankIcon = (rank: string) => {
   return rankImageMap[rank] || rankImageMap['F'];
 };
 
-// 单个成绩卡片组件 - 基于 osu! 官方设计
+// 单个成绩卡片组件 - 基于官方设计
 const ScoreCard: React.FC<{
   score: BestScore;
   t: TFunction;
@@ -327,7 +327,7 @@ const UserBestScores: React.FC<UserBestScoresProps> = ({
 
       const response = await userAPI.getBestScores(userId, selectedMode, 6, currentOffset);
 
-      // 处理 API 响应 - 根据 osu! API，应该直接返回 SoloScoreInfo[] 数组
+      // 处理 API 响应 - 根据上游 API，应该直接返回 SoloScoreInfo[] 数组
       const newScores = Array.isArray(response) ? response : [];
 
       // 判断是否还有更多数据的逻辑

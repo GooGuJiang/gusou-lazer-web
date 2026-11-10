@@ -66,7 +66,7 @@ const getRankIcon = (rank: string) => {
   return rankImageMap[rank] || rankImageMap['F'];
 };
 
-// 单个成绩卡片组件 - 基于 osu! 官方设计
+// 单个成绩卡片组件 - 基于官方设计
 const ScoreCard: React.FC<{
   score: BestScore;
   t: TFunction;

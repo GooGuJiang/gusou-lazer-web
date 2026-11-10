@@ -79,7 +79,7 @@ const DeviceManagement: React.FC = () => {
 
   // 获取设备类型显示名称
   const getDeviceTypeName = (session: DeviceSession) => {
-    // 如果是 osu!lazer 客户端，显示为桌面应用
+    // 如果是上游 lazer 客户端，显示为桌面应用
     if (session.user_agent === 'osu!' || session.user_agent.toLowerCase().includes('osu!')) {
       return t('settings.device.deviceTypes.app');
     }
@@ -100,7 +100,7 @@ const DeviceManagement: React.FC = () => {
 
   // 获取客户端显示名称
   const getClientDisplayName = (session: DeviceSession) => {
-    // 检查是否是 osu!lazer 客户端
+    // 检查是否是上游 lazer 客户端
     if (session.user_agent === 'osu!' || session.user_agent.toLowerCase().includes('osu!')) {
       return t('settings.device.clientNames.game');
     }

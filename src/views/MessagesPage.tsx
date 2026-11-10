@@ -339,9 +339,9 @@ const MessagesPage: React.FC = () => {
           cleanupDuplicatePrivateChannels();
         }, 100);
 
-        // 如果没有选中频道且有可用频道，优先选择 osu! 频道
+        // 如果没有选中频道且有可用频道，优先选择官方频道
         if (!selectedChannel && sortedChannels.length > 0) {
-          // 查找 osu! 频道
+          // 查找官方频道
           const osuChannel = sortedChannels.find(
             (ch) =>
               ch.name.toLowerCase().includes('osu') ||
