@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-`gusou-lazer-web` 是面向 g0v0 / osu! lazer 生态的 Next.js Web 客户端。公开页面由 App Router 服务端渲染，现有复杂交互页面通过 React Router 兼容层渐进迁移。
+`gusou-lazer-web` 是面向 g0v0 / 上游 lazer 生态的 Next.js Web 客户端。公开页面由 App Router 服务端渲染，现有复杂交互页面通过 React Router 兼容层渐进迁移。
 
 - 仓库：<https://github.com/GooGuJiang/gusou-lazer-web>
 - API 服务默认地址：`https://lazer-api.g0v0.top`
