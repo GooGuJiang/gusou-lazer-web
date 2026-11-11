@@ -1,5 +1,5 @@
 /**
- * BBCode Parser for osu! style BBCode
+ * BBCode Parser for upstream style BBCode
  * 基于官方osu-web BBCodeFromDB.php实现，确保输出与官方网站一致
  */
 import { t, type TranslationOptions } from './i18n';

@@ -102,7 +102,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
 
   const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role]);
 
-  // osu! 单向好友系统菜单配置
+  // 官方单向好友系统菜单配置
   const menuItems: MenuItemType[] = useMemo(() => {
     if (isSelf) return [];
 
@@ -224,7 +224,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
     return items;
   }, [isSelf, isBlocked, isFriend, isMutual, followsMe, onAdd, onRemove, onBlock, onUnblock, t]);
 
-  // 获取主按钮的图标 - osu! 单向好友系统
+  // 获取主按钮的图标 - 官方单向好友系统
   const getMainIcon = () => {
     if (loading) {
       return <FiLoader className="w-4 h-4 animate-spin text-blue-500" />;
@@ -286,7 +286,7 @@ const FriendActions: React.FC<FriendActionsProps> = ({
     );
   };
 
-  // 获取按钮状态文本 - osu! 单向好友系统
+  // 获取按钮状态文本 - 官方单向好友系统
   const getButtonStatusText = () => {
     if (isSelf) return t('profile.friendActions.selfProfile');
     if (isBlocked) return t('profile.friendActions.blocked');
