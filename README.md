@@ -5,21 +5,12 @@
 >
 > - 我们（GooGuTeam）与 ppy Pty Ltd、peppy 或 team osu! 无关。此项目未获得其支持，也未获得其认可。
 > - **osu!** 和 **ppy** 是 **ppy Pty Ltd** 的注册商标。
+> - 本站点展示的账号、成绩与排名来自社区服务器，与官方服务器独立，不计入官方排行榜。
 > - 请支持原项目：在[官方服务器](https://osu.ppy.sh)游玩，并考虑成为[支持者](https://osu.ppy.sh/home/support)，帮助支持上游开发。
 > - 对于上游的问题和改进，请向[上游仓库](https://github.com/ppy/osu-web)提交 issue / PR，或前往[上游反馈论坛](https://osu.ppy.sh/community/forums/5)。请勿因 g0v0! 的特有问题联系上游团队，此类问题应反馈到对应的 GooGuTeam 下的仓库。
 > - 如果尚未玩过原版游戏，请先[下载并体验官方客户端](https://osu.ppy.sh/home/download)。本项目并非原项目的替代品。
 
 面向 g0v0 server 的 Next.js Web 客户端。公开页面由 App Router 按请求服务端渲染，并通过 `/en` 与 `/zh` 提供独立的可索引语言版本。
-
-> [!IMPORTANT]
-> **gusou-lazer-web 是一个非官方的社区项目，是面向 g0v0-server 的 Web 客户端。**
->
-> - 本项目与 **ppy Pty Ltd** 及上游开发团队**没有任何隶属、背书或支持关系**。
-> - 上游名称、「lazer」代号及相关品牌均为 **ppy Pty Ltd** 的商标。本站点展示的账号、成绩与排名来自社区服务器，与官方服务器**完全独立**，不计入官方排行榜。
-> - **请支持原项目。**上游游戏免费且持续维护，没有它就没有这个项目。如果你喜欢音游，最好的支持方式是：
->   - 在[官方服务器](https://osu.ppy.sh)游玩——那里的成绩计入真正的排行榜。
->   - 成为 [supporter](https://osu.ppy.sh/home/support)——直接资助上游开发。
->   - 游戏本身的问题请到[上游仓库](https://github.com/ppy/osu)反馈，不要为本项目的问题打扰上游团队。
 
 ## 本地开发
 
