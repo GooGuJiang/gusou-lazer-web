@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
+import UnofficialProjectNotice from '../UI/UnofficialProjectNotice';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import { NotificationProvider } from '../../contexts/NotificationContext';
@@ -24,6 +25,7 @@ const Layout: React.FC = () => {
         }}
       >
         <Navbar />
+        <UnofficialProjectNotice />
         <main
           className={shouldApplyTopPadding ? 'pt-[56px] md:pt-20' : ''}
           style={{
